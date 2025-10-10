@@ -13,6 +13,7 @@
 
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
+import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import {
@@ -157,7 +158,6 @@ export const getSubsections = async (sectionId) => {
       if (
         segments.length === 5 &&
         segments[2] === sectionId &&
-        segments[3] !== "drawer" &&
         segments[4].endsWith(".md")
       ) {
         const subsectionId = segments[3];
@@ -198,68 +198,67 @@ export const getSubsections = async (sectionId) => {
 // Get specific content by section and subsection
 export const getContent = async (sectionId, subsectionId) => {
   try {
-    // If only section is provided, get section content
+    let path;
+
     if (sectionId && !subsectionId) {
-      const path = `../markdown/${sectionId}/${sectionId}.md`;
+      path = `../markdown/${sectionId}/${sectionId}.md`;
+    } else if (sectionId && subsectionId) {
+      path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
+    } else {
+      return null;
+    }
+    for (const filePath in allMarkdownFiles) {
+      if (filePath.endsWith(path.slice(2))) {
+        const file = await allMarkdownFiles[filePath]();
+        const { content, frontmatter } = parseFrontmatter(file);
 
-      for (const filePath in allMarkdownFiles) {
-        if (filePath.endsWith(path.slice(2))) {
-          // Remove the leading ..
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-          return { content: cleanContent, frontmatter };
+        const [mainRaw, sidebarRaw] = content.split("## Sidebar");
+        const mainContent = mainRaw?.trim() || "";
+
+        const sidebar = {};
+        if (sidebarRaw) {
+          const lines = sidebarRaw.trim().split("\n");
+          let currentKey = null;
+          let currentHeading = null;
+          let currentValue = [];
+
+          lines.forEach((line) => {
+            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+
+            if (match) {
+              if (currentKey) {
+                sidebar[currentKey] = {
+                  heading: currentHeading || currentKey.replace(/-/g, " "),
+                  content: currentValue.join("\n").trim(),
+                };
+              }
+              currentKey = match[1].trim();
+              currentHeading = null;
+              currentValue = [];
+            } else if (line.startsWith("Heading:")) {
+              currentHeading = line.replace("Heading:", "").trim();
+            } else if (currentKey) {
+              currentValue.push(line);
+            }
+          });
+
+          if (currentKey) {
+            sidebar[currentKey] = {
+              heading: currentHeading || currentKey.replace(/-/g, " "),
+              content: currentValue.join("\n").trim(),
+            };
+          }
+          console.log("Sidebar:", sidebar);
         }
+        const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
+          return `<sidebar-ref term="${term}"></sidebar-ref>`;
+        });
+        return { content: parsedContent, sidebar, frontmatter };
       }
     }
-
-    // If both section and subsection are provided, get subsection content
-    if (sectionId && subsectionId) {
-      const path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
-
-      for (const filePath in allMarkdownFiles) {
-        if (filePath.endsWith(path.slice(2))) {
-          // Remove the leading ..
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-          return { content: cleanContent, frontmatter };
-        }
-      }
-    }
-
     return null;
   } catch (error) {
-    console.error(
-      `Failed to load content: ${sectionId}/${subsectionId}`,
-      error
-    );
-    return null;
-  }
-};
-
-// Get a specific drawer markdown file
-export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
-  try {
-    // Find the matching drawer file
-    const drawerPath = `../markdown/${sectionId}/${subsectionId}/drawer/${fileId}.md`;
-
-    for (const path in allMarkdownFiles) {
-      if (path.endsWith(drawerPath.slice(2))) {
-        // Remove the leading ..
-        const content = await allMarkdownFiles[path]();
-        const { content: cleanContent, frontmatter } =
-          parseFrontmatter(content);
-        return { content: cleanContent, frontmatter };
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.error(
-      `Failed to load drawer file: ${sectionId}/${subsectionId}/drawer/${fileId}`,
-      error
-    );
+    console.error("Failed to load content:", sectionId, subsectionId, error);
     return null;
   }
 };
@@ -292,26 +291,28 @@ export const parseSubsections = (content) => {
 };
 
 // Process markdown content and render it
-function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
+function MarkdownRenderer({
+  content,
+  sidebar,
+  sectionId,
+  subsectionId,
+  onDrawerOpen,
+  onNavigation,
+  isFinal,
+}) {
   // Process special links in the content
   const processedContent = useMemo(() => {
     if (!content) return "";
 
-    // Replace drawer links with custom elements
-    let processed = content.replace(
-      /\[drawer:([^\]]+)\]\(([^)]+)\)/g,
-      (match, text, target) => {
-        return `<drawer-link text="${text}" target="${target}"></drawer-link>`;
-      }
-    );
+    let processed =
+      typeof content === "string" ? content : content.content || "";
 
     // Replace navigation links with custom elements
-    processed = processed.replace(
-      /\[nav:([^\]]+)\]\(([^)]+)\)/g,
-      (match, text, target) => {
-        return `<nav-link text="${text}" target="${target}"></nav-link>`;
-      }
-    );
+    if (typeof processed === "string") {
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
+        return `<sidebar-ref term="${term}"></sidebar-ref>`;
+      });
+    }
 
     return processed;
   }, [content]);
@@ -445,28 +446,32 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
       },
 
       // Custom components for interactive elements
-      "drawer-link": ({ node }) => {
-        const text = node.properties?.text;
-        const target = node.properties?.target;
+      "sidebar-ref": ({ node }) => {
+        const term = node.properties?.["term"];
+        const value = sidebar?.[term];
+
         return (
-          <HStack
-            as="span"
-            spacing={1}
-            display="inline-flex"
-            alignItems="center"
-            _hover={{ color: "purple.500", cursor: "pointer" }}
-            onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            color="blue.400"
+          <Link
+            as={RouterLink}
+            to={`/${sectionId}/${subsectionId}/${term}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onDrawerOpen(term);
+            }}
+            color="blue.500"
+            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            style={{ whiteSpace: "nowrap" }}
           >
-            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
-            <Icon
-              as={InfoIcon}
-              boxSize="0.8em"
-              style={{ fill: "currentColor" }}
-            />
-          </HStack>
+            {value
+              ? term
+                  .replace(/-/g, " ")
+                  .replace(/Case Study(?!:)/g, "Case Study:") // add colon if missing
+              : `Missing: ${term}`}
+            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
+          </Link>
         );
       },
+
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
