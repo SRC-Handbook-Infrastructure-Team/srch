@@ -22,10 +22,11 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import {
   getSections,
   getSubsections,
-  // parseSubsections,
   getContent,
 } from "../util/MarkdownRenderer";
 import { initializeIndex, search } from "../util/SearchEngine";
+
+import { useLayout } from "../layouts/LayoutContext";
 
 // Beta Tag Component
 const BetaTag = () => (
@@ -47,7 +48,18 @@ const BetaTag = () => (
   </Box>
 );
 
-const NavBar = () => {
+function NavBar() {
+  const [showButton, setShowButton] = useState(false);
+  const { leftSidebar } = useLayout() || {};
+  const {
+    width: leftWidth = 250,
+    collapsed = false,
+    toggleCollapsed = () => {},
+    startResize = () => {},
+    handleKeyDown = () => {},
+    isResizing = false,
+  } = leftSidebar || {};
+
   const location = useLocation();
   const currPath = location.pathname;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,7 +72,6 @@ const NavBar = () => {
   // Current section and subsection IDs from URL
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
-  const currentHeadingId = location.hash?.substring(1) || "";
 
   // State
   const [sections, setSections] = useState([]);
@@ -73,16 +84,10 @@ const NavBar = () => {
   useEffect(() => {
     async function loadAllData() {
       try {
-        // Load all sections
         const sectionsData = await getSections();
-
-        // Sort sections by order
-        const sortedSections = [...sectionsData].sort(
-          (a, b) => a.order - b.order
-        );
+        const sortedSections = [...sectionsData].sort((a, b) => a.order - b.order);
         setSections(sortedSections);
 
-        // Preload all subsections and determine which sections have them
         const subsectionsMap = {};
         const expandStateMap = {};
 
@@ -90,12 +95,7 @@ const NavBar = () => {
           const sectionSubsections = await getSubsections(section.id);
 
           if (sectionSubsections.length > 0) {
-            // Store sorted subsections
-            subsectionsMap[section.id] = sectionSubsections.sort(
-              (a, b) => a.order - b.order
-            );
-
-            // If this is the current section, expand it
+            subsectionsMap[section.id] = sectionSubsections.sort((a, b) => a.order - b.order);
             if (section.id === currentSectionId) {
               expandStateMap[section.id] = true;
             }
@@ -105,17 +105,12 @@ const NavBar = () => {
         setSubsections(subsectionsMap);
         setExpandedSections(expandStateMap);
 
-        // If we're on the root path, navigate to the first section
         if (!currentSectionId && sortedSections.length > 0 && !hasFetchedData) {
           navigate(`/${sortedSections[0].id}`);
         }
 
-        // If we're viewing a subsection, load its content headings
         if (currentSectionId && currentSubsectionId) {
-          const result = await getContent(
-            currentSectionId,
-            currentSubsectionId
-          );
+          const result = await getContent(currentSectionId, currentSubsectionId);
           if (result && result.content) {
             const headings = parseSubsections(result.content);
             setContentHeadings({
@@ -143,9 +138,7 @@ const NavBar = () => {
     }
   }, [currentSectionId, currentSubsectionId, subsections, navigate]);
 
-  // Handle expanding/collapsing a section
   const toggleSection = (sectionId, event) => {
-    // Only handle the expand/collapse icon click
     if (event.target.tagName === "svg" || event.target.closest("svg")) {
       event.preventDefault();
       setExpandedSections((prev) => ({
@@ -155,262 +148,136 @@ const NavBar = () => {
     }
   };
 
-  // Handle smooth scrolling for headings
-  const scrollToHeading = (headingId, e) => {
-    e.preventDefault();
-    const element = document.getElementById(headingId);
-    if (element) {
-      // Update URL without navigation
-      window.history.pushState(
-        null,
-        "",
-        `/srch-s25/${currentSectionId}/${currentSubsectionId}#${headingId}`
-      );
-      // Scroll smoothly
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const NavContent = () => (
+    <VStack align="stretch" spacing={2}>
+      <Link to="/">
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          SRC Handbook
+        </Text>
+      </Link>
 
-  // Navigation content with BETA tags
-  const NavContent = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
-    const [isIndexInitialized, setIndexInitialized] = useState(false);
+      <Divider mb={4} />
 
-    useEffect(() => {
-      const doSearch = async () => {
-        if (searchQuery.length > 2) {
-          if (!isIndexInitialized) {
-            await initializeIndex(); // async init
-            setIndexInitialized(true);
-          }
-          const results = search(searchQuery);
-          setSearchResults(results);
-        } else {
-          setSearchResults([]);
-        }
-      };
-      doSearch();
-    }, [searchQuery]);
+      {sections.map((section) => {
+        const hasSubsections = subsections[section.id]?.length > 0;
+        const isExpanded = expandedSections[section.id];
+        const isActive = currentSectionId === section.id;
 
-    return (
-      <VStack align="stretch" spacing={2}>
-        <Link to="/">
-          <Text fontSize="xl" fontWeight="bold" mb={4}>
-            SRC Handbook
-          </Text>
-        </Link>
-
-        <Divider mb={4} />
-        <Box>
-          <Input
-            placeholder="Search..."
-            mb={4}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </Box>
-
-        {/* Show search results if they are available */}
-        {searchQuery.length > 2 && searchResults.length > 0 && (
-          <Box mb={4}>
-            {searchResults.map((item) => {
-              const doc = item.doc || {};
-              return (
-                <Box key={item.id} mb={2} p={2} borderRadius="md" bg="gray.50">
-                  <Link
-                    to={{
-                      pathname: doc.isDrawer
-                        ? `/${doc.section}/${doc.subsection || ""}/${
-                            doc.anchor
-                          }`
-                        : `/${doc.section}/${doc.subsection || ""}`,
-                      hash: doc.isDrawer ? undefined : `#${doc.anchor}`,
-                    }}
-                    state={{ highlight: searchQuery }}
-                  >
-                    <Text fontWeight="medium">{doc.title}</Text>
-                    <Text fontSize="sm" fontWeight="light">
-                      {doc.subsectionTitle}
-                    </Text>
-                    {item.snippet && (
-                      <Text
-                        fontSize="sm"
-                        color="gray.500"
-                        mt={1}
-                        dangerouslySetInnerHTML={{ __html: item.snippet }}
-                      />
-                    )}
-                    {item.allSnippets && item.allSnippets.length > 1}
-                  </Link>
-                </Box>
-              );
-            })}
-          </Box>
-        )}
-
-        {/* No results message */}
-        {searchQuery.length > 2 && searchResults.length === 0 && (
-          <Text mb={4}>No results found</Text>
-        )}
-
-        <Divider mb={4} />
-
-        {/* Full sections navigation always visible */}
-        {sections.map((section) => {
-          const hasSubsections = subsections[section.id]?.length > 0;
-          const isExpanded = expandedSections[section.id];
-          const isActive = currentSectionId === section.id;
-
-          return (
-            <Box key={section.id} mb={2}>
-              {/* Section header */}
-              <Box
-                p={2}
-                borderRadius="md"
-                bg={
-                  isActive && !currentSubsectionId ? "gray.100" : "transparent"
+        return (
+          <Box key={section.id} mb={2}>
+            {/* Section header */}
+            <Box
+              p={2}
+              borderRadius="md"
+              bg={isActive && !currentSubsectionId ? "gray.100" : "transparent"}
+              cursor="pointer"
+              onClick={(e) => {
+                const sectionSubsections = subsections[section.id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${section.id}`);
                 }
-                cursor="pointer"
-                onClick={(e) => {
-                  // When clicking on section header, navigate to first subsection
-                  const sectionSubsections = subsections[section.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${section.id}`);
-                  }
-                  toggleSection(section.id, e);
-                }}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="medium">{section.title}</Text>
-                  {section.final === false && <BetaTag />}
-                </Box>
-                {/* Only show expand/collapse icon if section has subsections */}
-                {hasSubsections && (
-                  <Icon
-                    as={ChevronDownIcon}
-                    transform={isExpanded ? "rotate(180deg)" : undefined}
-                    transition="transform 0.2s"
-                    w={5}
-                    h={5}
-                  />
-                )}
+                toggleSection(section.id, e);
+              }}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" alignItems="center">
+                <Text fontWeight="medium">{section.title}</Text>
+                {section.final === false && <BetaTag />}
               </Box>
-              {/* Subsections */}
-              {isExpanded && hasSubsections && (
-                <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                  {subsections[section.id].map((subsection) => {
-                    const isSubsectionActive =
-                      isActive && currentSubsectionId === subsection.id;
-                    const contentKey = `${section.id}/${subsection.id}`;
-                    const hasHeadings = contentHeadings[contentKey]?.length > 0;
 
-                    return (
-                      <Box key={subsection.id}>
-                        <Link to={`/${section.id}/${subsection.id}`}>
-                          <Box display="flex" alignItems="center">
-                            <Text
-                              fontSize="sm"
-                              p={1}
-                              fontWeight={
-                                isSubsectionActive ? "bold" : "normal"
-                              }
-                              color={
-                                isSubsectionActive ? "blue.500" : "inherit"
-                              }
-                            >
-                              {subsection.title}
-                            </Text>
-                            {subsection.final === false && <BetaTag />}
-                          </Box>
-                        </Link>
-                        {/* Content headings - COMMENTED OUT TO HIDE SUBSECTION HEADINGS */}
-                        {/* {isSubsectionActive && hasHeadings && (
-                        <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                          {contentHeadings[contentKey].map((heading) => (
-                            <Link
-                              key={heading.id}
-                              to={`/${section.id}/${subsection.id}#${heading.id}`}
-                              onClick={(e) => scrollToHeading(heading.id, e)}
-                            >
-                              <Text
-                                fontSize="xs"
-                                p={1}
-                                fontWeight={
-                                  currentHeadingId === heading.id
-                                    ? "bold"
-                                    : "normal"
-                                }
-                                color={
-                                  currentHeadingId === heading.id
-                                    ? "blue.500"
-                                    : "gray.600"
-                                }
-                              >
-                                {heading.title}
-                              </Text>
-                            </Link>
-                          ))}
-                        </VStack>
-                      )} */}
-                      </Box>
-                    );
-                  })}
-                </VStack>
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                />
               )}
             </Box>
-          );
-        })}
 
-        <Box mb={2}>
-          {/* TODO: only make the sub menus show if it is selected*/}
-          <Link to="/acknowledgements">
-            <Text p={2}>Acknowledgements</Text>
-          </Link>
-          {currentPath.includes("acknowledgements") && (
-            <VStack align="stretch" pl={4} mt={1} spacing={0}>
-              <Link to="/acknowledgements/leadership">
-                <Text fontSize="sm" p={1}>
-                  Leadership Team
-                </Text>
-              </Link>
-              <Link to="/acknowledgements/ai">
-                <Text fontSize="sm" p={1}>
-                  AI Team
-                </Text>
-              </Link>
-              <Link to="/acknowledgements/privacy">
-                <Text fontSize="sm" p={1}>
-                  Privacy Team
-                </Text>
-              </Link>
-              <Link to="/acknowledgements/accessibility">
-                <Text fontSize="sm" p={1}>
-                  Accessibility Team
-                </Text>
-              </Link>
-              <Link to="/acknowledgements/product">
-                <Text fontSize="sm" p={1}>
-                  Product Team
-                </Text>
-              </Link>
-              <Link to="/acknowledgements/additional">
-                <Text fontSize="sm" p={1}>
-                  Additional Contributors
-                </Text>
-              </Link>
-            </VStack>
-          )}
-        </Box>
-      </VStack>
-    );
-  };
+            {/* Subsections */}
+            {isExpanded && hasSubsections && (
+              <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                {subsections[section.id].map((subsection) => {
+                  const isSubsectionActive =
+                    isActive && currentSubsectionId === subsection.id;
+                  const contentKey = `${section.id}/${subsection.id}`;
 
+                  return (
+                    <Box key={subsection.id}>
+                      <Link to={`/${section.id}/${subsection.id}`}>
+                        <Box display="flex" alignItems="center">
+                          <Text
+                            fontSize="sm"
+                            p={1}
+                            fontWeight={isSubsectionActive ? "bold" : "normal"}
+                            color={isSubsectionActive ? "blue.500" : "inherit"}
+                          >
+                            {subsection.title}
+                          </Text>
+                          {subsection.final === false && <BetaTag />}
+                        </Box>
+                      </Link>
+
+                      {/* Headings list intentionally hidden as before */}
+                      {/* ... */}
+                    </Box>
+                  );
+                })}
+              </VStack>
+            )}
+          </Box>
+        );
+      })}
+
+      <Box mb={2}>
+        <Link to="/acknowledgements">
+          <Text p={2}>Acknowledgements</Text>
+        </Link>
+        {currPath.includes("acknowledgements") && (
+          <VStack align="stretch" pl={4} mt={1} spacing={0}>
+            <Link to="/acknowledgements/leadership">
+              <Text fontSize="sm" p={1}>
+                Leadership Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/ai">
+              <Text fontSize="sm" p={1}>
+                AI Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/privacy">
+              <Text fontSize="sm" p={1}>
+                Privacy Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/accessibility">
+              <Text fontSize="sm" p={1}>
+                Accessibility Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/product">
+              <Text fontSize="sm" p={1}>
+                Product Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/additional">
+              <Text fontSize="sm" p={1}>
+                Additional Contributors
+              </Text>
+            </Link>
+          </VStack>
+        )}
+      </Box>
+    </VStack>
+  );
+
+  // Mobile: unchanged — keep the hamburger + drawer
   if (isMobile) {
     return (
       <>
@@ -433,21 +300,73 @@ const NavBar = () => {
     );
   }
 
+  const visualWidth = collapsed ? 0 : leftWidth;
+
+  // Desktop: fixed left rail with resizer + collapse
   return (
     <Box
+      as="aside"
       position="fixed"
       left={0}
       top={0}
-      width="250px"
+      width={`${visualWidth}px`}
       height="100vh"
       borderRight="1px solid"
       borderColor="gray.200"
       bg="white"
-      overflowY="auto"
-      p={4}
+      overflowY={collapsed ? "hidden" : "auto"}
+      overflowX="hidden"
+      p={collapsed ? 0 : 4}
+      boxShadow="2xl"
+      transition="width 0.2s"
       zIndex={10}
+      aria-label="Primary navigation"
+      aria-expanded={!collapsed}
+      onMouseEnter={() => setShowButton(true)}
+      onMouseLeave={() => setShowButton(false)}
     >
+      {/* Collapse button
+      <Button
+        size="xs"
+        onClick={toggleCollapsed}
+        position="fixed"
+        left={collapsed ? "8px" : `${visualWidth - 16}px`}
+        top="50%"
+        transform="translateY(-50%)"
+        zIndex={20}
+        right="8px"
+        aria-pressed={collapsed}
+        width="28px"
+        height="60px"
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        opacity={showButton ? 1 : 0}
+        transition="opacity 0.3s ease"
+        _hover={{ bg: "gray.100" }}
+      >
+        {collapsed ? "▶" : "◀"}
+      </Button> */}
+
       <NavContent />
+
+      {/* Resize handle on the right edge */}
+      <Box
+        position="absolute"
+        right={0}
+        top={0}
+        bottom={0
+          
+        }
+        width={collapsed ? "60px" : "6px"}
+        cursor="col-resize"
+        bg={isResizing ? "rgba(37,99,235,0.15)" : "transparent"}
+        onMouseDown={startResize}
+        onTouchStart={startResize}
+        onKeyDown={handleKeyDown}
+        role="separator"
+        aria-orientation="vertical"
+        tabIndex={0}
+        aria-label="Resize navigation pane"
+      />
     </Box>
   );
 };

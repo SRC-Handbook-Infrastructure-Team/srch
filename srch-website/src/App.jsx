@@ -3,7 +3,7 @@ import "./App.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import theme from "./theme";
-import NavBar from "./components/NavBar";
+import MainLayout from "./layouts/SidebarLayout";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import {
@@ -16,6 +16,11 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter basename="/srch-s25/">
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/:sectionId" element={<MarkdownPage />} />
+            <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -26,33 +31,34 @@ function App() {
             element={<MarkdownPage />}
           />
 
-          {/* Acknowledgements paths */}
-          <Route
-            path="/acknowledgements"
-            element={<Team teamName="leadership" />}
-          />
-          <Route
-            path="/acknowledgements/leadership"
-            element={<Team teamName="leadership" />}
-          />
-          <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
-          <Route
-            path="/acknowledgements/privacy"
-            element={<Team teamName="privacy" />}
-          />
-          <Route
-            path="/acknowledgements/accessibility"
-            element={<Team teamName="accessibility" />}
-          />
-          <Route
-            path="/acknowledgements/product"
-            element={<Team teamName="product" />}
-          />
-          <Route
-            path="/acknowledgements/additional"
-            element={<AdditionalContributors />}
-          />
-        </Routes>
+            {/* Acknowledgements paths */}
+            <Route
+              path="/acknowledgements"
+              element={<Team teamName="leadership" />}
+            />
+            <Route
+              path="/acknowledgements/leadership"
+              element={<Team teamName="leadership" />}
+            />
+            <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
+            <Route
+              path="/acknowledgements/privacy"
+              element={<Team teamName="privacy" />}
+            />
+            <Route
+              path="/acknowledgements/accessibility"
+              element={<Team teamName="accessibility" />}
+            />
+            <Route
+              path="/acknowledgements/product"
+              element={<Team teamName="product" />}
+            />
+            <Route
+              path="/acknowledgements/additional"
+              element={<AdditionalContributors />}
+            />
+          </Routes>
+        </MainLayout>
       </BrowserRouter>
     </ChakraProvider>
   );
