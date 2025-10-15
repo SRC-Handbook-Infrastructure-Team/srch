@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -14,6 +14,7 @@ import {
   DrawerBody,
   useMediaQuery,
   Button,
+  Input,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { parseSubsections } from "../util/MarkdownRenderer";
@@ -24,6 +25,7 @@ import {
   // parseSubsections,
   getContent,
 } from "../util/MarkdownRenderer";
+import { initializeIndex, search } from "../util/SearchEngine";
 
 // Beta Tag Component
 const BetaTag = () => (
@@ -45,7 +47,7 @@ const BetaTag = () => (
   </Box>
 );
 
-function NavBar() {
+const NavBar = () => {
   const location = useLocation();
   const currPath = location.pathname;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -170,88 +172,161 @@ function NavBar() {
   };
 
   // Navigation content with BETA tags
-  const NavContent = () => (
-    <VStack align="stretch" spacing={2}>
-      <Link to="/">
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          SRC Handbook
-        </Text>
-      </Link>
+  const NavContent = () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [isIndexInitialized, setIndexInitialized] = useState(false);
 
-      <Divider mb={4} />
+    useEffect(() => {
+      const doSearch = async () => {
+        if (searchQuery.length > 2) {
+          if (!isIndexInitialized) {
+            await initializeIndex(); // async init
+            setIndexInitialized(true);
+          }
+          const results = search(searchQuery);
+          setSearchResults(results);
+        } else {
+          setSearchResults([]);
+        }
+      };
+      doSearch();
+    }, [searchQuery]);
 
-      {sections.map((section) => {
-        const hasSubsections = subsections[section.id]?.length > 0;
-        const isExpanded = expandedSections[section.id];
-        const isActive = currentSectionId === section.id;
+    return (
+      <VStack align="stretch" spacing={2}>
+        <Link to="/">
+          <Text fontSize="xl" fontWeight="bold" mb={4}>
+            SRC Handbook
+          </Text>
+        </Link>
 
-        return (
-          <Box key={section.id} mb={2}>
-            {/* Section header */}
-            <Box
-              p={2}
-              borderRadius="md"
-              bg={isActive && !currentSubsectionId ? "gray.100" : "transparent"}
-              cursor="pointer"
-              onClick={(e) => {
-                // When clicking on section header, navigate to first subsection
-                const sectionSubsections = subsections[section.id];
-                if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                } else {
-                  navigate(`/${section.id}`);
+        <Divider mb={4} />
+        <Box>
+          <Input
+            placeholder="Search..."
+            mb={4}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </Box>
+
+        {/* Show search results if they are available */}
+        {searchQuery.length > 2 && searchResults.length > 0 && (
+          <Box mb={4}>
+            {searchResults.map((item) => {
+              const doc = item.doc || {};
+              return (
+                <Box key={item.id} mb={2} p={2} borderRadius="md" bg="gray.50">
+                  <Link
+                    to={{
+                      pathname: `/${doc.section}/${doc.subsection || ""}`,
+                      hash: `#${doc.anchor}`,
+                    }}
+                    state={{ highlight: searchQuery }}
+                  >
+                    <Text fontWeight="medium">{doc.title}</Text>
+                    <Text fontSize="sm" fontWeight="light">
+                      {doc.subsectionTitle}
+                    </Text>
+                    {item.snippet && (
+                      <Text
+                        fontSize="sm"
+                        color="gray.500"
+                        mt={1}
+                        dangerouslySetInnerHTML={{ __html: item.snippet }}
+                      />
+                    )}
+                    {item.allSnippets && item.allSnippets.length > 1}
+                  </Link>
+                </Box>
+              );
+            })}
+          </Box>
+        )}
+
+        {/* No results message */}
+        {searchQuery.length > 2 && searchResults.length === 0 && (
+          <Text mb={4}>No results found</Text>
+        )}
+
+        <Divider mb={4} />
+
+        {/* Full sections navigation always visible */}
+        {sections.map((section) => {
+          const hasSubsections = subsections[section.id]?.length > 0;
+          const isExpanded = expandedSections[section.id];
+          const isActive = currentSectionId === section.id;
+
+          return (
+            <Box key={section.id} mb={2}>
+              {/* Section header */}
+              <Box
+                p={2}
+                borderRadius="md"
+                bg={
+                  isActive && !currentSubsectionId ? "gray.100" : "transparent"
                 }
-                toggleSection(section.id, e);
-              }}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box display="flex" alignItems="center">
-                <Text fontWeight="medium">{section.title}</Text>
-                {section.final === false && <BetaTag />}
+                cursor="pointer"
+                onClick={(e) => {
+                  // When clicking on section header, navigate to first subsection
+                  const sectionSubsections = subsections[section.id];
+                  if (sectionSubsections && sectionSubsections.length > 0) {
+                    navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                  } else {
+                    navigate(`/${section.id}`);
+                  }
+                  toggleSection(section.id, e);
+                }}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Box display="flex" alignItems="center">
+                  <Text fontWeight="medium">{section.title}</Text>
+                  {section.final === false && <BetaTag />}
+                </Box>
+                {/* Only show expand/collapse icon if section has subsections */}
+                {hasSubsections && (
+                  <Icon
+                    as={ChevronDownIcon}
+                    transform={isExpanded ? "rotate(180deg)" : undefined}
+                    transition="transform 0.2s"
+                    w={5}
+                    h={5}
+                  />
+                )}
               </Box>
+              {/* Subsections */}
+              {isExpanded && hasSubsections && (
+                <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                  {subsections[section.id].map((subsection) => {
+                    const isSubsectionActive =
+                      isActive && currentSubsectionId === subsection.id;
+                    const contentKey = `${section.id}/${subsection.id}`;
+                    const hasHeadings = contentHeadings[contentKey]?.length > 0;
 
-              {/* Only show expand/collapse icon if section has subsections */}
-              {hasSubsections && (
-                <Icon
-                  as={ChevronDownIcon}
-                  transform={isExpanded ? "rotate(180deg)" : undefined}
-                  transition="transform 0.2s"
-                  w={5}
-                  h={5}
-                />
-              )}
-            </Box>
-
-            {/* Subsections */}
-            {isExpanded && hasSubsections && (
-              <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                {subsections[section.id].map((subsection) => {
-                  const isSubsectionActive =
-                    isActive && currentSubsectionId === subsection.id;
-                  const contentKey = `${section.id}/${subsection.id}`;
-                  const hasHeadings = contentHeadings[contentKey]?.length > 0;
-
-                  return (
-                    <Box key={subsection.id}>
-                      {/* Subsection link */}
-                      <Link to={`/${section.id}/${subsection.id}`}>
-                        <Box display="flex" alignItems="center">
-                          <Text
-                            fontSize="sm"
-                            p={1}
-                            fontWeight={isSubsectionActive ? "bold" : "normal"}
-                            color={isSubsectionActive ? "blue.500" : "inherit"}
-                          >
-                            {subsection.title}
-                          </Text>
-                          {subsection.final === false && <BetaTag />}
-                        </Box>
-                      </Link>
-
-                      {/* Content headings - COMMENTED OUT TO HIDE SUBSECTION HEADINGS */}
-                      {/* {isSubsectionActive && hasHeadings && (
+                    return (
+                      <Box key={subsection.id}>
+                        <Link to={`/${section.id}/${subsection.id}`}>
+                          <Box display="flex" alignItems="center">
+                            <Text
+                              fontSize="sm"
+                              p={1}
+                              fontWeight={
+                                isSubsectionActive ? "bold" : "normal"
+                              }
+                              color={
+                                isSubsectionActive ? "blue.500" : "inherit"
+                              }
+                            >
+                              {subsection.title}
+                            </Text>
+                            {subsection.final === false && <BetaTag />}
+                          </Box>
+                        </Link>
+                        {/* Content headings - COMMENTED OUT TO HIDE SUBSECTION HEADINGS */}
+                        {/* {isSubsectionActive && hasHeadings && (
                         <VStack align="stretch" pl={4} mt={1} spacing={0}>
                           {contentHeadings[contentKey].map((heading) => (
                             <Link
@@ -279,56 +354,59 @@ function NavBar() {
                           ))}
                         </VStack>
                       )} */}
-                    </Box>
-                  );
-                })}
-              </VStack>
-            )}
-          </Box>
-        );
-      })}
-      <Box mb={2}>
-        {/* TODO: only make the sub menus show if it is selected*/}
-        <Link to="/acknowledgements">
-          <Text p={2}>Acknowledgements</Text>
-        </Link>
-        {currPath.includes("acknowledgements") && (
-          <VStack align="stretch" pl={4} mt={1} spacing={0}>
-            <Link to="/acknowledgements/leadership">
-              <Text fontSize="sm" p={1}>
-                Leadership Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/ai">
-              <Text fontSize="sm" p={1}>
-                AI Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/privacy">
-              <Text fontSize="sm" p={1}>
-                Privacy Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/accessibility">
-              <Text fontSize="sm" p={1}>
-                Accessibility Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/product">
-              <Text fontSize="sm" p={1}>
-                Product Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/additional">
-              <Text fontSize="sm" p={1}>
-                Additional Contributors
-              </Text>
-            </Link>
-          </VStack>
-        )}
-      </Box>
-    </VStack>
-  );
+                      </Box>
+                    );
+                  })}
+                </VStack>
+              )}
+            </Box>
+          );
+        })}
+
+        <Box mb={2}>
+          {/* TODO: only make the sub menus show if it is selected*/}
+          <Link to="/acknowledgements">
+            <Text p={2}>Acknowledgements</Text>
+          </Link>
+          {currentPath.includes("acknowledgements") && (
+            <VStack align="stretch" pl={4} mt={1} spacing={0}>
+              <Link to="/acknowledgements/leadership">
+                <Text fontSize="sm" p={1}>
+                  Leadership Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/ai">
+                <Text fontSize="sm" p={1}>
+                  AI Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/privacy">
+                <Text fontSize="sm" p={1}>
+                  Privacy Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/accessibility">
+                <Text fontSize="sm" p={1}>
+                  Accessibility Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/product">
+                <Text fontSize="sm" p={1}>
+                  Product Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/additional">
+                <Text fontSize="sm" p={1}>
+                  Additional Contributors
+                </Text>
+              </Link>
+            </VStack>
+          )}
+        </Box>
+      </VStack>
+    );
+  };
+
   if (isMobile) {
     return (
       <>
@@ -368,6 +446,6 @@ function NavBar() {
       <NavContent />
     </Box>
   );
-}
+};
 
 export default NavBar;
