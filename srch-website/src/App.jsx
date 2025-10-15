@@ -1,9 +1,10 @@
+// src/App.jsx
 import "./App.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import theme from "./theme";
-import MainLayout from "./layouts/SidebarLayout";
+import SidebarLayout from "./layouts/SidebarLayout"; 
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import {
@@ -16,20 +17,16 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter basename="/srch-s25/">
-        <MainLayout>
+        {/*  Wrap all routes in the SidebarLayout so margins, resizing, and context apply */}
+        <SidebarLayout>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/:sectionId" element={<MarkdownPage />} />
             <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/:sectionId" element={<MarkdownPage />} />
-          <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
-          <Route
-            path="/:sectionId/:subsectionId/:term"
-            element={<MarkdownPage />}
-          />
+            <Route
+              path="/:sectionId/:subsectionId/:term"
+              element={<MarkdownPage />}
+            />
 
             {/* Acknowledgements paths */}
             <Route
@@ -58,7 +55,7 @@ function App() {
               element={<AdditionalContributors />}
             />
           </Routes>
-        </MainLayout>
+        </SidebarLayout>
       </BrowserRouter>
     </ChakraProvider>
   );
