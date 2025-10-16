@@ -24,6 +24,8 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const highlight = location.state?.highlight || "";
+  const contentRef = useRef();
   // State for content
   const [mainContent, setMainContent] = useState("");
   const [drawerContent, setDrawerContent] = useState("");
@@ -350,6 +352,21 @@ function MarkdownPage() {
     };
   }, [isResizing, drawerWidth]);
 
+  // highlight search results
+  useEffect(() => {
+    if (highlight && contentRef.current) {
+      const regex = new RegExp(`(${highlight})`, "gi");
+      contentRef.current.innerHTML = contentRef.current.textContent.replace(
+        regex,
+        "<mark>$1</mark>"
+      );
+      const firstMark = contentRef.current.querySelector("mark");
+      if (firstMark)
+        firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [highlight, mainContent]);
+  
+  // retrieves sidebar content based on title
   useEffect(() => {
     if (!urlTerm || !sidebar || Object.keys(sidebar).length === 0) return;
     const entry = sidebar[urlTerm];
@@ -366,15 +383,16 @@ function MarkdownPage() {
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       {/* Main content */}
       {mainContent && (
-        <MarkdownRenderer
-          content={mainContent}
-          sidebar={sidebar}
-          sectionId={sectionId}
-          subsectionId={subsectionId}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          isFinal={contentFinal}
-        />
+          <MarkdownRenderer
+            content={mainContent}
+            sidebar={sidebar}
+            sectionId={sectionId}
+            subsectionId={subsectionId}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            isFinal={contentFinal}
+            highlight={highlight}
+          />
       )}
 
       {/* Drawer for additional content */}
@@ -417,6 +435,7 @@ function MarkdownPage() {
               content={drawerContent}
               onDrawerOpen={handleDrawerOpen}
               onNavigation={handleNavigation}
+              highlight={highlight}
             />
           </DrawerBody>
         </DrawerContent>

@@ -39,8 +39,19 @@ import {
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
+function highlightText(text, highlight) {
+  if (!highlight) return text;
+
+  const regex = new RegExp(`(${highlight})`, "gi");
+  const parts = text.split(regex);
+
+  return parts.map((part, index) =>
+    regex.test(part) ? <mark key={index}>{part}</mark> : part
+  );
+}
+
 // Helper function to create consistent ID from heading text
-function createIdFromHeading(text) {
+export function createIdFromHeading(text) {
   if (!text) return "";
   return text
     .toString()
@@ -51,7 +62,7 @@ function createIdFromHeading(text) {
 }
 
 // Helper to parse YAML frontmatter from markdown content
-function parseFrontmatter(content) {
+export function parseFrontmatter(content) {
   // Checks for --- CONTENT --- at the beginning of MD files, cross compatible w/ Windows chars
   const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
   const match = content.match(frontmatterRegex);
@@ -88,7 +99,7 @@ function parseFrontmatter(content) {
 }
 
 // Import all markdown files at build time
-const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
+export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   query: "?raw",
   import: "default",
 });
@@ -194,12 +205,39 @@ export const getSubsections = async (sectionId) => {
     return [];
   }
 };
-
 // Get specific content by section and subsection
+
 export const getContent = async (sectionId, subsectionId) => {
   try {
     let path;
 
+      for (const filePath in allMarkdownFiles) {
+        // Remove the leading ..
+        if (filePath.endsWith(path.slice(2))) {
+          const content = await allMarkdownFiles[filePath]();
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+          return {
+            content: cleanContent,
+            frontmatter,
+          };
+        }
+      }
+    }
+    // If both section and subsection are provided, get subsection content
+    if (sectionId && subsectionId) {
+      const path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
+
+      for (const filePath in allMarkdownFiles) {
+        if (filePath.endsWith(path.slice(2))) {
+          const content = await allMarkdownFiles[filePath]();
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+
+          return {
+            content: cleanContent,
+            frontmatter,
+          };
     if (sectionId && !subsectionId) {
       path = `../markdown/${sectionId}/${sectionId}.md`;
     } else if (sectionId && subsectionId) {
@@ -299,6 +337,7 @@ function MarkdownRenderer({
   onDrawerOpen,
   onNavigation,
   isFinal,
+  highlight,
 }) {
   // Process special links in the content
   const processedContent = useMemo(() => {
@@ -347,10 +386,12 @@ function MarkdownRenderer({
           {isFinal === false && <BetaTag />}
         </Heading>
       ),
-      h2: (props) => {
+      h2: ({ children, ...props }) => {
         // Create an ID from the heading for anchor links - use the same ID generation
         // as in parseSubsections to ensure they match exactly
-        const id = createIdFromHeading(props.children);
+        const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
+
         return (
           <Heading
             as="h2"
@@ -361,7 +402,13 @@ function MarkdownRenderer({
             lineHeight="1.3"
             scrollMarginTop="20px" // Adds margin at top when scrolled to
             {...props}
-          />
+          >
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </Heading>
         );
       },
       h3: (props) => (
@@ -372,7 +419,18 @@ function MarkdownRenderer({
       ),
 
       // Text elements
-      p: (props) => <Text mb={3} lineHeight="1.6" {...props} />,
+      p: ({ children, ...props }) => {
+        const childrenArray = Array.isArray(children) ? children : [children];
+        return (
+          <Text mb={3} lineHeight="1.6" {...props}>
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </Text>
+        );
+      },
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
