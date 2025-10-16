@@ -38,14 +38,15 @@ prioritizes meeting fundamental needs first, which helps protect the most vulner
 from harm. In the context of automated decision-making, this approach ensures that AI systems
 explicitly embed minimum ethical standards into their predictions and allocations.
 
-[drawer:Case Study: Annie MOORE](annie-moore)
+{Case-Study-Annie-MOORE}
 
 #### Priority
 
 The principle of **priority** focuses on the allocation of resources and opportunities to individuals or groups in order to address existing disparities or urgent needs. This approach recognizes that certain populations may require more immediate or substantial support to achieve equitable outcomes. In automated decision-making, priority ensures that AI systems can identify and respond to these critical needs.
 
-[drawer:Case Study: SafeRent Solutions AI Scoring System](saferent-solutions)
-[drawer:Case Study: AI Tools for LA Housing](la-housing-pilot)
+{Case-Study-SafeRent-Solutions-AI-Scoring-System}
+
+{Case-Study-AI-Tools-for-LA-Housing}
 
 #### Equality of Opportunity
 
@@ -55,7 +56,7 @@ prevent equitable participation and advancement in society. In the context of AI
 opportunity involves designing systems that (a) do not perpetuate existing biases that reflect
 morally arbitrary characteristics (e.g., race, gender) and (b) actively promote inclusivity.
 
-[drawer:Case Study: Algorithmic Justice League](ajl)
+{Case-Study-Algorithmic-Justice-League}
 
 #### Key Questions for Distributive Justice
 
@@ -88,7 +89,7 @@ authoritative decisions, these core features of procedural justice remain releva
   same relevant facts, the system should reach the same conclusion every time and be
   able to demonstrate that consistency under audit.
 
-[drawer:Case Study: Shapley Values for Credit Scores](shapley-neutrality)
+{Case-Study-Shapley-Values-for-Credit-Scores}
 
 - **Respect**: Respect in an automated setting is largely conveyed through user experience
   and data handling. Interfaces should provide plain‑language explanations, avoid
@@ -97,7 +98,7 @@ authoritative decisions, these core features of procedural justice remain releva
   collecting only the data strictly necessary for the task and safeguarding it with strong
   privacy controls.
 
-[drawer:Case Study: SCHUFA](schufa-respect)
+{Case-Study-SCHUFA}
 
 - **Voice**: Algorithms can’t “listen,” but their designers can build structured channels for
   voice: pre‑deployment participatory design sessions, in‑app feedback forms, and
@@ -105,7 +106,7 @@ authoritative decisions, these core features of procedural justice remain releva
   those interactions and feeding validated issues back into model retraining turns user
   voice into a live governance signal rather than a box‑checking exercise.
 
-[drawer:Case Study: Wikimedia Value-Sensitive Algorithm](wikimedia-voice)
+{Case-Study-Wikimedia-Value-Sensitive-Algorithm}
 
 - **Trustworthiness**: Trustworthiness emerges when system owners act and are seen to act
   in the public’s interest. Concretely, that involves open sourcing evaluation code where
@@ -114,7 +115,7 @@ authoritative decisions, these core features of procedural justice remain releva
   updates signal that the algorithm’s creators are motivated by fairness and public
   well‑being, not just efficiency or profit.
 
-[drawer:Case Study: Pymetrics Independent Audit](pymetrics-trust)
+{Case-Study-Pymetrics-Independent-Audit}
 
 It is crucial to scrutinize automated decision-making algorithms through this procedural justice
 framework to ensure they are designed and implemented in ways that uphold respect,
@@ -171,7 +172,7 @@ standards. Rather than imposing blanket liability on developers, lawmakers shoul
 actual use cases to better tackle the root causes of AI bias and foster accountable AI
 deployments.
 
-[drawer:Case Study: Timnit Gebru’s Google Exit](timnit-gebru)
+{Timnit-Gebrus-Google-Exit}
 
 ## Tradeoffs between Efficiency and Bias
 
@@ -188,7 +189,7 @@ local contexts, particularly when:
 - Large-scale models adopt reductionist approaches that fail to account for local
   community needs (e.g., environmental costs).
 
-[drawer:Case Study: Biased Car Insurance Premiums in Michigan](car-insurance)
+{Case-Study-Biased-Car-Insurance-Premiums-in-Michigan}
 
 ## Glossary
 
@@ -242,3 +243,91 @@ University of Oxford. _How AI Is Improving Outcomes for Resettled Refugees: The 
 Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14, 2025. https://law.yale.edu/justice-collaboratory/procedural-justice.
 
 Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
+
+
+## Sidebar
+
+Case-Study-Annie-MOORE:
+Heading: Annie MOORE
+Annie MOORE is an AI-powered matching system that has been implemented by the U.S. refugee resettlement agency HIAS since 2018. The system operationalizes sufficiency by matching refugees to host communities where each individual has a high likelihood of achieving a minimum threshold of employment and economic security. The system assesses refugees’ backgrounds and personal needs against local opportunities and resources. Through this process, the system enhances refugee integration and facilitates targeted resource allocation, which allows agencies like HIAS to provide more tailored support to individuals facing significant challenges.
+
+[Further Reading](https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer?utm_source=chatgpt.com)
+
+
+Case-Study-SafeRent-Solutions-AI-Scoring-System:
+Heading: SafeRent Solutions AI Scoring System
+In Massachusetts, an AI-driven tenant screening system by SafeRent Solutions demonstrates how algorithmic practices may undermine justice as priority. Traditionally, AI scoring systems have maintained heavy reliance on credit history and non-rental debt without accounting for the mitigating benefit of housing vouchers. In this case, SafeRent’s algorithm generated a “SafeRent Score” that incurred frequent penalizations on low-income applicants using housing vouchers, many of whom were Black and Hispanic. 
+
+The metric resulted in unfair rental application rejections despite exemplary records showing on-time rent payments. Rather than prioritizing the needs of applicants facing acute economic hardship, the system’s design treated voucher users as inherent risks due to lower traditional credit scores. As a result, landlords relying on the SafeRent Score denied housing opportunities to the very individuals who needed extra support. The subsequent lawsuit, filed in 2022 and settled for approximately $2.3 million in November 2024, forced SafeRent to suspend the SafeRent Score for voucher users for five years and mandated that property managers perform holistic assessments of these applicants. 
+
+This case shows that a scoring system misaligned with the principle of justice as priority can exacerbate existing inequities by failing to recognize that those who rely on vouchers are in urgent need of stable housing.
+
+[Further Reading](https://www.theverge.com/2024/11/20/24297692/ai-landlord-tool-saferent-low-income-tenants-discrimination-settlement)
+
+Case-Study-AI-Tools-for-LA-Housing:
+Heading: AI Tools for LA Housing
+In contrast to systems that penalize applicants by relying on traditional credit and eviction data, Los Angeles is piloting an AI-driven approach to housing allocation designed to prioritize those with the most urgent needs. In this model developed by USC researchers and community stakeholders, historical data is re-examined and adjusted for inherent biases. Instead of using a flat scoring system that inadvertently lowers scores for those with housing vouchers, the new system assigns additional weight to factors demonstrating acute vulnerability, like prolonged homelessness or pronounced gaps in income. This provision, currently being implemented by the Los Angeles Homeless Services Authority (LAHSA), ensures that applicants facing extreme hardship are given preferential consideration.
+
+[Further Reading](https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai)
+
+
+Case-Study-Algorithmic-Justice-League: 
+Heading: Algorithmic Justice League
+The Algorithmic Justice League (AJL), founded by Joy Buolawmwini, is dedicated to combating bias in AI systems to ensure equitable treatment across diverse populations. The documentary Coded Bias explores the AJL’s discovery that facial recognition technologies act on embedded biases in their training data when failing to accurately identify darker-skinned faces. The film also shows Buolawmwini’s advocacy for legislation to address algorithmic biases that undermine equality of opportunity.
+- [Gender Shades](http://gendershades.org/overview.html): an interactive evaluation of the accuracy of AI-powered gender classification products
+
+[Further Reading](https://www.ajl.org/)
+
+
+Case-Study-Shapley-Values-for-Credit-Scores:
+Heading: Shapley Values for Credit Scores
+Traditional credit scorecards have used logistic regression models because their decision-making processes offer interpretability. However, more powerful machine learning models like XGBoost and random forest algorithms typically offer superior predictive accuracy at the cost of interpretability. This tradeoff creates a neutrality problem as decisions become opaque. Researchers addressed this challenge by developing a novel framework using Shapley values to create interpretable credit scorecards that maintain the predictive power of advanced models.
+
+The Shapley values approach works by deriving credit scores for each predictor variable group in complex models like XGBoost and random forest. This method provides a mathematical guarantee that the contribution of each feature to the final decision is fairly allocated, which ensures consistency across applications. Researchers showed that removing discriminatory features like age and gender didn't significantly impact classification capabilities, proving that neutral credit scoring systems could achieve high accuracy without compromising fairness.
+
+This approach to neutrality satisfies the technical requirements of consistency and evidence-based decision-making while also making the rules transparent enough for outsiders to verify the logic. The mathematically rigorous allocation of feature importance ensures that if two loan applicants present identical relevant facts, they will receive identical scores.
+
+[Further Reading](https://pmc.ncbi.nlm.nih.gov/articles/PMC11318906/)
+
+Case-Study-SCHUFA:
+Heading: SCHUFA
+SCHUFA, a German credit bureau, provides creditworthiness scores to lenders based on automated processing of personal data. When an individual was denied credit after SCHUFA supplied information about her, she requested access to details about how her score was determined. SCHUFA provided some data but refused to explain the calculation methodology, citing trade secrets. After a series of appeals, the case reached the CJEU, which ruled decisively on the side of respect for individuals.
+
+The Court determined that when credit scoring agencies create probability scores through automated processing that significantly affect individuals, they engage in "automated decision-making" under Article 22 of the GDPR. This triggered important protections: the right to meaningful information about the logic involved, the right to human intervention, and the right to express one's point of view and challenge the decision.
+
+This case established that respect in algorithmic systems requires more than merely efficient processing; it demands treating individuals as autonomous agents who deserve explanations and recourse. The judgment forcefully rejected the notion that commercial interests in algorithmic secrecy outweigh individuals' rights to understand decisions that affect their lives. This respect manifests through both interface transparency (providing explanations) and substantive rights (offering meaningful recourse).
+
+[Further Reading](https://iapp.org/news/a/key-takeaways-from-the-cjeus-recent-automated-decision-making-rulings)
+
+
+Case-Study-Wikimedia-Value-Sensitive-Algorithm:
+Heading: Wikimedia Value-Sensitive Algorithm
+Researchers at the University of Minnesota developed an "intelligent socialization algorithm" to help WikiProjects (self-organized groups within Wikipedia) identify and recruit suitable new members. Rather than designing the algorithm based solely on technical considerations, they employed "Value-Sensitive Algorithm Design", which incorporated stakeholders' explicit feedback in the early stages of algorithm creation.
+
+This process began with interviews of WikiProject organizers to understand their recruitment practices and values. The researchers then translated these qualitative insights into specific algorithmic features and constraints. For example, they learned that project organizers valued editing activity as well as subject-matter expertise, communication skills, and cultural fit. The algorithm was designed to respect these multidimensional criteria rather than optimizing for simple metrics like edit count. After deployment, the system actively collected feedback from both project organizers and invitees, which helped create a continuous improvement loop. The results were notable, as experienced newcomers who received algorithm-generated invitations showed increased participation in projects compared to control groups.
+
+This case shows that meaningful voice in algorithmic systems doesn't require humanlike understanding but rather deliberate design choices that value stakeholder input throughout the development and deployment process. By creating structured channels for stakeholder feedback and actually incorporating this feedback into system design, the WikiProjects recruitment algorithm transformed user voice from a passive input into an active governance mechanism.
+
+[Further Reading](https://haiyizhu.com/wp-content/uploads/2018/09/VSAD_pre_camera_ready.pdf)
+
+Case-Study-Pymetrics-Independent-Audit:
+Heading: Pymetrics Trust
+Pymetrics develops algorithms that assess job candidates based on their performance in gamified assessments designed to measure cognitive and emotional traits. Aware of potential concerns about bias in hiring algorithms, pymetrics voluntarily submitted its candidate screening tools to an independent audit by researchers from Northeastern University.
+
+This cooperative audit was structured to maintain both rigor and independence. The auditors examined source code, tested statistical outcomes, and evaluated safeguards against manipulation. They specifically assessed whether pymetrics' implementation of the "four-fifths rule", a legal standard for detecting adverse impact in hiring, functioned as claimed. The audit confirmed that pymetrics' fairness guarantees were technically sound and included sufficient safeguards against both human error and intentional subversion.
+
+This approach established trustworthiness through multiple mechanisms: independent verification by credible third parties, transparency about methods, and a demonstrated willingness to subject proprietary systems to external scrutiny. By providing evidence that its fairness claims were more than marketing rhetoric, pymetrics established itself as a trustworthy actor in the sensitive context of employment.
+
+[Further Reading](https://mislove.org/publications/Pymetrics-FAccT.pdf)
+
+Timnit-Gebrus-Google-Exit:
+Heading: Timnit Gebru
+Timnit Gebru’s forced exit from Google serves as a notable example of why holding an individual developer accountable does little to remedy the underlying systemic issues that produce biased AI. The case shows that it is the institution’s opaque review processes, profit-driven priorities, and entrenched cultural biases that create conditions ripe for discriminatory outcomes. Gebru’s experience, where her legitimate criticisms of internal practices and calls for transparency were used to scapegoat her as “problematic”, affirms that responsibility must lie with governments, large organizations, and social institutions. Therefore, lawmakers and regulators should focus on ensuring that companies deploy robust safeguards in their automated systems to address the root causes of bias across diverse use cases, from financial decision-making to hiring practices, instead of imposing blanket liability on individual developers.
+
+[Further Reading](https://www.axios.com/2021/02/19/google-tweaks-diversity-research-policies-following-inquiry)
+
+Case-Study-Biased-Car-Insurance-Premiums-in-Michigan:
+Heading: Car Insurance Premiums in Michigan
+Insurance companies have increasingly adopted AI to optimize pricing for car insurance. These algorithms analyze vast amounts of data, including location, driving history, and demographic information, to determine premiums. While these systems offer efficiency and cost savings, they often perpetuate existing biases. For example, studies have shown that drivers in predominantly Black neighborhoods within regions like Michigan are charged higher premiums compared to those in predominantly White neighborhoods, despite similar accident risks. This bias reflects historical discrimination and can exacerbate economic inequalities by disproportionately affecting marginalized communities. To address these types of issues, it is crucial to implement mechanisms for accountability, like those mentioned in this primer, to ensure fairness and equity in automated decision-making processes.
+
+[Further Reading](https://www.governing.com/policy/michigans-fair-and-reasonable-reforms-allowed-car-insurers-to-charge-more-in-black-neighborhoods?utm_source=chatgpt.com)

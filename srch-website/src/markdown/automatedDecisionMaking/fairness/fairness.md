@@ -6,7 +6,7 @@ final: false
 
 # Algorithmic Fairness
 
-When machines replace humans in **[drawer:making high-impact decision](high-impact-decision)**, it is important for their outcomes to remain fair. But what is algorithmic fairness?
+When machines replace humans in **{making-high-impact-decision}**, it is important for their outcomes to remain fair. But what is algorithmic fairness?
 
 ## Definitions of Fairness
 
@@ -14,9 +14,9 @@ One common criterion for fairness within the CS community is procedural equality
 
 - **Procedural Equality**: Everyone is subject to the same decision-making process. For example, ATS, or applicant tracking systems, are automated decision-making systems that employers use to screen resumes in hiring processes. Procedural equality is achieved when the system runs every application in the same way.
 
-However, decision-making does not happen in a vacuum. Rather, it exists within a societal context defined by **[drawer:systems of oppression](systems-of-oppression)**, such as racism and sexism, that form an unequal baseline ‘procedurally fair’ algorithm that falsely assumes that every applicant starts from the same point and, as a result, can replicate pre-existing inequalities.
+However, decision-making does not happen in a vacuum. Rather, it exists within a societal context defined by **{Systems-of-Oppression}**, such as racism and sexism, that form an unequal baseline ‘procedurally fair’ algorithm that falsely assumes that every applicant starts from the same point and, as a result, can replicate pre-existing inequalities.
 
-The limitations of procedural equality lead us to the concept of **[drawer:equity](equity)**.
+The limitations of procedural equality lead us to the concept of **{equity}**.
 
 - **Equity**: Everyone is subject to a process that recognizes differences in opportunities and allocates outcomes accordingly.
 
@@ -26,7 +26,7 @@ Within equity, there is a technical distinction between individual and group fai
 
 An example of individual fairness would be in a resume screening system, individuals who have similar qualifications, including equivalent degrees, experience, and technical skills, should be ranked similarly.
 
-- **Group Fairness**: Groups should be viewed as similar and be treated similarly, acknowledging that historically groups might have been treated differently and thus have different opportunities. Here are **[drawer:three criteria for group fairness](three-criteria)**:
+- **Group Fairness**: Groups should be viewed as similar and be treated similarly, acknowledging that historically groups might have been treated differently and thus have different opportunities. Here are **{three-criteria-for-group-fairness}**:
   - **Independence**: A person’s group membership should not affect their outcome.
   - **Separation**: An individual’s group should not impact their outcomes depending on the “true outcome.”
   - **Sufficiency**: The output predictor means the same thing regardless of which group an individual is from.
@@ -35,7 +35,7 @@ An example of individual fairness would be in a resume screening system, individ
 
 All the fairness criteria above seem desirable. However, it is mathematically impossible to achieve both individual and group fairness. Within group fairness, it is also mathematically impossible to simultaneously achieve independence, separation, and sufficiency.
 
-The **[drawer:mathematical impossible results](mathematical-impossibility)** generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of **[drawer:implementations](implementations)** that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
+The **{mathematical-impossible-results}** generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of **{implementations}** that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
 
 ![Pareto Front of Group Fairness Criteria](/srch-s25/assets/primer-photos/fairness1.png)
 
@@ -88,3 +88,76 @@ School, Stanford Law. “How Will AI Impact Racial Disparities in Education?” 
 Ueda, Daiju, Taichi Kakinuma, Shohei Fujita, Koji Kamagata, Yasutaka Fushimi, Rintaro Ito, Yusuke Matsui, et al. “Fairness of Artificial Intelligence in Healthcare: Review and Recommendations.” Japanese Journal of Radiology 42, no. 1 (2024): 3–15. https://doi.org/10.1007/s11604-023-01474-3.
 
 Zhu, Linna, Michael Neal, and Caitlin Young. “Racial Disparities in Automated Valuation Models: New Evidence Using Property Condition and Machine Learning,” n.d.
+
+## Sidebar
+
+Systems-of-Oppression:
+Examples of systems of oppression include: racism, sexism, classism, ableism, ageism, homophobia, transphobia, xenophobia. 
+
+- [Social Identities and Systems of Oppression | National Museum of African American History and Culture](https://nmaahc.si.edu/learn/talking-about-race/topics/social-identities-and-systems-oppression)
+- [Why Is Oppression Wrong? | Philosophical Studies](https://link.springer.com/article/10.1007/s11098-023-02084-5#Sec2)
+- Brown’s [Race, Power, and Privilege courses](https://college.brown.edu/design-your-education/explore-open-curriculum/course-selection/curricular-programs/examining-race) dive deeper into examining “structural inequality, racial formations and/or disparities and systems of power within a complex, pluralistic world.”
+
+making-high-impact-decision:
+Heading: Examples of High-Impact Applications:
+- [Resume Screening](https://www.nature.com/articles/s41599-023-02079-x)
+- [Performance Assessment](https://www.tandfonline.com/doi/full/10.1080/07421222.2023.2267316)
+- [Tenant Screening](https://www.taylorfrancis.com/chapters/edit/10.4324/9781003365877-24/algorithms-racial-discrimination-us-housing-market-eva-rosen-philip-garboden)
+- [Property Appraisal](https://www.huduser.gov/portal/periodicals/cityscape/vol26num1/ch15.pdf)
+- [Credit Scoring](https://link.springer.com/article/10.1007/s00146-023-01676-3)
+- [Clinical Care](https://pmc.ncbi.nlm.nih.gov/articles/PMC10764412/)
+- [Child Welfare](https://dl.acm.org/doi/abs/10.1145/3313831.3376229?)
+- [Pretrial Risk Assessment](https://www.innovatingjustice.org/wp-content/uploads/2019/07/Beyond_The_Algorithm.pdf)
+- [Educational Performance](https://law.stanford.edu/2024/06/29/how-will-ai-impact-racial-disparities-in-education/)
+
+equity:
+Heading: Definitions of Equity
+For a deeper dive into equality vs. equity:
+[Minow: Equality vs. Equity](https://direct.mit.edu/ajle/article/doi/10.1162/ajle_a_00019/107229/EQUALITY-VS-EQUITY)
+
+three-criteria-for-group-fairness:
+Heading: Three Criteria for Group Fairness
+Let G be a variable denoting the group, Y a variable denoting the label for the training data (“true outcome”), and R the output of the procedure: 
+
+##### Independence
+
+<u>Formal Definition</u> R and G are independent, i.e. RG and P(R | G)=P(R) 
+
+<u>Example</u> An individual’s gender should not affect their likelihood of being screened in for hiring. Notably, this measures the group-level statistical independence between group membership and outcome. It thus differs from individual fairness, which examines fairness on an instance level. 
+
+##### Separation
+
+<u>Formal Definition</u> R and G are independent, conditioned on Y, i.e. RG | Y and P(R | Y, G)=P(R | Y) 
+
+<u>Example</u> Applicants who are capable of succeeding in a job should be equally likely to be screened out (resulting in a false negative outcome) in the hiring process irrespective of their gender.
+
+##### Sufficiency
+<u>Formal Definition</u>n Y and G are independent, conditioned on R, i.e. YG | R and P(Y | R, G)=P(Y | R) 
+<u>Example</u> A female applicant receiving a “7” should be equally capable of succeeding in a job as a male candidate with the same score. 
+
+To learn more about technical definitions of fairness, see [Fairness and Machine Learning](https://fairmlbook.org/)
+
+mathematical-impossible-results:
+Heading: Papers Explaining the Impossibility of Fairness
+
+##### Theory-focused
+- *[The (Im)possibility of fairness: different value systems require different mechanisms for fair decision-making](http://dx.doi.org/10.1145/3433949)*: The impossibility of achieving all fairness criteria in one case; mechanisms must align with specific values
+- *[FACT Diagnostic: How to Better Understand Trade-offs Involving Group Fairness](https://arxiv.org/pdf/2004.03424)*: A framework to analyze trade-offs between fairness metrics
+
+##### Case-study-focused
+- *[Inherent Trade-Offs in the Fair Determination of Risk Scores](https://arxiv.org/pdf/1609.05807)*: Proves automated risk score calculation cannot satisfy multiple fairness criteria at once
+- *[Fair prediction with disparate impact](https://arxiv.org/pdf/1703.00056)*: Shows enforcing fairness metrics often reduces accuracy
+- *[Algorithmic decision making and the cost of fairness](https://arxiv.org/pdf/1701.08230)*: Quantifies efficiency losses when prioritizing fairness
+
+implementations:
+Heading: Papers Addressing the Impossibility of Fairness
+
+##### Choosing One or Multiple Criteria over the Others
+- *[Equality of Opportunity in Supervised Learning](https://arxiv.org/pdf/1610.02413)*: Proposes a mechanism that prioritizes separation by equalizing odds across groups in supervised learning
+- *[Fairness and Risk: An Ethical Argument for a Group Fairness Definition Insurers Can Use](https://link.springer.com/article/10.1007/s13347-023-00624-9)*: Argued that sufficiency is the most applicable criterion for automated decision making in insurance premiums
+
+
+##### Escaping the Impossibility of Fairness 
+- *[Escaping the Impossibility of Fairness: From Formal to Substantive Algorithmic Fairness](https://link.springer.com/article/10.1007/s13347-022-00584-6)* and *[The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice](https://dl.acm.org/doi/pdf/10.1145/3593013.3594007)*: Escaping the mathematical impossibility of fairness by considering social contexts, practices, and justice implications
+- *[Pushing the limits of fairness impossibility: Who’s the fairest of them all?](https://proceedings.neurips.cc/paper_files/paper/2022/file/d3222559698f41247261b7a6c2bbaedc-Paper-Conference.pdf)*: A post-processor that improves fairness across various definitions simultaneously 
+

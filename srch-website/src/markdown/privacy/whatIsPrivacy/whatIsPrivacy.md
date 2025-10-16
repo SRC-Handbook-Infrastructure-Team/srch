@@ -14,7 +14,7 @@ Most people colloquially understand privacy as the condition of restricted acces
 
 ### Access as a gateway
 
-Through this lens, privacy functions as [drawer:a gate we can open or close to others](gate). Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
+Through this lens, privacy functions as {gate-we-can-open-close-to-others}. Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
 
 ### Anti-informational definitions of privacy
 
@@ -29,13 +29,13 @@ Control-based approaches **consider privacy in terms of how data is not only acc
 **Figure:** Diagram of the research data lifecycle from the [Longwood Medical Area Research Data Management Working Group](https://datamanagement.hms.harvard.edu) at Harvard Medical School. Detailed accessible version available online [here](https://datamanagement.hms.harvard.edu/plan-design/biomedical-data-lifecycle#).
 ![The Biomedical Data Lifecycle diagram depicts the core stages of the research lifecycle. The center of the wheel has a grey circle labeled Store & Manage. The layer surrounding this is cut into six segments in this order: Plan &  Design, Collect & Create, Analyze & Collaborate, Evaluate & Archive, Share & Disseminate, and Publish & Reuse. Clockwise guiding arrows are at the edge of each segment, showing that one stage leads into the next. The third layer expands on each topic by listing activities or resources that are involved in each of the seven segments in the other two layers.](/srch-s25/assets/primer-photos/dataLifecycle.png)
 
-Westin defines privacy as "the claim of individuals, groups, or institutions to determine for themselves when, how and to what extent information about them is communicated to others" (1967, 7). Privacy loss is therefore thought of as the loss of control over personal information (Véliz 2024, 75). For example, a [drawer:man-in-the-middle attack](mitm) intercepts communications along what was believed to be a private channel, violating the sender's privacy by undermining their ability to control the flow of information.
+Westin defines privacy as "the claim of individuals, groups, or institutions to determine for themselves when, how and to what extent information about them is communicated to others" (1967, 7). Privacy loss is therefore thought of as the loss of control over personal information (Véliz 2024, 75). For example, a {man-in-the-middle-attack} intercepts communications along what was believed to be a private channel, violating the sender's privacy by undermining their ability to control the flow of information.
 
 Contrary to an access-based perspective, a control-based approach views the possibility of unauthorized access to information as eroding privacy, even if that information is never actually accessed. We might use the metaphor of a diary to think through the difference. Say someone takes your diary, which is full of all your most private thoughts, from your desk drawer, locks it in a safe without reading it, and throws away the key. From an access-based perspective, you have not lost privacy because no one read your diary. From a control-based perspective, you have lost privacy because the diary is no longer in your possession.
 
 ### Contextual integrity
 
-In the last decade, Helen Nissenbaum's theory of [drawer:contextual integrity](integrity) has gained traction, especially among computer scientists. Contextual integrity is a theory of privacy developed within the landscape of 21st century computing. Nissenbaum posits that privacy is best understood as the "appropriate flow of personal information" (2010, 127). Appropriate flow of information is defined circumstantially according to five parameters: the data subject, sender, recipient, information type, and transmission principle (e.g., confidentially, with notice, with consent). This conception of privacy allows people to define for themselves the boundaries of acceptable data collection, storage, use, and dissemination. It is therefore flexible and responsive to evolving ethical norms.
+In the last decade, Helen Nissenbaum's theory of {contextual-integrity} has gained traction, especially among computer scientists. Contextual integrity is a theory of privacy developed within the landscape of 21st century computing. Nissenbaum posits that privacy is best understood as the "appropriate flow of personal information" (2010, 127). Appropriate flow of information is defined circumstantially according to five parameters: the data subject, sender, recipient, information type, and transmission principle (e.g., confidentially, with notice, with consent). This conception of privacy allows people to define for themselves the boundaries of acceptable data collection, storage, use, and dissemination. It is therefore flexible and responsive to evolving ethical norms.
 
 ## Lens 3: Privacy is about the separation of public and private spheres.
 
@@ -52,13 +52,13 @@ Some claim that privacy is about **moderating relationships between different en
 
 Others think of privacy **being inherent to specific types of actions (i.e., the what)** rather than spatial or relational contexts (i.e., the where and with whom). These thinkers believe privacy is about a **private sphere of action** that should be free from external interference. Examples of activities that are commonly understood to fall within the private sphere of action include voting, making medical decisions, and engaging in consensual sexual activity.
 
-This conception of privacy aligns with the "[drawer:constitutionally protected reasonable expectation of privacy](constitution)" established in _Katz v. United States_. Privacy rights in certain spheres are inferred from the Bill of Rights and have historically protected autonomy around "child rearing and education, family relationships, procreation, marriage, contraception, and abortion" (Inness 1992, 64).
+This conception of privacy aligns with the "{constitutionally-protected-reasonable-exprectation-of-privacy}" established in _Katz v. United States_. Privacy rights in certain spheres are inferred from the Bill of Rights and have historically protected autonomy around "child rearing and education, family relationships, procreation, marriage, contraception, and abortion" (Inness 1992, 64).
 
 ### Delineating public and private
 
-Public-private distinctions have been continually re-examined throughout history with the proliferation of new technologies. For instance, [drawer:Warren and Brandeis](warren-brandeis)' efforts in 1890 to define a legal right to privacy were inspired by the evolution of photographic technology, which could broadcast private or semi-private moments in unprecedented ways. Did the public sphere now include anything the camera's lens could capture? Warren and Brandeis said no. This sort of reasoned delineation between public and private is a key aspect of [drawer:developing appropriate privacy protections](protections).
+Public-private distinctions have been continually re-examined throughout history with the proliferation of new technologies. For instance, {Warren-and-Brandeis}' efforts in 1890 to define a legal right to privacy were inspired by the evolution of photographic technology, which could broadcast private or semi-private moments in unprecedented ways. Did the public sphere now include anything the camera's lens could capture? Warren and Brandeis said no. This sort of reasoned delineation between public and private is a key aspect of {developing-appropriate-privacy-protections}.
 
-In the 21st century, technology enables [drawer:previously unimaginable intrusions](intrusions) into private spheres. The home has long been considered the locus of privacy, and the integration of computers into home life creates a "porousness" wherein information may leak out.
+In the 21st century, technology enables {previously-unimaginable-intrusions} into private spheres. The home has long been considered the locus of privacy, and the integration of computers into home life creates a "porousness" wherein information may leak out.
 
 ## Lens 4: Privacy is about plausible deniability.
 
@@ -66,7 +66,7 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 
 [Canetti, Dwork, Naor, and Ostrovsky (1997)](https://link.springer.com/chapter/10.1007/BFb0052229) introduced the concept of deniable encryption. A **deniable encryption** scheme is one in which a message can be decrypted with the real key to reveal the true message or a fake key to reveal some other text. This allows someone to give the appearance of transparency without actually sacrificing privacy.
 
-[Dwork, McSherry, Nissim, and Smith (2006)](https://link.springer.com/chapter/10.1007/11681878_14#Bib1) describes **differential privacy (DP)**, a [drawer:framework](dp) used for privacy-preserving statistical analysis and machine learning. Differentially private algorithms rely on the careful introduction of statistical noise to obscure identity without meaningfully altering results. The inclusion or non-inclusion of a particular observation has no statistically significant impact on the outcome, so there is no way to prove a certain individual is represented in the data set. On this basis, a person can always plausibly deny contributing data.
+[Dwork, McSherry, Nissim, and Smith (2006)](https://link.springer.com/chapter/10.1007/11681878_14#Bib1) describes **differential privacy (DP)**, a {framework}used for privacy-preserving statistical analysis and machine learning. Differentially private algorithms rely on the careful introduction of statistical noise to obscure identity without meaningfully altering results. The inclusion or non-inclusion of a particular observation has no statistically significant impact on the outcome, so there is no way to prove a certain individual is represented in the data set. On this basis, a person can always plausibly deny contributing data.
 
 #### Figure: Table summarizing four views of privacy.
 
@@ -162,3 +162,41 @@ Véliz, Carissa. "In the Privacy of Our Streets." In _Surveillance, Privacy and 
 Warren, Samuel D., and Louis D. Brandeis. "The Right to Privacy." _Harvard Law Review_ 4, no. 5 (December 15, 1890): 193–220. https://doi.org/10.2307/1321160.
 
 Wheeler, Evan. _Security Risk Management: Building an Information Security Risk Management Program from the Ground Up_. Elsevier Science & Technology Books, 2011. https://doi.org/10.1016/C2010-0-64926-1.
+
+## Sidebar
+
+gate-we-can-open-close-to-others:
+Heading:Case 
+The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [*Van Buren v. United States*](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
+
+
+man-in-the-middle-attack: 
+For more details on man-in-the-middle (MITM) attacks, see [“What is a man-in-the-middle (MITM) attack?”](https://www.ibm.com/think/topics/man-in-the-middle) from IBM.
+
+**Case:** Edward Snowden publicized evidence that the U.S. National Security Agency (NSA) was intercepting traffic between Yahoo and Google data centers through a surveillance program known as MUSCULAR. See 2013 the Washington Post article ["NSA infiltrates links to Yahoo, Google data centers worldwide, Snowden documents say"](https://www.washingtonpost.com/world/national-security/nsa-infiltrates-links-to-yahoo-google-data-centers-worldwide-snowden-documents-say/2013/10/30/e51d661e-4166-11e3-8b74-d89d714ca4dd_story.html) by Gellman and Soltani to learn more.
+
+contextual-integrity:
+For more, watch and/or read Voices of VR’s ["Primer on the Contextual Integrity Theory of Privacy with Philosopher Helen Nissenbaum"](https://voicesofvr.com/998-primer-on-the-contextual-integrity-theory-of-privacy-with-philosopher-helen-nissenbaum/). 
+
+Contextual integrity is applicable in legal and policy discussions of privacy. Its advocates assert that it is more comprehensive than the predominant [Fair Information Practice Principles](https://www.fpc.gov/resources/fipps/) (FIPPs) model.
+
+The information flow control (IFC) model in cybersecurity can be seen as operationalizing Nissenbaum’s principle of appropriate flow. IFC focuses on “what information is authorized to be transferred between entities” (Wheeler 2011, 269). To learn more, see Wheeler’s book [*Security Risk Management*](https://ebookcentral-proquest-com.revproxy.brown.edu/lib/brown/detail.action?docID=685406).
+
+Not all aspects of Nissenbaum’s theory are straightforward to operationalize (e.g. some transmission principles such as “with consent”). IFC systems that allow for more nuanced control are an active area of research. The 2024 paper [“Sesame: Practical End-to-End Privacy Compliance with Policy Containers and Privacy Regions”](https://doi.org/10.1145/3694715.3695984) from Brown’s Efficient and Trustworthy Operating Systems (ETOS) Group is an example of such work.
+
+constitutionally-protected-reasonable-exprectation-of-privacy:
+**Case:** In his oft-cited concurrence to [*Katz v. United States*](https://www.oyez.org/cases/1967/35) (1967), Justice Harlan writes that a telephone booth is a private setting, more similar to one’s home, where one has a reasonable expectation of privacy, than to a field, where one does not have such an expectation. The delineation of public and private spheres in Katz is in relation to the Fourth Amendment protection against unreasonable searches and seizures by the government.
+
+**Case:** In [*Griswold v. Connecticut*](https://www.oyez.org/cases/1964/496) (1965), the Court found that a right to marital privacy inferred from the guarantees of the First, Third, Fourth, Fifth, and Ninth Amendments prevented the state from making contraceptive use illegal for married couples. This legal conception of privacy has been continually challenged. In a dissent to the original case, Justice Potter Stewart wrote, “I can find no such general right of privacy in the Bill of Rights, in any other part of the Constitution, or in any case ever before decided by this Court” (530). More recently, Justice Clarence Thomas rejected the argument behind Griswold in his concurrence to [*Dobbs v. Jackson Women’s Health Organization*](https://www.oyez.org/cases/2021/19-1392) (2022),  which eliminated the constitutional right to abortion.
+
+Warren-and-Brandeis:
+For more on Warren and Brandeis, see the original article ["The Right to Privacy"](https://groups.csail.mit.edu/mac/classes/6.805/articles/privacy/Privacy_brand_warr2.html) (1890) or explore their ideas further in ["The Right to Be Let Alone"](https://sk.sagepub.com/hnbk/edvol/the-sage-guide-to-key-issues-in-mass-media-ethics-and-law/chpt/20-right-be-let-alone?PageNum=306) (2015) by Freivogel.
+
+developing-appropriate-privacy-protections:
+Since 2000, the Supreme Court has considered how privacy protections apply to thermal-imaging ([*Kyllo v. United States*](https://www.oyez.org/cases/2000/99-8508)), GPS tracking ([*United States v. Jones*](https://www.oyez.org/cases/2011/10-1259)), and cellphone records ([*Carpenter v. United States*](https://www.oyez.org/cases/2017/16-402)) among other emerging technologies.
+
+previously-unimaginable-intrusions:
+As Véliz puts it, “What used to be the paradigmatic loci of the private—our homes and our minds—have become the paradigmatic loci of data collection” (2024, 45). For more on the mind component, see [“The Extended Mind”](https://www.jstor.org/stable/3328150) (1998) by Clark and Chalmers.
+
+framework:
+For more, see the [Harvard University Privacy Tools Project](https://privacytools.seas.harvard.edu/differential-privacy). Or explore ["A list of real-world uses of differential privacy"](https://desfontain.es/blog/real-world-differential-privacy.html) by Damien Desfontaines.

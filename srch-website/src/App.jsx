@@ -21,6 +21,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/:sectionId" element={<MarkdownPage />} />
           <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
+          <Route
+            path="/:sectionId/:subsectionId/:term"
+            element={<MarkdownPage />}
+          />
 
           {/* Acknowledgements paths */}
           <Route
