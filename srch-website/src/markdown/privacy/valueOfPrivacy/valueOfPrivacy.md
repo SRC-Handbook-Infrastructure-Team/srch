@@ -51,7 +51,7 @@ Privacy may privacy trade-offs—some of which were seen in this section–with 
 
 Privacy may also {conflict-with-itself} in some scenarios, as two different parties may want privacy in a mutually incompatible way. Here, who receives privacy when is called into question. Regulations serve to systematize these choices.
 
-## Sidebar
+## All Sidebar Content Below
 
 goods:
 Heading: Goods Defintion

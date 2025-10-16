@@ -207,48 +207,65 @@ export const getContent = async (sectionId, subsectionId) => {
     } else {
       return null;
     }
+
+    /**
+     * This code looks into all of the filepath and does the following:
+     * looks for the ## All Sidebar Content Below divider 
+     * creates the sidebar dictionary to pull from later
+     * extracts the Key (identical to the clickable term)
+     * extracts the Value (the paragraphical content)
+     * extracts the Heading (if provided used as the title heading for the sidbar)
+     */
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
         const file = await allMarkdownFiles[filePath]();
         const { content, frontmatter } = parseFrontmatter(file);
 
-        const [mainRaw, sidebarRaw] = content.split("## Sidebar");
+        const [mainRaw, sidebarRaw] = content.split(
+          "## All Sidebar Content Below"
+        );
         const mainContent = mainRaw?.trim() || "";
 
         const sidebar = {};
         if (sidebarRaw) {
           const lines = sidebarRaw.trim().split("\n");
-          let currentKey = null;
-          let currentHeading = null;
-          let currentValue = [];
+          let currentKey = null; // placeholder for the currentKey
+          let currentHeading = null; // placeholder for the currentValue
+          let currentValue = []; // placeholder for the current Value
 
           lines.forEach((line) => {
-            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
-
-            if (match) {
-              if (currentKey) {
+            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/); // looks for the {clickable-term} in the sidebar content
+            if (match) { 
+              if (currentKey) { // if a key has already been found, set the heading and content
                 sidebar[currentKey] = {
                   heading: currentHeading || currentKey.replace(/-/g, " "),
                   content: currentValue.join("\n").trim(),
                 };
               }
-              currentKey = match[1].trim();
-              currentHeading = null;
-              currentValue = [];
-            } else if (line.startsWith("Heading:")) {
+
+              // if not assign the key and create placeholders for the heading and value
+              currentKey = match[1].trim(); 
+              currentHeading = null; 
+              currentValue = []; 
+
+              // if the line starts with heading set the following words as the current heading
+            } else if (line.startsWith("Heading:")) { // finds and sets the heading if applicable
               currentHeading = line.replace("Heading:", "").trim();
+
+              // if not a heading line, add the current line to the currentValue
             } else if (currentKey) {
-              currentValue.push(line);
+              currentValue.push(line); // sets the value to the paragraphical content
             }
           });
 
+
+          // after looping through each line, 
           if (currentKey) {
             sidebar[currentKey] = {
               heading: currentHeading || currentKey.replace(/-/g, " "),
               content: currentValue.join("\n").trim(),
             };
           }
-          console.log("Sidebar:", sidebar);
         }
         const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
