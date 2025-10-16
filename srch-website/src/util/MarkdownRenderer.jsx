@@ -210,34 +210,6 @@ export const getSubsections = async (sectionId) => {
 export const getContent = async (sectionId, subsectionId) => {
   try {
     let path;
-
-      for (const filePath in allMarkdownFiles) {
-        // Remove the leading ..
-        if (filePath.endsWith(path.slice(2))) {
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-          return {
-            content: cleanContent,
-            frontmatter,
-          };
-        }
-      }
-    }
-    // If both section and subsection are provided, get subsection content
-    if (sectionId && subsectionId) {
-      const path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
-
-      for (const filePath in allMarkdownFiles) {
-        if (filePath.endsWith(path.slice(2))) {
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-
-          return {
-            content: cleanContent,
-            frontmatter,
-          };
     if (sectionId && !subsectionId) {
       path = `../markdown/${sectionId}/${sectionId}.md`;
     } else if (sectionId && subsectionId) {
@@ -286,7 +258,6 @@ export const getContent = async (sectionId, subsectionId) => {
               content: currentValue.join("\n").trim(),
             };
           }
-          console.log("Sidebar:", sidebar);
         }
         const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
@@ -294,7 +265,6 @@ export const getContent = async (sectionId, subsectionId) => {
         return { content: parsedContent, sidebar, frontmatter };
       }
     }
-    return null;
   } catch (error) {
     console.error("Failed to load content:", sectionId, subsectionId, error);
     return null;
@@ -434,6 +404,11 @@ function MarkdownRenderer({
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
+
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+
         return (
           <Link
             color="blue.400"
@@ -442,7 +417,11 @@ function MarkdownRenderer({
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {props.children}
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
             )}
@@ -453,7 +432,20 @@ function MarkdownRenderer({
       // Lists
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
-      li: (props) => <ListItem {...props} />,
+      li: (props) => {
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+        return (
+          <ListItem {...props}>
+            {childrenArray.map((child, i) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </ListItem>
+        );
+      },
 
       // Code
       code: ({ inline, ...props }) =>
@@ -469,6 +461,8 @@ function MarkdownRenderer({
             {...props}
           />
         ),
+
+      // Tables
       table: (props) => (
         <Box overflowX="auto" my={4}>
           <Table variant="simple" {...props}>
@@ -479,12 +473,36 @@ function MarkdownRenderer({
       thead: (props) => <Thead {...props} />,
       tbody: (props) => <Tbody {...props} />,
       tr: (props) => <Tr {...props} />,
-      th: (props) => (
-        <Th border="1px solid" borderColor="gray.300" {...props} />
-      ),
-      td: (props) => (
-        <Td border="1px solid" borderColor="gray.300" {...props} />
-      ),
+
+      th: (props) => {
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+        return (
+          <Th border="1px solid" borderColor="gray.300" {...props}>
+            {childrenArray.map((child, i) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </Th>
+        );
+      },
+
+      td: (props) => {
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+        return (
+          <Td border="1px solid" borderColor="gray.300" {...props}>
+            {childrenArray.map((child, i) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </Td>
+        );
+      },
 
       // Images
       img: (props) => {

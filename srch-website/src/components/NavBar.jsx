@@ -220,8 +220,12 @@ const NavBar = () => {
                 <Box key={item.id} mb={2} p={2} borderRadius="md" bg="gray.50">
                   <Link
                     to={{
-                      pathname: `/${doc.section}/${doc.subsection || ""}`,
-                      hash: `#${doc.anchor}`,
+                      pathname: doc.isDrawer
+                        ? `/${doc.section}/${doc.subsection || ""}/${
+                            doc.anchor
+                          }`
+                        : `/${doc.section}/${doc.subsection || ""}`,
+                      hash: doc.isDrawer ? undefined : `#${doc.anchor}`,
                     }}
                     state={{ highlight: searchQuery }}
                   >

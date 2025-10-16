@@ -356,7 +356,8 @@ function MarkdownPage() {
   useEffect(() => {
     if (highlight && contentRef.current) {
       const regex = new RegExp(`(${highlight})`, "gi");
-      contentRef.current.innerHTML = contentRef.current.textContent.replace(
+      const originalHTML = contentRef.current.innerHTML;
+      contentRef.current.innerHTML = originalHTML.replace(
         regex,
         "<mark>$1</mark>"
       );
@@ -365,7 +366,7 @@ function MarkdownPage() {
         firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [highlight, mainContent]);
-  
+
   // retrieves sidebar content based on title
   useEffect(() => {
     if (!urlTerm || !sidebar || Object.keys(sidebar).length === 0) return;
@@ -383,16 +384,16 @@ function MarkdownPage() {
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       {/* Main content */}
       {mainContent && (
-          <MarkdownRenderer
-            content={mainContent}
-            sidebar={sidebar}
-            sectionId={sectionId}
-            subsectionId={subsectionId}
-            onDrawerOpen={handleDrawerOpen}
-            onNavigation={handleNavigation}
-            isFinal={contentFinal}
-            highlight={highlight}
-          />
+        <MarkdownRenderer
+          content={mainContent}
+          sidebar={sidebar}
+          sectionId={sectionId}
+          subsectionId={subsectionId}
+          onDrawerOpen={handleDrawerOpen}
+          onNavigation={handleNavigation}
+          isFinal={contentFinal}
+          highlight={highlight}
+        />
       )}
 
       {/* Drawer for additional content */}

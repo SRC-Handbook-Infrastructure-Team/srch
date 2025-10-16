@@ -32,6 +32,7 @@ const index = new FlexSearch.Document({
       "subsection",
       "content",
       "anchor",
+      "isDrawer",
     ], // store full content for snippet extraction
   },
   preset: "match",
@@ -55,17 +56,71 @@ function extractHeadingBlocks(
 
   const pushBlock = () => {
     if (currentTitle !== null) {
-      blocks.push({
-        id: `${sectionId}${
-          subsectionId ? "/" + subsectionId : ""
-        }#${currentAnchor}`,
-        section: sectionId,
-        subsection: subsectionId,
-        subsectionTitle: subsectionTitle,
-        anchor: currentAnchor,
-        title: currentTitle,
-        content: currentLines.join("\n").trim(),
-      });
+      if (currentTitle == "Sidebar") {
+        let currentAnchor = null;
+        let anchorLines = [];
+
+        currentLines.forEach((line) => {
+          const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+          if (match) {
+            // If there is a previous block being accumulated, push it now
+            if (currentAnchor !== null) {
+              blocks.push({
+                id: `${sectionId}${
+                  subsectionId ? "/" + subsectionId : ""
+                }#${currentAnchor}`,
+                section: sectionId,
+                subsection: subsectionId,
+                subsectionTitle: subsectionTitle,
+                anchor: currentAnchor,
+                title:
+                  anchorLines.length > 0
+                    ? anchorLines[0].replace(/^Heading:\s*/, "")
+                    : currentAnchor,
+                content: anchorLines.join("\n").trim(),
+                isDrawer: true,
+              });
+            }
+            // Start a new anchor group
+            currentAnchor = match[1].trim();
+            anchorLines = [];
+          } else {
+            anchorLines.push(line);
+          }
+        });
+
+        // Push the final anchor block if any
+        if (currentAnchor !== null) {
+          blocks.push({
+            id: `${sectionId}${
+              subsectionId ? "/" + subsectionId : ""
+            }#${currentAnchor}`,
+            section: sectionId,
+            subsection: subsectionId,
+            subsectionTitle: subsectionTitle,
+            anchor: currentAnchor,
+            title:
+              anchorLines.length > 0
+                ? anchorLines[0].replace(/^Heading:\s*/, "")
+                : currentAnchor,
+            content: anchorLines.join("\n").trim(),
+            isDrawer: true,
+          });
+        }
+      } else {
+        blocks.push({
+          id: `${sectionId}${
+            subsectionId ? "/" + subsectionId : ""
+          }#${currentAnchor}`,
+          section: sectionId,
+          subsection: subsectionId,
+          subsectionTitle: subsectionTitle,
+          anchor: currentAnchor,
+          title: currentTitle,
+          content: currentLines.join("\n").trim(),
+          isDrawer: false,
+        });
+      }
     } else if (currentLines.length) {
       blocks.push({
         id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#intro`,
@@ -75,6 +130,7 @@ function extractHeadingBlocks(
         anchor: "intro",
         title: "Introduction",
         content: currentLines.join("\n").trim(),
+        isDrawer: false,
       });
     }
   };
@@ -115,40 +171,6 @@ export async function initializeIndex() {
           subsection.title
         )
       );
-
-      // Drawer files for this subsection
-      const drawerPathPrefix = `../markdown/${section.id}/${subsection.id}/drawer/`;
-      const drawerFiles = Object.keys(allMarkdownFiles).filter(
-        (path) => path.startsWith(drawerPathPrefix) && path.endsWith(".md")
-      );
-
-      for (const drawerFilePath of drawerFiles) {
-        const drawerContentRaw = await allMarkdownFiles[drawerFilePath]();
-        const { content: drawerContentClean, frontmatter } =
-          parseFrontmatter(drawerContentRaw);
-        // Get the first line of the drawer content
-        const firstLine = drawerContentClean.split("\n")[0].trim();
-
-        // If the line starts with one or more #, make the title that text without the #
-        const headerMatch = firstLine.match(/^#+\s*(.*)/);
-
-        // Add drawer file content to index as a separate document
-        contentArray.push({
-          id: `${section.id}/${subsection.id}/drawer/${drawerFilePath
-            .split("/")
-            .pop()
-            .replace(".md", "")}`,
-          section: section.id,
-          subsection: subsection.id,
-          subsectionTitle: subsection.title,
-          drawerFile: drawerFilePath, // tracks original path
-          title:
-            frontmatter.title ||
-            (headerMatch ? headerMatch[1].trim() : "unnamed drawer content"),
-          content: drawerContentClean,
-          isDrawer: true, // mark as drawer content
-        });
-      }
     }
   }
 
@@ -166,12 +188,10 @@ function getPlaintextFromMarkdown(content) {
   // Remove images
   content = content.replace(/!\[[^\]]*\]\([^\)]*\)/g, "");
 
-  // Replace drawer links [drawer:text](target) with just 'text'
-  content = content.replace(/\[drawer:([^\]]+)\]\([^\)]+\)/g, "$1");
-
-  // Replace nav links [nav:text](target) with just 'text'
-  content = content.replace(/\[nav:([^\]]+)\]\([^\)]+\)/g, "$1");
-
+  // Replace drawer links {text} with just 'text'
+  content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
+    p1.replace(/-/g, " ")
+  );
   // Replace general links [text](url) with just 'text'
   content = content.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
 
