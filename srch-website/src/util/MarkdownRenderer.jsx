@@ -83,7 +83,10 @@ const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   import: "default",
 });
 
-const drawerFiles = import.meta.glob("/src/markdown/**/drawer/*.md", { as: "raw" });
+const drawerFiles = import.meta.glob("../markdown/**/drawer/*.md", {
+  query: "?raw",
+  import: "default",
+});
 
 /* ----------------------------- Data Loaders ----------------------------- */
 
