@@ -1,4 +1,3 @@
-// src/hooks/useResizableSidebar.js
 import { useEffect, useRef, useState, useCallback } from "react";
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
@@ -13,9 +12,8 @@ export default function useResizableSidebar({
   collapsedWidth = 0,
   side = "left", // 'left' | 'right'
   saveOnEnd = true,
-  cssVarName, // optional: e.g., "--left-sidebar-width" or "--right-sidebar-width"
+  cssVarName,
 } = {}) {
-  // --- Initialize width from localStorage or default ---
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
     try {
@@ -44,10 +42,11 @@ export default function useResizableSidebar({
     [minWidth, maxWidth]
   );
 
-  // --- Mouse/Touch resizing logic ---
+  // --- Mouse/touch resizing ---
   const startResize = useCallback(
     (e) => {
       e.preventDefault();
+      e.stopPropagation();
       setIsResizing(true);
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       ref.current.startX = clientX;
@@ -99,25 +98,36 @@ export default function useResizableSidebar({
     };
   }, [isResizing, setWidth, side, stopResize]);
 
-  // --- Keyboard a11y (supports both Arrow keys and WASD) ---
+  // --- Keyboard Resizing (Arrow keys + A/D) ---
   const handleKeyDown = useCallback(
     (e) => {
-      const step = 8;
+      const step = e.shiftKey ? 20 : 8;
+      let delta = 0;
 
-      // Move left (A or ArrowLeft)
-      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        delta = side === "left" ? -step : step;
+      } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        delta = side === "left" ? step : -step;
+      } else if (e.key === "Home") {
+        setWidth(minWidth);
         e.preventDefault();
-        const delta = side === "left" ? -step : step;
-        setWidth(width + delta);
+        return;
+      } else if (e.key === "End") {
+        setWidth(maxWidth);
+        e.preventDefault();
+        return;
       }
-      // Move right (D or ArrowRight)
-      else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+
+      if (delta !== 0) {
         e.preventDefault();
-        const delta = side === "left" ? step : -step;
-        setWidth(width + delta);
+        const newWidth = clamp(width + delta, minWidth, maxWidth);
+        setWidth(newWidth);
+        try {
+          window.localStorage.setItem(storageKey, String(newWidth));
+        } catch {}
       }
     },
-    [width, setWidth, side]
+    [width, minWidth, maxWidth, side, setWidth, storageKey]
   );
 
   // --- Collapse toggle ---
@@ -145,6 +155,7 @@ export default function useResizableSidebar({
     });
   }, [collapsedWidth, width, minWidth, maxWidth, defaultWidth, storageKey]);
 
+  // --- Save helper ---
   const save = useCallback(() => {
     if (!isBrowser()) return;
     try {
@@ -152,7 +163,7 @@ export default function useResizableSidebar({
     } catch {}
   }, [storageKey, width]);
 
-  // --- Optional: Sync CSS variable for layout ---
+  // --- Sync CSS variable ---
   useEffect(() => {
     if (!isBrowser() || !cssVarName) return;
     const value = `${collapsed ? collapsedWidth : width}px`;

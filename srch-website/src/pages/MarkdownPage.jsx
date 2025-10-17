@@ -26,7 +26,6 @@ function MarkdownPage() {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  // Load main content
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
@@ -87,11 +86,9 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
-  // Navigation
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
-
       const pathParts = path.split("/").filter(Boolean);
 
       const targetSectionId = pathParts[0];
@@ -138,7 +135,6 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  // Drawer open handler (now uses LayoutContext)
   function handleDrawerOpen(targetId) {
     if (sectionId && subsectionId) {
       getDrawerFile(sectionId, subsectionId, targetId).then((result) => {
@@ -164,7 +160,6 @@ function MarkdownPage() {
     }
   }
 
-  // Navigation from content
   function handleNavigation(targetId) {
     closeRightDrawer();
     if (targetId.includes("/")) {
@@ -178,7 +173,6 @@ function MarkdownPage() {
     }
   }
 
-  // Anchor scrolling
   useEffect(() => {
     if (!mainContent) return;
     const timer = setTimeout(() => {
@@ -222,7 +216,7 @@ function MarkdownPage() {
   }, [urlTerm, sidebar]);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="markdown-page">
       {mainContent && (
         <MarkdownRenderer
           content={mainContent}

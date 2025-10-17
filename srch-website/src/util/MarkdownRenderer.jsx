@@ -1,18 +1,14 @@
 /**
- * SRC Handbook Markdown System
- *
- * This file handles rendering markdown content with special features:
- * - Loading content from hierarchical section/subsection structure in /markdown/
- * - Loading drawer content from drawer folders in each subsection
- * - Rendering special [drawer:text](target) and [nav:text](target) links as buttons
- * - Supporting image references using ![Alt text](/src/assets/imagename.jpg)
- * - Parsing YAML frontmatter for title and order
- * - Generating sidebar navigation from markdown files and headers
- *
+ * Unified Markdown Renderer
+ * Combines:
+ *  - Original sidebar & enhanced markdown rendering (code, image, tables)
+ *  - Working drawer and nav-link accessibility system
+ *  - Clean section/subsection logic and frontmatter parsing
  */
 
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
+import { Link as RouterLink } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -25,7 +21,6 @@ import {
   ListItem,
   Box,
   Code,
-  Button,
   Image,
   Table,
   Th,
@@ -50,94 +45,76 @@ function highlightText(text, highlight) {
   );
 }
 
-// Helper function to create consistent ID from heading text
-export function createIdFromHeading(text) {
+/* ---------------------------- Utility Functions ---------------------------- */
+
+function createIdFromHeading(text) {
   if (!text) return "";
   return text
     .toString()
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // Remove special chars except spaces and hyphens
-    .replace(/\s+/g, "-") // Replace spaces with hyphens
-    .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 }
 
-// Helper to parse YAML frontmatter from markdown content
-export function parseFrontmatter(content) {
-  // Checks for --- CONTENT --- at the beginning of MD files, cross compatible w/ Windows chars
+function parseFrontmatter(content) {
   const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
   const match = content.match(frontmatterRegex);
 
-  if (!match) {
-    return {
-      content,
-      frontmatter: {},
-    };
-  }
+  if (!match) return { content, frontmatter: {} };
 
   const frontmatterBlock = match[1];
   const cleanContent = content.replace(frontmatterRegex, "");
   const frontmatter = {};
 
-  // Parse the YAML lines
   frontmatterBlock.split("\n").forEach((line) => {
     if (line.trim() === "") return;
-
     const [key, ...valueParts] = line.split(":");
     const value = valueParts.join(":").trim();
 
-    // Convert to appropriate type
     if (value === "true") frontmatter[key.trim()] = true;
     else if (value === "false") frontmatter[key.trim()] = false;
     else if (!isNaN(Number(value))) frontmatter[key.trim()] = Number(value);
     else frontmatter[key.trim()] = value;
   });
 
-  return {
-    content: cleanContent,
-    frontmatter,
-  };
+  return { content: cleanContent, frontmatter };
 }
 
-// Import all markdown files at build time
-export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
+/* -------------------------- Markdown File Imports -------------------------- */
+
+const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   query: "?raw",
   import: "default",
 });
 
-// Get all sections (top-level folders)
+const drawerFiles = import.meta.glob("../markdown/**/drawer/*.md", {
+  query: "?raw",
+  import: "default",
+});
+
+/* ----------------------------- Data Loaders ----------------------------- */
+
 export const getSections = async () => {
   try {
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSections = new Set();
-    // Find all top-level sections with their markdown files
+
     for (const path of paths) {
       const segments = path.split("/");
-
-      // Skip the primers directory
       if (segments[2] === "primers") continue;
 
-      // Only process files directly in a section folder (not in subfolders)
       if (segments.length === 4 && segments[3].endsWith(".md")) {
         const sectionId = segments[2];
         const fileName = segments[3];
-
-        // Only include the main section file (same name as folder)
-        if (
-          fileName === `${sectionId}.md` &&
-          !processedSections.has(sectionId)
-        ) {
+        if (fileName === `${sectionId}.md` && !processedSections.has(sectionId)) {
           processedSections.add(sectionId);
-
           const content = await allMarkdownFiles[path]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-
+          const { content: cleanContent, frontmatter } = parseFrontmatter(content);
           sections.push({
             id: sectionId,
-            title:
-              frontmatter.title ||
-              cleanContent.split("\n")[0].replace("# ", ""),
+            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -146,7 +123,6 @@ export const getSections = async () => {
       }
     }
 
-    // Sort by order
     return sections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error loading sections:", error);
@@ -154,18 +130,14 @@ export const getSections = async () => {
   }
 };
 
-// Get all subsections for a specific section
 export const getSubsections = async (sectionId) => {
   try {
     const subsections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSubsections = new Set();
 
-    // Find all subsection markdown files for this section
     for (const path of paths) {
       const segments = path.split("/");
-
-      // Look for files in subfolders of the specified section
       if (
         segments.length === 5 &&
         segments[2] === sectionId &&
@@ -173,23 +145,13 @@ export const getSubsections = async (sectionId) => {
       ) {
         const subsectionId = segments[3];
         const fileName = segments[4];
-
-        // Only include files with the same name as their parent folder
-        if (
-          fileName === `${subsectionId}.md` &&
-          !processedSubsections.has(subsectionId)
-        ) {
+        if (fileName === `${subsectionId}.md` && !processedSubsections.has(subsectionId)) {
           processedSubsections.add(subsectionId);
-
           const content = await allMarkdownFiles[path]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-
+          const { content: cleanContent, frontmatter } = parseFrontmatter(content);
           subsections.push({
             id: subsectionId,
-            title:
-              frontmatter.title ||
-              cleanContent.split("\n")[0].replace("# ", ""),
+            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -198,17 +160,16 @@ export const getSubsections = async (sectionId) => {
       }
     }
 
-    // Sort by order
     return subsections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error(`Error loading subsections for ${sectionId}:`, error);
     return [];
   }
 };
-// Get specific content by section and subsection
 
 export const getContent = async (sectionId, subsectionId) => {
   try {
+    let path;
     let path;
     if (sectionId && !subsectionId) {
       path = `../markdown/${sectionId}/${sectionId}.md`;
@@ -217,12 +178,14 @@ export const getContent = async (sectionId, subsectionId) => {
     } else {
       return null;
     }
+
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
-        const file = await allMarkdownFiles[filePath]();
-        const { content, frontmatter } = parseFrontmatter(file);
+        const content = await allMarkdownFiles[filePath]();
+        const { content: cleanContent, frontmatter } = parseFrontmatter(content);
 
-        const [mainRaw, sidebarRaw] = content.split("## Sidebar");
+        // Optional Sidebar Parsing (from "## Sidebar" section)
+        const [mainRaw, sidebarRaw] = cleanContent.split("## Sidebar");
         const mainContent = mainRaw?.trim() || "";
 
         const sidebar = {};
@@ -234,7 +197,6 @@ export const getContent = async (sectionId, subsectionId) => {
 
           lines.forEach((line) => {
             const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
-
             if (match) {
               if (currentKey) {
                 sidebar[currentKey] = {
@@ -259,28 +221,40 @@ export const getContent = async (sectionId, subsectionId) => {
             };
           }
         }
-        const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
-          return `<sidebar-ref term="${term}"></sidebar-ref>`;
-        });
-        return { content: parsedContent, sidebar, frontmatter };
+
+        return { content: mainContent, sidebar, frontmatter };
       }
     }
+
+    return null;
   } catch (error) {
     console.error("Failed to load content:", sectionId, subsectionId, error);
     return null;
   }
 };
 
-// Parse subsections (h2 headings) from markdown content
+export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
+  try {
+    const drawerPath = `../markdown/${sectionId}/${subsectionId}/drawer/${fileId}.md`;
+    const loader = drawerFiles[drawerPath];
+    if (!loader) {
+      console.error("Drawer file not found:", drawerPath);
+      return null;
+    }
+    const content = await loader();
+    const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+    return { content: cleanContent, frontmatter };
+  } catch (error) {
+    console.error("Failed to load content:", sectionId, subsectionId, error);
+    return null;
+  }
+};
+
 export const parseSubsections = (content) => {
   if (!content) return [];
-
-  // Handle case where content might be an object with content property
   const contentStr = typeof content === "string" ? content : content.content;
-
   if (!contentStr) return [];
 
-  // Get rid of Windows return character (\r)
   const normalizedContent = contentStr.replace(/\r/g, "");
   const lines = normalizedContent.split("\n");
   const subsections = [];
@@ -298,7 +272,8 @@ export const parseSubsections = (content) => {
   return subsections;
 };
 
-// Process markdown content and render it
+/* ---------------------------- Markdown Renderer ---------------------------- */
+
 function MarkdownRenderer({
   content,
   sidebar,
@@ -307,26 +282,27 @@ function MarkdownRenderer({
   onDrawerOpen,
   onNavigation,
   isFinal,
-  highlight,
 }) {
-  // Process special links in the content
   const processedContent = useMemo(() => {
     if (!content) return "";
 
-    let processed =
-      typeof content === "string" ? content : content.content || "";
+    let processed = typeof content === "string" ? content : content.content || "";
 
-    // Replace navigation links with custom elements
-    if (typeof processed === "string") {
-      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
+    // Replace special syntaxes
+    processed = processed
+      .replace(/\[drawer:([^\]]+)\]\(([^)]+)\)/g, (_, text, target) => {
+        return `<drawer-link text="${text}" target="${target}"></drawer-link>`;
+      })
+      .replace(/\[nav:([^\]]+)\]\(([^)]+)\)/g, (_, text, target) => {
+        return `<nav-link text="${text}" target="${target}"></nav-link>`;
+      })
+      .replace(/\{([^}]+)\}/g, (_, term) => {
         return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
-    }
 
     return processed;
   }, [content]);
 
-  // Beta Tag Component
   const BetaTag = () => (
     <Box
       display="inline-flex"
@@ -346,22 +322,16 @@ function MarkdownRenderer({
     </Box>
   );
 
-  // Define component rendering for Markdown elements
   const components = useMemo(
     () => ({
-      // Headings
       h1: (props) => (
         <Heading as="h1" size="xl" mt={5} mb={3} {...props}>
           {props.children}
           {isFinal === false && <BetaTag />}
         </Heading>
       ),
-      h2: ({ children, ...props }) => {
-        // Create an ID from the heading for anchor links - use the same ID generation
-        // as in parseSubsections to ensure they match exactly
-        const id = createIdFromHeading(children);
-        const childrenArray = Array.isArray(children) ? children : [children];
-
+      h2: (props) => {
+        const id = createIdFromHeading(props.children);
         return (
           <Heading
             as="h2"
@@ -370,7 +340,7 @@ function MarkdownRenderer({
             mt={4}
             mb={2}
             lineHeight="1.3"
-            scrollMarginTop="20px" // Adds margin at top when scrolled to
+            scrollMarginTop="20px"
             {...props}
           >
             {childrenArray.map((child) =>
@@ -381,26 +351,7 @@ function MarkdownRenderer({
           </Heading>
         );
       },
-      h3: (props) => (
-        <Heading as="h3" size="sm" mt={3} mb={2} lineHeight="1.3" {...props} />
-      ),
-      h4: (props) => (
-        <Heading as="h4" size="sm" mt={2} mb={1} lineHeight="1.3" {...props} />
-      ),
-
-      // Text elements
-      p: ({ children, ...props }) => {
-        const childrenArray = Array.isArray(children) ? children : [children];
-        return (
-          <Text mb={3} lineHeight="1.6" {...props}>
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </Text>
-        );
-      },
+      p: (props) => <Text mb={3} lineHeight="1.6" {...props} />,
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
@@ -417,49 +368,19 @@ function MarkdownRenderer({
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-            {isExternal && (
-              <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
-            )}
+            {props.children}
+            {isExternal && <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />}
           </Link>
         );
       },
-
-      // Lists
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
-      li: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
-        return (
-          <ListItem {...props}>
-            {childrenArray.map((child, i) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </ListItem>
-        );
-      },
-
-      // Code
+      li: (props) => <ListItem {...props} />,
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
         ) : (
-          <Box
-            as="pre"
-            p={2}
-            bg="gray.100"
-            borderRadius="md"
-            overflowX="auto"
-            {...props}
-          />
+          <Box as="pre" p={2} bg="gray.100" borderRadius="md" overflowX="auto" {...props} />
         ),
 
       // Tables
@@ -473,59 +394,24 @@ function MarkdownRenderer({
       thead: (props) => <Thead {...props} />,
       tbody: (props) => <Tbody {...props} />,
       tr: (props) => <Tr {...props} />,
-
-      th: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
-        return (
-          <Th border="1px solid" borderColor="gray.300" {...props}>
-            {childrenArray.map((child, i) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </Th>
-        );
-      },
-
-      td: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
-        return (
-          <Td border="1px solid" borderColor="gray.300" {...props}>
-            {childrenArray.map((child, i) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </Td>
-        );
-      },
-
-      // Images
-      img: (props) => {
-        return (
-          <Image
-            src={props.src}
-            alt={props.alt || ""}
-            maxW="80%"
-            maxH="500px"
-            objectFit="contain"
-            borderRadius="md"
-            mx="auto"
-            my={6}
-            display="block"
-          />
-        );
-      },
-
-      // Custom components for interactive elements
+      th: (props) => <Th border="1px solid" borderColor="gray.300" {...props} />,
+      td: (props) => <Td border="1px solid" borderColor="gray.300" {...props} />,
+      img: (props) => (
+        <Image
+          src={props.src}
+          alt={props.alt || ""}
+          maxW="80%"
+          maxH="500px"
+          objectFit="contain"
+          borderRadius="md"
+          mx="auto"
+          my={6}
+          display="block"
+        />
+      ),
       "sidebar-ref": ({ node }) => {
         const term = node.properties?.["term"];
         const value = sidebar?.[term];
-
         return (
           <Link
             as={RouterLink}
@@ -539,12 +425,42 @@ function MarkdownRenderer({
             style={{ whiteSpace: "nowrap" }}
           >
             {value
-              ? term
-                  .replace(/-/g, " ")
-                  .replace(/Case Study(?!:)/g, "Case Study:") // add colon if missing
+              ? value.heading || term.replace(/-/g, " ")
               : `Missing: ${term}`}
             <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
           </Link>
+        );
+      },
+      "drawer-link": ({ node }) => {
+        const text = node.properties?.text;
+        const target = node.properties?.target;
+        return (
+          <HStack
+            as="button"
+            type="button"
+            spacing={1}
+            display="inline-flex"
+            alignItems="center"
+            onClick={() => onDrawerOpen && onDrawerOpen(target)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onDrawerOpen && onDrawerOpen(target);
+              }
+            }}
+            color="blue.400"
+            bg="none"
+            border="none"
+            cursor="pointer"
+            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            _focus={{ outline: "2px solid #3182ce", outlineOffset: "2px" }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Open additional information: ${text}`}
+          >
+            <Link>{text}</Link>
+            <Icon as={InfoIcon} boxSize="0.8em" />
+          </HStack>
         );
       },
 
@@ -553,20 +469,30 @@ function MarkdownRenderer({
         const target = node.properties?.target;
         return (
           <HStack
-            as="span"
+            as="button"
+            type="button"
             spacing={1}
             display="inline-flex"
             alignItems="center"
-            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onNavigation && onNavigation(target)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onNavigation && onNavigation(target);
+              }
+            }}
             color="blue.400"
+            bg="none"
+            border="none"
+            cursor="pointer"
+            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            _focus={{ outline: "2px solid #3182ce", outlineOffset: "2px" }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Navigate to ${text}`}
           >
-            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
-            <Icon
-              as={BsFileEarmarkText}
-              boxSize="0.8em"
-              style={{ fill: "currentColor" }}
-            />
+            <Link>{text}</Link>
+            <Icon as={BsFileEarmarkText} boxSize="0.8em" />
           </HStack>
         );
       },
@@ -574,8 +500,6 @@ function MarkdownRenderer({
     [onDrawerOpen, onNavigation, isFinal]
   );
 
-  // Return ReactMarkdown component as specified.
-  // rehypeRaw helps handle HTML parsing
   return (
     <div>
       <ReactMarkdown
