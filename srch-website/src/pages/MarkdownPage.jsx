@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import MarkdownRenderer, {
   getSections,
+  getDrawerFile,
   getContent,
   getSubsections,
 } from "../util/MarkdownRenderer";
@@ -18,8 +19,6 @@ function MarkdownPage() {
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
-  const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
   const [contentFinal, setContentFinal] = useState(undefined);
 
   useEffect(() => {
@@ -41,7 +40,6 @@ function MarkdownPage() {
         const result = await getContent(sectionId);
         if (result) {
           setMainContent(result.content);
-          setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
 
           const subsections = await getSubsections(sectionId);
@@ -67,7 +65,6 @@ function MarkdownPage() {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
           setMainContent(result.content);
-          setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
         } else {
           toast({
@@ -90,10 +87,8 @@ function MarkdownPage() {
     async (path) => {
       if (isLoading) return;
       const pathParts = path.split("/").filter(Boolean);
-
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
-      const targetTerm = pathParts[2] || null;
 
       try {
         let contentExists = false;
@@ -135,6 +130,7 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
+  // ✅ Updated to ensure drawer file paths resolve correctly
   function handleDrawerOpen(targetId) {
     if (sectionId && subsectionId) {
       getDrawerFile(sectionId, subsectionId, targetId).then((result) => {
@@ -149,7 +145,7 @@ function MarkdownPage() {
         } else {
           toast({
             title: "Drawer Content Not Found",
-            description: `The drawer content "${targetId}" could not be found.`,
+            description: `The drawer content "${targetId}" could not be found in /src/markdown/${sectionId}/${subsectionId}/drawer/.`,
             status: "error",
             duration: 5000,
             isClosable: true,
@@ -187,42 +183,11 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
-  // highlight search results
-  useEffect(() => {
-    if (highlight && contentRef.current) {
-      const regex = new RegExp(`(${highlight})`, "gi");
-      const originalHTML = contentRef.current.innerHTML;
-      contentRef.current.innerHTML = originalHTML.replace(
-        regex,
-        "<mark>$1</mark>"
-      );
-      const firstMark = contentRef.current.querySelector("mark");
-      if (firstMark)
-        firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [highlight, mainContent]);
-
-  // retrieves sidebar content based on title
-  useEffect(() => {
-    if (!urlTerm || !sidebar || Object.keys(sidebar).length === 0) return;
-    const entry = sidebar[urlTerm];
-    if (entry) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(typeof entry === "string" ? entry : entry.content || "");
-      setIsDrawerOpen(true);
-    } else {
-      console.warn(`No sidebar entry found for ${urlTerm}`);
-    }
-  }, [urlTerm, sidebar]);
-
   return (
     <div className="markdown-page">
       {mainContent && (
         <MarkdownRenderer
           content={mainContent}
-          sidebar={sidebar}
-          sectionId={sectionId}
-          subsectionId={subsectionId}
           onDrawerOpen={handleDrawerOpen}
           onNavigation={handleNavigation}
           isFinal={contentFinal}

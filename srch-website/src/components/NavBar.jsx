@@ -18,7 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { parseSubsections, getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
+import { getSections, getSubsections, getContent } 
+  from "../util/MarkdownRenderer";
 import { useLayout } from "../layouts/LayoutContext";
 
 const BetaTag = () => (

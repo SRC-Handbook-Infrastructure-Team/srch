@@ -1,0 +1,8 @@
+## Case Study: SafeRent Solutions AI Scoring System
+In Massachusetts, an AI-driven tenant screening system by SafeRent Solutions demonstrates how algorithmic practices may undermine justice as priority. Traditionally, AI scoring systems have maintained heavy reliance on credit history and non-rental debt without accounting for the mitigating benefit of housing vouchers. In this case, SafeRent’s algorithm generated a “SafeRent Score” that incurred frequent penalizations on low-income applicants using housing vouchers, many of whom were Black and Hispanic. 
+
+The metric resulted in unfair rental application rejections despite exemplary records showing on-time rent payments. Rather than prioritizing the needs of applicants facing acute economic hardship, the system’s design treated voucher users as inherent risks due to lower traditional credit scores. As a result, landlords relying on the SafeRent Score denied housing opportunities to the very individuals who needed extra support. The subsequent lawsuit, filed in 2022 and settled for approximately $2.3 million in November 2024, forced SafeRent to suspend the SafeRent Score for voucher users for five years and mandated that property managers perform holistic assessments of these applicants. 
+
+This case shows that a scoring system misaligned with the principle of justice as priority can exacerbate existing inequities by failing to recognize that those who rely on vouchers are in urgent need of stable housing.
+
+[Further Reading](https://www.theverge.com/2024/11/20/24297692/ai-landlord-tool-saferent-low-income-tenants-discrimination-settlement)

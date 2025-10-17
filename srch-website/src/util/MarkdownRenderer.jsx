@@ -1,14 +1,12 @@
 /**
  * Unified Markdown Renderer
- * Combines:
- *  - Original sidebar & enhanced markdown rendering (code, image, tables)
- *  - Working drawer and nav-link accessibility system
- *  - Clean section/subsection logic and frontmatter parsing
+ * - Enhanced markdown (code, image, tables)
+ * - Drawer + nav-link system
+ * - Frontmatter + optional "## Sidebar" parsing
  */
 
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link as RouterLink } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -34,18 +32,15 @@ import {
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
-function highlightText(text, highlight) {
-  if (!highlight) return text;
-
-  const regex = new RegExp(`(${highlight})`, "gi");
-  const parts = text.split(regex);
-
-  return parts.map((part, index) =>
-    regex.test(part) ? <mark key={index}>{part}</mark> : part
-  );
-}
-
 /* ---------------------------- Utility Functions ---------------------------- */
+
+function getNodeText(node) {
+  if (node == null) return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(getNodeText).join("");
+  if (typeof node === "object" && node.props) return getNodeText(node.props.children);
+  return "";
+}
 
 function createIdFromHeading(text) {
   if (!text) return "";
@@ -88,10 +83,7 @@ const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   import: "default",
 });
 
-const drawerFiles = import.meta.glob("../markdown/**/drawer/*.md", {
-  query: "?raw",
-  import: "default",
-});
+const drawerFiles = import.meta.glob("/src/markdown/**/drawer/*.md", { as: "raw" });
 
 /* ----------------------------- Data Loaders ----------------------------- */
 
@@ -141,6 +133,7 @@ export const getSubsections = async (sectionId) => {
       if (
         segments.length === 5 &&
         segments[2] === sectionId &&
+        segments[3] !== "drawer" &&
         segments[4].endsWith(".md")
       ) {
         const subsectionId = segments[3];
@@ -170,7 +163,6 @@ export const getSubsections = async (sectionId) => {
 export const getContent = async (sectionId, subsectionId) => {
   try {
     let path;
-    let path;
     if (sectionId && !subsectionId) {
       path = `../markdown/${sectionId}/${sectionId}.md`;
     } else if (sectionId && subsectionId) {
@@ -184,7 +176,7 @@ export const getContent = async (sectionId, subsectionId) => {
         const content = await allMarkdownFiles[filePath]();
         const { content: cleanContent, frontmatter } = parseFrontmatter(content);
 
-        // Optional Sidebar Parsing (from "## Sidebar" section)
+        // Optional Sidebar Parsing
         const [mainRaw, sidebarRaw] = cleanContent.split("## Sidebar");
         const mainContent = mainRaw?.trim() || "";
 
@@ -245,31 +237,9 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
     const { content: cleanContent, frontmatter } = parseFrontmatter(content);
     return { content: cleanContent, frontmatter };
   } catch (error) {
-    console.error("Failed to load content:", sectionId, subsectionId, error);
+    console.error("Failed to load drawer file:", sectionId, subsectionId, error);
     return null;
   }
-};
-
-export const parseSubsections = (content) => {
-  if (!content) return [];
-  const contentStr = typeof content === "string" ? content : content.content;
-  if (!contentStr) return [];
-
-  const normalizedContent = contentStr.replace(/\r/g, "");
-  const lines = normalizedContent.split("\n");
-  const subsections = [];
-
-  for (const line of lines) {
-    if (line.startsWith("## ")) {
-      const title = line.replace("## ", "");
-      subsections.push({
-        title,
-        id: createIdFromHeading(title),
-      });
-    }
-  }
-
-  return subsections;
 };
 
 /* ---------------------------- Markdown Renderer ---------------------------- */
@@ -288,7 +258,7 @@ function MarkdownRenderer({
 
     let processed = typeof content === "string" ? content : content.content || "";
 
-    // Replace special syntaxes
+    // Replace custom syntaxes
     processed = processed
       .replace(/\[drawer:([^\]]+)\]\(([^)]+)\)/g, (_, text, target) => {
         return `<drawer-link text="${text}" target="${target}"></drawer-link>`;
@@ -330,8 +300,10 @@ function MarkdownRenderer({
           {isFinal === false && <BetaTag />}
         </Heading>
       ),
+
       h2: (props) => {
-        const id = createIdFromHeading(props.children);
+        const plain = getNodeText(props.children);
+        const id = createIdFromHeading(plain);
         return (
           <Heading
             as="h2"
@@ -343,23 +315,15 @@ function MarkdownRenderer({
             scrollMarginTop="20px"
             {...props}
           >
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
+            {props.children}
           </Heading>
         );
       },
+
       p: (props) => <Text mb={3} lineHeight="1.6" {...props} />,
       a: (props) => {
         const isExternal =
-          props.href.startsWith("http://") || props.href.startsWith("https://");
-
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
-
+          props.href?.startsWith("http://") || props.href?.startsWith("https://");
         return (
           <Link
             color="blue.400"
@@ -382,8 +346,6 @@ function MarkdownRenderer({
         ) : (
           <Box as="pre" p={2} bg="gray.100" borderRadius="md" overflowX="auto" {...props} />
         ),
-
-      // Tables
       table: (props) => (
         <Box overflowX="auto" my={4}>
           <Table variant="simple" {...props}>
@@ -424,9 +386,7 @@ function MarkdownRenderer({
             _hover={{ color: "purple.500", textDecoration: "underline" }}
             style={{ whiteSpace: "nowrap" }}
           >
-            {value
-              ? value.heading || term.replace(/-/g, " ")
-              : `Missing: ${term}`}
+            {value ? value.heading || term.replace(/-/g, " ") : `Missing: ${term}`}
             <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
           </Link>
         );
@@ -442,28 +402,15 @@ function MarkdownRenderer({
             display="inline-flex"
             alignItems="center"
             onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onDrawerOpen && onDrawerOpen(target);
-              }
-            }}
             color="blue.400"
-            bg="none"
-            border="none"
             cursor="pointer"
             _hover={{ color: "purple.500", textDecoration: "underline" }}
-            _focus={{ outline: "2px solid #3182ce", outlineOffset: "2px" }}
-            tabIndex={0}
-            role="button"
-            aria-label={`Open additional information: ${text}`}
           >
             <Link>{text}</Link>
             <Icon as={InfoIcon} boxSize="0.8em" />
           </HStack>
         );
       },
-
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
@@ -475,21 +422,9 @@ function MarkdownRenderer({
             display="inline-flex"
             alignItems="center"
             onClick={() => onNavigation && onNavigation(target)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onNavigation && onNavigation(target);
-              }
-            }}
             color="blue.400"
-            bg="none"
-            border="none"
             cursor="pointer"
             _hover={{ color: "purple.500", textDecoration: "underline" }}
-            _focus={{ outline: "2px solid #3182ce", outlineOffset: "2px" }}
-            tabIndex={0}
-            role="button"
-            aria-label={`Navigate to ${text}`}
           >
             <Link>{text}</Link>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />
@@ -497,16 +432,12 @@ function MarkdownRenderer({
         );
       },
     }),
-    [onDrawerOpen, onNavigation, isFinal]
+    [onDrawerOpen, onNavigation, isFinal, sectionId, subsectionId, sidebar]
   );
 
   return (
     <div>
-      <ReactMarkdown
-        components={components}
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
-      >
+      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
         {processedContent}
       </ReactMarkdown>
     </div>

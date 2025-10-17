@@ -37,42 +37,49 @@ export default function SidebarLayout({ children }) {
   };
 
   const MIN_MAIN_WIDTH = 700;
-  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1440;
-  const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1440
+  );
 
-  if (leftSidebar.width + rightSidebar.width > availableForSidebars) {
-    if (leftSidebar.width > rightSidebar.width) {
-      leftSidebar.setWidth(
-        Math.max(
-          availableForSidebars - rightSidebar.width,
-          leftSidebar.minWidth || 180
-        )
-      );
-    } else {
-      rightSidebar.setWidth(
-        Math.max(
-          availableForSidebars - leftSidebar.width,
-          rightSidebar.minWidth || 300
-        )
-      );
-    }
-  }
-
+  // 🧠 Fix: Move width adjustment into an effect to avoid render loops
   useEffect(() => {
-    const handleResize = () => {
-      const newAvailable = window.innerWidth - MIN_MAIN_WIDTH;
-      if (leftSidebar.width + rightSidebar.width > newAvailable) {
-        if (leftSidebar.width > rightSidebar.width) {
-          leftSidebar.setWidth(newAvailable - rightSidebar.width);
-        } else {
-          rightSidebar.setWidth(newAvailable - leftSidebar.width);
-        }
+    const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
+
+    if (leftSidebar.width + rightSidebar.width > availableForSidebars) {
+      if (leftSidebar.width > rightSidebar.width) {
+        leftSidebar.setWidth(
+          Math.max(
+            availableForSidebars - rightSidebar.width,
+            leftSidebar.minWidth || 180
+          )
+        );
+      } else {
+        rightSidebar.setWidth(
+          Math.max(
+            availableForSidebars - leftSidebar.width,
+            rightSidebar.minWidth || 300
+          )
+        );
       }
-    };
+    }
+  }, [
+    viewportWidth,
+    leftSidebar.width,
+    rightSidebar.width,
+    leftSidebar.minWidth,
+    rightSidebar.minWidth,
+    leftSidebar.setWidth,
+    rightSidebar.setWidth,
+  ]);
+
+  // 🪟 Update on window resize
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [leftSidebar, rightSidebar]);
+  }, []);
 
+  // Sync CSS custom properties
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--left-sidebar-width",
@@ -109,14 +116,10 @@ export default function SidebarLayout({ children }) {
             }
           }}
           aria-pressed={leftSidebar.collapsed}
-          aria-label={
-            leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"
-          }
+          aria-label={leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
           title="Toggle sidebar"
           style={{
-            left: leftSidebar.collapsed
-              ? "8px"
-              : `${leftSidebar.width - 16}px`,
+            left: leftSidebar.collapsed ? "8px" : `${leftSidebar.width - 16}px`,
           }}
         >
           {leftSidebar.collapsed ? "▶" : "◀"}
@@ -148,9 +151,7 @@ export default function SidebarLayout({ children }) {
             </div>
             <div className="drawer-content">{rightContent}</div>
             <div
-              className={`resize-handle ${
-                rightSidebar.isResizing ? "resizing" : ""
-              }`}
+              className={`resize-handle ${rightSidebar.isResizing ? "resizing" : ""}`}
               onMouseDown={rightSidebar.startResize}
               onTouchStart={rightSidebar.startResize}
               onKeyDown={rightSidebar.handleKeyDown}
