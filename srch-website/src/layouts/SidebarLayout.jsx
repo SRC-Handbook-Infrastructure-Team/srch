@@ -4,6 +4,7 @@ import { LayoutContext } from "./LayoutContext";
 import NavBar from "../components/NavBar";
 
 export default function SidebarLayout({ children }) {
+  // Left sidebar setup and persistence
   const leftSidebar = useResizableSidebar({
     storageKey: "leftSidebarWidth",
     defaultWidth: 250,
@@ -14,23 +15,27 @@ export default function SidebarLayout({ children }) {
     cssVarName: "--left-sidebar-width",
   });
 
+  // Right sidebar setup and persistence
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
     defaultWidth: 400,
-    minWidth: 300,
+    minWidth: 375,
     maxWidth: 700,
     side: "right",
     cssVarName: "--right-sidebar-width",
   });
 
+  // State for right drawer content and visibility
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
+  /** Opens the right drawer and sets its content */
   const openRightDrawer = (content) => {
     setIsRightOpen(true);
     setRightContent(content);
   };
 
+  /** Closes the right drawer and clears its content */
   const closeRightDrawer = () => {
     setIsRightOpen(false);
     setRightContent(null);
@@ -41,7 +46,7 @@ export default function SidebarLayout({ children }) {
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
 
-  // 🧠 Fix: Move width adjustment into an effect to avoid render loops
+  /** Ensures sidebars fit available viewport space dynamically */
   useEffect(() => {
     const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
 
@@ -72,14 +77,14 @@ export default function SidebarLayout({ children }) {
     rightSidebar.setWidth,
   ]);
 
-  // 🪟 Update on window resize
+  /** Updates viewport width on window resize */
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Sync CSS custom properties
+  /** Syncs CSS custom properties for sidebar widths */
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--left-sidebar-width",
@@ -105,7 +110,7 @@ export default function SidebarLayout({ children }) {
       <div className="sidebar-layout">
         <NavBar />
 
-        {/* Sidebar Toggle Button */}
+        {/* Collapsible left sidebar toggle */}
         <button
           className="toggle-btn"
           onClick={leftSidebar.toggleCollapsed}
@@ -129,6 +134,7 @@ export default function SidebarLayout({ children }) {
           {children}
         </main>
 
+        {/* Right Drawer */}
         {isRightOpen && (
           <aside className="right-sidebar" aria-label="Right sidebar drawer">
             <div className="drawer-header">
@@ -149,7 +155,11 @@ export default function SidebarLayout({ children }) {
                 ✕
               </button>
             </div>
-            <div className="drawer-content">{rightContent}</div>
+
+            {/* Scrollable content area */}
+            <div className="drawer-content scrollable-drawer">{rightContent}</div>
+
+            {/* Right resize handle */}
             <div
               className={`resize-handle ${rightSidebar.isResizing ? "resizing" : ""}`}
               onMouseDown={rightSidebar.startResize}

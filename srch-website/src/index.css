@@ -168,3 +168,26 @@ button:focus-visible {
 .markdown-page {
   padding: var(--space-lg);
 }
+/* Make right drawer always scrollable */
+.scrollable-drawer {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px); /* 48px = approx. header height */
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.scrollable-drawer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-drawer::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.scrollable-drawer::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
+import { useToast, Box } from "@chakra-ui/react";
 import MarkdownRenderer, {
   getSections,
   getDrawerFile,
@@ -21,10 +21,12 @@ function MarkdownPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
 
+  /** Track previous route so we can safely navigate back on missing content. */
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
+  /** Fetches and loads main markdown content based on current route params. */
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
@@ -36,12 +38,14 @@ function MarkdownPage() {
         return;
       }
 
+      // Load top-level section
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
         if (result) {
           setMainContent(result.content);
           setContentFinal(result.frontmatter?.final);
 
+          // Redirect to first subsection if section content is minimal
           const subsections = await getSubsections(sectionId);
           if (!result.content.trim() || result.content.trim().length < 50) {
             if (subsections.length > 0) navigate(`/${sectionId}/${subsections[0].id}`);
@@ -61,6 +65,7 @@ function MarkdownPage() {
         return;
       }
 
+      // Load subsection content
       if (sectionId && subsectionId) {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
@@ -83,6 +88,10 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
+  /**
+   * Checks whether a given section/subsection path exists before navigating.
+   * Prevents broken links and provides user feedback if content is missing.
+   */
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
@@ -130,17 +139,34 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  // ✅ Updated to ensure drawer file paths resolve correctly
+  /**
+   * Opens the right-hand drawer and displays its markdown content.
+   * Includes its own scrollable container to handle long content.
+   */
   function handleDrawerOpen(targetId) {
     if (sectionId && subsectionId) {
       getDrawerFile(sectionId, subsectionId, targetId).then((result) => {
         if (result) {
           openRightDrawer(
-            <MarkdownRenderer
-              content={result.content}
-              onDrawerOpen={handleDrawerOpen}
-              onNavigation={handleNavigation}
-            />
+            <Box
+              height="100%"
+              maxH="100vh"
+              overflowY="auto"
+              p={4}
+              flex="1"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                scrollbarWidth: "thin",
+                scrollbarColor: "rgba(0,0,0,0.3) transparent",
+              }}
+            >
+              <MarkdownRenderer
+                content={result.content}
+                onDrawerOpen={handleDrawerOpen}
+                onNavigation={handleNavigation}
+              />
+            </Box>
           );
         } else {
           toast({
@@ -156,6 +182,9 @@ function MarkdownPage() {
     }
   }
 
+  /**
+   * Handles internal navigation links (nav-link) and closes drawer when moving between sections.
+   */
   function handleNavigation(targetId) {
     closeRightDrawer();
     if (targetId.includes("/")) {
@@ -169,6 +198,7 @@ function MarkdownPage() {
     }
   }
 
+  /** Automatically scrolls to hash anchors or top when new content loads. */
   useEffect(() => {
     if (!mainContent) return;
     const timer = setTimeout(() => {
@@ -183,6 +213,7 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
+  /** Main page render: displays the markdown for the current section/subsection. */
   return (
     <div className="markdown-page">
       {mainContent && (
