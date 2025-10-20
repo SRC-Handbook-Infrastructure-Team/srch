@@ -190,4 +190,15 @@ button:focus-visible {
 .scrollable-drawer::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.5);
 }
+/* Prevent choppy text during sidebar open animation */
+.right-sidebar {
+  overflow: hidden;
+}
 
+/* Prevent text from resizing or reflowing during sidebar open */
+.right-sidebar.opening .drawer-content {
+  pointer-events: none;        /* avoid mid-animation clicks */
+  transform: translateZ(0);    /* isolate rendering to its own layer */
+  will-change: transform;      /* hint browser to keep layout stable */
+  flex: 1 0 auto;              /* prevent flexbox from resizing text area */
+}

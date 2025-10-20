@@ -4,6 +4,10 @@ const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const isBrowser = () =>
   typeof window !== "undefined" && typeof document !== "undefined";
 
+/** 
+ * Custom hook for creating a resizable sidebar with persistence, accessibility,
+ * and performance optimizations using requestAnimationFrame + throttled updates.
+ */
 export default function useResizableSidebar({
   storageKey = "sidebarWidth",
   defaultWidth = 250,
@@ -36,13 +40,17 @@ export default function useResizableSidebar({
   });
 
   const ref = useRef({ startX: 0, startWidth: defaultWidth, previousWidth: null });
+  const rafRef = useRef(null);
+  const lastCommitTime = useRef(0);
+  const pendingWidth = useRef(width);
 
+  /** Safely clamps and updates width state */
   const setWidth = useCallback(
     (w) => setWidthState(() => clamp(Math.round(w), minWidth, maxWidth)),
     [minWidth, maxWidth]
   );
 
-  // --- Mouse/touch resizing ---
+  /** Handles start of drag resize */
   const startResize = useCallback(
     (e) => {
       e.preventDefault();
@@ -56,30 +64,64 @@ export default function useResizableSidebar({
     [width]
   );
 
+  /** Stops resizing and commits final width */
   const stopResize = useCallback(() => {
     if (!isResizing) return;
     setIsResizing(false);
     if (isBrowser()) document.body.style.cursor = "";
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+
+    // Final React + localStorage sync
+    setWidth(pendingWidth.current);
     if (saveOnEnd && isBrowser()) {
       try {
-        window.localStorage.setItem(storageKey, String(width));
+        window.localStorage.setItem(storageKey, String(pendingWidth.current));
       } catch {}
     }
-  }, [isResizing, width, saveOnEnd, storageKey]);
+  }, [isResizing, saveOnEnd, setWidth, storageKey]);
 
+  /** Handles mouse and touch drag events efficiently */
   useEffect(() => {
     if (!isBrowser()) return;
 
     const onMove = (e) => {
       if (!isResizing) return;
+
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const delta = clientX - ref.current.startX;
-      const next =
+
+      /** 
+       * Sensitivity multiplier makes dragging feel faster — 
+       * small mouse movements result in larger sidebar width changes.
+       */
+      const sensitivity = 1.5;
+      const delta = (clientX - ref.current.startX) * sensitivity;
+
+      const rawNext =
         side === "left"
           ? ref.current.startWidth + delta
           : ref.current.startWidth - delta;
-      setWidth(next);
+
+      // Immediately clamp to prevent dragging past limits
+      const clampedNext = clamp(rawNext, minWidth, maxWidth);
+      pendingWidth.current = clampedNext;
+
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        document.documentElement.style.setProperty(
+          cssVarName,
+          `${pendingWidth.current}px`
+        );
+      });
+
+      // Throttle React updates for performance
+      const now = Date.now();
+      if (now - lastCommitTime.current > 100) {
+        setWidth(pendingWidth.current);
+        lastCommitTime.current = now;
+      }
     };
+
     const onUp = () => stopResize();
 
     if (isResizing) {
@@ -94,11 +136,12 @@ export default function useResizableSidebar({
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onUp);
+      cancelAnimationFrame(rafRef.current);
       if (isBrowser()) document.body.style.cursor = "";
     };
-  }, [isResizing, setWidth, side, stopResize]);
+  }, [isResizing, setWidth, side, minWidth, maxWidth, cssVarName, stopResize]);
 
-  // --- Keyboard Resizing (Arrow keys + A/D) ---
+  /** Handles keyboard-based resizing (arrow keys + A/D) */
   const handleKeyDown = useCallback(
     (e) => {
       const step = e.shiftKey ? 20 : 8;
@@ -130,7 +173,7 @@ export default function useResizableSidebar({
     [width, minWidth, maxWidth, side, setWidth, storageKey]
   );
 
-  // --- Collapse toggle ---
+  /** Toggles collapsed state and restores previous width */
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {
       const next = !prev;
@@ -155,7 +198,7 @@ export default function useResizableSidebar({
     });
   }, [collapsedWidth, width, minWidth, maxWidth, defaultWidth, storageKey]);
 
-  // --- Save helper ---
+  /** Persists current width to localStorage */
   const save = useCallback(() => {
     if (!isBrowser()) return;
     try {
@@ -163,7 +206,7 @@ export default function useResizableSidebar({
     } catch {}
   }, [storageKey, width]);
 
-  // --- Sync CSS variable ---
+  /** Syncs sidebar width to CSS custom property */
   useEffect(() => {
     if (!isBrowser() || !cssVarName) return;
     const value = `${collapsed ? collapsedWidth : width}px`;

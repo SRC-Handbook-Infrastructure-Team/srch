@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import NavBar from "../components/NavBar";
@@ -46,7 +46,7 @@ export default function SidebarLayout({ children }) {
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
 
-  /** Ensures sidebars fit available viewport space dynamically */
+  /** Dynamically ensures both sidebars fit within the viewport */
   useEffect(() => {
     const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
 
@@ -77,14 +77,14 @@ export default function SidebarLayout({ children }) {
     rightSidebar.setWidth,
   ]);
 
-  /** Updates viewport width on window resize */
+  /** Updates viewport width when window resizes */
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  /** Syncs CSS custom properties for sidebar widths */
+  /** Syncs sidebar widths to CSS custom properties */
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--left-sidebar-width",
@@ -96,14 +96,21 @@ export default function SidebarLayout({ children }) {
     );
   }, [leftSidebar.width, leftSidebar.collapsed, rightSidebar.width, isRightOpen]);
 
-  const layoutValue = {
-    leftSidebar,
-    rightSidebar,
-    rightContent,
-    isRightOpen,
-    openRightDrawer,
-    closeRightDrawer,
-  };
+  /** 
+   * Memoized layout context value to prevent unnecessary re-renders 
+   * across the app when sidebar state changes.
+   */
+  const layoutValue = useMemo(
+    () => ({
+      leftSidebar,
+      rightSidebar,
+      rightContent,
+      isRightOpen,
+      openRightDrawer,
+      closeRightDrawer,
+    }),
+    [leftSidebar, rightSidebar, rightContent, isRightOpen, openRightDrawer, closeRightDrawer]
+  );
 
   return (
     <LayoutContext.Provider value={layoutValue}>
@@ -136,7 +143,16 @@ export default function SidebarLayout({ children }) {
 
         {/* Right Drawer */}
         {isRightOpen && (
-          <aside className="right-sidebar" aria-label="Right sidebar drawer">
+          <aside
+            className="right-sidebar opening"
+            aria-label="Right sidebar drawer"
+            onTransitionEnd={(e) => {
+              if (e.propertyName === "width") {
+                e.currentTarget.classList.remove("opening");
+                e.currentTarget.classList.add("opened");
+              }
+            }}
+          >
             <div className="drawer-header">
               <span>Additional Information</span>
               <button
