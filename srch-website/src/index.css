@@ -45,6 +45,12 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+mark.light-red {
+  background-color: #d18790;
+  border-radius: 4px; /* optional for rounded edges */
+  padding: 2px 3px; /* optional for spacing */
+  color: #000; /* optional: set text color if needed */
+}
 
 @media (prefers-color-scheme: light) {
   :root {
