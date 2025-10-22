@@ -1,8 +1,7 @@
 import "./App.css";
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import theme from "./theme";
 import NavBar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
@@ -11,6 +10,30 @@ import {
   Team,
   AdditionalContributors,
 } from "./pages/Acknowledgements";
+
+// === Add: Custom Theme Override (Typography + Colors) ===
+const theme = extendTheme({
+  fonts: {
+    heading: `"Be Vietnam Pro", sans-serif`,
+    body: `"Be Vietnam Pro", sans-serif`,
+  },
+  styles: {
+    global: {
+      body: {
+        bg: "#ffffff",
+        color: "#1a1a1a",
+        lineHeight: "1.75",
+      },
+      a: {
+        color: "#7b4b24",
+        _hover: {
+          color: "#6b3f1f",
+          textDecoration: "underline",
+        },
+      },
+    },
+  },
+});
 
 function App() {
   return (
