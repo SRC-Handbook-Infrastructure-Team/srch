@@ -13,6 +13,7 @@
 
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
+import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import {
@@ -157,7 +158,6 @@ export const getSubsections = async (sectionId) => {
       if (
         segments.length === 5 &&
         segments[2] === sectionId &&
-        segments[3] !== "drawer" &&
         segments[4].endsWith(".md")
       ) {
         const subsectionId = segments[3];
@@ -198,68 +198,84 @@ export const getSubsections = async (sectionId) => {
 // Get specific content by section and subsection
 export const getContent = async (sectionId, subsectionId) => {
   try {
-    // If only section is provided, get section content
+    let path;
+
     if (sectionId && !subsectionId) {
-      const path = `../markdown/${sectionId}/${sectionId}.md`;
-
-      for (const filePath in allMarkdownFiles) {
-        if (filePath.endsWith(path.slice(2))) {
-          // Remove the leading ..
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-          return { content: cleanContent, frontmatter };
-        }
-      }
+      path = `../markdown/${sectionId}/${sectionId}.md`;
+    } else if (sectionId && subsectionId) {
+      path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
+    } else {
+      return null;
     }
 
-    // If both section and subsection are provided, get subsection content
-    if (sectionId && subsectionId) {
-      const path = `../markdown/${sectionId}/${subsectionId}/${subsectionId}.md`;
+    /**
+     * This code looks into all of the filepath and does the following:
+     * looks for the ## All Sidebar Content Below divider 
+     * creates the sidebar dictionary to pull from later
+     * extracts the Key (identical to the clickable term)
+     * extracts the Value (the paragraphical content)
+     * extracts the Heading (if provided used as the title heading for the sidbar)
+     */
+    for (const filePath in allMarkdownFiles) {
+      if (filePath.endsWith(path.slice(2))) {
+        const file = await allMarkdownFiles[filePath]();
+        const { content, frontmatter } = parseFrontmatter(file);
 
-      for (const filePath in allMarkdownFiles) {
-        if (filePath.endsWith(path.slice(2))) {
-          // Remove the leading ..
-          const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent, frontmatter } =
-            parseFrontmatter(content);
-          return { content: cleanContent, frontmatter };
+        const [mainRaw, sidebarRaw] = content.split(
+          "## All Sidebar Content Below"
+        );
+        const mainContent = mainRaw?.trim() || "";
+
+        const sidebar = {};
+        if (sidebarRaw) {
+          const lines = sidebarRaw.trim().split("\n");
+          let currentKey = null; // placeholder for the currentKey
+          let currentHeading = null; // placeholder for the currentValue
+          let currentValue = []; // placeholder for the current Value
+
+          lines.forEach((line) => {
+            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/); // looks for the {clickable-term} in the sidebar content
+            if (match) { 
+              if (currentKey) { // if a key has already been found, set the heading and content
+                sidebar[currentKey] = {
+                  heading: currentHeading || currentKey.replace(/-/g, " "),
+                  content: currentValue.join("\n").trim(),
+                };
+              }
+
+              // if not assign the key and create placeholders for the heading and value
+              currentKey = match[1].trim(); 
+              currentHeading = null; 
+              currentValue = []; 
+
+              // if the line starts with heading set the following words as the current heading
+            } else if (line.startsWith("Heading:")) { // finds and sets the heading if applicable
+              currentHeading = line.replace("Heading:", "").trim();
+
+              // if not a heading line, add the current line to the currentValue
+            } else if (currentKey) {
+              currentValue.push(line); // sets the value to the paragraphical content
+            }
+          });
+
+
+          // after looping through each line, 
+          if (currentKey) {
+            sidebar[currentKey] = {
+              heading: currentHeading || currentKey.replace(/-/g, " "),
+              content: currentValue.join("\n").trim(),
+            };
+          }
         }
+        const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
+          return `<sidebar-ref term="${term}"></sidebar-ref>`;
+        });
+        return { content: parsedContent, sidebar, frontmatter };
       }
     }
-
     return null;
   } catch (error) {
-    console.error(
-      `Failed to load content: ${sectionId}/${subsectionId}`,
-      error
-    );
-    return null;
-  }
-};
-
-// Get a specific drawer markdown file
-export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
-  try {
-    // Find the matching drawer file
-    const drawerPath = `../markdown/${sectionId}/${subsectionId}/drawer/${fileId}.md`;
-
-    for (const path in allMarkdownFiles) {
-      if (path.endsWith(drawerPath.slice(2))) {
-        // Remove the leading ..
-        const content = await allMarkdownFiles[path]();
-        const { content: cleanContent, frontmatter } =
-          parseFrontmatter(content);
-        return { content: cleanContent, frontmatter };
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.error(
-      `Failed to load drawer file: ${sectionId}/${subsectionId}/drawer/${fileId}`,
-      error
-    );
+    console.error("Failed to load content:", sectionId, subsectionId, error);
     return null;
   }
 };
@@ -292,26 +308,28 @@ export const parseSubsections = (content) => {
 };
 
 // Process markdown content and render it
-function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
+function MarkdownRenderer({
+  content,
+  sidebar,
+  sectionId,
+  subsectionId,
+  onDrawerOpen,
+  onNavigation,
+  isFinal,
+}) {
   // Process special links in the content
   const processedContent = useMemo(() => {
     if (!content) return "";
 
-    // Replace drawer links with custom elements
-    let processed = content.replace(
-      /\[drawer:([^\]]+)\]\(([^)]+)\)/g,
-      (match, text, target) => {
-        return `<drawer-link text="${text}" target="${target}"></drawer-link>`;
-      }
-    );
+    let processed =
+      typeof content === "string" ? content : content.content || "";
 
     // Replace navigation links with custom elements
-    processed = processed.replace(
-      /\[nav:([^\]]+)\]\(([^)]+)\)/g,
-      (match, text, target) => {
-        return `<nav-link text="${text}" target="${target}"></nav-link>`;
-      }
-    );
+    if (typeof processed === "string") {
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
+        return `<sidebar-ref term="${term}"></sidebar-ref>`;
+      });
+    }
 
     return processed;
   }, [content]);
@@ -445,28 +463,32 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
       },
 
       // Custom components for interactive elements
-      "drawer-link": ({ node }) => {
-        const text = node.properties?.text;
-        const target = node.properties?.target;
+      "sidebar-ref": ({ node }) => {
+        const term = node.properties?.["term"];
+        const value = sidebar?.[term];
+
         return (
-          <HStack
-            as="span"
-            spacing={1}
-            display="inline-flex"
-            alignItems="center"
-            _hover={{ color: "purple.500", cursor: "pointer" }}
-            onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            color="blue.400"
+          <Link
+            as={RouterLink}
+            to={`/${sectionId}/${subsectionId}/${term}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onDrawerOpen(term);
+            }}
+            color="blue.500"
+            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            style={{ whiteSpace: "nowrap" }}
           >
-            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
-            <Icon
-              as={InfoIcon}
-              boxSize="0.8em"
-              style={{ fill: "currentColor" }}
-            />
-          </HStack>
+            {value
+              ? term
+                  .replace(/-/g, " ")
+                  .replace(/Case Study(?!:)/g, "Case Study:") // add colon if missing
+              : `Missing: ${term}`}
+            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
+          </Link>
         );
       },
+
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
