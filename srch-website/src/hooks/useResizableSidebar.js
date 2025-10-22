@@ -59,16 +59,28 @@ export default function useResizableSidebar({
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       ref.current.startX = clientX;
       ref.current.startWidth = width;
-      if (isBrowser()) document.body.style.cursor = "ew-resize";
+      if (isBrowser()) {
+        document.body.style.cursor = "ew-resize";
+        // Add performance class to the *correct* sidebar while dragging
+        const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
+        const sidebarEl = document.querySelector(selector);
+        if (sidebarEl) sidebarEl.classList.add("resizing");
+      }
     },
-    [width]
+    [width, side]
   );
 
   /** Stops resizing and commits final width */
   const stopResize = useCallback(() => {
     if (!isResizing) return;
     setIsResizing(false);
-    if (isBrowser()) document.body.style.cursor = "";
+    if (isBrowser()) {
+      document.body.style.cursor = "";
+      // Remove performance class when drag ends
+      const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
+      const sidebarEl = document.querySelector(selector);
+      if (sidebarEl) sidebarEl.classList.remove("resizing");
+    }
     cancelAnimationFrame(rafRef.current);
     rafRef.current = null;
 
@@ -79,7 +91,7 @@ export default function useResizableSidebar({
         window.localStorage.setItem(storageKey, String(pendingWidth.current));
       } catch {}
     }
-  }, [isResizing, saveOnEnd, setWidth, storageKey]);
+  }, [isResizing, saveOnEnd, setWidth, storageKey, side]);
 
   /** Handles mouse and touch drag events efficiently */
   useEffect(() => {
@@ -116,7 +128,7 @@ export default function useResizableSidebar({
 
       // Throttle React updates for performance
       const now = Date.now();
-      if (now - lastCommitTime.current > 100) {
+      if (now - lastCommitTime.current > 120) {
         setWidth(pendingWidth.current);
         lastCommitTime.current = now;
       }
