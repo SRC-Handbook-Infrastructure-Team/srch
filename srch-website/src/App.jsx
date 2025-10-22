@@ -2,7 +2,6 @@ import "./App.css";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import theme from "./theme";
 import NavBar from "./components/NavBar";
 import ContentsSidebar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
