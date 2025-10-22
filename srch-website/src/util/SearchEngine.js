@@ -3,8 +3,6 @@ import {
   getSections,
   getSubsections,
   createIdFromHeading,
-  allMarkdownFiles,
-  parseFrontmatter,
 } from "./MarkdownRenderer.jsx";
 
 // Create the FlexSearch Document index
@@ -27,6 +25,7 @@ const index = new FlexSearch.Document({
     ],
     store: [
       "title",
+      "sectionTitle",
       "section",
       "subsectionTitle",
       "subsection",
@@ -36,13 +35,19 @@ const index = new FlexSearch.Document({
     ], // store full content for snippet extraction
   },
   preset: "match",
-  tokenize: "forward",
+  tokenize: "strict",
+  encode: false,
+  matcher: false,
+  filter: false,
 });
+
+let indexInitialized = false;
 
 // Extract h2 blocks from markdown with anchors
 function extractHeadingBlocks(
   markdown,
   sectionId,
+  sectionTitle,
   subsectionId = null,
   subsectionTitle
 ) {
@@ -54,70 +59,62 @@ function extractHeadingBlocks(
   let currentAnchor = null;
   let currentLines = [];
 
+  function pushDrawerBlock(anchor, lines) {
+    blocks.push({
+      id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#${anchor}`,
+      section: sectionId,
+      sectionTitle: sectionTitle,
+      subsection: subsectionId,
+      subsectionTitle: subsectionTitle,
+      anchor: anchor,
+      title:
+        lines.length > 0
+          ? lines[0].startsWith("Heading:")
+            ? lines[0].replace(/^Heading:\s*/, "")
+            : lines[0].split(/\s+/).slice(0, 5).join(" ") + "..."
+          : anchor,
+      content: (lines.length > 0 && lines[0].startsWith("Heading:")
+        ? lines.slice(1)
+        : lines
+      )
+        .join("\n")
+        .trim(),
+      isDrawer: true,
+    });
+  }
+
   const pushBlock = () => {
     if (currentTitle !== null) {
-      if (currentTitle == "Sidebar") {
-        let currentAnchor = null;
+      if (currentTitle === "Sidebar") {
+        let currentAnchorLocal = null;
         let anchorLines = [];
-
         currentLines.forEach((line) => {
           const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
           if (match) {
-            // If there is a previous block being accumulated, push it now
-            if (currentAnchor !== null) {
-              blocks.push({
-                id: `${sectionId}${
-                  subsectionId ? "/" + subsectionId : ""
-                }#${currentAnchor}`,
-                section: sectionId,
-                subsection: subsectionId,
-                subsectionTitle: subsectionTitle,
-                anchor: currentAnchor,
-                title:
-                  anchorLines.length > 0
-                    ? anchorLines[0].replace(/^Heading:\s*/, "")
-                    : currentAnchor,
-                content: anchorLines.join("\n").trim(),
-                isDrawer: true,
-              });
+            if (currentAnchorLocal !== null) {
+              pushDrawerBlock(currentAnchorLocal, anchorLines);
             }
-            // Start a new anchor group
-            currentAnchor = match[1].trim();
+            currentAnchorLocal = match[1].trim();
             anchorLines = [];
           } else {
             anchorLines.push(line);
           }
         });
-
-        // Push the final anchor block if any
-        if (currentAnchor !== null) {
-          blocks.push({
-            id: `${sectionId}${
-              subsectionId ? "/" + subsectionId : ""
-            }#${currentAnchor}`,
-            section: sectionId,
-            subsection: subsectionId,
-            subsectionTitle: subsectionTitle,
-            anchor: currentAnchor,
-            title:
-              anchorLines.length > 0
-                ? anchorLines[0].replace(/^Heading:\s*/, "")
-                : currentAnchor,
-            content: anchorLines.join("\n").trim(),
-            isDrawer: true,
-          });
+        if (currentAnchorLocal !== null) {
+          pushDrawerBlock(currentAnchorLocal, anchorLines);
         }
       } else {
         blocks.push({
-          id: `${sectionId}${
-            subsectionId ? "/" + subsectionId : ""
-          }#${currentAnchor}`,
+          id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#${
+            currentAnchor || "unknown"
+          }`,
           section: sectionId,
+          sectionTitle: sectionTitle,
           subsection: subsectionId,
           subsectionTitle: subsectionTitle,
           anchor: currentAnchor,
           title: currentTitle,
-          content: currentLines.join("\n").trim(),
+          content: currentTitle + "\n" + currentLines.join("\n").trim(),
           isDrawer: false,
         });
       }
@@ -125,11 +122,12 @@ function extractHeadingBlocks(
       blocks.push({
         id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#intro`,
         section: sectionId,
+        sectionTitle: sectionTitle,
         subsection: subsectionId,
         subsectionTitle: subsectionTitle,
         anchor: "intro",
         title: "Introduction",
-        content: currentLines.join("\n").trim(),
+        content: currentLines.slice(2).join("\n").trim(),
         isDrawer: false,
       });
     }
@@ -151,22 +149,22 @@ function extractHeadingBlocks(
   return blocks;
 }
 
-// Initialize FlexSearch index from all markdown content
 export async function initializeIndex() {
+  if (indexInitialized) return;
+
   const sections = await getSections();
   const contentArray = [];
 
   for (const section of sections) {
-    // Section-level heading blocks
     contentArray.push(...extractHeadingBlocks(section.content, section.id));
     const subsections = await getSubsections(section.id);
 
     for (const subsection of subsections) {
-      // Subsection-level heading blocks
       contentArray.push(
         ...extractHeadingBlocks(
           subsection.content,
           section.id,
+          section.title,
           subsection.id,
           subsection.title
         )
@@ -177,6 +175,7 @@ export async function initializeIndex() {
   contentArray.forEach((item) => {
     index.add(item);
   });
+  indexInitialized = true;
 }
 
 function getPlaintextFromMarkdown(content) {
@@ -206,62 +205,51 @@ function getPlaintextFromMarkdown(content) {
   // Remove footnotes
   content = content.replace(/\[\^([^\]]+)\]/g, "");
 
-  // Make white space normal
-  content = content.replace(/\s{2,}/g, " ");
-  content = content.replace(/\n+/g, " ").trim();
+  // Normalize spaces (but keep newlines)
+  content = content.replace(/[ \t]{2,}/g, " ");
+
+  // Preserve paragraph breaks by replacing multiple newlines with exactly two newlines
+  content = content.replace(/\n{2,}/g, "\n\n").trim();
 
   return content;
 }
-
-// Extract some highlighted snippets from content for a search
-function createSnippet(content, query, radius = 30, maxSnippets = 5) {
-  const snippets = [];
-  const contentLower = content.toLowerCase();
+function createSnippet(content, query) {
   const queryLower = query.toLowerCase();
-  let startIndex = 0;
+  const regex = new RegExp(
+    `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+    "gi"
+  );
+  const paragraphs = content.split(/\n\s*\n/);
 
-  while (snippets.length < maxSnippets) {
-    const index = contentLower.indexOf(queryLower, startIndex);
-    if (index === -1) break;
+  // Filter to only paragraphs containing the query
+  const matchedParagraphs = paragraphs.filter((para) =>
+    para.toLowerCase().includes(queryLower)
+  );
 
-    // Move start backward to word boundary if needed
-    let start = index;
-    while (
-      start > 0 &&
-      /\S/.test(content[start - 1]) &&
-      !/\s/.test(content[start - 1])
-    ) {
-      start--;
-    }
-
-    // Calculate initial end index
-    let end = index + query.length + radius;
-
-    // Adjust end to a full word (move forward until next whitespace)
-    while (end < content.length && /\S/.test(content[end])) {
-      end++;
-    }
-
-    end = Math.min(content.length, end);
-
-    // Extract snippet, highlight query
-    let snippet = content.substring(start, end);
-
-    const regex = new RegExp(`(${query})`, "gi");
-    snippet = snippet.replace(regex, "<mark>$1</mark>");
-
-    snippets.push(snippet.trim() + "...");
-    startIndex = index + query.length;
+  if (matchedParagraphs.length === 0) {
+    // fallback: highlight entire content if no paragraph found
+    return content.replace(regex, '<mark class="light-red">$1</mark>').trim();
   }
 
-  return snippets;
+  // Highlight query in matched paragraphs
+  const snippet = matchedParagraphs
+    .map((para) =>
+      para.replace(regex, '<mark class="light-red">$1</mark>').trim()
+    )
+    .join("\n\n");
+
+  return snippet.trim();
 }
 
-// Search function returning results and snippets
-export function search(query) {
+export async function search(query) {
   if (!query || query.length < 3) return [];
 
-  const results = index.search(query, { enrich: true, depth: 2 });
+  const results = index.search(query, {
+    enrich: true,
+    depth: 1,
+    match: "strict",
+  });
+
   const allResults = results.reduce(
     (acc, fieldResults) => acc.concat(fieldResults.result),
     []
@@ -274,20 +262,17 @@ export function search(query) {
     const doc = res.doc;
     if (doc && doc.content) {
       const plainText = getPlaintextFromMarkdown(doc.content);
-      const snippets = createSnippet(plainText, query, 30, 5);
+      const snippet = createSnippet(plainText, query);
 
-      snippets.forEach((snippet, i) => {
-        const uniqueKey = res.id + "|" + snippet;
-        if (!seenKeys.has(uniqueKey)) {
-          seenKeys.add(uniqueKey);
-          snippetResults.push({
-            ...res,
-            id: res.id + "_snippet_" + i,
-            snippet,
-            allSnippets: snippets,
-          });
-        }
-      });
+      const uniqueKey = res.id;
+      if (!seenKeys.has(uniqueKey) && snippet.includes('class="light-red"')) {
+        seenKeys.add(uniqueKey);
+        snippetResults.push({
+          ...res,
+          snippet,
+          allSnippets: [snippet],
+        });
+      }
     }
   });
 

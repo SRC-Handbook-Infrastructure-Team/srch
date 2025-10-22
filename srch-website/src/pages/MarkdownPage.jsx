@@ -7,7 +7,57 @@ import MarkdownRenderer, {
   getContent,
   getSubsections,
 } from "../util/MarkdownRenderer";
-import { useLayout } from "../layouts/LayoutContext";
+import { BsSignIntersectionSideFill } from "react-icons/bs";
+import { Divider, Text } from "@chakra-ui/react"; // already imported, just confirming
+
+/**
+ * Formats the compact page header that sits above the divider, e.g.:
+ * "1.a - What is Privacy?"
+ *
+ * Rules:
+ * - Section numbering is fixed by product spec (Privacy=1, Accessibility=2, ADM=3, GenAI=4).
+ * - Subsection letters come from a small slug→letter map.
+ * - Prefer frontmatter `title` (pageTitle) when present; otherwise prettify the slug.
+ *
+ * @param {string} sectionId - URL slug for the section (e.g., "privacy")
+ * @param {string} subsectionId - URL slug for the subsection (e.g., "what-is-privacy")
+ * @param {string} pageTitle - Optional human title from markdown frontmatter
+ * @returns {string} The formatted header like "1.a - What is Privacy?"
+ */
+function getFormattedTitle(sectionId, subsectionId, pageTitle) {
+  // Product-specified numbering
+  const sectionMap = {
+    privacy: "1",
+    accessibility: "2",
+    "automated-decision-making": "3",
+    "generative-ai": "4",
+    // (About intentionally omitted from the numbered sequence)
+  };
+
+  // Known subsection letters (add to this as you add new subsections)
+  const subsectionLetters = {
+    // Privacy
+    "what-is-privacy": "a",
+    "value-of-privacy": "b",
+    // Accessibility
+    "what-is-accessibility": "a",
+  };
+
+  const sectionNum = sectionMap[sectionId] || "?";
+  const letter = subsectionLetters[subsectionId] || "";
+
+  // Prefer frontmatter title if available
+  const titleText = pageTitle && pageTitle.trim()
+    ? pageTitle.trim()
+    : (subsectionId || sectionId || "")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (m) => m.toUpperCase());
+
+  return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
+}
+
+
+
 
 function MarkdownPage() {
   const { sectionId, subsectionId } = useParams();
@@ -20,8 +70,25 @@ function MarkdownPage() {
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
+  const [pageTitle, setPageTitle] = useState("");
+  const [subsections, setSubsections] = useState([]);
 
-  /** Track previous route so we can safely navigate back on missing content. */
+
+
+  // Drawer resize state
+  const [drawerWidth, setDrawerWidth] = useState(() => {
+    try {
+      const savedWidth = localStorage.getItem("drawerWidth");
+      return savedWidth ? parseInt(savedWidth) : 400; // Default width if not found
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+      return 400; // Default width on error
+    }
+  });
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef(null);
+
+  // Store the current valid path whenever content loads successfully
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
@@ -41,9 +108,16 @@ function MarkdownPage() {
       // Load top-level section
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
+        setPageTitle(result.frontmatter?.title || "");
+
+
         if (result) {
-          setMainContent(result.content);
+          const cleaned = result.content.replace(/^# .*\n+/, "");
+          setMainContent(cleaned);
+          setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
+
 
           // Redirect to first subsection if section content is minimal
           const subsections = await getSubsections(sectionId);
@@ -69,8 +143,11 @@ function MarkdownPage() {
       if (sectionId && subsectionId) {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
-          setMainContent(result.content);
+          const cleaned = result.content.replace(/^# .*\n+/, "");
+          setMainContent(cleaned);
+          setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
         } else {
           toast({
             title: "Subsection Not Found",
@@ -88,10 +165,54 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
-  /**
-   * Checks whether a given section/subsection path exists before navigating.
-   * Prevents broken links and provides user feedback if content is missing.
+    /**
+   * Loads and stores the ordered list of subsections for the current section.
+   *
+   * This effect runs whenever `sectionId` changes.
+   * It fetches all subsections via `getSubsections(sectionId)` and updates local state.
+   *
+   * Why:
+   *  - Needed to determine the subsection letter ("a", "b", "c", etc.)
+   *    for formatted page headers like "1.a - What is Privacy?"
+   *  - Enables consistent numbering even if user navigates directly
+   *    to a subsection route or between sections.
+   *
+   * Notes:
+   *  - Uses an `active` flag to prevent stale state updates if the user
+   *    navigates quickly between sections (avoids race conditions).
+   *  - `getSubsections()` already sorts by `order` and defaults to `999` for missing order values.
    */
+  useEffect(() => {
+    if (!sectionId) return; // No section selected yet
+
+    let active = true; // Guard against async race condition
+
+    getSubsections(sectionId)
+      .then((data) => {
+        if (active) {
+          setSubsections(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load subsections for section:", sectionId, err);
+      });
+
+    // Cleanup: mark inactive if component unmounts or section changes
+    return () => {
+      active = false;
+    };
+  }, [sectionId]);
+
+
+  useEffect(() => {
+    if (sidebar && sidebar[urlTerm]) {
+      setDrawerTerm(urlTerm);
+      setDrawerContent(sidebar[urlTerm].content);
+      setIsDrawerOpen(true);
+    }
+  }, [urlTerm, sidebar]);
+
+  // Pre-check if content exists before navigating
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
@@ -217,13 +338,88 @@ function MarkdownPage() {
   return (
     <div className="markdown-page">
       {mainContent && (
-        <MarkdownRenderer
-          content={mainContent}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          isFinal={contentFinal}
-        />
-      )}
+        <Box mb={10}>
+          {/* PAGE HEADER */}
+          <Box mb={6}>
+            <Text
+              fontSize="2xl"
+              fontWeight="semibold"
+              color="#4F3629"
+              mv={3}
+              mb={2}
+          >
+            {getFormattedTitle(sectionId, subsectionId, pageTitle)}
+
+          </Text>
+          <Divider borderColor="#4F3629" borderWidth="1.5px" mb={8} />
+        </Box>
+
+        {/* MAIN CONTENT */}
+        <Box ref={contentRef}>
+          <MarkdownRenderer
+            content={mainContent}
+            sidebar={sidebar}
+            sectionId={sectionId}
+            subsectionId={subsectionId}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            isFinal={contentFinal}
+            highlight={highlight}
+          />
+        </Box>
+      </Box>
+    )}
+
+
+      {/* Drawer for additional content */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        placement="right"
+        onClose={() => {
+          setIsDrawerOpen(false);
+          navigate(`/${sectionId}/${subsectionId}`, { replace: true });
+        }}
+        blockScrollOnMount={false}
+        trapFocus={false}
+      >
+        <DrawerContent
+          sx={{ width: `${drawerWidth}px !important` }}
+          maxWidth="80vw"
+          position="relative"
+        >
+          <DrawerCloseButton />
+          <DrawerHeader
+            borderBottomWidth="2px"
+            color="var(--color-accent)"
+            borderColor="var(--color-accent)"
+          >
+            {sidebar[drawerTerm]?.heading || drawerTerm}
+          </DrawerHeader>
+
+          {/* Resize handle */}
+          <Box
+            position="absolute"
+            left="0"
+            top="0"
+            bottom="0"
+            width="6px"
+            cursor="ew-resize"
+            bgColor={isResizing ? "blue.400" : "transparent"}
+            _hover={{ bgColor: "blue.200" }}
+            onMouseDown={handleMouseDown}
+            zIndex="999"
+          />
+
+          <DrawerBody>
+            <MarkdownRenderer
+              content={drawerContent}
+              onDrawerOpen={handleDrawerOpen}
+              onNavigation={handleNavigation}
+              highlight={highlight}
+            />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

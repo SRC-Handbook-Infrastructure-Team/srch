@@ -32,17 +32,16 @@ import {
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
-/* ---------------------------- Utility Functions ---------------------------- */
-
-function getNodeText(node) {
-  if (node == null) return "";
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(getNodeText).join("");
-  if (typeof node === "object" && node.props) return getNodeText(node.props.children);
-  return "";
+function highlightText(text, highlight) {
+  if (!highlight) return text;
+  const regex = new RegExp(`(${highlight})`, "gi");
+  const parts = text.split(regex);
+  return parts.map((part, index) =>
+    regex.test(part) ? <mark key={index}>{part}</mark> : part
+  );
 }
 
-function createIdFromHeading(text) {
+export function createIdFromHeading(text) {
   if (!text) return "";
   return text
     .toString()
@@ -52,11 +51,13 @@ function createIdFromHeading(text) {
     .replace(/-+/g, "-");
 }
 
-function parseFrontmatter(content) {
+export function parseFrontmatter(content) {
   const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
   const match = content.match(frontmatterRegex);
 
-  if (!match) return { content, frontmatter: {} };
+  if (!match) {
+    return { content, frontmatter: {} };
+  }
 
   const frontmatterBlock = match[1];
   const cleanContent = content.replace(frontmatterRegex, "");
@@ -66,7 +67,6 @@ function parseFrontmatter(content) {
     if (line.trim() === "") return;
     const [key, ...valueParts] = line.split(":");
     const value = valueParts.join(":").trim();
-
     if (value === "true") frontmatter[key.trim()] = true;
     else if (value === "false") frontmatter[key.trim()] = false;
     else if (!isNaN(Number(value))) frontmatter[key.trim()] = Number(value);
@@ -76,30 +76,19 @@ function parseFrontmatter(content) {
   return { content: cleanContent, frontmatter };
 }
 
-/* -------------------------- Markdown File Imports -------------------------- */
-
-const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
+export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   query: "?raw",
   import: "default",
 });
-
-const drawerFiles = import.meta.glob("../markdown/**/drawer/*.md", {
-  query: "?raw",
-  import: "default",
-});
-
-/* ----------------------------- Data Loaders ----------------------------- */
 
 export const getSections = async () => {
   try {
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSections = new Set();
-
     for (const path of paths) {
       const segments = path.split("/");
       if (segments[2] === "primers") continue;
-
       if (segments.length === 4 && segments[3].endsWith(".md")) {
         const sectionId = segments[2];
         const fileName = segments[3];
@@ -117,7 +106,6 @@ export const getSections = async () => {
         }
       }
     }
-
     return sections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error loading sections:", error);
@@ -130,7 +118,6 @@ export const getSubsections = async (sectionId) => {
     const subsections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSubsections = new Set();
-
     for (const path of paths) {
       const segments = path.split("/");
       if (
@@ -141,7 +128,10 @@ export const getSubsections = async (sectionId) => {
       ) {
         const subsectionId = segments[3];
         const fileName = segments[4];
-        if (fileName === `${subsectionId}.md` && !processedSubsections.has(subsectionId)) {
+        if (
+          fileName === `${subsectionId}.md` &&
+          !processedSubsections.has(subsectionId)
+        ) {
           processedSubsections.add(subsectionId);
           const content = await allMarkdownFiles[path]();
           const { content: cleanContent, frontmatter } = parseFrontmatter(content);
@@ -155,7 +145,6 @@ export const getSubsections = async (sectionId) => {
         }
       }
     }
-
     return subsections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error(`Error loading subsections for ${sectionId}:`, error);
@@ -217,7 +206,10 @@ export const getContent = async (sectionId, subsectionId) => {
           }
         }
 
-        return { content: mainContent, sidebar, frontmatter };
+        const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
+          return `<sidebar-ref term="${term}"></sidebar-ref>`;
+        });
+        return { content: parsedContent, sidebar, frontmatter };
       }
     }
 
@@ -228,24 +220,24 @@ export const getContent = async (sectionId, subsectionId) => {
   }
 };
 
-export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
-  try {
-    const drawerPath = `../markdown/${sectionId}/${subsectionId}/drawer/${fileId}.md`;
-    const loader = drawerFiles[drawerPath];
-    if (!loader) {
-      console.error("Drawer file not found:", drawerPath);
-      return null;
+export const parseSubsections = (content) => {
+  if (!content) return [];
+  const contentStr = typeof content === "string" ? content : content.content;
+  if (!contentStr) return [];
+  const normalizedContent = contentStr.replace(/\r/g, "");
+  const lines = normalizedContent.split("\n");
+  const subsections = [];
+  for (const line of lines) {
+    if (line.startsWith("## ")) {
+      const title = line.replace("## ", "");
+      subsections.push({
+        title,
+        id: createIdFromHeading(title),
+      });
     }
-    const content = await loader();
-    const { content: cleanContent, frontmatter } = parseFrontmatter(content);
-    return { content: cleanContent, frontmatter };
-  } catch (error) {
-    console.error("Failed to load drawer file:", sectionId, subsectionId, error);
-    return null;
   }
+  return subsections;
 };
-
-/* ---------------------------- Markdown Renderer ---------------------------- */
 
 function MarkdownRenderer({
   content,
@@ -258,21 +250,13 @@ function MarkdownRenderer({
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
-
-    let processed = typeof content === "string" ? content : content.content || "";
-
-    // Replace custom syntaxes
-    processed = processed
-      .replace(/\[drawer:([^\]]+)\]\(([^)]+)\)/g, (_, text, target) => {
-        return `<drawer-link text="${text}" target="${target}"></drawer-link>`;
-      })
-      .replace(/\[nav:([^\]]+)\]\(([^)]+)\)/g, (_, text, target) => {
-        return `<nav-link text="${text}" target="${target}"></nav-link>`;
-      })
-      .replace(/\{([^}]+)\}/g, (_, term) => {
+    let processed =
+      typeof content === "string" ? content : content.content || "";
+    if (typeof processed === "string") {
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
         return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
-
+    }
     return processed;
   }, [content]);
 
@@ -298,15 +282,14 @@ function MarkdownRenderer({
   const components = useMemo(
     () => ({
       h1: (props) => (
-        <Heading as="h1" size="xl" mt={5} mb={3} {...props}>
+        <Heading as="h1" size="xl" mt={10} mb={3} {...props}>
           {props.children}
           {isFinal === false && <BetaTag />}
         </Heading>
       ),
-
-      h2: (props) => {
-        const plain = getNodeText(props.children);
-        const id = createIdFromHeading(plain);
+      h2: ({ children, ...props }) => {
+        const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
         return (
           <Heading
             as="h2"
@@ -316,33 +299,93 @@ function MarkdownRenderer({
             mb={2}
             lineHeight="1.3"
             scrollMarginTop="20px"
+            color="var(--color-accent)"
             {...props}
           >
             {props.children}
           </Heading>
         );
       },
-
-      p: (props) => <Text mb={3} lineHeight="1.6" {...props} />,
+      h3: (props) => (
+        <Heading
+          as="h3"
+          size="sm"
+          mt={3}
+          mb={2}
+          lineHeight="1.3"
+          color="var(--color-accent)"
+          {...props}
+        />
+      ),
+      h4: (props) => (
+        <Heading
+          as="h4"
+          size="sm"
+          mt={2}
+          mb={1}
+          lineHeight="1.3"
+          color="var(--color-accent)"
+          {...props}
+        />
+      ),
+      p: ({ children, ...props }) => {
+        const childrenArray = Array.isArray(children) ? children : [children];
+        return (
+          <Text mb={3} lineHeight="1.6" {...props}>
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </Text>
+        );
+      },
       a: (props) => {
         const isExternal =
-          props.href?.startsWith("http://") || props.href?.startsWith("https://");
+          props.href.startsWith("http://") || props.href.startsWith("https://");
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
         return (
           <Link
-            color="blue.400"
+            color="#9D0013"
+            fontWeight="500"
+            textDecoration="none"
+            _hover={{
+              textDecoration: "underline",
+              color: "#7A0010", // darker shade on hover
+              
+            }}
             href={props.href}
             isExternal={isExternal}
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {props.children}
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
             {isExternal && <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />}
           </Link>
         );
       },
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
-      li: (props) => <ListItem {...props} />,
+      li: (props) => {
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+        return (
+          <ListItem {...props}>
+            {childrenArray.map((child, i) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </ListItem>
+        );
+      },
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
@@ -359,8 +402,12 @@ function MarkdownRenderer({
       thead: (props) => <Thead {...props} />,
       tbody: (props) => <Tbody {...props} />,
       tr: (props) => <Tr {...props} />,
-      th: (props) => <Th border="1px solid" borderColor="gray.300" {...props} />,
-      td: (props) => <Td border="1px solid" borderColor="gray.300" {...props} />,
+      th: (props) => (
+        <Th border="1px solid" borderColor="gray.300" {...props} />
+      ),
+      td: (props) => (
+        <Td border="1px solid" borderColor="gray.300" {...props} />
+      ),
       img: (props) => (
         <Image
           src={props.src}
@@ -378,40 +425,39 @@ function MarkdownRenderer({
         const term = node.properties?.["term"];
         const value = sidebar?.[term];
         return (
-          <Link
+          <Box
             as={RouterLink}
             to={`/${sectionId}/${subsectionId}/${term}`}
             onClick={(e) => {
               e.preventDefault();
               onDrawerOpen(term);
             }}
-            color="blue.500"
-            _hover={{ color: "purple.500", textDecoration: "underline" }}
-            style={{ whiteSpace: "nowrap" }}
-          >
-            {value ? value.heading || term.replace(/-/g, " ") : `Missing: ${term}`}
-            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
-          </Link>
-        );
-      },
-      "drawer-link": ({ node }) => {
-        const text = node.properties?.text;
-        const target = node.properties?.target;
-        return (
-          <HStack
-            as="button"
-            type="button"
-            spacing={1}
             display="inline-flex"
             alignItems="center"
-            onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            color="blue.400"
+            px="0.3em"
+            py="0.15em"
+            mx="0.1em"
+            borderRadius="md"
+            bg="#7b4b24"
+            color="white"
+            _hover={{
+              bg: "#633c1d",
+              color: "white",
+              textDecoration: "none",
+            }}
             cursor="pointer"
-            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            whiteSpace="nowrap"
+            transition="background-color 0.2s ease"
           >
-            <Link>{text}</Link>
-            <Icon as={InfoIcon} boxSize="0.8em" />
-          </HStack>
+            <Text as="span" fontWeight="medium" fontSize="inherit" lineHeight="1.4">
+              {value
+                ? term
+                  .replace(/-/g, " ")
+                  .replace(/Case Study(?!:)/g, "Case Study:")
+              : `Missing: ${term}`}
+            </Text>
+            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
+          </Box>
         );
       },
       "nav-link": ({ node }) => {
