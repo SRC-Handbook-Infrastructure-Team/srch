@@ -7,6 +7,8 @@ import { useState } from "react";
 export const ResultsWindow = React.memo(function ResultsWindow({
   searchQuery,
   maxResults = null,
+  canExpand,
+  setIsExpanded,
 }) {
   const [searchResults, setSearchResults] = useState([]);
   const [isIndexInitialized, setIndexInitialized] = useState([]);
@@ -43,11 +45,43 @@ export const ResultsWindow = React.memo(function ResultsWindow({
   function handleClick() {
     return () => {
       navigate(`/search/${encodeURIComponent(searchQuery)}`);
+      unexpand();
     };
   }
 
+  function unexpand() {
+    if (canExpand) {
+      setIsExpanded(false);
+    }
+  }
+
   return (
-    <Box mt={4} mb={4} overflowY="auto" borderRadius="md" px={2}>
+    <Box
+      overflowY="auto"
+      borderRadius="md"
+      px={2}
+      height={"full"}
+    >
+      <Text mt={2} mb={2} color="gray.500" fontSize="sm">
+        {maxResults != null ? (
+          <Text
+            as="a"
+            cursor="pointer"
+            color="blue.600"
+            textDecoration="underline"
+            onClick={handleClick()}
+            _hover={{ color: "blue.800" }}
+          >
+            {`View all ${searchResults.length} result${
+              searchResults.length === 1 ? "" : "s"
+            }`}
+          </Text>
+        ) : (
+          `Showing ${searchResults.length} result${
+            searchResults.length === 1 ? "" : "s"
+          }`
+        )}
+      </Text>
       {Array.isArray(limitedResults) && limitedResults.length > 0 ? (
         limitedResults.map((item) => {
           const doc = item.doc || {};
@@ -104,6 +138,7 @@ export const ResultsWindow = React.memo(function ResultsWindow({
               </Box>
 
               <Link
+                onClick={unexpand}
                 to={{
                   pathname: doc.isDrawer
                     ? `/${doc.section}/${doc.subsection || ""}/${doc.anchor}`
@@ -127,26 +162,6 @@ export const ResultsWindow = React.memo(function ResultsWindow({
           No results found
         </Text>
       )}
-      <Text mt={4} color="gray.500" fontSize="sm">
-        {maxResults != null ? (
-          <Text
-            as="a"
-            cursor="pointer"
-            color="blue.600"
-            textDecoration="underline"
-            onClick={handleClick()}
-            _hover={{ color: "blue.800" }}
-          >
-            {`View all ${searchResults.length} result${
-              searchResults.length === 1 ? "" : "s"
-            }`}
-          </Text>
-        ) : (
-          `Showing ${searchResults.length} result${
-            searchResults.length === 1 ? "" : "s"
-          }`
-        )}
-      </Text>
     </Box>
   );
 });

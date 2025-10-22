@@ -52,9 +52,10 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
       alignItems="center"
       overflow="visible"
       minWidth="40px"
-      width={isExpanded ? "400px" : "40px"}
+      width={!canExpand ? "100%" : isExpanded ? "400px" : "40px"}
       transition="width 0.3s ease"
     >
+      <Box></Box>
       <Box flex="1" position="relative">
         <Input
           type="text"
@@ -67,7 +68,6 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
           borderRadius="md"
           fontSize="sm"
           pl="2.5rem"
-          width="100%"
           opacity={isExpanded ? 1 : 0}
           pointerEvents={isExpanded ? "auto" : "none"}
           transition="opacity 0.3s ease"
@@ -80,7 +80,6 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
         {canExpand && isExpanded && searchQuery && (
           <Box
             position="absolute"
-            top="100%"
             left={0}
             right={0}
             bg="white"
@@ -89,11 +88,16 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
             borderRadius="md"
             mt="1"
             zIndex={1000}
-            maxHeight="200px"
+            maxHeight="90vh"
             overflowY="auto"
             boxShadow="md"
           >
-            <ResultsWindow searchQuery={searchQuery} maxResults={5} />
+            <ResultsWindow
+              searchQuery={searchQuery}
+              maxResults={5}
+              setIsExpanded={setIsExpanded}
+              canExpand={canExpand}
+            />
           </Box>
         )}
       </Box>
