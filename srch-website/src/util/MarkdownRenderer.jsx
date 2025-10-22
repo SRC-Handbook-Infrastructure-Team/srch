@@ -288,14 +288,7 @@ function MarkdownRenderer({
   const components = useMemo(
     () => ({
       h1: (props) => (
-        <Heading
-          as="h1"
-          size="xl"
-          mt={5}
-          mb={3}
-          color="var(--color-accent)"
-          {...props}
-        >
+        <Heading as="h1" size="xl" mt={10} mb={3} {...props}>
           {props.children}
           {isFinal === false && <BetaTag />}
         </Heading>
