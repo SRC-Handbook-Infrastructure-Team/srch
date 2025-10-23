@@ -184,8 +184,11 @@ export default function SidebarLayout({ children }) {
         <NavBar />
 
         {/* LEFT SIDEBAR NAVIGATION (ContentsSidebar)
-            Directly rendered; className toggles "open" for CSS animation */}
-        <ContentsSidebar className={!leftSidebar.collapsed ? "open" : ""} />
+        Conditionally shown (can hide on /search if needed later) */}
+        {!window.location.pathname.startsWith("/search") && (
+          <ContentsSidebar className={!leftSidebar.collapsed ? "open" : ""} />
+        )}
+
 
         {/* Floating Hamburger (always visible top-left, above NavBar) */}
         <div style={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 2000 }}>
