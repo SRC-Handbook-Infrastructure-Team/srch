@@ -1,25 +1,31 @@
 /* ==========================================================================  
    Base Global Defaults
    --------------------------------------------------------------------------
-   These define app-wide rendering and color rules.
+   Combined index.css (old + new)
    ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+
+/* --------------------------------------------------------------------------
+   Root Design Tokens & Theme Variables
+   -------------------------------------------------------------------------- */
 :root {
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* ------------------------------------------------------------------------
-     🎨 Design Tokens — Base Color System
-     ------------------------------------------------------------------------ */
+  /* Base Colors */
   --color-text: #1a1a1a;
   --color-text-muted: #555;
   --color-bg: #ffffff;
   --color-bg-alt: #f8f9fa;
-  --color-border: #e2e8f0;
-  --color-accent: #3182ce;
+  --color-border: #e0d7ce; /* from new theme */
+  --color-accent: #7b4b24; /* new accent color */
+  --color-accent-light: #f3ece6;
 
   /* Feedback / Utility Colors */
   --color-success: #22c55e;
@@ -30,30 +36,23 @@
   /* Shadows & elevation */
   --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
-  /* ------------------------------------------------------------------------
-     Component Tokens
-     ------------------------------------------------------------------------ */
-  /* Navigation & Sidebar */
+  /* Component Tokens */
   --sidebar-bg: var(--color-bg);
   --sidebar-border: var(--color-border);
   --nav-hover-bg: #f7fafc;
 
-  /* Drawer / Right Panel */
   --drawer-bg: var(--color-bg);
   --drawer-border: var(--color-border);
   --drawer-hover-bg: #f0f0f0;
 
-  /* Buttons */
   --button-bg: #1a1a1a;
   --button-hover-border: #646cff;
   --button-focus-outline: var(--color-accent);
 
-  /* Scrollbars */
   --scrollbar-thumb-color: rgba(0, 0, 0, 0.3);
   --scrollbar-thumb-hover-color: rgba(0, 0, 0, 0.5);
   --scrollbar-track-color: transparent;
 
-  /* Beta Tag */
   --beta-bg: #bfdbfe;
   --beta-text: #1e40af;
 
@@ -70,8 +69,21 @@
 }
 
 /* --------------------------------------------------------------------------
-   Links (anchor elements)
+   Global Typography & Base
    -------------------------------------------------------------------------- */
+body {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;
+  line-height: 28px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  margin: 0;
+  display: block;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -79,16 +91,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-/* --------------------------------------------------------------------------
-   Body and Button Reset
-   -------------------------------------------------------------------------- */
-body {
-  margin: 0;
-  display: block;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 button {
@@ -127,22 +129,12 @@ button:focus-visible {
 }
 
 /* ========================================================================== 
-   Design System Variables & Layout Tokens
-   ========================================================================== */
-:root {
-  /* The base section above already defines these; retained for structure. */
-}
-
-/* ========================================================================== 
-   Sidebar Layout Core Wrapper
+   Layout: Sidebar & Drawer
    ========================================================================== */
 .sidebar-layout {
   display: block;
 }
 
-/* --------------------------------------------------------------------------
-   Floating Toggle Button (arrow to collapse/expand sidebar)
-   -------------------------------------------------------------------------- */
 .sidebar-layout .toggle-btn {
   position: fixed;
   top: 50%;
@@ -159,12 +151,6 @@ button:focus-visible {
   background: var(--color-bg-alt);
 }
 
-/* --------------------------------------------------------------------------
-   Main Content Area
-   --------------------------------------------------------------------------
-   Maintains spacing relative to both sidebars without reflowing the text
-   during transitions or animations.
-   -------------------------------------------------------------------------- */
 .sidebar-layout .main-content {
   margin-left: calc(var(--left-sidebar-width) - 50px);
   margin-right: calc(var(--right-sidebar-width) - 40px);
@@ -172,57 +158,39 @@ button:focus-visible {
   min-height: 100vh;
 }
 
-/* ========================================================================== 
-   LEFT SIDEBAR (Navigation Drawer)
-   --------------------------------------------------------------------------
-   - Fixed-position container for NavBar content.
-   - Slides in/out via GPU-accelerated transform.
-   - Visibility managed by .open class (added in SidebarLayout.jsx).
-   - Keeps performance fast; no React renders needed for the animation.
-   ========================================================================== */
+/* LEFT SIDEBAR */
 .left-sidebar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: var(--left-sidebar-width);
-
   background-color: var(--sidebar-bg);
   color: var(--color-text);
   border-right: 1px solid var(--sidebar-border);
-
-  /* GPU and paint optimizations */
   will-change: width;
   contain: layout paint style;
-
   box-shadow: var(--shadow-elevated);
   z-index: 25;
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
-
-/* Ensure open state remains visible even with .resizing present */
 .left-sidebar.open,
 .left-sidebar.open.resizing {
   transform: translateX(0);
   opacity: 1;
 }
-/* Closing state — fades out slightly while sliding away */
 .left-sidebar.closing {
   opacity: 0;
   transform: translateX(-20px);
   transition: transform 0.35s ease, opacity 0.25s ease-out;
 }
-
-/* Collapsed or hidden */
 .left-sidebar:not(.open) {
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 0.25s ease-out, opacity 0.25s ease-out;
 }
-
-/* While resizing, strip heavy paints and disable events */
 .left-sidebar.resizing,
 .right-sidebar.resizing {
   box-shadow: none;
@@ -231,14 +199,7 @@ button:focus-visible {
   will-change: width;
 }
 
-
-/* ========================================================================== 
-   RIGHT SIDEBAR (Right Drawer Panel)
-   --------------------------------------------------------------------------
-   - Anchored to right edge.
-   - Slides over main content instead of resizing layout.
-   - Width is still dynamic (for resizing) but visibility handled by .open.
-   ========================================================================== */
+/* RIGHT SIDEBAR */
 .right-sidebar {
   position: fixed;
   top: 0;
@@ -249,7 +210,6 @@ button:focus-visible {
   background-color: var(--drawer-bg);
   display: flex;
   flex-direction: column;
-
   transform: translateX(100%);
   opacity: 0;
   transition: transform 0.5s ease, opacity 0.5s ease;
@@ -257,14 +217,10 @@ button:focus-visible {
   overflow: hidden;
   z-index: 22;
 }
-
-/* Slide the drawer into view */
 .right-sidebar.open {
   transform: translateX(0);
   opacity: 1;
 }
-
-/* Drawer Header (title + close button row) */
 .right-sidebar .drawer-header {
   border-bottom: 1px solid var(--drawer-border);
   padding: var(--space-sm) var(--space-md);
@@ -273,14 +229,12 @@ button:focus-visible {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
 }
-
-/* Drawer Scrollable Content Area */
 .right-sidebar .drawer-content {
   padding: var(--space-md);
 }
-
-/* Drawer Close Button */
 .right-sidebar .drawer-close-btn {
   background: none;
   border: none;
@@ -293,11 +247,6 @@ button:focus-visible {
 .right-sidebar .drawer-close-btn:hover {
   background: var(--drawer-hover-bg);
 }
-.right-sidebar .drawer-close-btn:focus {
-  outline: 2px solid var(--button-focus-outline);
-}
-
-/* Resize Handle for Right Sidebar */
 .right-sidebar .resize-handle {
   position: absolute;
   left: 0;
@@ -312,43 +261,40 @@ button:focus-visible {
 }
 
 /* ========================================================================== 
-   Scrollable Drawer Section
-   --------------------------------------------------------------------------
-   Ensures long right drawer content remains independently scrollable.
-   ========================================================================== */
-.scrollable-drawer {
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - 48px);
-  padding-right: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-}
-.scrollable-drawer::-webkit-scrollbar {
-  width: 6px;
-}
-.scrollable-drawer::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb-color);
-  border-radius: 3px;
-}
-.scrollable-drawer::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover-color);
-}
-
-/* ========================================================================== 
-   Markdown Page Container
-   --------------------------------------------------------------------------
-   Applies padding around rendered markdown pages.
+   Additional UI Enhancements
    ========================================================================== */
 .markdown-page {
   padding: var(--space-lg);
 }
 
-/* ========================================================================== 
-   NavBar & Navigation Section Styles
-   --------------------------------------------------------------------------
-   Maintains consistent styling between sections and subsections.
-   ========================================================================== */
+.mark.light-red {
+  background-color: #d18790;
+  border-radius: 4px;
+  padding: 2px 3px;
+  color: #000;
+}
+
+mark {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Sidebar links */
+.sidebar-link-active {
+  color: var(--color-accent) !important;
+  font-weight: 600;
+}
+.sidebar-link:hover {
+  color: var(--color-accent);
+}
+
+/* Markdown headings */
+h1, h2, h3, h4 {
+  color: var(--color-accent);
+}
+
+/* Nav & Tags */
 .beta-tag {
   display: inline-flex;
   align-items: center;
@@ -361,103 +307,4 @@ button:focus-visible {
   margin-left: 8px;
   border-radius: var(--chakra-radii-md, 6px);
   vertical-align: middle;
-}
-
-.nav-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.nav-section {
-  padding: var(--space-sm);
-  border-radius: var(--chakra-radii-md, 6px);
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.2s ease;
-}
-.nav-section:hover {
-  background-color: var(--nav-hover-bg);
-}
-
-.nav-section-title {
-  display: flex;
-  align-items: center;
-}
-.nav-section-text {
-  font-weight: 500;
-}
-
-.nav-subsection {
-  display: flex;
-  align-items: center;
-}
-.nav-subsection-text {
-  font-size: 0.875rem;
-  padding: 4px;
-}
-.nav-subsection-active {
-  font-weight: 700;
-}
-
-/* ========================================================================== 
-   Left Sidebar Resizer (drag handle visual)
-   --------------------------------------------------------------------------
-   The thin bar used to resize the left NavBar width.
-   ========================================================================== */
-.left-resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  cursor: col-resize;
-  background: transparent;
-}
-.left-resizer.is-resizing {
-  background: rgba(37, 99, 235, 0.15);
-}
-
-/* ==========================================================================
-   Floating Hamburger (always visible)
-   --------------------------------------------------------------------------
-   Sits at top-left of the viewport so users can re-open the sidebar when
-   it is collapsed. High z-index to avoid being occluded by sidebars/drawers.
-   ========================================================================== */
-.floating-hamburger-btn {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 9999;
-
-  /* Visuals */
-  background: var(--color-bg);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: background 0.15s ease, transform 0.05s ease;
-}
-.floating-hamburger-btn:hover {
-  background: var(--color-bg-alt);
-}
-.floating-hamburger-btn:active {
-  transform: translateY(1px);
-}
-.floating-hamburger-btn:focus {
-  outline: 2px solid var(--button-focus-outline);
-  outline-offset: 2px;
-}
-
-/* Optional tiny tweak for the NavBar header expand/collapse control */
-.nav-expand-all-btn {
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0;
-  border-radius: 6px;
 }
