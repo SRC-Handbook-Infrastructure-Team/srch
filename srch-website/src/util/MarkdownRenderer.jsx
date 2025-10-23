@@ -247,6 +247,7 @@ function MarkdownRenderer({
   onDrawerOpen,
   onNavigation,
   isFinal,
+  highlight,
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -289,7 +290,6 @@ function MarkdownRenderer({
       ),
       h2: ({ children, ...props }) => {
         const id = createIdFromHeading(children);
-        const childrenArray = Array.isArray(children) ? children : [children];
         return (
           <Heading
             as="h2"
@@ -328,24 +328,20 @@ function MarkdownRenderer({
           {...props}
         />
       ),
-      p: ({ children, ...props }) => {
-        const childrenArray = Array.isArray(children) ? children : [children];
-        return (
-          <Text mb={3} lineHeight="1.6" {...props}>
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </Text>
-        );
-      },
+      p: ({ children, ...props }) => (
+        <Text mb={3} lineHeight="1.6" {...props}>
+          {Array.isArray(children)
+            ? children.map((child) =>
+                typeof child === "string"
+                  ? highlightText(child, highlight)
+                  : child
+              )
+            : children}
+        </Text>
+      ),
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
         return (
           <Link
             color="#9D0013"
@@ -353,39 +349,21 @@ function MarkdownRenderer({
             textDecoration="none"
             _hover={{
               textDecoration: "underline",
-              color: "#7A0010", // darker shade on hover
-              
+              color: "#7A0010",
             }}
             href={props.href}
             isExternal={isExternal}
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
+            {props.children}
             {isExternal && <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />}
           </Link>
         );
       },
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
-      li: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
-        return (
-          <ListItem {...props}>
-            {childrenArray.map((child, i) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
-          </ListItem>
-        );
-      },
+      li: (props) => <ListItem {...props} />,
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
@@ -399,15 +377,8 @@ function MarkdownRenderer({
           </Table>
         </Box>
       ),
-      thead: (props) => <Thead {...props} />,
-      tbody: (props) => <Tbody {...props} />,
-      tr: (props) => <Tr {...props} />,
-      th: (props) => (
-        <Th border="1px solid" borderColor="gray.300" {...props} />
-      ),
-      td: (props) => (
-        <Td border="1px solid" borderColor="gray.300" {...props} />
-      ),
+      th: (props) => <Th border="1px solid" borderColor="gray.300" {...props} />,
+      td: (props) => <Td border="1px solid" borderColor="gray.300" {...props} />,
       img: (props) => (
         <Image
           src={props.src}
@@ -452,9 +423,9 @@ function MarkdownRenderer({
             <Text as="span" fontWeight="medium" fontSize="inherit" lineHeight="1.4">
               {value
                 ? term
-                  .replace(/-/g, " ")
-                  .replace(/Case Study(?!:)/g, "Case Study:")
-              : `Missing: ${term}`}
+                    .replace(/-/g, " ")
+                    .replace(/Case Study(?!:)/g, "Case Study:")
+                : `Missing: ${term}`}
             </Text>
             <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
           </Box>
@@ -492,5 +463,34 @@ function MarkdownRenderer({
     </div>
   );
 }
+
+/**
+ * Loads a Markdown file from the "drawer" subfolder, used for right-hand side drawers.
+ *
+ * @param {string} sectionId - The section slug (e.g. "privacy")
+ * @param {string} subsectionId - The subsection slug (e.g. "what-is-privacy")
+ * @param {string} term - The sidebar reference key (e.g. "case-study-1")
+ * @returns {Promise<{content: string, frontmatter: object} | null>}
+ */
+export const getDrawerFile = async (sectionId, subsectionId, term) => {
+  try {
+    const expectedPath = `../markdown/${sectionId}/${subsectionId}/drawer/${term}.md`;
+
+
+    for (const filePath in allMarkdownFiles) {
+      if (filePath.endsWith(expectedPath.slice(2))) {
+        const content = await allMarkdownFiles[filePath]();
+        const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+        return { content: cleanContent, frontmatter };
+      }
+    }
+
+    console.warn(`Drawer file not found for ${sectionId}/${subsectionId}/${term}`);
+    return null;
+  } catch (error) {
+    console.error("Error loading drawer file:", sectionId, subsectionId, term, error);
+    return null;
+  }
+};
 
 export default MarkdownRenderer;

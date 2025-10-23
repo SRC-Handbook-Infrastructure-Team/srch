@@ -1,15 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
-import NavBar from "../components/NavBar";
-import SidebarToggleButton from "../components/SidebarToggleButton"; // ← NEW
+import NavBar from "../components/NavBar"; // ← Top navigation (from teammate)
+import ContentsSidebar from "../components/ContentsSidebar"; // ← Left-hand contents sidebar
+import SidebarToggleButton from "../components/SidebarToggleButton"; // ← Floating hamburger toggle
 
 /**
  * SidebarLayout
  * -----------------------------------------------------------------------------
  * This component defines the overall two-sidebar layout for the application.
  * It manages:
- *   • The left navigation sidebar (NavBar)
+ *   • The left navigation sidebar (ContentsSidebar)
  *   • The right contextual drawer (Additional Information panel)
  *   • The main content region between them
  *
@@ -170,20 +171,27 @@ export default function SidebarLayout({ children }) {
    * RENDER STRUCTURE
    * --------------------------------------------------------------
    * - Provides layout context to all child components
-   * - Renders the fixed left NavBar sidebar (with slide-in animation)
-   * - Displays a toggle button to collapse/expand left sidebar
-   * - Wraps the main content region
-   * - Renders the right drawer (conditionally), which also slides in
+   * - Renders top NavBar (teammate’s component)
+   * - Renders left ContentsSidebar (your component)
+   * - Displays toggle button
+   * - Wraps main content region
+   * - Renders right drawer
    */
   return (
     <LayoutContext.Provider value={layoutValue}>
       <div className="sidebar-layout">
-        {/* LEFT SIDEBAR NAVIGATION (NavBar)
-            Directly rendered; className toggles "open" for CSS animation */}
-        <NavBar className={!leftSidebar.collapsed ? "open" : ""} />
+        {/* TOP NAVBAR (global navigation/search bar) */}
+        <NavBar />
 
-        {/* Floating Hamburger (always visible top-left) */}
-        <SidebarToggleButton />
+        {/* LEFT SIDEBAR NAVIGATION (ContentsSidebar)
+            Directly rendered; className toggles "open" for CSS animation */}
+        <ContentsSidebar className={!leftSidebar.collapsed ? "open" : ""} />
+
+        {/* Floating Hamburger (always visible top-left, above NavBar) */}
+        <div style={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 2000 }}>
+          <SidebarToggleButton />
+        </div>
+
 
         {/* MAIN CONTENT AREA */}
         <main id="main" className="main-content">

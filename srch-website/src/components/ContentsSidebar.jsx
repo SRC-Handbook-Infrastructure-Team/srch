@@ -24,10 +24,11 @@ import {
   getContent,
 } from "../util/MarkdownRenderer";
 import { initializeIndex, search } from "../util/SearchEngine";
+import { useLayout } from "../layouts/LayoutContext";
 
 /**
  * BetaTag
- * ---------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  * Small in-line label that communicates a feature/page is still in beta.
  * Visual styling is now handled by the `.beta-tag` CSS class.
  */
@@ -40,18 +41,33 @@ const BetaTag = () => (
 const EXPANDED_KEY = "contentsbar:expanded";
 
 /**
- * NavBar
- * ---------------------------------------------------------------------------
+ * parseSubsections (stub)
+ * -----------------------------------------------------------------------------
+ * Placeholder utility to extract headings from markdown content.
+ * Currently returns an empty array; reimplement if heading anchors are needed.
+ */
+function parseSubsections(content) {
+  return [];
+}
+
+/**
+ * setContentHeadings (stub)
+ * -----------------------------------------------------------------------------
+ * Placeholder state updater for section/subsection heading anchors.
+ * In full implementation, should manage a mapping of subsection IDs to headings.
+ */
+function setContentHeadings(_) {
+  // no-op stub
+}
+
+/**
+ * ContentsSidebar
+ * -----------------------------------------------------------------------------
  * The main left-hand navigation component.
  * Accepts an optional `className` prop to allow external containers (like SidebarLayout)
  * to control CSS transitions such as slide-in/out behavior.
  */
-function NavBar({ className = "" }) {
-  /**
-   * Layout & resizing control pulled from LayoutContext.
-   * This determines the left nav's width and exposes handlers
-   * for mouse/keyboard resizing.
-   */
+function ContentsSidebar({ className = "" }) {
   const [showButton, setShowButton] = useState(false);
   const { leftSidebar } = useLayout() || {};
   const {
@@ -62,19 +78,13 @@ function NavBar({ className = "" }) {
     isResizing = false,
   } = leftSidebar || {};
 
-  /**
-   * URL-driven routing info:
-   *   /:sectionId/:subsectionId?
-   * We use this to highlight the active section/subsection,
-   * and to auto-expand the active section in the tree.
-   */
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
-<<<<<<< HEAD:srch-website/src/components/NavBar.jsx
-=======
-
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
   const currentHeadingId = location.hash?.substring(1) || "";
@@ -124,7 +134,6 @@ function NavBar({ className = "" }) {
               [`${currentSectionId}/${currentSubsectionId}`]: headings,
             });
           }
->>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
         }
 
         setHasFetchedData(true);
@@ -168,95 +177,92 @@ function NavBar({ className = "" }) {
     }
   };
 
-  const NavContent = () => {
+  const NavContent = () => (
+    <VStack align="stretch" spacing={2}>
+      {/* Main Navigation */}
+      {sections.map((section, idx) => {
+        const hasSubsections = subsections[section.id]?.length > 0;
+        const isExpanded = expandedSections[section.id];
+        const isActiveSection = currentSectionId === section.id;
 
-    return (
-      <VStack align="stretch" spacing={2}>
-
-        {/* Main Navigation */}
-        {sections.map((section, idx) => {
-          const hasSubsections = subsections[section.id]?.length > 0;
-          const isExpanded = expandedSections[section.id];
-          const isActiveSection = currentSectionId === section.id;
-
-          return (
-            <Box key={section.id} mb={2}>
-              {/* Top-level section title */}
-              <Box
-                p={2}
-                cursor="pointer"
-                onClick={(e) => {
-                  const sectionSubsections = subsections[section.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${section.id}`);
-                  }
-                  toggleSection(section.id, e);
-                }}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="600" color="#1a1a1a" fontSize="md">
-                    {idx + 1}. {section.title}
-                  </Text>
-                  {section.final === false && <BetaTag />}
-                </Box>
-                {hasSubsections && (
-                  <Icon
-                    as={ChevronDownIcon}
-                    transform={isExpanded ? "rotate(180deg)" : undefined}
-                    transition="transform 0.2s"
-                    w={5}
-                    h={5}
-                    color={isActiveSection ? "#531C00" : "inherit"}
-                  />
-                )}
+        return (
+          <Box key={section.id} mb={2}>
+            {/* Top-level section title */}
+            <Box
+              p={2}
+              cursor="pointer"
+              onClick={(e) => {
+                const sectionSubsections = subsections[section.id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${section.id}`);
+                }
+                toggleSection(section.id, e);
+              }}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" alignItems="center">
+                <Text fontWeight="600" color="#1a1a1a" fontSize="md">
+                  {idx + 1}. {section.title}
+                </Text>
+                {section.final === false && <BetaTag />}
               </Box>
-
-              {/* Subsections */}
-              {isExpanded && hasSubsections && (
-                <VStack align="stretch" pl={6} mt={1} spacing={0}>
-                  {subsections[section.id].map((subsection) => {
-                    const isSubActive =
-                      isActiveSection && currentSubsectionId === subsection.id;
-
-                    return (
-                      <Box key={subsection.id} mb={1}>
-                        <Link to={`/${section.id}/${subsection.id}`}>
-                          <Box
-                            px={2}
-                            py={1}
-                            borderRadius="md"
-                            bg={isSubActive ? "#531C00" : "transparent"}
-                            transition="background-color 0.2s ease"
-                            _hover={{
-                              bg: isSubActive ? "#531C00" : "rgba(83,28,0,0.1)",
-                            }}
-                          >
-                            <Text
-                              fontSize="sm"
-                              fontWeight={isSubActive ? "600" : "400"}
-                              color={isSubActive ? "white" : "#1a1a1a"}
-                            >
-                              {subsection.title}
-                            </Text>
-                          </Box>
-                        </Link>
-                      </Box>
-                    );
-                  })}
-                </VStack>
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                  color={isActiveSection ? "#531C00" : "inherit"}
+                />
               )}
             </Box>
-          );
-        })}
-      </VStack>
-    );
-  };
->>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
+
+            {/* Subsections */}
+            {isExpanded && hasSubsections && (
+              <VStack align="stretch" pl={6} mt={1} spacing={0}>
+                {subsections[section.id].map((subsection) => {
+                  const isSubActive =
+                    isActiveSection && currentSubsectionId === subsection.id;
+
+                  return (
+                    <Box key={subsection.id} mb={1}>
+                      <Link to={`/${section.id}/${subsection.id}`}>
+                        <Box
+                          px={2}
+                          py={1}
+                          borderRadius="md"
+                          bg={isSubActive ? "#531C00" : "transparent"}
+                          transition="background-color 0.2s ease"
+                          _hover={{
+                            bg: isSubActive
+                              ? "#531C00"
+                              : "rgba(83,28,0,0.1)",
+                          }}
+                        >
+                          <Text
+                            fontSize="sm"
+                            fontWeight={isSubActive ? "600" : "400"}
+                            color={isSubActive ? "white" : "#1a1a1a"}
+                          >
+                            {subsection.title}
+                          </Text>
+                        </Box>
+                      </Link>
+                    </Box>
+                  );
+                })}
+              </VStack>
+            )}
+          </Box>
+        );
+      })}
+    </VStack>
+  );
 
   // Mobile: render a button that opens the left nav in a Drawer.
   if (isMobile) {
@@ -295,8 +301,8 @@ function NavBar({ className = "" }) {
       borderRight="1px solid #eee"
       bg="#fff"
       overflowY="auto"
+      overflowX="hidden"
       p={4}
->>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
       zIndex={10}
       aria-label="Primary navigation"
       aria-expanded={!collapsed}
@@ -308,7 +314,7 @@ function NavBar({ className = "" }) {
       {/* Left resizer (base visuals via CSS; dynamic bits remain) */}
       <Box
         className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
-        width={collapsed ? "60px" : "6px"} // dynamic width stays inline
+        width={collapsed ? "60px" : "6px"}
         onMouseDown={startResize}
         onTouchStart={startResize}
         onKeyDown={handleKeyDown}
@@ -322,4 +328,4 @@ function NavBar({ className = "" }) {
   );
 }
 
-export default NavBar;
+export default ContentsSidebar;
