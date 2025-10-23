@@ -14,12 +14,13 @@ function NavBar() {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
-
-  // Current section and subsection IDs from URL
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
 
-  // State
+  /**
+   * Data for sections + subsections.
+   * expandedSections is a map of sectionId -> boolean (expanded or not).
+   */
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
@@ -161,6 +162,8 @@ function NavBar() {
 
   return (
     <Box
+      as="aside"
+      className={`left-sidebar ${className}`.trim()}
       position="fixed"
       left={0}
       top={0}

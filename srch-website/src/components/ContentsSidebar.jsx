@@ -15,10 +15,8 @@ import {
   DrawerBody,
   useMediaQuery,
   Button,
-  Input,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { parseSubsections } from "../util/MarkdownRenderer";
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
   getSections,
@@ -27,35 +25,55 @@ import {
 } from "../util/MarkdownRenderer";
 import { initializeIndex, search } from "../util/SearchEngine";
 
-// Beta Tag Component
+/**
+ * BetaTag
+ * ---------------------------------------------------------------------------
+ * Small in-line label that communicates a feature/page is still in beta.
+ * Visual styling is now handled by the `.beta-tag` CSS class.
+ */
 const BetaTag = () => (
-  <Box
-    display="inline-flex"
-    alignItems="center"
-    justifyContent="center"
-    bg="blue.100"
-    color="blue.700"
-    fontWeight="bold"
-    fontSize="xs"
-    px={2}
-    py={0.5}
-    borderRadius="md"
-    ml={2}
-    verticalAlign="middle"
-  >
+  <Box className="beta-tag" as="span">
     BETA
   </Box>
 );
 
-const NavBar = () => {
-  const location = useLocation();
-  const currPath = location.pathname;
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+const EXPANDED_KEY = "contentsbar:expanded";
 
+/**
+ * NavBar
+ * ---------------------------------------------------------------------------
+ * The main left-hand navigation component.
+ * Accepts an optional `className` prop to allow external containers (like SidebarLayout)
+ * to control CSS transitions such as slide-in/out behavior.
+ */
+function NavBar({ className = "" }) {
+  /**
+   * Layout & resizing control pulled from LayoutContext.
+   * This determines the left nav's width and exposes handlers
+   * for mouse/keyboard resizing.
+   */
+  const [showButton, setShowButton] = useState(false);
+  const { leftSidebar } = useLayout() || {};
+  const {
+    width: leftWidth = 250,
+    collapsed = false,
+    startResize = () => {},
+    handleKeyDown = () => {},
+    isResizing = false,
+  } = leftSidebar || {};
+
+  /**
+   * URL-driven routing info:
+   *   /:sectionId/:subsectionId?
+   * We use this to highlight the active section/subsection,
+   * and to auto-expand the active section in the tree.
+   */
+  const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
+<<<<<<< HEAD:srch-website/src/components/NavBar.jsx
+=======
 
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
@@ -63,7 +81,6 @@ const NavBar = () => {
 
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
-  const [contentHeadings, setContentHeadings] = useState({});
   const [expandedSections, setExpandedSections] = useState({});
   const [hasFetchedData, setHasFetchedData] = useState(false);
 
@@ -100,16 +117,14 @@ const NavBar = () => {
         }
 
         if (currentSectionId && currentSubsectionId) {
-          const result = await getContent(
-            currentSectionId,
-            currentSubsectionId
-          );
+          const result = await getContent(currentSectionId, currentSubsectionId);
           if (result && result.content) {
             const headings = parseSubsections(result.content);
             setContentHeadings({
               [`${currentSectionId}/${currentSubsectionId}`]: headings,
             });
           }
+>>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
         }
 
         setHasFetchedData(true);
@@ -241,7 +256,9 @@ const NavBar = () => {
       </VStack>
     );
   };
+>>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
 
+  // Mobile: render a button that opens the left nav in a Drawer.
   if (isMobile) {
     return (
       <>
@@ -264,22 +281,45 @@ const NavBar = () => {
     );
   }
 
+  // Desktop: fixed sidebar with resizer.
+  const visualWidth = collapsed ? 0 : leftWidth;
+
   return (
     <Box
+      as="aside"
+      className={`left-sidebar ${className}`.trim()}
       position="fixed"
       left={0}
       top={0}
-      width="250px"
       height="100vh"
       borderRight="1px solid #eee"
       bg="#fff"
       overflowY="auto"
       p={4}
+>>>>>>> edb82ea31f0f38696cbf5a37b2187126ec9fcfb7:srch-website/src/components/ContentsSidebar.jsx
       zIndex={10}
+      aria-label="Primary navigation"
+      aria-expanded={!collapsed}
+      onMouseEnter={() => setShowButton(true)}
+      onMouseLeave={() => setShowButton(false)}
     >
       <NavContent />
+
+      {/* Left resizer (base visuals via CSS; dynamic bits remain) */}
+      <Box
+        className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
+        width={collapsed ? "60px" : "6px"} // dynamic width stays inline
+        onMouseDown={startResize}
+        onTouchStart={startResize}
+        onKeyDown={handleKeyDown}
+        role="separator"
+        aria-orientation="vertical"
+        tabIndex={0}
+        aria-label="Resize navigation pane"
+        aria-hidden={collapsed}
+      />
     </Box>
   );
-};
+}
 
 export default NavBar;

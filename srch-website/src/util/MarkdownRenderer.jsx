@@ -1,14 +1,8 @@
 /**
- * SRC Handbook Markdown System
- *
- * This file handles rendering markdown content with special features:
- * - Loading content from hierarchical section/subsection structure in /markdown/
- * - Loading drawer content from drawer folders in each subsection
- * - Rendering special [drawer:text](target) and [nav:text](target) links as buttons
- * - Supporting image references using ![Alt text](/src/assets/imagename.jpg)
- * - Parsing YAML frontmatter for title and order
- * - Generating sidebar navigation from markdown files and headers
- *
+ * Unified Markdown Renderer
+ * - Enhanced markdown (code, image, tables)
+ * - Drawer + nav-link system
+ * - Frontmatter + optional "## Sidebar" parsing
  */
 
 import { useMemo } from "react";
@@ -104,9 +98,7 @@ export const getSections = async () => {
           const { content: cleanContent, frontmatter } = parseFrontmatter(content);
           sections.push({
             id: sectionId,
-            title:
-              frontmatter.title ||
-              cleanContent.split("\n")[0].replace("# ", ""),
+            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -131,6 +123,7 @@ export const getSubsections = async (sectionId) => {
       if (
         segments.length === 5 &&
         segments[2] === sectionId &&
+        segments[3] !== "drawer" &&
         segments[4].endsWith(".md")
       ) {
         const subsectionId = segments[3];
@@ -144,9 +137,7 @@ export const getSubsections = async (sectionId) => {
           const { content: cleanContent, frontmatter } = parseFrontmatter(content);
           subsections.push({
             id: subsectionId,
-            title:
-              frontmatter.title ||
-              cleanContent.split("\n")[0].replace("# ", ""),
+            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -171,12 +162,14 @@ export const getContent = async (sectionId, subsectionId) => {
     } else {
       return null;
     }
+
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
-        const file = await allMarkdownFiles[filePath]();
-        const { content, frontmatter } = parseFrontmatter(file);
+        const content = await allMarkdownFiles[filePath]();
+        const { content: cleanContent, frontmatter } = parseFrontmatter(content);
 
-        const [mainRaw, sidebarRaw] = content.split("## Sidebar");
+        // Optional Sidebar Parsing
+        const [mainRaw, sidebarRaw] = cleanContent.split("## Sidebar");
         const mainContent = mainRaw?.trim() || "";
 
         const sidebar = {};
@@ -219,6 +212,8 @@ export const getContent = async (sectionId, subsectionId) => {
         return { content: parsedContent, sidebar, frontmatter };
       }
     }
+
+    return null;
   } catch (error) {
     console.error("Failed to load content:", sectionId, subsectionId, error);
     return null;
@@ -252,7 +247,6 @@ function MarkdownRenderer({
   onDrawerOpen,
   onNavigation,
   isFinal,
-  highlight,
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -308,11 +302,7 @@ function MarkdownRenderer({
             color="var(--color-accent)"
             {...props}
           >
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
+            {props.children}
           </Heading>
         );
       },
@@ -400,14 +390,7 @@ function MarkdownRenderer({
         inline ? (
           <Code {...props} />
         ) : (
-          <Box
-            as="pre"
-            p={2}
-            bg="gray.100"
-            borderRadius="md"
-            overflowX="auto"
-            {...props}
-          />
+          <Box as="pre" p={2} bg="gray.100" borderRadius="md" overflowX="auto" {...props} />
         ),
       table: (props) => (
         <Box overflowX="auto" my={4}>
@@ -482,34 +465,28 @@ function MarkdownRenderer({
         const target = node.properties?.target;
         return (
           <HStack
-            as="span"
+            as="button"
+            type="button"
             spacing={1}
             display="inline-flex"
             alignItems="center"
-            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onNavigation && onNavigation(target)}
             color="blue.400"
+            cursor="pointer"
+            _hover={{ color: "purple.500", textDecoration: "underline" }}
           >
-            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
-            <Icon
-              as={BsFileEarmarkText}
-              boxSize="0.8em"
-              style={{ fill: "currentColor" }}
-            />
+            <Link>{text}</Link>
+            <Icon as={BsFileEarmarkText} boxSize="0.8em" />
           </HStack>
         );
       },
     }),
-    [onDrawerOpen, onNavigation, isFinal]
+    [onDrawerOpen, onNavigation, isFinal, sectionId, subsectionId, sidebar]
   );
 
   return (
     <div>
-      <ReactMarkdown
-        components={components}
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
-      >
+      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
         {processedContent}
       </ReactMarkdown>
     </div>

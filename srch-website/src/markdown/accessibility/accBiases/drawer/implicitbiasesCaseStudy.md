@@ -1,0 +1,3 @@
+
+A fitness app uses color-coded progress indicators, such as green to signify success and red to indicate failure. While this design may seem intuitive for many users, it unintentionally excludes those with color vision deficiencies, such as red-green colorblindness, who may struggle to distinguish between these cues. As a result, critical performance feedback becomes less accessible, reinforcing an implicit bias toward users with typical color vision. This oversight highlights the importance of designing with multiple accessibility considerations in mind. A more inclusive approach would incorporate additional visual elements (i.e., icons, text labels, or patterns) to ensure all users, regardless of color perception, can effectively interpret their progress.
+
