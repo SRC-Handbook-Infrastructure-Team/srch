@@ -1,6 +1,7 @@
 /* ==========================================================================  
    Base Global Defaults
    --------------------------------------------------------------------------
+   These define app-wide rendering and color rules.
    Combined index.css (old + new)
    ========================================================================== */
 
@@ -18,7 +19,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Base Colors */
+  /* ------------------------------------------------------------------------
+     🎨 Design Tokens — Base Color System
+     ------------------------------------------------------------------------ */
   --color-text: #1a1a1a;
   --color-text-muted: #555;
   --color-bg: #ffffff;
@@ -77,7 +80,6 @@ body {
   line-height: 28px;
   color: var(--color-text);
   background-color: var(--color-bg);
-
   margin: 0;
   display: block;
   min-width: 320px;
@@ -86,11 +88,13 @@ body {
 
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--color-accent);
+  text-decoration: none;
 }
+
 a:hover {
-  color: #535bf2;
+  color: #6b3f1f;
+  text-decoration: underline;
 }
 
 button {
@@ -101,40 +105,30 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: var(--button-bg);
+  color: #fff;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* --------------------------------------------------------------------------
-   Light Theme Adjustments
-   -------------------------------------------------------------------------- */
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 /* ========================================================================== 
-   Layout: Sidebar & Drawer
+   Sidebar Layout Core Wrapper
    ========================================================================== */
 .sidebar-layout {
   display: block;
 }
 
+/* --------------------------------------------------------------------------
+   Floating Toggle Button (arrow to collapse/expand sidebar)
+   -------------------------------------------------------------------------- */
 .sidebar-layout .toggle-btn {
   position: fixed;
   top: 50%;
@@ -151,6 +145,9 @@ button:focus-visible {
   background: var(--color-bg-alt);
 }
 
+/* --------------------------------------------------------------------------
+   Main Content Area
+   -------------------------------------------------------------------------- */
 .sidebar-layout .main-content {
   margin-left: calc(var(--left-sidebar-width) - 50px);
   margin-right: calc(var(--right-sidebar-width) - 40px);
@@ -158,7 +155,9 @@ button:focus-visible {
   min-height: 100vh;
 }
 
-/* LEFT SIDEBAR */
+/* ========================================================================== 
+   LEFT SIDEBAR
+   ========================================================================== */
 .left-sidebar {
   position: fixed;
   top: 0;
@@ -176,21 +175,25 @@ button:focus-visible {
   opacity: 0;
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
+
 .left-sidebar.open,
 .left-sidebar.open.resizing {
   transform: translateX(0);
   opacity: 1;
 }
+
 .left-sidebar.closing {
   opacity: 0;
   transform: translateX(-20px);
   transition: transform 0.35s ease, opacity 0.25s ease-out;
 }
+
 .left-sidebar:not(.open) {
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 0.25s ease-out, opacity 0.25s ease-out;
 }
+
 .left-sidebar.resizing,
 .right-sidebar.resizing {
   box-shadow: none;
@@ -199,7 +202,9 @@ button:focus-visible {
   will-change: width;
 }
 
-/* RIGHT SIDEBAR */
+/* ========================================================================== 
+   RIGHT SIDEBAR (Drawer)
+   ========================================================================== */
 .right-sidebar {
   position: fixed;
   top: 0;
@@ -221,8 +226,9 @@ button:focus-visible {
   transform: translateX(0);
   opacity: 1;
 }
+
 .right-sidebar .drawer-header {
-  border-bottom: 1px solid var(--drawer-border);
+  border-bottom: 2px solid var(--color-accent);
   padding: var(--space-sm) var(--space-md);
   font-weight: 600;
   font-size: 20px;
@@ -230,7 +236,6 @@ button:focus-visible {
   justify-content: space-between;
   align-items: center;
   color: var(--color-accent);
-  border-bottom: 2px solid var(--color-accent);
 }
 .right-sidebar .drawer-content {
   padding: var(--space-md);
@@ -247,24 +252,42 @@ button:focus-visible {
 .right-sidebar .drawer-close-btn:hover {
   background: var(--drawer-hover-bg);
 }
-.right-sidebar .resize-handle {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  cursor: ew-resize;
-  background: transparent;
+
+/* ========================================================================== 
+   Scrollable Drawer Section
+   ========================================================================== */
+.scrollable-drawer {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px);
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
 }
-.right-sidebar .resize-handle.resizing {
-  background: rgba(37, 99, 235, 0.15);
+.scrollable-drawer::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-drawer::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+  border-radius: 3px;
+}
+.scrollable-drawer::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
 }
 
 /* ========================================================================== 
-   Additional UI Enhancements
+   Markdown & Content
    ========================================================================== */
 .markdown-page {
   padding: var(--space-lg);
+}
+
+mark {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 2px 4px;
 }
 
 .mark.light-red {
@@ -274,13 +297,9 @@ button:focus-visible {
   color: #000;
 }
 
-mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-/* Sidebar links */
+/* ========================================================================== 
+   Sidebar Links
+   ========================================================================== */
 .sidebar-link-active {
   color: var(--color-accent) !important;
   font-weight: 600;
@@ -289,12 +308,16 @@ mark {
   color: var(--color-accent);
 }
 
-/* Markdown headings */
+/* ========================================================================== 
+   Headings & Typography
+   ========================================================================== */
 h1, h2, h3, h4 {
   color: var(--color-accent);
 }
 
-/* Nav & Tags */
+/* ========================================================================== 
+   NavBar & Navigation Section Styles
+   ========================================================================== */
 .beta-tag {
   display: inline-flex;
   align-items: center;
@@ -307,4 +330,104 @@ h1, h2, h3, h4 {
   margin-left: 8px;
   border-radius: var(--chakra-radii-md, 6px);
   vertical-align: middle;
+}
+
+.nav-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.nav-section {
+  padding: var(--space-sm);
+  border-radius: var(--chakra-radii-md, 6px);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+.nav-section:hover {
+  background-color: var(--nav-hover-bg);
+}
+
+.nav-section-title {
+  display: flex;
+  align-items: center;
+}
+.nav-section-text {
+  font-weight: 500;
+}
+
+.nav-subsection {
+  display: flex;
+  align-items: center;
+}
+.nav-subsection-text {
+  font-size: 0.875rem;
+  padding: 4px;
+}
+.nav-subsection-active {
+  font-weight: 700;
+}
+
+/* ========================================================================== 
+   Left Sidebar Resizer (drag handle)
+   ========================================================================== */
+.left-resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+  background: transparent;
+}
+.left-resizer.is-resizing {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+/* ========================================================================== 
+   Floating Hamburger Button
+   ========================================================================== */
+.floating-hamburger-btn {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+.floating-hamburger-btn:hover {
+  background: var(--color-bg-alt);
+}
+.floating-hamburger-btn:active {
+  transform: translateY(1px);
+}
+.floating-hamburger-btn:focus {
+  outline: 2px solid var(--button-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Nav expand button */
+.nav-expand-all-btn {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 6px;
+}
+
+/* ========================================================================== 
+   Divider & Misc
+   ========================================================================== */
+.page-divider {
+  border-top: 2px solid #4f3629;
+  margin: 16px 0;
 }
