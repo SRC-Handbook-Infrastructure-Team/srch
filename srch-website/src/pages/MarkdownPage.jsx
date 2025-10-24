@@ -93,11 +93,15 @@ function MarkdownPage() {
   const [drawerContent, setDrawerContent] = useState("");
   const { openRightDrawer, closeRightDrawer } = useLayout();
 
+  // 🧩 Highlight from URL state
+  const highlight = location.state?.highlight || "";
+
   // 🧩 Drawer & sidebar states
   const [sidebar, setSidebar] = useState({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerContent, setDrawerContent] = useState("");
+
 
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
@@ -408,6 +412,7 @@ function MarkdownPage() {
               onDrawerOpen={handleDrawerOpen}
               onNavigation={handleNavigation}
               isFinal={contentFinal}
+              highlight={highlight}
             />
           </Box>
         </Box>
@@ -434,6 +439,7 @@ function MarkdownPage() {
               content={drawerContent}
               onDrawerOpen={handleDrawerOpen}
               onNavigation={handleNavigation}
+              highlight={highlight}
             />
           </DrawerBody>
         </DrawerContent>

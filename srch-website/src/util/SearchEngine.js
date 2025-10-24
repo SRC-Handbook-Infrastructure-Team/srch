@@ -43,7 +43,12 @@ const index = new FlexSearch.Document({
 
 let indexInitialized = false;
 
-// Extract h2 blocks from markdown with anchors
+/**
+ * Extract h2 blocks from markdown with anchors
+ * --------------------------------------------------------------
+ * Parses markdown and groups it into searchable blocks, each
+ * representing a logical heading section or sidebar subsection.
+ */
 function extractHeadingBlocks(
   markdown,
   sectionId,
@@ -149,6 +154,12 @@ function extractHeadingBlocks(
   return blocks;
 }
 
+/**
+ * Initialize FlexSearch index from all markdown content
+ * --------------------------------------------------------------
+ * Reads sections and subsections, parses them into heading blocks,
+ * and adds each into the FlexSearch index.
+ */
 export async function initializeIndex() {
   if (indexInitialized) return;
 
@@ -178,6 +189,9 @@ export async function initializeIndex() {
   indexInitialized = true;
 }
 
+/**
+ * Convert markdown to plaintext for search indexing and snippet extraction.
+ */
 function getPlaintextFromMarkdown(content) {
   if (!content) return "";
 
@@ -213,34 +227,95 @@ function getPlaintextFromMarkdown(content) {
 
   return content;
 }
-function createSnippet(content, query) {
+
+/**
+ * Extracts highlighted snippets from content for a search query.
+ * --------------------------------------------------------------
+ * - Finds up to `maxSnippets` short regions of text that include the query.
+ * - If no direct matches are found, highlights entire paragraphs containing it.
+ * - Always returns an array of snippets for consistency.
+ * - Fallback: highlights full content if nothing matches at all.
+ */
+function createSnippet(content, query, radius = 30, maxSnippets = 5) {
+  if (!content || !query) return [];
+
+  const snippets = [];
+  const contentLower = content.toLowerCase();
   const queryLower = query.toLowerCase();
-  const regex = new RegExp(
-    `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-    "gi"
-  );
-  const paragraphs = content.split(/\n\s*\n/);
+  let startIndex = 0;
 
-  // Filter to only paragraphs containing the query
-  const matchedParagraphs = paragraphs.filter((para) =>
-    para.toLowerCase().includes(queryLower)
-  );
+  // First pass: find local context snippets
+  while (snippets.length < maxSnippets) {
+    const index = contentLower.indexOf(queryLower, startIndex);
+    if (index === -1) break;
 
-  if (matchedParagraphs.length === 0) {
-    // fallback: highlight entire content if no paragraph found
-    return content.replace(regex, '<mark class="light-red">$1</mark>').trim();
+    // Move start backward to word boundary
+    let start = index;
+    while (
+      start > 0 &&
+      /\S/.test(content[start - 1]) &&
+      !/\s/.test(content[start - 1])
+    ) {
+      start--;
+    }
+
+    // Move end forward to next whitespace after radius
+    let end = index + query.length + radius;
+    while (end < content.length && /\S/.test(content[end])) {
+      end++;
+    }
+    end = Math.min(content.length, end);
+
+    // Highlight the query
+    const regex = new RegExp(
+      `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+      "gi"
+    );
+    let snippet = content.substring(start, end).replace(
+      regex,
+      '<mark class="light-red">$1</mark>'
+    );
+
+    snippets.push(snippet.trim() + "...");
+    startIndex = index + query.length;
   }
 
-  // Highlight query in matched paragraphs
-  const snippet = matchedParagraphs
-    .map((para) =>
-      para.replace(regex, '<mark class="light-red">$1</mark>').trim()
-    )
-    .join("\n\n");
+  // Paragraph fallback: if no localized snippets found
+  if (snippets.length === 0) {
+    const paragraphs = content.split(/\n\s*\n/);
+    const regex = new RegExp(
+      `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+      "gi"
+    );
+    const matchedParagraphs = paragraphs.filter((para) =>
+      para.toLowerCase().includes(queryLower)
+    );
 
-  return snippet.trim();
+    if (matchedParagraphs.length > 0) {
+      const paragraphSnippets = matchedParagraphs.map((para) =>
+        para.replace(regex, '<mark class="light-red">$1</mark>').trim()
+      );
+      return paragraphSnippets;
+    }
+
+    // Ultimate fallback: highlight entire content
+    const fallback = content.replace(
+      regex,
+      '<mark class="light-red">$1</mark>'
+    );
+    return [fallback];
+  }
+
+  return snippets;
 }
 
+
+/**
+ * Search function returning results and snippets
+ * --------------------------------------------------------------
+ * Performs a FlexSearch query, extracts plaintext,
+ * generates highlighted snippets, and returns structured results.
+ */
 export async function search(query) {
   if (!query || query.length < 3) return [];
 
@@ -262,17 +337,20 @@ export async function search(query) {
     const doc = res.doc;
     if (doc && doc.content) {
       const plainText = getPlaintextFromMarkdown(doc.content);
-      const snippet = createSnippet(plainText, query);
+      const snippets = createSnippet(plainText, query, 30, 5);
 
-      const uniqueKey = res.id;
-      if (!seenKeys.has(uniqueKey) && snippet.includes('class="light-red"')) {
-        seenKeys.add(uniqueKey);
-        snippetResults.push({
-          ...res,
-          snippet,
-          allSnippets: [snippet],
-        });
-      }
+      snippets.forEach((snippet, i) => {
+        const uniqueKey = `${res.id}_${i}`;
+        if (!seenKeys.has(uniqueKey)) {
+          seenKeys.add(uniqueKey);
+          snippetResults.push({
+            ...res,
+            id: `${res.id}_snippet_${i}`,
+            snippet,
+            allSnippets: snippets,
+          });
+        }
+      });
     }
   });
 

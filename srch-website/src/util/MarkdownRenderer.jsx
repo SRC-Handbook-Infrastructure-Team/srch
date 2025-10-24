@@ -1,8 +1,9 @@
 /**
- * Unified Markdown Renderer
- * - Enhanced markdown (code, image, tables)
- * - Drawer + nav-link system
- * - Frontmatter + optional "## Sidebar" parsing
+ * MarkdownRenderer.jsx
+ *
+ * Renders Markdown content with Chakra UI components.
+ * Handles headings, paragraphs, links, lists, tables, and embedded drawers.
+ * Includes support for highlighting search terms.
  */
 
 import { useMemo } from "react";
@@ -32,6 +33,8 @@ import {
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
+/* ----------------------------- Highlight Utility ----------------------------- */
+
 function highlightText(text, highlight) {
   if (!highlight) return text;
   const regex = new RegExp(`(${highlight})`, "gi");
@@ -40,6 +43,8 @@ function highlightText(text, highlight) {
     regex.test(part) ? <mark key={index}>{part}</mark> : part
   );
 }
+
+/* ----------------------------- Utility Functions ----------------------------- */
 
 export function createIdFromHeading(text) {
   if (!text) return "";
@@ -76,26 +81,34 @@ export function parseFrontmatter(content) {
   return { content: cleanContent, frontmatter };
 }
 
+/* ----------------------------- Markdown Imports ----------------------------- */
+
 export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   query: "?raw",
   import: "default",
 });
+
+/* ----------------------------- Section Loaders ----------------------------- */
 
 export const getSections = async () => {
   try {
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSections = new Set();
+
     for (const path of paths) {
       const segments = path.split("/");
       if (segments[2] === "primers") continue;
+
       if (segments.length === 4 && segments[3].endsWith(".md")) {
         const sectionId = segments[2];
         const fileName = segments[3];
+
         if (fileName === `${sectionId}.md` && !processedSections.has(sectionId)) {
           processedSections.add(sectionId);
           const content = await allMarkdownFiles[path]();
           const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+
           sections.push({
             id: sectionId,
             title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
@@ -106,6 +119,7 @@ export const getSections = async () => {
         }
       }
     }
+
     return sections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error loading sections:", error);
@@ -118,6 +132,7 @@ export const getSubsections = async (sectionId) => {
     const subsections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSubsections = new Set();
+
     for (const path of paths) {
       const segments = path.split("/");
       if (
@@ -128,13 +143,12 @@ export const getSubsections = async (sectionId) => {
       ) {
         const subsectionId = segments[3];
         const fileName = segments[4];
-        if (
-          fileName === `${subsectionId}.md` &&
-          !processedSubsections.has(subsectionId)
-        ) {
+
+        if (fileName === `${subsectionId}.md` && !processedSubsections.has(subsectionId)) {
           processedSubsections.add(subsectionId);
           const content = await allMarkdownFiles[path]();
           const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+
           subsections.push({
             id: subsectionId,
             title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
@@ -145,12 +159,15 @@ export const getSubsections = async (sectionId) => {
         }
       }
     }
+
     return subsections.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error(`Error loading subsections for ${sectionId}:`, error);
     return [];
   }
 };
+
+/* ----------------------------- Content Loader ----------------------------- */
 
 export const getContent = async (sectionId, subsectionId) => {
   try {
@@ -229,6 +246,7 @@ export const getContent = async (sectionId, subsectionId) => {
         const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
         });
+
         return { content: parsedContent, sidebar, frontmatter };
       }
     }
@@ -240,13 +258,17 @@ export const getContent = async (sectionId, subsectionId) => {
   }
 };
 
+/* ----------------------------- Subsection Parser ----------------------------- */
+
 export const parseSubsections = (content) => {
   if (!content) return [];
   const contentStr = typeof content === "string" ? content : content.content;
   if (!contentStr) return [];
+
   const normalizedContent = contentStr.replace(/\r/g, "");
   const lines = normalizedContent.split("\n");
   const subsections = [];
+
   for (const line of lines) {
     if (line.startsWith("## ")) {
       const title = line.replace("## ", "");
@@ -256,8 +278,11 @@ export const parseSubsections = (content) => {
       });
     }
   }
+
   return subsections;
 };
+
+/* ----------------------------- Markdown Renderer ----------------------------- */
 
 function MarkdownRenderer({
   content,
@@ -304,12 +329,19 @@ function MarkdownRenderer({
     () => ({
       h1: (props) => (
         <Heading as="h1" size="xl" mt={10} mb={3} {...props}>
-          {props.children}
+          {Array.isArray(props.children)
+            ? props.children.map((child) =>
+                typeof child === "string"
+                  ? highlightText(child, highlight)
+                  : child
+              )
+            : props.children}
           {isFinal === false && <BetaTag />}
         </Heading>
       ),
       h2: ({ children, ...props }) => {
         const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
         return (
           <Heading
             as="h2"
@@ -322,32 +354,14 @@ function MarkdownRenderer({
             color="var(--color-accent)"
             {...props}
           >
-            {props.children}
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
           </Heading>
         );
       },
-      h3: (props) => (
-        <Heading
-          as="h3"
-          size="sm"
-          mt={3}
-          mb={2}
-          lineHeight="1.3"
-          color="var(--color-accent)"
-          {...props}
-        />
-      ),
-      h4: (props) => (
-        <Heading
-          as="h4"
-          size="sm"
-          mt={2}
-          mb={1}
-          lineHeight="1.3"
-          color="var(--color-accent)"
-          {...props}
-        />
-      ),
       p: ({ children, ...props }) => (
         <Text mb={3} lineHeight="1.6" {...props}>
           {Array.isArray(children)
@@ -362,6 +376,9 @@ function MarkdownRenderer({
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
         return (
           <Link
             color="#9D0013"
@@ -376,19 +393,43 @@ function MarkdownRenderer({
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {props.children}
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
             {isExternal && <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />}
           </Link>
         );
       },
+      li: (props) => {
+        const childrenArray = Array.isArray(props.children)
+          ? props.children
+          : [props.children];
+        return (
+          <ListItem {...props}>
+            {childrenArray.map((child) =>
+              typeof child === "string"
+                ? highlightText(child, highlight)
+                : child
+            )}
+          </ListItem>
+        );
+      },
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
-      li: (props) => <ListItem {...props} />,
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
         ) : (
-          <Box as="pre" p={2} bg="gray.100" borderRadius="md" overflowX="auto" {...props} />
+          <Box
+            as="pre"
+            p={2}
+            bg="gray.100"
+            borderRadius="md"
+            overflowX="auto"
+            {...props}
+          />
         ),
       table: (props) => (
         <Box overflowX="auto" my={4}>
@@ -472,12 +513,16 @@ function MarkdownRenderer({
         );
       },
     }),
-    [onDrawerOpen, onNavigation, isFinal, sectionId, subsectionId, sidebar]
+    [onDrawerOpen, onNavigation, isFinal, sectionId, subsectionId, sidebar, highlight]
   );
 
   return (
     <div>
-      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        components={components}
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm]}
+      >
         {processedContent}
       </ReactMarkdown>
     </div>
@@ -485,7 +530,8 @@ function MarkdownRenderer({
 }
 
 /**
- * Loads a Markdown file from the "drawer" subfolder, used for right-hand side drawers.
+ * Loads a Markdown file from the "drawer" subfolder.
+ * Used for right-hand side drawer panels.
  *
  * @param {string} sectionId - The section slug (e.g. "privacy")
  * @param {string} subsectionId - The subsection slug (e.g. "what-is-privacy")
@@ -495,7 +541,6 @@ function MarkdownRenderer({
 export const getDrawerFile = async (sectionId, subsectionId, term) => {
   try {
     const expectedPath = `../markdown/${sectionId}/${subsectionId}/drawer/${term}.md`;
-
 
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(expectedPath.slice(2))) {
