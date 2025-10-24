@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   useToast,
@@ -8,6 +8,7 @@ import {
   DrawerHeader,
   DrawerContent,
   DrawerCloseButton,
+  DrawerOverlay,
   Divider,
   Text,
 } from "@chakra-ui/react";
@@ -25,36 +26,62 @@ import MarkdownRenderer, {
  *
  * Rules:
  * - Section numbering is fixed by product spec (Privacy=1, Accessibility=2, ADM=3, GenAI=4).
- * - Subsection letters come from a small slug→letter map.
+ * - Subsection letters come from index-based ordering (a, b, c...).
  * - Prefer frontmatter `title` (pageTitle) when present; otherwise prettify the slug.
  *
- * @param {string} sectionId - URL slug for the section (e.g., "privacy")
- * @param {string} subsectionId - URL slug for the subsection (e.g., "what-is-privacy")
- * @param {string} pageTitle - Optional human title from markdown frontmatter
- * @returns {string} The formatted header like "1.a - What is Privacy?"
+ * This version reuses the same numbering logic as ContentsSidebar.
  */
-function getFormattedTitle(sectionId, subsectionId, pageTitle) {
-  const sectionMap = {
-    privacy: "1",
-    accessibility: "2",
-    "automated-decision-making": "3",
-    "generative-ai": "4",
-  };
 
-  const subsectionLetters = {
-    "what-is-privacy": "a",
-    "value-of-privacy": "b",
-    "what-is-accessibility": "a",
-  };
+// ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
+const SECTION_NUMBER_MAP = {
+  privacy: "1",
+  accessibility: "2",
+  "automated-decision-making": "3",
+  "generative-ai": "4",
+};
 
-  const sectionNum = sectionMap[sectionId] || "?";
-  const letter = subsectionLetters[subsectionId] || "";
+// convert 0 -> 'a', 1 -> 'b', etc.
+function indexToLetter(index) {
+  let s = "";
+  let i = index;
+  do {
+    s = String.fromCharCode(97 + (i % 26)) + s;
+    i = Math.floor(i / 26) - 1;
+  } while (i >= 0);
+  return s;
+}
 
-  const titleText = pageTitle && pageTitle.trim()
-    ? pageTitle.trim()
-    : (subsectionId || sectionId || "")
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (m) => m.toUpperCase());
+// prettify "what-is-privacy" → "What Is Privacy"
+function prettifySlug(slug = "") {
+  return String(slug)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (m) => m.toUpperCase())
+    .trim();
+}
+
+/**
+ * Build a formatted header string using the loaded subsections array.
+ * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
+ *
+ * @param {string} sectionId
+ * @param {string} subsectionId
+ * @param {string} pageTitle
+ * @param {Array} subsectionsArr  // array of { id, title, order, ... }
+ * @returns {string}
+ */
+function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = []) {
+  const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
+
+  let letter = "";
+  if (subsectionId && Array.isArray(subsectionsArr) && subsectionsArr.length > 0) {
+    const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
+    if (idx >= 0) letter = indexToLetter(idx);
+  }
+
+  const titleText =
+    pageTitle && pageTitle.trim()
+      ? pageTitle.trim()
+      : prettifySlug(subsectionId || sectionId || "");
 
   return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
 }
@@ -64,7 +91,10 @@ function MarkdownPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-  const { openRightDrawer, closeRightDrawer } = useLayout();
+
+  //  Guard against undefined context (edge cases/tests)
+  const layout = useLayout() || {};
+  const { openRightDrawer, closeRightDrawer } = layout;
 
   // 🧩 Highlight from URL state
   const highlight = location.state?.highlight || "";
@@ -74,7 +104,6 @@ function MarkdownPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerContent, setDrawerContent] = useState("");
-
 
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
@@ -95,6 +124,12 @@ function MarkdownPage() {
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef(null);
   const contentRef = useRef(null);
+
+  // compute header once subsections are available to avoid '?' and race conditions
+  const formattedTitle = useMemo(
+    () => getFormattedTitle(sectionId, subsectionId, pageTitle, subsections),
+    [sectionId, subsectionId, pageTitle, subsections]
+  );
 
   // --- Store valid previous path ---
   useEffect(() => {
@@ -117,15 +152,39 @@ function MarkdownPage() {
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
         if (result) {
-          const cleaned = result.content.replace(/^# .*\n+/, "");
+          // Strip leading H1 and blank lines to avoid duplicate title below divider
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
 
-          const subsections = await getSubsections(sectionId);
+          //  renamed local variable to avoid shadowing
+          const subs = await getSubsections(sectionId);
+
+          //  sanitize subsections to remove falsy/drawer entries
+          const validSubs = (subs || [])
+            .filter((s) => s && s.id && typeof s.id === "string")
+            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+            .map((s) => ({
+              ...s,
+              title:
+                (s.title && String(s.title).trim()) ||
+                String(s.id || "")
+                  .replace(/[-_]/g, " ")
+                  .replace(/\b\w/g, (m) => m.toUpperCase()),
+            }))
+            .sort(
+              (a, b) =>
+                (Number.isFinite(a.order) ? a.order : 999) -
+                (Number.isFinite(b.order) ? b.order : 999)
+            );
+
+          setSubsections(validSubs);
+
           if (!result.content.trim() || result.content.trim().length < 50) {
-            if (subsections.length > 0) navigate(`/${sectionId}/${subsections[0].id}`);
+            if (validSubs.length > 0) navigate(`/${sectionId}/${validSubs[0].id}`);
           }
         } else {
           toast({
@@ -146,7 +205,9 @@ function MarkdownPage() {
       if (sectionId && subsectionId) {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
-          const cleaned = result.content.replace(/^# .*\n+/, "");
+          // Strip leading H1 and blank lines to avoid duplicate title below divider
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
@@ -175,7 +236,24 @@ function MarkdownPage() {
     let active = true;
     getSubsections(sectionId)
       .then((data) => {
-        if (active) setSubsections(data);
+        if (!active) return;
+        const validSubs = (data || [])
+          .filter((s) => s && s.id && typeof s.id === "string")
+          .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+          .map((s) => ({
+            ...s,
+            title:
+              (s.title && String(s.title).trim()) ||
+              String(s.id || "")
+                .replace(/[-_]/g, " ")
+                .replace(/\b\w/g, (m) => m.toUpperCase()),
+          }))
+          .sort(
+            (a, b) =>
+              (Number.isFinite(a.order) ? a.order : 999) -
+              (Number.isFinite(b.order) ? b.order : 999)
+          );
+        setSubsections(validSubs);
       })
       .catch((err) => console.error("Failed to load subsections:", err));
     return () => {
@@ -312,7 +390,7 @@ function MarkdownPage() {
         <Box mb={10}>
           <Box mb={6}>
             <Text fontSize="2xl" fontWeight="semibold" color="#4F3629" mb={2}>
-              {getFormattedTitle(sectionId, subsectionId, pageTitle)}
+              {formattedTitle}
             </Text>
             <Divider borderColor="#4F3629" borderWidth="1.5px" mb={8} />
           </Box>
@@ -343,9 +421,19 @@ function MarkdownPage() {
         blockScrollOnMount={false}
         trapFocus={false}
       >
-        <DrawerContent sx={{ width: `${drawerWidth}px !important` }} maxWidth="80vw" position="relative">
+        {/* Added overlay for accessibility / UX */}
+        <DrawerOverlay />
+        <DrawerContent
+          sx={{ width: `${drawerWidth}px !important` }}
+          maxWidth="80vw"
+          position="relative"
+        >
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="2px" color="var(--color-accent)" borderColor="var(--color-accent)">
+          <DrawerHeader
+            borderBottomWidth="2px"
+            color="var(--color-accent)"
+            borderColor="var(--color-accent)"
+          >
             {sidebar[drawerTerm]?.heading || drawerTerm}
           </DrawerHeader>
           <DrawerBody>
