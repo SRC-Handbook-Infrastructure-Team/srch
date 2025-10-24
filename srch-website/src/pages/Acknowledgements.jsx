@@ -76,7 +76,7 @@ function Acknowledgements() {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={5} mb={3}>
+      <Heading as="h1" size="xl" mt={10} mb={3}>
         Acknowledgements
       </Heading>
     </div>
@@ -99,7 +99,7 @@ function Team({ teamName }) {
   };
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={5} mb={3}>
+      <Heading as="h1" size="xl" mt={10} mb={3}>
         {nameToTitleMap[teamName]} Team
       </Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
@@ -129,7 +129,7 @@ function AdditionalContributors() {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={5} mb={3}>
+      <Heading as="h1" size="xl" mt={10} mb={3}>
         Additional Contributors
       </Heading>
       <Divider my={4} borderColor="gray.300" />{" "}

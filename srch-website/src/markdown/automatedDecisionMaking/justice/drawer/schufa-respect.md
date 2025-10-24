@@ -1,0 +1,8 @@
+## Case Study: SCHUFA 
+SCHUFA, a German credit bureau, provides creditworthiness scores to lenders based on automated processing of personal data. When an individual was denied credit after SCHUFA supplied information about her, she requested access to details about how her score was determined. SCHUFA provided some data but refused to explain the calculation methodology, citing trade secrets. After a series of appeals, the case reached the CJEU, which ruled decisively on the side of respect for individuals.
+
+The Court determined that when credit scoring agencies create probability scores through automated processing that significantly affect individuals, they engage in "automated decision-making" under Article 22 of the GDPR. This triggered important protections: the right to meaningful information about the logic involved, the right to human intervention, and the right to express one's point of view and challenge the decision.
+
+This case established that respect in algorithmic systems requires more than merely efficient processing; it demands treating individuals as autonomous agents who deserve explanations and recourse. The judgment forcefully rejected the notion that commercial interests in algorithmic secrecy outweigh individuals' rights to understand decisions that affect their lives. This respect manifests through both interface transparency (providing explanations) and substantive rights (offering meaningful recourse).
+
+[Further Reading](https://iapp.org/news/a/key-takeaways-from-the-cjeus-recent-automated-decision-making-rulings)

@@ -1,3 +1,15 @@
+/* ==========================================================================  
+   Base Global Defaults
+   --------------------------------------------------------------------------
+   These define app-wide rendering and color rules.
+   Combined index.css (old + new)
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+
+/* --------------------------------------------------------------------------
+   Root Design Tokens & Theme Variables
+   -------------------------------------------------------------------------- */
 :root {
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -7,24 +19,82 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  /* ------------------------------------------------------------------------
+     🎨 Design Tokens — Base Color System
+     ------------------------------------------------------------------------ */
   --color-text: #1a1a1a;
+  --color-text-muted: #555;
   --color-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-border: #e0d7ce; /* from new theme */
+  --color-accent: #7b4b24; /* new accent color */
+  --color-accent-light: #f3ece6;
+
+  /* Feedback / Utility Colors */
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* Shadows & elevation */
+  --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Component Tokens */
+  --sidebar-bg: var(--color-bg);
+  --sidebar-border: var(--color-border);
+  --nav-hover-bg: #f7fafc;
+
+  --drawer-bg: var(--color-bg);
+  --drawer-border: var(--color-border);
+  --drawer-hover-bg: #f0f0f0;
+
+  --button-bg: #1a1a1a;
+  --button-hover-border: #646cff;
+  --button-focus-outline: var(--color-accent);
+
+  --scrollbar-thumb-color: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb-hover-color: rgba(0, 0, 0, 0.5);
+  --scrollbar-track-color: transparent;
+
+  --beta-bg: #bfdbfe;
+  --beta-text: #1e40af;
+
+  /* Layout Tokens */
+  --radius-md: 4px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  /* Sidebar Widths */
+  --left-sidebar-width: 250px;
+  --right-sidebar-width: 400px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* --------------------------------------------------------------------------
+   Global Typography & Base
+   -------------------------------------------------------------------------- */
 body {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;
+  line-height: 28px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   margin: 0;
   display: block;
   min-width: 320px;
   min-height: 100vh;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #6b3f1f;
+  text-decoration: underline;
 }
 
 button {
@@ -34,27 +104,330 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--button-bg);
+  color: #fff;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ========================================================================== 
+   Sidebar Layout Core Wrapper
+   ========================================================================== */
+.sidebar-layout {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Floating Toggle Button (arrow to collapse/expand sidebar)
+   -------------------------------------------------------------------------- */
+.sidebar-layout .toggle-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 25;
+  transition: background 0.2s, left 0.2s;
+}
+.sidebar-layout .toggle-btn:hover {
+  background: var(--color-bg-alt);
+}
+
+/* --------------------------------------------------------------------------
+   Main Content Area
+   -------------------------------------------------------------------------- */
+.sidebar-layout .main-content {
+  margin-left: calc(var(--left-sidebar-width) - 50px);
+  margin-right: calc(var(--right-sidebar-width) - 40px);
+  transition: margin 150ms ease;
+  min-height: 100vh;
+}
+
+/* ========================================================================== 
+   LEFT SIDEBAR
+   ========================================================================== */
+.left-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--left-sidebar-width);
+  background-color: var(--sidebar-bg);
+  color: var(--color-text);
+  border-right: 1px solid var(--sidebar-border);
+  will-change: width;
+  contain: layout paint style;
+  box-shadow: var(--shadow-elevated);
+  z-index: 25;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.left-sidebar.open,
+.left-sidebar.open.resizing {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.left-sidebar.closing {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: transform 0.35s ease, opacity 0.25s ease-out;
+}
+
+.left-sidebar:not(.open) {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.left-sidebar.resizing,
+.right-sidebar.resizing {
+  box-shadow: none;
+  pointer-events: none;
+  transition: none !important;
+  will-change: width;
+}
+
+/* ========================================================================== 
+   RIGHT SIDEBAR (Drawer)
+   ========================================================================== */
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: var(--right-sidebar-width);
+  border-left: 1px solid var(--drawer-border);
+  background-color: var(--drawer-bg);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  will-change: transform, opacity;
+  overflow: hidden;
+  z-index: 22;
+}
+.right-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.right-sidebar .drawer-header {
+  border-bottom: 2px solid var(--color-accent);
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 600;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-accent);
+}
+.right-sidebar .drawer-content {
+  padding: var(--space-md);
+}
+.right-sidebar .drawer-close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+}
+.right-sidebar .drawer-close-btn:hover {
+  background: var(--drawer-hover-bg);
+}
+
+/* ========================================================================== 
+   Scrollable Drawer Section
+   ========================================================================== */
+.scrollable-drawer {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px);
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+}
+.scrollable-drawer::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-drawer::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+  border-radius: 3px;
+}
+.scrollable-drawer::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
+}
+
+/* ========================================================================== 
+   Markdown & Content
+   ========================================================================== */
+.markdown-page {
+  padding: var(--space-lg);
+}
+
+mark {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+.mark.light-red {
+  background-color: #d18790;
+  border-radius: 4px;
+  padding: 2px 3px;
+  color: #000;
+}
+
+/* ========================================================================== 
+   Sidebar Links
+   ========================================================================== */
+.sidebar-link-active {
+  color: var(--color-accent) !important;
+  font-weight: 600;
+}
+.sidebar-link:hover {
+  color: var(--color-accent);
+}
+
+/* ========================================================================== 
+   Headings & Typography
+   ========================================================================== */
+h1, h2, h3, h4 {
+  color: var(--color-accent);
+}
+
+/* ========================================================================== 
+   NavBar & Navigation Section Styles
+   ========================================================================== */
+.beta-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--beta-bg);
+  color: var(--beta-text);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: var(--chakra-radii-md, 6px);
+  vertical-align: middle;
+}
+
+.nav-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.nav-section {
+  padding: var(--space-sm);
+  border-radius: var(--chakra-radii-md, 6px);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+.nav-section:hover {
+  background-color: var(--nav-hover-bg);
+}
+
+.nav-section-title {
+  display: flex;
+  align-items: center;
+}
+.nav-section-text {
+  font-weight: 500;
+}
+
+.nav-subsection {
+  display: flex;
+  align-items: center;
+}
+.nav-subsection-text {
+  font-size: 0.875rem;
+  padding: 4px;
+}
+.nav-subsection-active {
+  font-weight: 700;
+}
+
+/* ========================================================================== 
+   Left Sidebar Resizer (drag handle)
+   ========================================================================== */
+.left-resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+  background: transparent;
+}
+.left-resizer.is-resizing {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+/* ========================================================================== 
+   Floating Hamburger Button
+   ========================================================================== */
+.floating-hamburger-btn {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+.floating-hamburger-btn:hover {
+  background: var(--color-bg-alt);
+}
+.floating-hamburger-btn:active {
+  transform: translateY(1px);
+}
+.floating-hamburger-btn:focus {
+  outline: 2px solid var(--button-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Nav expand button */
+.nav-expand-all-btn {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 6px;
+}
+
+/* ========================================================================== 
+   Divider & Misc
+   ========================================================================== */
+.page-divider {
+  border-top: 2px solid #4f3629;
+  margin: 16px 0;
 }
