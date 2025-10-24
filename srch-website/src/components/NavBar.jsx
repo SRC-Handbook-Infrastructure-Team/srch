@@ -192,14 +192,17 @@ function NavBar() {
         px={4}
       >
         <Box cursor="pointer" onClick={() => navigate("/")}>
-          <Image
-            src={logo}
-            alt="Logo"
-            boxSize="75px"
-            objectFit="contain"
-            paddingTop={2}
-            paddingBottom={2}
-          />
+          <HStack alignItems={"center"}>
+            <Image
+              src={logo}
+              alt="Logo"
+              boxSize="75px"
+              objectFit="contain"
+              paddingTop={2}
+              paddingBottom={2}
+            />
+            <Text fontSize={"xx-large"} fontWeight={"bold"}>SRC Handbook</Text>
+          </HStack>
         </Box>
 
         <HStack spacing={4} ml="auto">
