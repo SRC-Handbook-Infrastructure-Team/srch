@@ -197,6 +197,7 @@ export const getContent = async (sectionId, subsectionId) => {
           "## All Sidebar Content Below"
         );
         // Optional Sidebar Parsing
+        const [mainRaw, sidebarRaw] = cleanContent.split("## Sidebar");
         const mainContent = mainRaw?.trim() || "";
 
         const sidebar = {};
