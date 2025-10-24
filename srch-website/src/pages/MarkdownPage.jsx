@@ -299,7 +299,7 @@ function MarkdownPage() {
       return;
     }
 
-    const sidebarContent = sidebar[term]
+    const sidebarContent = sidebar[term];
     if (sidebarContent) {
       setDrawerTerm(urlTerm);
       setDrawerContent(sidebarContent);
