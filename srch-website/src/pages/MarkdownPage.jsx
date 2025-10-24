@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useM } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   useToast,
@@ -79,12 +79,10 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle) {
   return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
 }
 
-function MarkdownPage() {
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const cachedContent = useRef({}); // used to store content to prevent multiple getContent calls
 
@@ -100,10 +98,7 @@ function MarkdownPage() {
   const [sidebar, setSidebar] = useState({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
-  const [drawerContent, setDrawerContent] = useState("");
 
-
-  const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
@@ -271,6 +266,7 @@ function MarkdownPage() {
       );
       setIsDrawerOpen(true);
     }
+  }
   }, [urlTerm, sidebar]);
 
   // --- Utility navigation check ---
