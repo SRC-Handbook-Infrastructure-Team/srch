@@ -25,6 +25,7 @@ function MarkdownPage() {
   const toast = useToast();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const highlight = location.state?.highlight || "";
+  
   const contentRef = useRef();
   // State for content
   const [mainContent, setMainContent] = useState("");
