@@ -104,14 +104,20 @@ export const getSections = async () => {
         const sectionId = segments[2];
         const fileName = segments[3];
 
-        if (fileName === `${sectionId}.md` && !processedSections.has(sectionId)) {
+        if (
+          fileName === `${sectionId}.md` &&
+          !processedSections.has(sectionId)
+        ) {
           processedSections.add(sectionId);
           const content = await allMarkdownFiles[path]();
-          const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
 
           sections.push({
             id: sectionId,
-            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
+            title:
+              frontmatter.title ||
+              cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -144,14 +150,20 @@ export const getSubsections = async (sectionId) => {
         const subsectionId = segments[3];
         const fileName = segments[4];
 
-        if (fileName === `${subsectionId}.md` && !processedSubsections.has(subsectionId)) {
+        if (
+          fileName === `${subsectionId}.md` &&
+          !processedSubsections.has(subsectionId)
+        ) {
           processedSubsections.add(subsectionId);
           const content = await allMarkdownFiles[path]();
-          const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
 
           subsections.push({
             id: subsectionId,
-            title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
+            title:
+              frontmatter.title ||
+              cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
             final: frontmatter.final,
@@ -191,9 +203,10 @@ export const getContent = async (sectionId, subsectionId) => {
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
         const content = await allMarkdownFiles[filePath]();
-        const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+        const { content: cleanContent, frontmatter } =
+          parseFrontmatter(content);
 
-        const [mainRaw, sidebarRaw] = content.split(
+        const [mainRaw, sidebarRaw] = cleanContent.split(
           "## All Sidebar Content Below"
         );
         // Optional Sidebar Parsing
@@ -397,7 +410,9 @@ function MarkdownRenderer({
                 ? highlightText(child, highlight)
                 : child
             )}
-            {isExternal && <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />}
+            {isExternal && (
+              <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
+            )}
           </Link>
         );
       },
@@ -437,8 +452,12 @@ function MarkdownRenderer({
           </Table>
         </Box>
       ),
-      th: (props) => <Th border="1px solid" borderColor="gray.300" {...props} />,
-      td: (props) => <Td border="1px solid" borderColor="gray.300" {...props} />,
+      th: (props) => (
+        <Th border="1px solid" borderColor="gray.300" {...props} />
+      ),
+      td: (props) => (
+        <Td border="1px solid" borderColor="gray.300" {...props} />
+      ),
       img: (props) => (
         <Image
           src={props.src}
@@ -480,7 +499,12 @@ function MarkdownRenderer({
             whiteSpace="nowrap"
             transition="background-color 0.2s ease"
           >
-            <Text as="span" fontWeight="medium" fontSize="inherit" lineHeight="1.4">
+            <Text
+              as="span"
+              fontWeight="medium"
+              fontSize="inherit"
+              lineHeight="1.4"
+            >
               {value
                 ? term
                     .replace(/-/g, " ")
@@ -512,7 +536,15 @@ function MarkdownRenderer({
         );
       },
     }),
-    [onDrawerOpen, onNavigation, isFinal, sectionId, subsectionId, sidebar, highlight]
+    [
+      onDrawerOpen,
+      onNavigation,
+      isFinal,
+      sectionId,
+      subsectionId,
+      sidebar,
+      highlight,
+    ]
   );
 
   return (
@@ -544,15 +576,24 @@ export const getDrawerFile = async (sectionId, subsectionId, term) => {
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(expectedPath.slice(2))) {
         const content = await allMarkdownFiles[filePath]();
-        const { content: cleanContent, frontmatter } = parseFrontmatter(content);
+        const { content: cleanContent, frontmatter } =
+          parseFrontmatter(content);
         return { content: cleanContent, frontmatter };
       }
     }
 
-    console.warn(`Drawer file not found for ${sectionId}/${subsectionId}/${term}`);
+    console.warn(
+      `Drawer file not found for ${sectionId}/${subsectionId}/${term}`
+    );
     return null;
   } catch (error) {
-    console.error("Error loading drawer file:", sectionId, subsectionId, term, error);
+    console.error(
+      "Error loading drawer file:",
+      sectionId,
+      subsectionId,
+      term,
+      error
+    );
     return null;
   }
 };
