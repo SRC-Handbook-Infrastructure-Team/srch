@@ -62,7 +62,7 @@ A key aspect of this collaborative process is **parallel low-fidelity prototypin
 
 Fair and representative data collection is crucial for ensuring that datasets used in AI or UX research reflect the diversity of real-world experiences. This inclusivity helps prevent bias in model predictions and design decisions, which encourages more equitable and effective solutions for a broader range of users.
 
-## All Sidebar Content Below
+## Sidebar
 
 Case-Study-for-Automation-Bias: 
 A designer implements a high-contrast mode in a new app to improve accessibility for visually impaired users. After gathering feedback from a small group of users who respond positively, the designer assumes the solution effectively meets the needs of all individuals with visual impairments. However, this assumption reflects confirmation bias, as it overlooks users with different accessibility needs– such as those with light sensitivity, who may find high-contrast modes uncomfortable or even painful. By failing to consider a diverse range of user experiences, the designer unintentionally creates an exclusionary design that benefits some but alienates others. A more inclusive approach would involve engaging a wider range of users, incorporating iterative testing, and offering customizable contrast settings to accommodate varying accessibility needs.

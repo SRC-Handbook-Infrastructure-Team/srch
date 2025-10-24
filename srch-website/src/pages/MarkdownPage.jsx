@@ -15,26 +15,10 @@ import MarkdownRenderer, {
   getContent,
   getSubsections,
 } from "../util/MarkdownRenderer";
+import { BsSignIntersectionSideFill } from "react-icons/bs";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
-
-  /*
-
-  Hook Explanation: 
-  - sectionId: refers to the module name (ex: Privacy, Accessibility, Generative AI)
-  - subSectionId: refers to the article name (ex: bias, fairness, whatIsAccessibility)
-  - urlTerm: only used for sidebar content to create a unique slug for every sidebar
-  (ex:)
-  - sidebar and setSidebar: sidebar is the dictionary that maps all of the sidebar terms
-  (what the user sees and can click) to the actual content relating to that term
-  
-  drawerTerm and setDrawerTerm: drawerTerm is used to set the heading for each
-  sidebar, if a heading is provided then the drawer term is set to the heading
-  if not it is automatically pulled
-
-
-  */
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,7 +34,7 @@ function MarkdownPage() {
   const [drawerTerm, setDrawerTerm] = useState("");
   const [contentFinal, setContentFinal] = useState(undefined);
 
-  // Drawer resize state 
+  // Drawer resize state
   const [drawerWidth, setDrawerWidth] = useState(() => {
     try {
       const savedWidth = localStorage.getItem("drawerWidth");
@@ -114,7 +98,7 @@ function MarkdownPage() {
             position: "bottom-right",
           });
 
-          // Navigate back to the previous valid path instead of changing the URL
+          // Naviga5te back to the previous valid path instead of changing the URL
           navigate(previousPath, { replace: true });
         }
         setIsLoading(false);
@@ -165,6 +149,7 @@ function MarkdownPage() {
 
       // Parse the path
       const pathParts = path.split("/").filter(Boolean);
+
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
       const targetTerm = pathParts[2] || null;
@@ -179,8 +164,7 @@ function MarkdownPage() {
             contentExists = true;
             handleDrawerOpen(targetTerm);
           }
-        } 
-        else if (targetSubsectionId) {
+        } else if (targetSubsectionId) {
           // Check if the section and subsection exist
           const result = await getContent(targetSectionId, targetSubsectionId);
           contentExists = result !== null;
@@ -235,13 +219,13 @@ function MarkdownPage() {
   // Handle clicking drawer links
   function handleDrawerOpen(term) {
     // Load drawer content for the current section/subsection
+
     setDrawerTerm(term);
 
     if (!sidebar) {
       console.warn("Sidebar not loaded yet");
       return;
     }
-
     const content = sidebar[term];
     if (content) {
       setDrawerContent(content);

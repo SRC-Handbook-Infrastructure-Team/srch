@@ -163,7 +163,7 @@ Warren, Samuel D., and Louis D. Brandeis. "The Right to Privacy." _Harvard Law R
 
 Wheeler, Evan. _Security Risk Management: Building an Information Security Risk Management Program from the Ground Up_. Elsevier Science & Technology Books, 2011. https://doi.org/10.1016/C2010-0-64926-1.
 
-## All Sidebar Content Below
+## Sidebar
 
 gate-we-can-open-close-to-others:
 Heading:Case 

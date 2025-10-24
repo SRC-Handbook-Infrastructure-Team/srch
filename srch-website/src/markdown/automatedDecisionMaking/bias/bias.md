@@ -146,7 +146,7 @@ Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Rese
 [^3]: Suresh, “A Framework for Understanding Sources of Harm “
 [^4]: Suresh, “A Framework for Understanding Sources of Harm"
 
-## All Sidebar Content Below
+## Sidebar
 
 ai-dev-lifecycle: 
 Heading: Understanding AI Development Lifecycle

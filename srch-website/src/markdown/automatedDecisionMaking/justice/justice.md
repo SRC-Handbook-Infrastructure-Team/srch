@@ -245,7 +245,7 @@ Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14,
 Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
 
 
-## All Sidebar Content Below
+## Sidebar
 
 Case-Study-Annie-MOORE:
 Heading: Annie MOORE
