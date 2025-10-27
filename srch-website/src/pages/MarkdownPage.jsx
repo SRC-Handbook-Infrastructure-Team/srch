@@ -20,6 +20,26 @@ import MarkdownRenderer, {
   getDrawerFile,
 } from "../util/MarkdownRenderer";
 
+function MarkdownPage() {
+  // Get parameters from URL and location for hash
+
+  /*
+
+  Hook Explanation: 
+  - sectionId: refers to the module name (ex: Privacy, Accessibility, Generative AI)
+  - subSectionId: refers to the article name (ex: bias, fairness, whatIsAccessibility)
+  - urlTerm: only used for sidebar content to create a unique slug for every sidebar
+  (ex:)
+  - sidebar and setSidebar: sidebar is the dictionary that maps all of the sidebar terms
+  (what the user sees and can click) to the actual content relating to that term
+  
+  drawerTerm and setDrawerTerm: drawerTerm is used to set the heading for each
+  sidebar, if a heading is provided then the drawer term is set to the heading
+  if not it is automatically pulled
+
+
+  */
+
 /**
  * Formats the compact page header that sits above the divider, e.g.:
  * "1.a - What is Privacy?"
@@ -86,11 +106,12 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
   return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
 }
 
-function MarkdownPage() {
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
+  const cachedContent = useRef({});
+  
 
   //  Guard against undefined context (edge cases/tests)
   const layout = useLayout() || {};
@@ -103,7 +124,6 @@ function MarkdownPage() {
   const [sidebar, setSidebar] = useState({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
-  const [drawerContent, setDrawerContent] = useState("");
 
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
@@ -131,6 +151,48 @@ function MarkdownPage() {
     [sectionId, subsectionId, pageTitle, subsections]
   );
 
+  // Helper function to generate cache key based on the section and subsection
+  function getCacheKey(section, subsection = null) {
+    return subsection ? `${section}/${subsection}` : section;
+  }
+
+  async function getCachedContent(section, subsection = null) {
+    const cacheKey = getCacheKey(section, subsection);
+
+    // if the content is already cached, then we just want to retrieve it
+    if (cachedContent.current[cacheKey]) {
+      return cachedContent.current[cacheKey];
+    }
+
+    // if the content has not been cached, cache it
+    const result = await getContent(section, subsection);
+    if (result) {
+      cachedContent.current[cacheKey] = result;
+    }
+
+    return result;
+  }
+
+  function getSidebarContent(
+    term,
+    targetSectionId = sectionId,
+    targetSubsectionId = subsectionId
+  ) {
+    if (sidebar && sidebar[term]) {
+      return sidebar[term];
+    }
+
+    const cacheKey = getCacheKey(targetSectionId, targetSubsectionId);
+    const storedContent = cachedContent.current[cacheKey];
+
+    if (storedContent && storedContent.sidebar && storedContent.sidebar[term]) {
+      return storedContent.sidebar[term];
+    }
+
+    return null;
+  }
+
+  // Store the current valid path whenever content loads successfully
   // --- Store valid previous path ---
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
@@ -150,7 +212,8 @@ function MarkdownPage() {
 
       // Load top-level section
       if (sectionId && !subsectionId) {
-        const result = await getContent(sectionId);
+        const result = await getCachedContent(sectionId);
+
         if (result) {
           // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
@@ -195,6 +258,8 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+
+          // Navigate back to the previous valid path instead of changing the URL
           navigate(previousPath, { replace: true });
         }
         setIsLoading(false);
@@ -203,7 +268,7 @@ function MarkdownPage() {
 
       // Load subsection
       if (sectionId && subsectionId) {
-        const result = await getContent(sectionId, subsectionId);
+        const result = await getCachedContent(sectionId, subsectionId);
         if (result) {
           // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
@@ -263,11 +328,21 @@ function MarkdownPage() {
 
   /** Reacts when a URL drawer term is provided. */
   useEffect(() => {
+    if (!urlTerm) return;
+
+    const sidebarEntry = getSidebarContent(urlTerm);
+
+    if (sidebarEntry) {
     if (urlTerm && sidebar && sidebar[urlTerm]) {
       setDrawerTerm(urlTerm);
-      setDrawerContent(sidebar[urlTerm].content);
+      setDrawerContent(
+        typeof sidebarEntry === "string"
+          ? sidebarEntry
+          : sidebarEntry.content || " "
+      );
       setIsDrawerOpen(true);
     }
+  }
   }, [urlTerm, sidebar]);
 
   // --- Utility navigation check ---
@@ -280,10 +355,27 @@ function MarkdownPage() {
 
       try {
         let contentExists = false;
-        if (targetSubsectionId) {
-          contentExists = (await getContent(targetSectionId, targetSubsectionId)) !== null;
+
+        if (targetSubsectionId && targetTerm) {
+          const result = await getCachedContent(
+            targetSectionId,
+            targetSubsectionId
+          );
+          if (result && result.sidebar && result.sidebar[targetTerm]) {
+            contentExists = true;
+            handleDrawerOpen(targetTerm);
+          }
+        } else if (targetSubsectionId) {
+          // Check if the section and subsection exist
+          const result = await getCachedContent(
+            targetSectionId,
+            targetSubsectionId
+          );
+          contentExists = result !== null;
         } else {
-          contentExists = (await getContent(targetSectionId)) !== null;
+          // Check if just the section exists
+          const result = await getCachedContent(targetSectionId);
+          contentExists = result !== null;
         }
 
         if (contentExists) navigate(`/${path}`);
@@ -314,43 +406,31 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  /** Opens the right-hand drawer and displays its markdown content. */
-  function handleDrawerOpen(targetId) {
-    if (sectionId && subsectionId) {
-      getDrawerFile(sectionId, subsectionId, targetId).then((result) => {
-        if (result) {
-          openRightDrawer(
-            <Box
-              height="100%"
-              maxH="100vh"
-              overflowY="auto"
-              p={4}
-              flex="1"
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                scrollbarWidth: "thin",
-                scrollbarColor: "rgba(0,0,0,0.3) transparent",
-              }}
-            >
-              <MarkdownRenderer
-                content={result.content}
-                onDrawerOpen={handleDrawerOpen}
-                onNavigation={handleNavigation}
-                highlight={highlight}
-              />
-            </Box>
-          );
-        } else {
-          toast({
-            title: "Drawer Content Not Found",
-            description: `The drawer content "${targetId}" could not be found in /src/markdown/${sectionId}/${subsectionId}/drawer/.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-        }
+  // Handle clicking drawer links
+  function handleDrawerOpen(term) {
+    // Load drawer content for the current section/subsection
+    setDrawerTerm(term);
+
+    if (!sidebar) {
+      console.warn("Sidebar not loaded yet");
+      return;
+    }
+
+    const sidebarContent = sidebar[term];
+    if (sidebarContent) {
+      setDrawerTerm(urlTerm);
+      setDrawerContent(sidebarContent);
+      setIsDrawerOpen(true);
+
+      navigate(`/${sectionId}/${subsectionId}/${term}`);
+    } else {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
       });
     }
   }

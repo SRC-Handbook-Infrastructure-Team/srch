@@ -68,7 +68,7 @@ function NavBar({ className = "" }) {
 
         setSubsections(subsectionsMap);
 
-        if (!currentSectionId && sortedSections.length > 0) {
+        if (!currentSectionId && currentPath !== '/' && sortedSections.length > 0) {
           navigate(`/${sortedSections[0].id}`, { replace: true });
         }
 
@@ -199,14 +199,17 @@ function NavBar({ className = "" }) {
       >
         {/* Logo section */}
         <Box cursor="pointer" onClick={() => navigate("/")}>
-          <Image
-            src={logo}
-            alt="Logo"
-            boxSize="75px"
-            objectFit="contain"
-            paddingTop={2}
-            paddingBottom={2}
-          />
+          <HStack alignItems={"center"}>
+            <Image
+              src={logo}
+              alt="Logo"
+              boxSize="75px"
+              objectFit="contain"
+              paddingTop={2}
+              paddingBottom={2}
+            />
+            <Text fontSize={"xx-large"} fontWeight={"bold"}>SRC Handbook</Text>
+          </HStack>
         </Box>
 
         {/* Navigation links */}

@@ -76,7 +76,9 @@ function extractHeadingBlocks(
         lines.length > 0
           ? lines[0].startsWith("Heading:")
             ? lines[0].replace(/^Heading:\s*/, "")
-            : lines[0].split(/\s+/).slice(0, 5).join(" ") + "..."
+            : getPlaintextFromMarkdown(
+                lines[0].split(/\s+/).slice(0, 5).join(" ") + "..."
+              )
           : anchor,
       content: (lines.length > 0 && lines[0].startsWith("Heading:")
         ? lines.slice(1)
@@ -119,7 +121,7 @@ function extractHeadingBlocks(
           subsectionTitle: subsectionTitle,
           anchor: currentAnchor,
           title: currentTitle,
-          content: currentTitle + "\n" + currentLines.join("\n").trim(),
+          content: currentLines.join("\n").trim(),
           isDrawer: false,
         });
       }
@@ -308,16 +310,8 @@ function createSnippet(content, query, radius = 30, maxSnippets = 5) {
 
   return snippets;
 }
-
-
-/**
- * Search function returning results and snippets
- * --------------------------------------------------------------
- * Performs a FlexSearch query, extracts plaintext,
- * generates highlighted snippets, and returns structured results.
- */
 export async function search(query) {
-  if (!query || query.length < 3) return [];
+  if (!query) return [];
 
   const results = index.search(query, {
     enrich: true,
@@ -335,22 +329,57 @@ export async function search(query) {
 
   allResults.forEach((res) => {
     const doc = res.doc;
-    if (doc && doc.content) {
-      const plainText = getPlaintextFromMarkdown(doc.content);
-      const snippets = createSnippet(plainText, query, 30, 5);
+    if (doc) {
+      const regex = new RegExp(
+        `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+        "gi"
+      );
 
-      snippets.forEach((snippet, i) => {
-        const uniqueKey = `${res.id}_${i}`;
-        if (!seenKeys.has(uniqueKey)) {
-          seenKeys.add(uniqueKey);
+      const titleMatches =
+        doc.title && doc.title.toLowerCase().includes(query.toLowerCase());
+      const contentHasMatch =
+        doc.content &&
+        getPlaintextFromMarkdown(doc.content)
+          .toLowerCase()
+          .includes(query.toLowerCase());
+
+      // Add title match as a result
+      if (titleMatches) {
+        const titleKey = `${res.id}-title`;
+        if (!seenKeys.has(titleKey)) {
+          seenKeys.add(titleKey);
           snippetResults.push({
             ...res,
-            id: `${res.id}_snippet_${i}`,
-            snippet,
-            allSnippets: snippets,
+            id: titleKey,
+            snippet: doc.title.replace(
+              regex,
+              '<mark class="light-red">$1</mark>'
+            ),
+            allSnippets: [
+              doc.title.replace(regex, '<mark class="light-red">$1</mark>'),
+            ],
           });
         }
-      });
+      }
+
+      // Add content match as a separate result
+      if (contentHasMatch) {
+        const contentKey = `${res.id}-content`;
+        if (!seenKeys.has(contentKey)) {
+          const plainText = getPlaintextFromMarkdown(doc.content);
+          const contentSnippet = createSnippet(plainText, query);
+
+          if (contentSnippet.includes('class="light-red"')) {
+            seenKeys.add(contentKey);
+            snippetResults.push({
+              ...res,
+              id: contentKey,
+              snippet: contentSnippet,
+              allSnippets: [contentSnippet],
+            });
+          }
+        }
+      }
     }
   });
 

@@ -5,7 +5,6 @@ import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
 
 function SearchResults() {
-  console.log("Rendering SearchResults component");
   const { query } = useParams();
   const decodedQuery = decodeURIComponent(query || "");
   const [searchQuery, setSearchQuery] = useState(decodedQuery || "");
