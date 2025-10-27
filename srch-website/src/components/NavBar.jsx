@@ -68,7 +68,7 @@ function NavBar({ className = "" }) {
 
         setSubsections(subsectionsMap);
 
-        if (!currentSectionId && sortedSections.length > 0) {
+        if (!currentSectionId && currentPath !== '/' && sortedSections.length > 0) {
           navigate(`/${sortedSections[0].id}`, { replace: true });
         }
 

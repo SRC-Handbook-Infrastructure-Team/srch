@@ -83,9 +83,10 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle) {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-
-  const cachedContent = useRef({}); // used to store content to prevent multiple getContent calls
-
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const highlight = location.state?.highlight || "";
+  
+  const contentRef = useRef();
   // State for content
   const [mainContent, setMainContent] = useState("");
   const [drawerContent, setDrawerContent] = useState("");
