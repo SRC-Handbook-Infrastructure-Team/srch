@@ -1,0 +1,4 @@
+## Case Study: Annie MOORE
+Annie MOORE is an AI-powered matching system that has been implemented by the U.S. refugee resettlement agency HIAS since 2018. The system operationalizes sufficiency by matching refugees to host communities where each individual has a high likelihood of achieving a minimum threshold of employment and economic security. The system assesses refugees’ backgrounds and personal needs against local opportunities and resources. Through this process, the system enhances refugee integration and facilitates targeted resource allocation, which allows agencies like HIAS to provide more tailored support to individuals facing significant challenges.
+
+[Further Reading](https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer?utm_source=chatgpt.com)

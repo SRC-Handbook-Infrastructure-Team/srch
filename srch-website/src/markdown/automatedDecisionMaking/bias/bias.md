@@ -146,7 +146,7 @@ Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Rese
 [^3]: Suresh, “A Framework for Understanding Sources of Harm “
 [^4]: Suresh, “A Framework for Understanding Sources of Harm"
 
-## Sidebar
+## All Sidebar Content Below
 
 ai-dev-lifecycle: 
 Heading: Understanding AI Development Lifecycle
@@ -280,4 +280,5 @@ E.g: False arrests due to erroneous facial recognition make it difficult for peo
 [^2]:  *Facial Recognition And The Facial Difference Community*
 
 [^3]:   MacMillan, *Police Ignore Standards*
+
 

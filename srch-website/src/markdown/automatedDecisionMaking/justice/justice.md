@@ -245,7 +245,7 @@ Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14,
 Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
 
 
-## Sidebar
+## All Sidebar Content Below
 
 Case-Study-Annie-MOORE:
 Heading: Annie MOORE
@@ -331,3 +331,4 @@ Heading: Car Insurance Premiums in Michigan
 Insurance companies have increasingly adopted AI to optimize pricing for car insurance. These algorithms analyze vast amounts of data, including location, driving history, and demographic information, to determine premiums. While these systems offer efficiency and cost savings, they often perpetuate existing biases. For example, studies have shown that drivers in predominantly Black neighborhoods within regions like Michigan are charged higher premiums compared to those in predominantly White neighborhoods, despite similar accident risks. This bias reflects historical discrimination and can exacerbate economic inequalities by disproportionately affecting marginalized communities. To address these types of issues, it is crucial to implement mechanisms for accountability, like those mentioned in this primer, to ensure fairness and equity in automated decision-making processes.
 
 [Further Reading](https://www.governing.com/policy/michigans-fair-and-reasonable-reforms-allowed-car-insurers-to-charge-more-in-black-neighborhoods?utm_source=chatgpt.com)
+

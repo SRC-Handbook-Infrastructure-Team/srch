@@ -1,0 +1,1 @@
+As Véliz puts it, “What used to be the paradigmatic loci of the private—our homes and our minds—have become the paradigmatic loci of data collection” (2024, 45). For more on the mind component, see [“The Extended Mind”](https://www.jstor.org/stable/3328150) (1998) by Clark and Chalmers.

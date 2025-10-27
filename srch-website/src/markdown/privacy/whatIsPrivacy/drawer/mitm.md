@@ -1,0 +1,3 @@
+For more details on man-in-the-middle (MITM) attacks, see [“What is a man-in-the-middle (MITM) attack?”](https://www.ibm.com/think/topics/man-in-the-middle) from IBM.
+
+**Case:** Edward Snowden publicized evidence that the U.S. National Security Agency (NSA) was intercepting traffic between Yahoo and Google data centers through a surveillance program known as MUSCULAR. See 2013 the Washington Post article ["NSA infiltrates links to Yahoo, Google data centers worldwide, Snowden documents say"](https://www.washingtonpost.com/world/national-security/nsa-infiltrates-links-to-yahoo-google-data-centers-worldwide-snowden-documents-say/2013/10/30/e51d661e-4166-11e3-8b74-d89d714ca4dd_story.html) by Gellman and Soltani to learn more.
