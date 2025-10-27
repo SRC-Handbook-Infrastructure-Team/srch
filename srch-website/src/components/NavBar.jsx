@@ -1,30 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, Image, HStack, VStack, Icon } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { SearchBar } from "./SearchBar";
 import logo from "../assets/logo.png";
-import { useCallback } from "react";
-import { useRef } from "react";
 
-function NavBar() {
+/**
+ * NavBar
+ * -----------------------------------------------------------------------------
+ * The global top navigation bar of the site.
+ * Handles navigation across sections and modules,
+ * as well as the site search input and static navigation links.
+ * -----------------------------------------------------------------------------
+ */
+function NavBar({ className = "" }) {
   const location = useLocation();
-
   const navigate = useNavigate();
+
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
-
-  // Current section and subsection IDs from URL
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
 
-  // State
+  /**
+   * Data for sections + subsections.
+   * expandedSections is a map of sectionId -> boolean (expanded or not).
+   */
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const hasLoadedData = useRef(false);
   const [openSection, setOpenSection] = useState(null);
+
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
     setOpenSection((prev) => (prev === sectionKey ? null : sectionKey));
@@ -36,17 +44,17 @@ function NavBar() {
     async function loadAllData() {
       try {
         const sectionsData = await getSections();
-
         const sortedSections = [...sectionsData].sort(
           (a, b) => a.order - b.order
         );
         setSections(sortedSections);
 
         const subsectionsMap = {};
+        // Fix: expandStateMap was missing declaration before use
+        const expandStateMap = {};
 
         for (const section of sortedSections) {
           const sectionSubsections = await getSubsections(section.id);
-
           if (sectionSubsections.length > 0) {
             subsectionsMap[section.id] = sectionSubsections.sort(
               (a, b) => a.order - b.order
@@ -60,7 +68,7 @@ function NavBar() {
 
         setSubsections(subsectionsMap);
 
-        if (!currentSectionId && sortedSections.length > 0) {
+        if (!currentSectionId && currentPath !== '/' && sortedSections.length > 0) {
           navigate(`/${sortedSections[0].id}`, { replace: true });
         }
 
@@ -161,36 +169,35 @@ function NavBar() {
 
   return (
     <Box
+      as="header"
+      className={`top-navbar ${className}`.trim()}
       position="fixed"
-      left={0}
       top={0}
+      left={0}
       width="100vw"
-      height={"min-content"}
+      height="min-content"
       margin={0}
-      borderRight="1px solid"
+      borderBottom="1px solid"
       borderColor="gray.200"
       bg="white"
       overflowY="auto"
-      overflow={"visible"}
-      boxShadow={"2px 2px 5px rgba(0, 0, 0, 0.1)"}
-      zIndex={10}
+      overflow="visible"
+      boxShadow="2px 2px 5px rgba(0, 0, 0, 0.1)"
+      zIndex={20}
       sx={{
-        "& a:hover": {
-          color: "#9D0013",
-        },
-        "& a:button": {
-          color: "#9D0013",
-        },
+        "& a:hover": { color: "#9D0013" },
+        "& a:button": { color: "#9D0013" },
       }}
     >
       <HStack
         align="stretch"
         justify="space-between"
         spacing={2}
-        overflow={"visible"}
+        overflow="visible"
         width="100%"
         px={4}
       >
+        {/* Logo section */}
         <Box cursor="pointer" onClick={() => navigate("/")}>
           <HStack alignItems={"center"}>
             <Image
@@ -205,6 +212,7 @@ function NavBar() {
           </HStack>
         </Box>
 
+        {/* Navigation links */}
         <HStack spacing={4} ml="auto">
           <NavDropdown
             title="Modules"
@@ -224,6 +232,7 @@ function NavBar() {
             isExpanded={openSection === "modules"}
             onToggle={(e) => toggleSection("modules", e)}
           />
+
           <Box
             p={2}
             borderRadius="md"
@@ -242,18 +251,18 @@ function NavBar() {
           >
             <Text>{"About"}</Text>
           </Box>
+
           <Box
             p={2}
             borderRadius="md"
             cursor="pointer"
             textAlign="center"
-            onClick={() => {
-              navigate("/acknowledgements/leadership");
-            }}
+            onClick={() => navigate("/acknowledgements/leadership")}
             _hover={{ color: "#9D0013" }}
           >
             <Text>{"Acknowledgements"}</Text>
           </Box>
+
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}

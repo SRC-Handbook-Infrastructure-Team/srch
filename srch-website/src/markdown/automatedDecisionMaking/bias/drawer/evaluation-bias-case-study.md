@@ -1,0 +1,3 @@
+Evaluation bias is present in facial expression recognition datasets. Common benchmarks like AffectNet and FER2013 contain images taken in controlled settings and processed to account for crops, rotation, and more. **In a model that seeks to predict facial expressions in naturalistic settings, benchmarking against these datasets would introduce evaluation bias by failing to reflect the use population**. Indeed, many facial expression recognition models report up to 95% accuracy, but state-of-the-art expression recognition “in the wild” is only 72%.[^1]
+
+[^1]: Babisha, _Advancements in Facial Expression Recognition;_ Roy, _ResEmoteNet_

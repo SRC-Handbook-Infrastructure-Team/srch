@@ -1,0 +1,4 @@
+## Case Study: AI Tools for LA Housing
+In contrast to systems that penalize applicants by relying on traditional credit and eviction data, Los Angeles is piloting an AI-driven approach to housing allocation designed to prioritize those with the most urgent needs. In this model developed by USC researchers and community stakeholders, historical data is re-examined and adjusted for inherent biases. Instead of using a flat scoring system that inadvertently lowers scores for those with housing vouchers, the new system assigns additional weight to factors demonstrating acute vulnerability, like prolonged homelessness or pronounced gaps in income. This provision, currently being implemented by the Los Angeles Homeless Services Authority (LAHSA), ensures that applicants facing extreme hardship are given preferential consideration.
+
+[Further Reading](https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai)

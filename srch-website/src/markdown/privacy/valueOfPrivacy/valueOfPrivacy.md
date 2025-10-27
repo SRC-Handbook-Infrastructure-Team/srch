@@ -51,7 +51,7 @@ Privacy may privacy trade-offs—some of which were seen in this section–with 
 
 Privacy may also {conflict-with-itself} in some scenarios, as two different parties may want privacy in a mutually incompatible way. Here, who receives privacy when is called into question. Regulations serve to systematize these choices.
 
-## Sidebar
+## All Sidebar Content Below
 
 goods:
 Heading: Goods Defintion
@@ -166,3 +166,5 @@ Many formal and informal groups may seek this kind of privacy. This includes, bu
 
 conflict-with-itself:
 One example of this is [forensic investigation](https://www.jstor.org/stable/43741598?seq=3). By collecting some data of many people to begin with, when an investigation is needed, more people can be excluded based on the beginning data and will not have their privacy needlessly violated. If this doesn’t occur, then more people will need to be investigated deeply, requiring a trade-off in who gets privacy, even if the average amount of privacy between individuals is the same.
+
+

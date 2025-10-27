@@ -1,0 +1,1 @@
+Since 2000, the Supreme Court has considered how privacy protections apply to thermal-imaging ([*Kyllo v. United States*](https://www.oyez.org/cases/2000/99-8508)), GPS tracking ([*United States v. Jones*](https://www.oyez.org/cases/2011/10-1259)), and cellphone records ([*Carpenter v. United States*](https://www.oyez.org/cases/2017/16-402)) among other emerging technologies.
