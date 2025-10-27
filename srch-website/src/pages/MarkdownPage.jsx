@@ -17,7 +17,6 @@ import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
-  getDrawerFile,
 } from "../util/MarkdownRenderer";
 
 function MarkdownPage() {
@@ -126,6 +125,7 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
   const [drawerTerm, setDrawerTerm] = useState("");
 
   const [mainContent, setMainContent] = useState("");
+  const [drawerContent, setDrawerContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
