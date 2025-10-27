@@ -132,14 +132,12 @@
   align-self: stretch;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   display: inline-flex;
 }
 
 .curriculum-title {
-  align-items: center;
-  text-align: center;
   color: black;
   font-size: 48px;
   font-family: "Funnel Sans", sans-serif;
@@ -342,6 +340,7 @@
   text-align: center;
   color: black;
   font-size: 48px;
+  padding-bottom: 36px;
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 500;
   word-wrap: break-word;
@@ -350,6 +349,7 @@
 .how-to-info {
   align-self: stretch;
   flex-direction: column;
+  padding-top: 12px;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 18px;
@@ -946,4 +946,5 @@ h1, h2, h3, h4 {
 .page-divider {
   border-top: 2px solid #4f3629;
   margin: 16px 0;
+}
 }
