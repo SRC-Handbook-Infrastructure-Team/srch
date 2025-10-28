@@ -1,1 +1,0 @@
-This section does not cover differential privacy. For more information, view the section focusing on the goods and trade-offs that come from differential privacy specifically. 
