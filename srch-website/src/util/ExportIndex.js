@@ -1,10 +1,6 @@
-import FlexSearch from "flexsearch";
-import {
-  getSections,
-  getSubsections,
-  createIdFromHeading,
-} from "./MarkdownRenderer.jsx";
 import fs from "fs";
+import FlexSearch from "flexsearch";
+import path from "path";
 
 // Create the FlexSearch Document index
 const index = new FlexSearch.Document({
@@ -42,6 +38,159 @@ const index = new FlexSearch.Document({
 });
 
 let indexInitialized = false;
+
+// markdown renderer
+
+/* ----------------------------- Markdown Imports ----------------------------- */
+
+
+export async function getAllMarkdownFiles() {
+  const markdownDir = path.resolve("src/markdown");
+  const markdownFiles = {};
+
+  const files = fs.readdirSync(markdownDir);
+
+  for (const file of files) {
+    if (file.endsWith(".md")) {
+      const fullPath = path.join(markdownDir, file);
+      const content = fs.readFileSync(fullPath, "utf-8");
+      markdownFiles[file] = () => Promise.resolve(content);
+    }
+  }
+
+  return markdownFiles;
+}
+
+const allMarkdownFiles = await getAllMarkdownFiles();
+
+
+/* ----------------------------- Section Loaders ----------------------------- */
+
+export const getSections = async () => {
+  try {
+    const sections = [];
+    const paths = Object.keys(allMarkdownFiles);
+    const processedSections = new Set();
+
+    for (const path of paths) {
+      const segments = path.split("/");
+      if (segments[2] === "primers") continue;
+
+      if (segments.length === 4 && segments[3].endsWith(".md")) {
+        const sectionId = segments[2];
+        const fileName = segments[3];
+
+        if (
+          fileName === `${sectionId}.md` &&
+          !processedSections.has(sectionId)
+        ) {
+          processedSections.add(sectionId);
+          const content = await allMarkdownFiles[path]();
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+
+          sections.push({
+            id: sectionId,
+            title:
+              frontmatter.title ||
+              cleanContent.split("\n")[0].replace("# ", ""),
+            order: frontmatter.order || 999,
+            content: cleanContent,
+            final: frontmatter.final,
+          });
+        }
+      }
+    }
+
+    return sections.sort((a, b) => a.order - b.order);
+  } catch (error) {
+    console.error("Error loading sections:", error);
+    return [];
+  }
+};
+
+export const getSubsections = async (sectionId) => {
+  try {
+    const subsections = [];
+    const paths = Object.keys(allMarkdownFiles);
+    const processedSubsections = new Set();
+
+    for (const path of paths) {
+      const segments = path.split("/");
+      if (
+        segments.length === 5 &&
+        segments[2] === sectionId &&
+        segments[3] !== "drawer" &&
+        segments[4].endsWith(".md")
+      ) {
+        const subsectionId = segments[3];
+        const fileName = segments[4];
+
+        if (
+          fileName === `${subsectionId}.md` &&
+          !processedSubsections.has(subsectionId)
+        ) {
+          processedSubsections.add(subsectionId);
+          const content = await allMarkdownFiles[path]();
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+
+          subsections.push({
+            id: subsectionId,
+            title:
+              frontmatter.title ||
+              cleanContent.split("\n")[0].replace("# ", ""),
+            order: frontmatter.order || 999,
+            content: cleanContent,
+            final: frontmatter.final,
+          });
+        }
+      }
+    }
+
+    return subsections.sort((a, b) => a.order - b.order);
+  } catch (error) {
+    console.error(`Error loading subsections for ${sectionId}:`, error);
+    return [];
+  }
+};
+
+/* ----------------------------- Utility Functions ----------------------------- */
+
+export function createIdFromHeading(text) {
+  if (!text) return "";
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+export function parseFrontmatter(content) {
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
+  const match = content.match(frontmatterRegex);
+
+  if (!match) {
+    return { content, frontmatter: {} };
+  }
+
+  const frontmatterBlock = match[1];
+  const cleanContent = content.replace(frontmatterRegex, "");
+  const frontmatter = {};
+
+  frontmatterBlock.split("\n").forEach((line) => {
+    if (line.trim() === "") return;
+    const [key, ...valueParts] = line.split(":");
+    const value = valueParts.join(":").trim();
+    if (value === "true") frontmatter[key.trim()] = true;
+    else if (value === "false") frontmatter[key.trim()] = false;
+    else if (!isNaN(Number(value))) frontmatter[key.trim()] = Number(value);
+    else frontmatter[key.trim()] = value;
+  });
+
+  return { content: cleanContent, frontmatter };
+}
 
 // Extract h2 blocks from markdown with anchors
 function extractHeadingBlocks(
@@ -106,11 +255,6 @@ function extractHeadingBlocks(
           pushDrawerBlock(currentAnchorLocal, anchorLines);
         }
       } else {
-        console.log(sectionId);
-        if (sectionId == "about") {
-          sectionTitle = "About";
-          subsectionTitle = "About";
-        }
         blocks.push({
           id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#${
             currentAnchor || "unknown"
@@ -126,10 +270,6 @@ function extractHeadingBlocks(
         });
       }
     } else if (currentLines.length) {
-      if (sectionId == "about") {
-        sectionTitle = "About";
-        subsectionTitle = "About";
-      }
       blocks.push({
         id: `${sectionId}${subsectionId ? "/" + subsectionId : ""}#intro`,
         section: sectionId,
@@ -160,7 +300,7 @@ function extractHeadingBlocks(
   return blocks;
 }
 
-export async function initializeIndex() {
+async function initializeIndex() {
   if (indexInitialized) return;
 
   const sections = await getSections();
@@ -171,9 +311,6 @@ export async function initializeIndex() {
     const subsections = await getSubsections(section.id);
 
     for (const subsection of subsections) {
-      console.log(section.id, section.title);
-      console.log(subsection.id, subsection.title);
-      console.log();
       contentArray.push(
         ...extractHeadingBlocks(
           subsection.content,
@@ -189,8 +326,8 @@ export async function initializeIndex() {
   contentArray.forEach((item) => {
     index.add(item);
   });
-  // exportIndexFrontend();
-  indexInitialized = true;
+
+  console.log("Built index:", index);
 }
 
 function getPlaintextFromMarkdown(content) {
@@ -229,98 +366,21 @@ function getPlaintextFromMarkdown(content) {
   return content;
 }
 
-function createSnippet(content, query) {
-  const queryLower = query.toLowerCase();
-  const regex = new RegExp(
-    `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-    "gi"
-  );
-  const paragraphs = content.split(/\n\s*\n/);
-
-  // Filter to only paragraphs containing the query
-  const matchedParagraphs = paragraphs.filter((para) =>
-    para.toLowerCase().includes(queryLower)
-  );
-
-  if (matchedParagraphs.length === 0) {
-    // fallback: highlight entire content if no paragraph found
-    return content.replace(regex, "<mark>$1</mark>").trim();
-  }
-
-  // Highlight query in matched paragraphs
-  const snippet = matchedParagraphs
-    .map((para) => para.replace(regex, "<mark>$1</mark>").trim())
-    .join("\n\n");
-
-  return snippet.trim();
-}
-
-export async function search(query) {
-  if (!query) return [];
-  const results = index.search(query, {
-    enrich: true,
-    depth: 1,
-    match: "strict",
-  });
-
-  const allResults = results.reduce(
-    (acc, fieldResults) => acc.concat(fieldResults.result),
-    []
-  );
-
-  const snippetResults = [];
-  const seenKeys = new Set();
-
-  allResults.forEach((res) => {
-    const doc = res.doc;
-    if (doc) {
-      const regex = new RegExp(
-        `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-        "gi"
+async function exportIndex() {
+  await initializeIndex(); // make sure it is initialized
+  const json = index.export(); // export full index as JSON object
+    if (!json) {
+      throw new Error(
+        "Index export returned undefined. Index might not be initialized properly."
       );
-
-      const titleMatches =
-        doc.title && doc.title.toLowerCase().includes(query.toLowerCase());
-      const contentHasMatch =
-        doc.content &&
-        getPlaintextFromMarkdown(doc.content)
-          .toLowerCase()
-          .includes(query.toLowerCase());
-
-      // Add title match as a result
-      if (titleMatches) {
-        const titleKey = `${res.id}-title`;
-        if (!seenKeys.has(titleKey)) {
-          seenKeys.add(titleKey);
-          snippetResults.push({
-            ...res,
-            id: titleKey,
-            snippet: doc.title.replace(regex, "<mark>$1</mark>"),
-            allSnippets: [doc.title.replace(regex, "<mark>$1</mark>")],
-          });
-        }
-      }
-
-      // Add content match as a separate result
-      if (contentHasMatch) {
-        const contentKey = `${res.id}-content`;
-        if (!seenKeys.has(contentKey)) {
-          const plainText = getPlaintextFromMarkdown(doc.content);
-          const contentSnippet = createSnippet(plainText, query);
-
-          if (contentSnippet.includes("<mark>")) {
-            seenKeys.add(contentKey);
-            snippetResults.push({
-              ...res,
-              id: contentKey,
-              snippet: contentSnippet,
-              allSnippets: [contentSnippet],
-            });
-          }
-        }
-      }
     }
-  });
-
-  return snippetResults;
+  const jsonString = JSON.stringify(json);
+  // Write to file in Node.js environment
+  fs.writeFileSync("search-index.json", jsonString, "utf-8");
+  console.log("Index exported successfully");
 }
+
+exportIndex().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

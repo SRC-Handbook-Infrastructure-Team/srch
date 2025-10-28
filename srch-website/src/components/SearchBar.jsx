@@ -3,7 +3,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import { GiTransparentSlime } from "react-icons/gi";
+import "../index.css"; // Import the CSS file
 
 function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
   const containerRef = useRef(null);
@@ -43,27 +43,26 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [canExpand]);
 
   return (
-    <Box
-      bg="white"
-      border="1px solid"
-      borderRadius="md"
-      borderColor={"gray.100"}
-    >
+    <Box className="searchbar-outer">
       <Box
         ref={containerRef}
-        position="relative"
-        display="inline-flex"
-        alignItems="center"
-        overflow="visible"
-        minWidth="40px"
-        width={!canExpand ? "100%" : isExpanded ? "500px" : "40px"}
-        transition="width 0.3s ease"
+        className={`searchbar-container${isExpanded ? " expanded" : ""}`}
+        style={{
+          width: !canExpand ? "100%" : isExpanded ? "500px" : "40px",
+        }}
       >
-        <Box flex="1" position="relative">
+        <IconButton
+          aria-label="Toggle search bar"
+          icon={<SearchIcon />}
+          className="searchbar-toggle-button"
+          onClick={toggleExpand}
+        />
+        <Box className="searchbar-input-container">
           <Input
+            className={`searchbar-input${isExpanded ? " visible" : ""}`}
             type="text"
             placeholder={
               isExpanded ? "Search for topics, case studies, terms..." : ""
@@ -71,75 +70,43 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            // borderRadius="none"
-            // borderColor={"transparent"}
-            fontSize="sm"
-            pl="2.5rem"
-            opacity={isExpanded ? 1 : 0}
-            pointerEvents={isExpanded ? "auto" : "none"}
-            transition="opacity 0.3s ease"
+            style={{
+              opacity: isExpanded ? 1 : 0,
+              pointerEvents: isExpanded ? "auto" : "none",
+            }}
             onFocus={() => {
               setIsFocused(true);
               if (canExpand) setIsExpanded(true);
             }}
             onMouseDown={() => setIsFocused(false)}
           />
-          <Box color="white">
+          <Box className="searchbar-results-window">
             {canExpand && isExpanded && searchQuery && (
-              <Box
-                position="absolute"
-                left={0}
-                right={0}
-                zIndex={2}
-                overflowY="auto"
-              >
-                <ResultsWindow
-                  searchQuery={searchQuery}
-                  maxResults={5}
-                  setIsExpanded={setIsExpanded}
-                  canExpand={canExpand}
-                />
+              <Box>
+                <Box className="results-window results-white-background">
+                  <ResultsWindow
+                    searchQuery={searchQuery}
+                    maxResults={3}
+                    setIsExpanded={setIsExpanded}
+                    canExpand={canExpand}
+                  />
+                </Box>
               </Box>
             )}
             {!canExpand && isExpanded && searchQuery && (
-              <Box
-                position="absolute"
-                left={0}
-                right={0}
-                zIndex={1}
-                overflowY="auto"
-              >
-                <ResultsWindow
-                  searchQuery={searchQuery}
-                  maxResults={5}
-                  setIsExpanded={setIsExpanded}
-                  canExpand={canExpand}
-                />
+              <Box>
+                <Box className="results-window results-white-background">
+                  <ResultsWindow
+                    searchQuery={searchQuery}
+                    maxResults={5}
+                    setIsExpanded={setIsExpanded}
+                    canExpand={canExpand}
+                  />
+                </Box>
               </Box>
             )}
           </Box>
         </Box>
-        <IconButton
-          aria-label="Toggle search bar"
-          icon={<SearchIcon />}
-          variant="ghost"
-          size="md"
-          position="absolute"
-          left="0"
-          zIndex={2}
-          onClick={toggleExpand}
-          _focus={{ boxShadow: "none" }}
-          _focusVisible={{ boxShadow: "none" }}
-          _hover={{ color: "#9D0013", bg: "transparent" }}
-          _active={{ boxShadow: "none" }}
-          sx={{
-            "&, &:hover, &:active, &:focus, &:focus-visible, &:focus-within": {
-              outline: "0 !important",
-              boxShadow: "none !important",
-              border: "none !important",
-            },
-          }}
-        />
       </Box>
     </Box>
   );
