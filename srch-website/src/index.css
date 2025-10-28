@@ -30,921 +30,1156 @@
   --color-accent: #7b4b24; /* new accent color */
   --color-accent-light: #f3ece6;
 
-.layout {
-  width: 1512px;
-  background: white;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  display: inline-flex;
-}
-
-.body {
-  align-self: stretch;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 36px;
-  display: flex;
-}
-
-.upper-content {
-  align-self: stretch;
-  padding-bottom: 24px;
-  padding-left: 200px;
-  padding-right: 200px;
-  position: relative;
-  border-top: 1px white solid;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 56px;
-  display: inline-flex;
-}
-
-.background-gradient {
-  width: 1512px;
-  height: 568px;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  background-image: url("../src/assets/landing-page-background-gradient.png");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.upper-text-section {
-  width: 582px;
-  padding-top: 100px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 36px;
-  display: inline-flex;
-  z-index: 1;
-}
-
-.website-title {
-  align-self: stretch;
-  color: black;
-  font-size: 84px;
-  font-family: "Funnel Sans", sans-serif;
-  color: #000;
-  font-style: normal;
-  font-weight: 900;
-  line-height: 100px;
-  word-wrap: break-word;
-}
-
-.info-section {
-  align-self: stretch;
-  color: black;
-  font-size: 18px;
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-weight: 400px;
-  line-height: 28px;
-  word-wrap: break-word;
-}
-
-.lower-content {
-  display: flexbox;
-  padding: 72px 200px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 84px;
-  align-self: stretch;
-  background: #fff;
-}
-
-.section-divider {
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 36;
-  display: inline-flex;
-}
-
-.curriculum-header {
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  display: inline-flex;
-}
-
-.curriculum-title {
-  color: black;
-  font-size: 48px;
-  font-family: "Funnel Sans", sans-serif;
-  font-weight: 500;
-  word-wrap: break-word;
-}
-
-.curriculum-subtext {
-  width: 1112px;
-  text-align: center;
-  color: black;
-  font-size: 18px;
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-weight: 400;
-  line-height: 28px;
-  word-wrap: break-word;
-}
-
-
-.card-section {
-  align-self: stretch;
-  justify-content: center;
-  align-items: center;
-  gap: 12;
-  display: inline-flex;
-}
-
-.topic-card {
- width: 100%;
- height: auto;
- min-height: 24px;
- display: flex;
- flex-direction: row;
- justify-content: center;
- align-items: center;
- gap: 24px;
- padding: 24px;
- background: white;
- border-radius: 16px;
- border: none;
- outline: 1px solid #755543;
- outline-offset: -1px;
- box-shadow: 2px 2px 10px rgba(0, 0, 0, 0,08);
- overflow: hidden;
- cursor: pointer;
- text-align: left;
- transition: transform 0.2s, box-shadow 0.2s;
-
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 24px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.outline-tip {
-  width: 100px;
-  height: 100px;
-  position: relative;
-  overflow: hidden;
-}
-
-.vector {
-  left: 12.5px;
-  top: 4.17px;
-  position: absolute;
-}
-
-.card {
-  flex: 1 1 0;
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 6px;
-  display: inline-flex;
-}
-
-.topic-text {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  display: flex;
-}
-
-.card-heading {
-  color: black;
-  font-size: 28px;
-  font-family: "Funnel Sans", sans-serif;
-  font-weight: 700;
-  word-wrap: break-word;
-}
-
-.topic-subtext {
-  align-self: stretch;
-  color: black;
-  font-size: 16px;
-  font-family: "Be Vietnam Pro";
-  font-weight: 400;
-  word-wrap: break-word;
-}
-
-.line-divider {
-  width: 100%;
-  max-width: 1108px;
-  height: 2px; 
-  background: rgba(90,45,0,0.5);
-  margin: 0 auto;
-}
-
-.search-section {
-  align-self: stretch;
-  padding-bottom: 24px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 36px;
-  display: flex;
-
-}
-
-.search-header {
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  display: flex;
-}
-
-.search-title {
-  color: black; 
-  font-size: 48px;
-  font-family: 'Funnel Sans', sans-serif;
-  font-weight: 500;
-  word-wrap: break-word;
-
-}
-
-.search-subtitle {
-  width: 100%;
-  max-width: 1112px;
-  text-align: center;
-  color: black;
-  font-size: 18px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 400;
-  line-height: 28px;
-  word-wrap: break-word;
-}
-
-
-.search-bar {
-  width: 100%;
-  max-width: 878px;
-  height: 56px; 
-  padding: 10px 24px;
-  background: white;
-  border-radius: 24px;
-  outline: 1px solid #5D3210;
-  outline-offset: -1px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 16px;
-  display: inline-flex;
-}
-
-.search-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-.search-placeholder {
-  flex: 1;
-  color: #656565;
-  font-size: 18px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 400;
-  line-height: 28px;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-.search-placeholder::placeholder {
-  color: #656565
-}
-
-.section-title {
-  align-self: stretch;
-  text-align: center;
-  color: black;
-  font-size: 48px;
-  padding-bottom: 36px;
-  font-family: 'Funnel Sans', sans-serif;
-  font-weight: 500;
-  word-wrap: break-word;
-}
-
-.how-to-info {
-  align-self: stretch;
-  flex-direction: column;
-  padding-top: 12px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 18px;
-  display: flex;
-}
-
-.info-list{
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 16px;
-  display: flex;
-}
-
-.list-item {
-  align-self: stretch;
-  padding: 0 24px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 16px;
-  display: inline-flex;
-}
-
-.list-icon{
-  width: 28px;
-  height: 28px;
-  flex-shrink:0;
-}
-
-.list-text {
-  flex: 1;
-  color: black;
-  font-size: 20px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 400;
-  line-height: 28px;
-  word-wrap: break-word;
-}
-
-/* Learn More Button*/
-.learn-more-container {
-  align-self: stretch;
-  justify-content: flex-end;
-  align-items: right;
-  gap: 10px; 
-  padding-top: 12px;
-  padding-bottom: 36px;
-  display: inline-flex;
-}
-
-.learn-more-button {
-  padding: 10px 20px;
-  border-radius: 16px;
-  outline: 2px solid rgba(83, 28, 0, 0.25);
-  outline-offset: -2px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  display: flex;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.learn-more-button:hover {
-  background: rgba(83, 28, 0, 0.05);
-  outline-color: rgba(83, 28, 0, 0.4)
-}
-
-.learn-more-text {
-  color: black;
-  font-size: 20px;
-  font-family: 'Be Vietnam Pro', san-serif;
-  font-weight: 400;
-  word-wrap: break-word;
-}
-
-.button-icon {
-  width: 28px;
-  height: 28px
-}
-
-/* Link Section - Footer Container */
-.link-section {
-  align-self: stretch;
-  justify-content: space-between;
-  align-items: flex-start;
-  display: flex;
-  gap: 40px;
-  padding: 40px 0;
-}
-
-/* Logo Area */
-.logo-area {
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 10px;
-  display: flex;
-}
-
-.footer-logo {
-  width: 100px;
-  height: 91px;
-  object-fit: contain;
-  display: block;
-}
-
-/* Modules Section */
-.modules {
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 18px;
-  display: flex;
-  flex: 1; /* This allows equal spacing */
-}
-
-.modules-heading,
-.module-heading {
-  color: black;
-  font-size: 20px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 600;
-  word-wrap: break-word;
-}
-
-/* Primer Links */
-.primer-link {
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  display: flex;
-  width: 100%;
-}
-
-.primer-link-photo {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.primer-link-photo img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-/* Module Links */
-.module-links {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-.module-link {
-  color: black;
-  font-size: 20px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 400;
-  word-wrap: break-word;
-  background: none;
-  border: none;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.module-link:hover {
-  color: #9D0013;
-}
-
-/* Feedback Contact */
-.feedback-contact {
-  color: black;
-  font-size: 20px;
-  font-family: 'Be Vietnam Pro', sans-serif;
-  font-weight: 400;
-  line-height: 30px;
-  word-wrap: break-word;
-}
-
-.feedback-contact a {
-  color: #9D0013;
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.feedback-contact a:hover {
-  color: #7A000F;
-}
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .link-area {
-    flex-wrap: wrap;
-    gap: 30px;
-  }
-  
-  .logo-area {
-    padding-right: 50px;
-  }
-}
-
-@media (max-width: 768px) {
-  .link-area {
+  .layout {
+    width: 1512px;
+    background: white;
+    overflow: hidden;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: inline-flex;
+  }
+
+  .body {
+    align-self: stretch;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 36px;
+    display: flex;
+  }
+
+  .upper-content {
+    align-self: stretch;
+    padding-bottom: 24px;
+    padding-left: 200px;
+    padding-right: 200px;
+    position: relative;
+    border-top: 1px white solid;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 56px;
+    display: inline-flex;
+  }
+
+  .background-gradient {
+    width: 1512px;
+    height: 568px;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    background-image: url("../src/assets/landing-page-background-gradient.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  .upper-text-section {
+    width: 582px;
+    padding-top: 100px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 36px;
+    display: inline-flex;
+    z-index: 1;
+  }
+
+  .website-title {
+    align-self: stretch;
+    color: black;
+    font-size: 84px;
+    font-family: "Funnel Sans", sans-serif;
+    color: #000;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100px;
+    word-wrap: break-word;
+  }
+
+  .info-section {
+    align-self: stretch;
+    color: black;
+    font-size: 18px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400px;
+    line-height: 28px;
+    word-wrap: break-word;
+  }
+
+  .lower-content {
+    display: flexbox;
+    padding: 72px 200px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 84px;
+    align-self: stretch;
+    background: #fff;
+  }
+
+  .section-divider {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 36;
+    display: inline-flex;
+  }
+
+  .curriculum-header {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    display: inline-flex;
+  }
+
+  .curriculum-title {
+    color: black;
+    font-size: 48px;
+    font-family: "Funnel Sans", sans-serif;
+    font-weight: 500;
+    word-wrap: break-word;
+  }
+
+  .curriculum-subtext {
+    width: 1112px;
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    line-height: 28px;
+    word-wrap: break-word;
+  }
+
+  .card-section {
+    align-self: stretch;
+    justify-content: center;
+    align-items: center;
+    gap: 12;
+    display: inline-flex;
+  }
+
+  .topic-card {
+    width: 100%;
+    height: auto;
+    min-height: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    border: none;
+    outline: 1px solid #755543;
+    outline-offset: -1px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0, 08);
+    overflow: hidden;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .outline-tip {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vector {
+    left: 12.5px;
+    top: 4.17px;
+    position: absolute;
+  }
+
+  .card {
+    flex: 1 1 0;
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 6px;
+    display: inline-flex;
+  }
+
+  .topic-text {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+  }
+
+  .card-heading {
+    color: black;
+    font-size: 28px;
+    font-family: "Funnel Sans", sans-serif;
+    font-weight: 700;
+    word-wrap: break-word;
+  }
+
+  .topic-subtext {
+    align-self: stretch;
+    color: black;
+    font-size: 16px;
+    font-family: "Be Vietnam Pro";
+    font-weight: 400;
+    word-wrap: break-word;
+  }
+
+  .line-divider {
+    width: 100%;
+    max-width: 1108px;
+    height: 2px;
+    background: rgba(90, 45, 0, 0.5);
+    margin: 0 auto;
+  }
+
+  .search-section {
+    align-self: stretch;
+    padding-bottom: 24px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 36px;
+    display: flex;
+  }
+
+  .search-header {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: flex;
+  }
+
+  .search-title {
+    color: black;
+    font-size: 48px;
+    font-family: "Funnel Sans", sans-serif;
+    font-weight: 500;
+    word-wrap: break-word;
+  }
+
+  .search-subtitle {
+    width: 100%;
+    max-width: 1112px;
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    line-height: 28px;
+    word-wrap: break-word;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 878px;
+    height: 56px;
+    padding: 10px 24px;
+    background: white;
+    border-radius: 24px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    display: inline-flex;
+  }
+
+  .search-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .search-placeholder {
+    flex: 1;
+    color: #656565;
+    font-size: 18px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    line-height: 28px;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+
+  .search-placeholder::placeholder {
+    color: #656565;
+  }
+
+  .section-title {
+    align-self: stretch;
+    text-align: center;
+    color: black;
+    font-size: 48px;
+    padding-bottom: 36px;
+    font-family: "Funnel Sans", sans-serif;
+    font-weight: 500;
+    word-wrap: break-word;
+  }
+
+  .how-to-info {
+    align-self: stretch;
+    flex-direction: column;
+    padding-top: 12px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 18px;
+    display: flex;
+  }
+
+  .info-list {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    display: flex;
+  }
+
+  .list-item {
+    align-self: stretch;
+    padding: 0 24px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    display: inline-flex;
+  }
+
+  .list-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .list-text {
+    flex: 1;
+    color: black;
+    font-size: 20px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    line-height: 28px;
+    word-wrap: break-word;
+  }
+
+  /* Learn More Button*/
+  .learn-more-container {
+    align-self: stretch;
+    justify-content: flex-end;
+    align-items: right;
+    gap: 10px;
+    padding-top: 12px;
+    padding-bottom: 36px;
+    display: inline-flex;
+  }
+
+  .learn-more-button {
+    padding: 10px 20px;
+    border-radius: 16px;
+    outline: 2px solid rgba(83, 28, 0, 0.25);
+    outline-offset: -2px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .learn-more-button:hover {
+    background: rgba(83, 28, 0, 0.05);
+    outline-color: rgba(83, 28, 0, 0.4);
+  }
+
+  .learn-more-text {
+    color: black;
+    font-size: 20px;
+    font-family: "Be Vietnam Pro", san-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+  }
+
+  .button-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Link Section - Footer Container */
+  .link-section {
+    align-self: stretch;
+    justify-content: space-between;
+    align-items: flex-start;
+    display: flex;
     gap: 40px;
+    padding: 40px 0;
   }
-  
+
+  /* Logo Area */
   .logo-area {
-    padding-right: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    display: flex;
   }
-  
+
+  .footer-logo {
+    width: 100px;
+    height: 91px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Modules Section */
   .modules {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 18px;
+    display: flex;
+    flex: 1; /* This allows equal spacing */
+  }
+
+  .modules-heading,
+  .module-heading {
+    color: black;
+    font-size: 20px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 600;
+    word-wrap: break-word;
+  }
+
+  /* Primer Links */
+  .primer-link {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    display: flex;
     width: 100%;
   }
-}
 
+  .primer-link-photo {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
+  .primer-link-photo img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
 
+  /* Module Links */
+  .module-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
 
------- general styles ------- a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+  .module-link {
+    color: black;
+    font-size: 20px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
 
-/* --------------------------------------------------------------------------
+  .module-link:hover {
+    color: #9d0013;
+  }
+
+  /* Feedback Contact */
+  .feedback-contact {
+    color: black;
+    font-size: 20px;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    line-height: 30px;
+    word-wrap: break-word;
+  }
+
+  .feedback-contact a {
+    color: #9d0013;
+    text-decoration: underline;
+    transition: color 0.2s;
+  }
+
+  .feedback-contact a:hover {
+    color: #7a000f;
+  }
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .link-area {
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .logo-area {
+      padding-right: 50px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .link-area {
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .logo-area {
+      padding-right: 0;
+    }
+
+    .modules {
+      width: 100%;
+    }
+  }
+
+  ------ general styles ------- a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: #535bf2;
+  }
+
+  /* --------------------------------------------------------------------------
    Global Typography & Base
    -------------------------------------------------------------------------- */
-body {
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 16px;
-  line-height: 28px;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  margin: 0;
-  display: block;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  body {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    margin: 0;
+    display: block;
+    min-width: 320px;
+    min-height: 100vh;
+  }
 
-a {
-  font-weight: 500;
-  color: var(--color-accent);
-  text-decoration: none;
-}
+  a {
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
 
-a:hover {
-  color: #6b3f1f;
-  text-decoration: underline;
-}
+  a:hover {
+    color: #6b3f1f;
+    text-decoration: underline;
+  }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--button-bg);
-  color: #fff;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--button-bg);
+    color: #fff;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
 
-button:hover {
-  border-color: var(--button-hover-border);
-}
+  button:hover {
+    border-color: var(--button-hover-border);
+  }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Sidebar Layout Core Wrapper
    ========================================================================== */
-.sidebar-layout {
-  display: block;
-}
+  .sidebar-layout {
+    display: block;
+  }
 
-/* --------------------------------------------------------------------------
+  /* --------------------------------------------------------------------------
    Floating Toggle Button (arrow to collapse/expand sidebar)
    -------------------------------------------------------------------------- */
-.sidebar-layout .toggle-btn {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  padding: var(--space-xs) var(--space-sm);
-  z-index: 25;
-  transition: background 0.2s, left 0.2s;
-}
-.sidebar-layout .toggle-btn:hover {
-  background: var(--color-bg-alt);
-}
+  .sidebar-layout .toggle-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    z-index: 25;
+    transition: background 0.2s, left 0.2s;
+  }
+  .sidebar-layout .toggle-btn:hover {
+    background: var(--color-bg-alt);
+  }
 
-/* --------------------------------------------------------------------------
+  /* --------------------------------------------------------------------------
    Main Content Area
    -------------------------------------------------------------------------- */
-.sidebar-layout .main-content {
-  margin-left: calc(var(--left-sidebar-width) - 50px);
-  margin-right: calc(var(--right-sidebar-width) - 40px);
-  transition: margin 150ms ease;
-  min-height: 100vh;
-}
+  .sidebar-layout .main-content {
+    margin-left: calc(var(--left-sidebar-width) - 50px);
+    margin-right: calc(var(--right-sidebar-width) - 40px);
+    transition: margin 150ms ease;
+    min-height: 100vh;
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    LEFT SIDEBAR
    ========================================================================== */
-.left-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: var(--left-sidebar-width);
-  background-color: var(--sidebar-bg);
-  color: var(--color-text);
-  border-right: 1px solid var(--sidebar-border);
-  will-change: width;
-  contain: layout paint style;
-  box-shadow: var(--shadow-elevated);
-  z-index: 25;
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-}
+  .left-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--left-sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: var(--color-text);
+    border-right: 1px solid var(--sidebar-border);
+    will-change: width;
+    contain: layout paint style;
+    box-shadow: var(--shadow-elevated);
+    z-index: 25;
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+  }
 
-.left-sidebar.open,
-.left-sidebar.open.resizing {
-  transform: translateX(0);
-  opacity: 1;
-}
+  .left-sidebar.open,
+  .left-sidebar.open.resizing {
+    transform: translateX(0);
+    opacity: 1;
+  }
 
-.left-sidebar.closing {
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: transform 0.35s ease, opacity 0.25s ease-out;
-}
+  .left-sidebar.closing {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: transform 0.35s ease, opacity 0.25s ease-out;
+  }
 
-.left-sidebar:not(.open) {
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
-}
+  .left-sidebar:not(.open) {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  }
 
-.left-sidebar.resizing,
-.right-sidebar.resizing {
-  box-shadow: none;
-  pointer-events: none;
-  transition: none !important;
-  will-change: width;
-}
+  .left-sidebar.resizing,
+  .right-sidebar.resizing {
+    box-shadow: none;
+    pointer-events: none;
+    transition: none !important;
+    will-change: width;
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    RIGHT SIDEBAR (Drawer)
    ========================================================================== */
-.right-sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: var(--right-sidebar-width);
-  border-left: 1px solid var(--drawer-border);
-  background-color: var(--drawer-bg);
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  opacity: 0;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  will-change: transform, opacity;
-  overflow: hidden;
-  z-index: 22;
-}
-.right-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
+  .right-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: var(--right-sidebar-width);
+    border-left: 1px solid var(--drawer-border);
+    background-color: var(--drawer-bg);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    will-change: transform, opacity;
+    overflow: hidden;
+    z-index: 22;
+  }
+  .right-sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+  }
 
-.right-sidebar .drawer-header {
-  border-bottom: 2px solid var(--color-accent);
-  padding: var(--space-sm) var(--space-md);
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--color-accent);
-}
-.right-sidebar .drawer-content {
-  padding: var(--space-md);
-}
-.right-sidebar .drawer-close-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-md);
-  padding: var(--space-xs) var(--space-sm);
-}
-.right-sidebar .drawer-close-btn:hover {
-  background: var(--drawer-hover-bg);
-}
+  .right-sidebar .drawer-header {
+    border-bottom: 2px solid var(--color-accent);
+    padding: var(--space-sm) var(--space-md);
+    font-weight: 600;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-accent);
+  }
+  .right-sidebar .drawer-content {
+    padding: var(--space-md);
+  }
+  .right-sidebar .drawer-close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm);
+  }
+  .right-sidebar .drawer-close-btn:hover {
+    background: var(--drawer-hover-bg);
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Scrollable Drawer Section
    ========================================================================== */
-.scrollable-drawer {
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - 48px);
-  padding-right: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-}
-.scrollable-drawer::-webkit-scrollbar {
-  width: 6px;
-}
-.scrollable-drawer::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb-color);
-  border-radius: 3px;
-}
-.scrollable-drawer::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover-color);
-}
+  .scrollable-drawer {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 48px);
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+  }
+  .scrollable-drawer::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollable-drawer::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 3px;
+  }
+  .scrollable-drawer::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Markdown & Content
    ========================================================================== */
-.markdown-page {
-  padding: var(--space-lg);
-}
+  .markdown-page {
+    padding: var(--space-lg);
+  }
 
-mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
-  font-weight: 600;
-  border-radius: 3px;
-  padding: 2px 4px;
-}
+  mark {
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 1px 0;
+  }
 
-.mark.light-red {
-  background-color: #d18790;
-  border-radius: 4px;
-  padding: 2px 3px;
-  color: #000;
-}
-
-/* ========================================================================== 
+  /* ========================================================================== 
    Sidebar Links
    ========================================================================== */
-.sidebar-link-active {
-  color: var(--color-accent) !important;
-  font-weight: 600;
-}
-.sidebar-link:hover {
-  color: var(--color-accent);
-}
+  .sidebar-link-active {
+    color: var(--color-accent) !important;
+    font-weight: 600;
+  }
+  .sidebar-link:hover {
+    color: var(--color-accent);
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Headings & Typography
    ========================================================================== */
-h1, h2, h3, h4 {
-  color: var(--color-accent);
-}
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-accent);
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    NavBar & Navigation Section Styles
    ========================================================================== */
-.beta-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--beta-bg);
-  color: var(--beta-text);
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  margin-left: 8px;
-  border-radius: var(--chakra-radii-md, 6px);
-  vertical-align: middle;
-}
+  .beta-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--beta-bg);
+    color: var(--beta-text);
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    margin-left: 8px;
+    border-radius: var(--chakra-radii-md, 6px);
+    vertical-align: middle;
+  }
 
-.nav-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
+  .nav-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
 
-.nav-section {
-  padding: var(--space-sm);
-  border-radius: var(--chakra-radii-md, 6px);
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.2s ease;
-}
-.nav-section:hover {
-  background-color: var(--nav-hover-bg);
-}
+  .nav-section {
+    padding: var(--space-sm);
+    border-radius: var(--chakra-radii-md, 6px);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+  }
+  .nav-section:hover {
+    background-color: var(--nav-hover-bg);
+  }
 
-.nav-section-title {
-  display: flex;
-  align-items: center;
-}
-.nav-section-text {
-  font-weight: 500;
-}
+  .nav-section-title {
+    display: flex;
+    align-items: center;
+  }
+  .nav-section-text {
+    font-weight: 500;
+  }
 
-.nav-subsection {
-  display: flex;
-  align-items: center;
-}
-.nav-subsection-text {
-  font-size: 0.875rem;
-  padding: 4px;
-}
-.nav-subsection-active {
-  font-weight: 700;
-}
+  .nav-subsection {
+    display: flex;
+    align-items: center;
+  }
+  .nav-subsection-text {
+    font-size: 0.875rem;
+    padding: 4px;
+  }
+  .nav-subsection-active {
+    font-weight: 700;
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Left Sidebar Resizer (drag handle)
    ========================================================================== */
-.left-resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  cursor: col-resize;
-  background: transparent;
-}
-.left-resizer.is-resizing {
-  background: rgba(37, 99, 235, 0.15);
-}
+  .left-resizer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+    background: transparent;
+  }
+  .left-resizer.is-resizing {
+    background: rgba(37, 99, 235, 0.15);
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Floating Hamburger Button
    ========================================================================== */
-.floating-hamburger-btn {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 9999;
-  background: var(--color-bg);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: background 0.15s ease, transform 0.05s ease;
-}
-.floating-hamburger-btn:hover {
-  background: var(--color-bg-alt);
-}
-.floating-hamburger-btn:active {
-  transform: translateY(1px);
-}
-.floating-hamburger-btn:focus {
-  outline: 2px solid var(--button-focus-outline);
-  outline-offset: 2px;
-}
+  .floating-hamburger-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+  .floating-hamburger-btn:hover {
+    background: var(--color-bg-alt);
+  }
+  .floating-hamburger-btn:active {
+    transform: translateY(1px);
+  }
+  .floating-hamburger-btn:focus {
+    outline: 2px solid var(--button-focus-outline);
+    outline-offset: 2px;
+  }
 
-/* Nav expand button */
-.nav-expand-all-btn {
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0;
-  border-radius: 6px;
-}
+  /* Nav expand button */
+  .nav-expand-all-btn {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border-radius: 6px;
+  }
 
-/* ========================================================================== 
+  /* ========================================================================== 
    Divider & Misc
    ========================================================================== */
-.page-divider {
-  border-top: 2px solid #4f3629;
-  margin: 16px 0;
-}
+  .page-divider {
+    border-top: 2px solid #4f3629;
+    margin: 16px 0;
+  }
+
+  /* ========================================================================== 
+   Search Bar
+   ========================================================================== */
+  .nav-search {
+    z-index: 999;
+  }
+  .searchbar-outer {
+    /* background: white; */
+    /* justify-content: flex-end; */
+  }
+
+  .searchbar-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    overflow: visible;
+    min-width: 40px;
+    transition: width 0.3s ease;
+  }
+
+  .searchbar-container.expanded {
+  }
+
+  .searchbar-input-container {
+    flex: 1;
+    position: relative;
+    left: 0;
+  }
+
+  .searchbar-input::placeholder {
+    color: black;
+    opacity: 1;
+  }
+
+  .searchbar-input {
+    font-size: 0.875rem; /* 'sm' */
+    padding-left: 2.5rem;
+    transition: opacity 0.3s ease;
+    background: transparent;
+    z-index: 9;
+  }
+  .searchbar-input:focus,
+  .searchbar-input:focus-visible,
+  .searchbar-input:active,
+  .searchbar-input:focus,
+  .searchbar-input:focus-within {
+    border-width: 0;
+    border-color: #531c00;
+  }
+
+  .searchbar-input:hover {
+    border-width: 0;
+    border-color: #531c00;
+  }
+
+  .searchbar-input:not(.visible) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .searchbar-input.visible {
+    opacity: 1;
+    border-width: 2px;
+    border-color: #531c00;
+    pointer-events: auto;
+  }
+
+  .searchbar-results-window {
+    color: white;
+  }
+
+  .searchbar-toggle-button {
+    position: absolute !important;
+    width: 0px;
+    left: 0 !important;
+    z-index: 2;
+    color: black !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .searchbar-toggle-button:hover {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #9d0013 !important;
+    background: transparent !important;
+  }
+
+  .searchbar-toggle-button:focus,
+  .searchbar-toggle-button:focus-visible,
+  .searchbar-toggle-button:active {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* ========================================================================== 
+   Search Results Window
+   ========================================================================== */
+
+  .results-window {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    border-width: 2px;
+    border-color: #5d3210;
+    border-radius: 6px;
+    transform: translateY(-40px);
+    padding-top: 30px;
+  }
+
+  .results-autofill {
+    z-index: 999999999999999999;
+    background-color: transparent;
+    color: black !important;
+  }
+
+  .results-white-background {
+    background: white;
+  }
+
+  .results-list {
+    overflow-y: auto;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+
+  .short {
+    height: min-content;
+  }
+
+  .results-count {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-item {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .results-section {
+    background: #9d0013;
+    color: white;
+    padding: 0rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    margin-right: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .results-subsection {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+  }
+
+  .results-title {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #4a5568;
+    font-weight: bold;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .result-snippet {
+    font-size: 0.875rem;
+    color: black;
+  }
+
+  .result-snippet-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .result-snippet-link:hover {
+    text-decoration: underline;
+  }
+
+  .result-snippet-text {
+    white-space: normal;
+  }
+
+  .result-snippet-text.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .read-more-button,
+  .result-snippet-readmore {
+    position: static !important;
+    z-index: 0 !important;
+    pointer-events: auto !important;
+    text-align: right;
+    justify-self: flex-start;
+  }
+
+  .read-more-button {
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    background: darkgray !important;
+    color: white !important;
+    font-size: 0.75rem;
+    border: none;
+  }
+
+  .results-none {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-view-all {
+    background: white;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .view-all-link {
+    cursor: pointer;
+    color: #3182ce;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    outline: none;
+  }
+
+  .view-all-link:hover {
+    color: #2b6cb0;
+  }
 }
