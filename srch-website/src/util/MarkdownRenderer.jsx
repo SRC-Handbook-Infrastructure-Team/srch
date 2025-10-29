@@ -405,10 +405,10 @@ function MarkdownRenderer({
             target={isExternal ? "_blank" : undefined}
             {...props}
           >
-            {childrenArray.map((child) =>
+            {childrenArray.map((child, index) =>
               typeof child === "string"
                 ? highlightText(child, highlight)
-                : child
+                : <span key={index}>{child}</span>
             )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />

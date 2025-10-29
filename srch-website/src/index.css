@@ -32,6 +32,21 @@
   --color-accent-light: #f3ece6;
 }
 
+.beta-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ebf8ff;
+  color:#2b6cb0;
+  font-weight: bold;
+  font-size: x-small;
+  vertical-align: middle;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.375rem;
+  margin-left: 0.375rem;
+}
+
   .layout {
     width: 1512px;
     background: white;
