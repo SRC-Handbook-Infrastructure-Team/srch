@@ -31,14 +31,15 @@
   --color-border: #e0d7ce; /* from new theme */
   --color-accent: #7b4b24; /* new accent color */
   --color-accent-light: #f3ece6;
-  )
+}
+
 
 .beta-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: #ebf8ff;
-  color:#2b6cb0;
+  color: #2b6cb0;
   font-weight: bold;
   font-size: x-small;
   vertical-align: middle;
@@ -49,7 +50,7 @@
 }
 
   .layout {
-    width: 1512px;
+    width: 100%;
     background: white;
     overflow: hidden;
     flex-direction: column;
@@ -1200,4 +1201,4 @@
   .view-all-link:hover {
     color: #2b6cb0;
   }
-}
+
