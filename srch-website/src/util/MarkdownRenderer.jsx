@@ -6,6 +6,7 @@
  * Includes support for highlighting search terms.
  */
 
+import React from "react";
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
@@ -35,13 +36,26 @@ import { BsFileEarmarkText } from "react-icons/bs";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
-function highlightText(text, highlight) {
-  if (!highlight) return text;
-  const regex = new RegExp(`(${highlight})`, "gi");
-  const parts = text.split(regex);
-  return parts.map((part, index) =>
-    regex.test(part) ? <mark key={index}>{part}</mark> : part
-  );
+export function highlightText(node, highlight) {
+  if (!highlight || (!node && node !== 0)) return node;
+  if (typeof node === "string") {
+    const regex = new RegExp(`(${highlight})`, "gi");
+    const parts = node.split(regex);
+    return parts.map((part, idx) =>
+      regex.test(part) ? <mark key={idx}>{part}</mark> : part
+    );
+  }
+  if (Array.isArray(node)) {
+    return node.map((child) => highlightText(child, highlight));
+  }
+  if (React.isValidElement(node)) {
+    return React.cloneElement(
+      node,
+      node.props,
+      highlightText(node.props.children, highlight)
+    );
+  }
+  return node;
 }
 
 /* ----------------------------- Utility Functions ----------------------------- */
@@ -366,23 +380,13 @@ function MarkdownRenderer({
             color="var(--color-accent)"
             {...props}
           >
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
+            {highlightText(childrenArray, highlight)}
           </Heading>
         );
       },
-      p: ({ children, ...props }) => (
+      p: (props) => (
         <Text mb={3} lineHeight="1.6" {...props}>
-          {Array.isArray(children)
-            ? children.map((child) =>
-                typeof child === "string"
-                  ? highlightText(child, highlight)
-                  : child
-              )
-            : children}
+          {highlightText(props.children, highlight)}
         </Text>
       ),
       a: (props) => {
@@ -393,12 +397,12 @@ function MarkdownRenderer({
           : [props.children];
         return (
           <Link
-            color="#9D0013"
+            textColor="#9D0013"
             fontWeight="500"
-            textDecoration="none"
+            textDecoration="underline"
             _hover={{
               textDecoration: "underline",
-              color: "#7A0010",
+              color: "whiteAlpha.200",
             }}
             href={props.href}
             isExternal={isExternal}
@@ -406,9 +410,11 @@ function MarkdownRenderer({
             {...props}
           >
             {childrenArray.map((child, index) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : <span key={index}>{child}</span>
+              typeof child === "string" ? (
+                highlightText(child, highlight)
+              ) : (
+                <span key={index}>{child}</span>
+              )
             )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
@@ -422,11 +428,7 @@ function MarkdownRenderer({
           : [props.children];
         return (
           <ListItem {...props}>
-            {childrenArray.map((child) =>
-              typeof child === "string"
-                ? highlightText(child, highlight)
-                : child
-            )}
+            {highlightText(childrenArray, highlight)}
           </ListItem>
         );
       },
@@ -474,6 +476,10 @@ function MarkdownRenderer({
       "sidebar-ref": ({ node }) => {
         const term = node.properties?.["term"];
         const value = sidebar?.[term];
+        // Choose text to highlight (term, or `Missing: ${term}` if falsy)
+        const toShow = value
+          ? term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+          : `Missing: ${term}`;
         return (
           <Box
             as={RouterLink}
@@ -488,7 +494,8 @@ function MarkdownRenderer({
             py="0.15em"
             mx="0.1em"
             borderRadius="md"
-            bg="#7b4b24"
+            textColor={"#9D0013"}
+            textDecoration={"underline"}
             color="white"
             _hover={{
               bg: "#633c1d",
@@ -505,11 +512,7 @@ function MarkdownRenderer({
               fontSize="inherit"
               lineHeight="1.4"
             >
-              {value
-                ? term
-                    .replace(/-/g, " ")
-                    .replace(/Case Study(?!:)/g, "Case Study:")
-                : `Missing: ${term}`}
+              {highlightText(toShow, highlight)}
             </Text>
             <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
           </Box>
@@ -518,6 +521,7 @@ function MarkdownRenderer({
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
+        // highlightText can handle plain string or array input
         return (
           <HStack
             as="button"
@@ -530,7 +534,7 @@ function MarkdownRenderer({
             cursor="pointer"
             _hover={{ color: "purple.500", textDecoration: "underline" }}
           >
-            <Link>{text}</Link>
+            <Link>{highlightText(text, highlight)}</Link>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />
           </HStack>
         );

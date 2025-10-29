@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, Image, HStack, VStack, Icon } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -68,7 +68,11 @@ function NavBar({ className = "" }) {
 
         setSubsections(subsectionsMap);
 
-        if (!currentSectionId && currentPath !== '/' && sortedSections.length > 0) {
+        if (
+          !currentSectionId &&
+          currentPath !== "/" &&
+          sortedSections.length > 0
+        ) {
           navigate(`/${sortedSections[0].id}`, { replace: true });
         }
 
@@ -196,6 +200,7 @@ function NavBar({ className = "" }) {
         overflow="visible"
         width="100%"
         px={4}
+        height={"min-content"}
       >
         {/* Logo section */}
         <Box cursor="pointer" onClick={() => navigate("/")}>
@@ -208,7 +213,9 @@ function NavBar({ className = "" }) {
               paddingTop={2}
               paddingBottom={2}
             />
-            <Text fontSize={"xx-large"} fontWeight={"bold"}>SRC Handbook</Text>
+            <Text fontSize={"xx-large"} fontWeight={"bold"}>
+              SRC Handbook
+            </Text>
           </HStack>
         </Box>
 
@@ -264,6 +271,7 @@ function NavBar({ className = "" }) {
           </Box>
 
           <SearchBar
+            className="nav-search"
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             canExpand={true}

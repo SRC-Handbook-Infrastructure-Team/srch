@@ -19,6 +19,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+
   /* ------------------------------------------------------------------------
      🎨 Design Tokens — Base Color System
      ------------------------------------------------------------------------ */
@@ -30,7 +31,7 @@
   --color-border: #e0d7ce; /* from new theme */
   --color-accent: #7b4b24; /* new accent color */
   --color-accent-light: #f3ece6;
-}
+  )
 
 .beta-tag {
   display: inline-flex;
@@ -317,8 +318,6 @@
     padding: 10px 24px;
     background: white;
     border-radius: 24px;
-    outline: 1px solid #5d3210;
-    outline-offset: -1px;
     justify-content: flex-start;
     align-items: center;
     gap: 16px;
@@ -815,23 +814,16 @@
     padding: 2px 4px;
   }
 
-  .mark.light-red {
-    background-color: #d18790;
-    border-radius: 4px;
-    padding: 2px 3px;
-    color: #000;
-  }
-
   /* ========================================================================== 
    Sidebar Links
    ========================================================================== */
-.sidebar-link-active {
-  color: var(--color-accent) !important;
-  font-weight: 600;
-}
-.sidebar-link:hover {
-  color: var(--color-accent);
-}
+  .sidebar-link-active {
+    color: var(--color-accent) !important;
+    font-weight: 600;
+  }
+  .sidebar-link:hover {
+    color: var(--color-accent);
+  }
 
   /* ========================================================================== 
    Headings & Typography
@@ -960,3 +952,252 @@
     margin: 16px 0;
   }
 
+  /* ========================================================================== 
+   Search Bar
+   ========================================================================== */
+  .nav-search {
+    z-index: 999;
+  }
+  .searchbar-outer {
+    /* background: white; */
+    /* justify-content: flex-end; */
+  }
+
+  .searchbar-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    overflow: visible;
+    min-width: 40px;
+    transition: width 0.3s ease;
+  }
+
+  .searchbar-container.expanded {
+  }
+
+  .searchbar-input-container {
+    flex: 1;
+    position: relative;
+    left: 0;
+  }
+
+  .searchbar-input::placeholder {
+    color: black;
+    opacity: 1;
+  }
+
+  .searchbar-input {
+    font-size: 0.875rem; /* 'sm' */
+    padding-left: 2.5rem;
+    transition: opacity 0.3s ease;
+    background: transparent;
+    z-index: 9;
+  }
+  .searchbar-input:focus,
+  .searchbar-input:focus-visible,
+  .searchbar-input:active,
+  .searchbar-input:focus,
+  .searchbar-input:focus-within {
+    border-width: 0;
+    border-color: #531c00;
+  }
+
+  .searchbar-input:hover {
+    border-width: 0;
+    border-color: #531c00;
+  }
+
+  .searchbar-input:not(.visible) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .searchbar-input.visible {
+    opacity: 1;
+    border-width: 2px;
+    border-color: #531c00;
+    pointer-events: auto;
+  }
+
+  .searchbar-results-window {
+    color: white;
+  }
+
+  .searchbar-toggle-button {
+    position: absolute !important;
+    width: 0px;
+    left: 0 !important;
+    z-index: 2;
+    color: black !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .searchbar-toggle-button:hover {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #9d0013 !important;
+    background: transparent !important;
+  }
+
+  .searchbar-toggle-button:focus,
+  .searchbar-toggle-button:focus-visible,
+  .searchbar-toggle-button:active {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* ========================================================================== 
+   Search Results Window
+   ========================================================================== */
+
+  .results-window {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    border-width: 2px;
+    border-color: #5d3210;
+    border-radius: 6px;
+    transform: translateY(-40px);
+    padding-top: 30px;
+  }
+
+  .results-autofill {
+    z-index: 999999999999999999;
+    background-color: transparent;
+    color: black !important;
+  }
+
+  .results-white-background {
+    background: white;
+  }
+
+  .results-list {
+    overflow-y: auto;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+
+  .short {
+    height: min-content;
+  }
+
+  .results-count {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-item {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .results-section {
+    background: #9d0013;
+    color: white;
+    padding: 0rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    margin-right: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .results-subsection {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+  }
+
+  .results-title {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #4a5568;
+    font-weight: bold;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .result-snippet {
+    font-size: 0.875rem;
+    color: black;
+  }
+
+  .result-snippet-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .result-snippet-link:hover {
+    text-decoration: underline;
+  }
+
+  .result-snippet-text {
+    white-space: normal;
+  }
+
+  .result-snippet-text.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .read-more-button,
+  .result-snippet-readmore {
+    position: static !important;
+    z-index: 0 !important;
+    pointer-events: auto !important;
+    text-align: right;
+    justify-self: flex-start;
+  }
+
+  .read-more-button {
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    background: darkgray !important;
+    color: white !important;
+    font-size: 0.75rem;
+    border: none;
+  }
+
+  .results-none {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-view-all {
+    background: white;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .view-all-link {
+    cursor: pointer;
+    color: #3182ce;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    outline: none;
+  }
+
+  .view-all-link:hover {
+    color: #2b6cb0;
+  }
+}

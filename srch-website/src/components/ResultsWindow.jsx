@@ -1,81 +1,112 @@
-import React, { useEffect, useMemo } from "react";
-import { Box, Text, Button } from "@chakra-ui/react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
+import { Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { search, initializeIndex } from "../util/SearchEngine";
-import { useState, useRef, useCallback } from "react";
+import "../index.css";
 
-// Move ResultSnippet outside and memoize
-const ResultSnippet = React.memo(({ snippet, searchQuery, pathname, hash }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [isClamped, setIsClamped] = useState(false);
-  const textRef = useRef(null);
+const MAX_CLAMP_LENGTH = 100;
 
-  useEffect(() => {
-    const checkClamped = () => {
-      const el = textRef.current;
-      if (el) {
-        const clamped = el.scrollHeight > el.clientHeight;
-        setIsClamped(clamped);
+const ResultSnippet = React.memo(
+  ({
+    snippet,
+    searchQuery,
+    pathname,
+    hash,
+    maxResults,
+    canExpand,
+    setIsExpanded,
+  }) => {
+    const [expanded, setExpanded] = useState(false);
+    const [isClamped, setIsClamped] = useState(true);
+
+    const clampedSnippet = useMemo(() => {
+      if (!snippet) return "";
+      const markIndex = snippet.toLowerCase().indexOf("<mark");
+      if (markIndex === -1 || snippet.length <= MAX_CLAMP_LENGTH) {
+        return snippet;
       }
-    };
-    checkClamped();
-    window.addEventListener("resize", checkClamped);
-    return () => window.removeEventListener("resize", checkClamped);
-  }, [snippet]);
+      const beforeMark = snippet.slice(0, markIndex);
+      const spaces = [];
+      for (let i = 0; i < beforeMark.length; i++) {
+        if (beforeMark[i] === " ") spaces.push(i);
+      }
+      let startIndex;
+      if (spaces.length >= 2) {
+        startIndex = spaces[spaces.length - 2];
+      } else if (spaces.length === 1) {
+        startIndex = spaces[0];
+      } else {
+        startIndex = 0;
+      }
+      const clampStart = Math.max(0, startIndex);
+      let clamped = snippet.slice(clampStart);
+      if (clampStart > 0) {
+        if (clamped.startsWith(" ")) {
+          clamped = "..." + clamped.slice(1);
+        } else {
+          clamped = "..." + clamped;
+        }
+      }
+      return clamped;
+    }, [snippet]);
 
-  return (
-    <Box fontSize="sm" color="black">
-      <Link
-        state={{ highlight: searchQuery }}
-        to={{ pathname: pathname, hash: hash }}
-        _hover={{ textDecoration: "underline" }}
-        style={{ display: "block" }}
-      >
-        {!expanded ? (
-          <Text
-            ref={textRef}
-            mt={1}
-            dangerouslySetInnerHTML={{ __html: snippet }}
-            sx={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "normal",
-            }}
-          />
-        ) : (
-          <Text mt={1} dangerouslySetInnerHTML={{ __html: snippet }} />
-        )}
-      </Link>
-      {!expanded && isClamped && (
-        <Box
-          mt={1}
-          textAlign="right"
-          onMouseEnter={(e) => e.stopPropagation()}
-          justifySelf={"flex-start"}
+    function handleClick() {
+      if (canExpand) {
+        setIsExpanded(false);
+      }
+    }
+
+    return (
+      <div className="result-snippet">
+        <Link
+          state={{ highlight: searchQuery }}
+          to={{ pathname, hash }}
+          className="result-snippet-link"
+          aria-label={`Open result for ${searchQuery}`}
+          onClick={handleClick}
         >
-          <Button
-            size="xs"
-            variant="link"
-            px={2}
-            py={1}
-            bg="darkgray"
-            textColor={"white"}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setExpanded(true);
-            }}
+          {!expanded ? (
+            <span
+              className={`result-snippet-text${!expanded ? " clamped" : ""}`}
+              dangerouslySetInnerHTML={{ __html: clampedSnippet }}
+            />
+          ) : (
+            <span
+              className="result-snippet-text"
+              dangerouslySetInnerHTML={{ __html: snippet }}
+            />
+          )}
+        </Link>
+        {!expanded && isClamped && maxResults == null && (
+          <div
+            className="result-snippet-readmore"
+            onMouseEnter={(e) => e.stopPropagation()}
           >
-            Read more
-          </Button>
-        </Box>
-      )}
-    </Box>
-  );
-});
+            <Button
+              size="xs"
+              variant="link"
+              className="read-more-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setExpanded(true);
+              }}
+              aria-label="Expand result snippet"
+            >
+              Read more
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 export const ResultsWindow = React.memo(
   ({ searchQuery, maxResults = null, canExpand, setIsExpanded }) => {
@@ -91,7 +122,6 @@ export const ResultsWindow = React.memo(
       [searchResults, maxResults]
     );
 
-    // Initialize once
     useEffect(() => {
       const init = async () => {
         await initializeIndex();
@@ -100,7 +130,6 @@ export const ResultsWindow = React.memo(
       init();
     }, []);
 
-    // Debounced search when query changes
     useEffect(() => {
       const doSearch = async () => {
         if (searchQuery.length && isIndexInitialized) {
@@ -110,12 +139,7 @@ export const ResultsWindow = React.memo(
           setSearchResults([]);
         }
       };
-
-      // Add debounce delay
-      const debounceTimer = setTimeout(() => {
-        doSearch();
-      }, 200); // Increased to 250ms
-
+      const debounceTimer = setTimeout(doSearch, 0);
       return () => clearTimeout(debounceTimer);
     }, [searchQuery, isIndexInitialized]);
 
@@ -133,78 +157,38 @@ export const ResultsWindow = React.memo(
     }, [canExpand, setIsExpanded]);
 
     return (
-      <Box bg="white" border="1px solid" borderColor="gray.100" borderRadius="md">
-        <Box
-          overflowY="auto"
-          px={2}
-          py={2}
-          height={"full"}
-          maxHeight={maxResults != null ? "50vh" : undefined}
-          mt="1"
-        >
+      <div>
+        <div className={`results-list${maxResults != null ? " short" : ""}`}>
           {maxResults == null && (
-            <Text mb={2} color="gray.500" fontSize="sm">
+            <div className="results-count">
               {`Showing ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
-              }`}
-            </Text>
+              } for "${searchQuery}"`}
+            </div>
           )}
           {Array.isArray(limitedResults) && limitedResults.length > 0 ? (
-            limitedResults.map((item) => {
+            limitedResults.map((item, idx) => {
               const doc = item.doc || {};
+              const key =
+                item.id ??
+                `${doc.sectionTitle || ""}-${doc.subsectionTitle || ""}-${
+                  doc.title || ""
+                }-${idx}`;
               return (
-                <Box
-                  key={`${item.id || Math.random()}`}
-                  mb={2}
-                  pb={3}
-                  borderBottom="1px solid"
-                  borderColor="gray.200"
-                >
-                  <Box display="flex" alignItems="center" mb={1}>
-                    <Box
-                      bg="#9D0013"
-                      color="white"
-                      px={4}
-                      py={1}
-                      borderRadius="full"
-                      fontWeight="semibold"
-                      fontSize="sm"
-                      mr={3}
-                      whiteSpace="nowrap"
-                    >
-                      {doc.sectionTitle || "Unnamed Section"}
-                    </Box>
-                    <Box
-                      as="span"
-                      display="flex"
-                      alignItems="center"
-                      fontSize="sm"
-                      color="gray.700"
-                    >
-                      <Box
-                        as="span"
-                        h={2}
-                        w={2}
-                        bg="gray.300"
-                        borderRadius="full"
-                        mr={2}
-                        whiteSpace="nowrap"
-                      />
-                      {doc.subsectionTitle || "Unnamed Subsection"}
-                    </Box>
-                  </Box>
-                  <Box
-                    as="span"
-                    display="flex"
-                    alignItems="center"
-                    fontSize="sm"
-                    color="gray.700"
-                    fontWeight="bold"
-                    textDecoration="underline"
-                    whiteSpace="nowrap"
-                  >
+                <div className="results-item" key={key}>
+                  <div className="results-header">
+                    <div className="results-section">
+                      {doc.sectionTitle || doc.section || "Unnamed Section"}
+                    </div>
+                    <div className="results-subsection">
+                      {doc.subsectionTitle ||
+                        doc.section ||
+                        "Unnamed Subsection"}
+                    </div>
+                  </div>
+                  <div className="results-title">
                     {doc.title || "Unnamed Header"}
-                  </Box>
+                  </div>
                   <ResultSnippet
                     snippet={item.snippet}
                     pathname={
@@ -216,34 +200,40 @@ export const ResultsWindow = React.memo(
                     }
                     hash={doc.isDrawer ? undefined : `#${doc.anchor}`}
                     searchQuery={searchQuery}
+                    maxResults={maxResults}
+                    canExpand={canExpand}
+                    setIsExpanded={setIsExpanded}
                   />
-                </Box>
+                </div>
               );
             })
           ) : (
-            <Text color="gray.500" fontSize="sm">
-              No results found
-            </Text>
+            <div className="results-none">No results found</div>
           )}
-        </Box>
-        {maxResults != null && canExpand && (
-          <Box px={2} py={2} mt={1}>
-            <Text
-              as="a"
-              cursor="pointer"
-              color="blue.600"
-              textDecoration="underline"
-              onClick={handleClick()}
-              fontSize="sm"
-              _hover={{ color: "blue.800" }}
-            >
-              {`View all ${searchResults.length} result${
+        </div>
+        {maxResults != null && (
+          <div className="results-view-all">
+            <div className="results-count">
+              {`Showing ${
+                searchResults.length >= maxResults
+                  ? maxResults
+                  : searchResults.length
+              } of ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
               }`}
-            </Text>
-          </Box>
+            </div>
+            <div>
+              <a
+                className="view-all-link"
+                onClick={handleClick()}
+                aria-label={`View all search results`}
+              >
+                {`See full result${searchResults.length === 1 ? "" : "s"}`}
+              </a>
+            </div>
+          </div>
         )}
-      </Box>
+      </div>
     );
   }
 );

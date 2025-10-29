@@ -17,6 +17,8 @@ import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
+  getDrawerFile,
+  highlightText,
 } from "../util/MarkdownRenderer";
 
 function MarkdownPage() {
@@ -39,85 +41,100 @@ function MarkdownPage() {
 
   */
 
-/**
- * Formats the compact page header that sits above the divider, e.g.:
- * "1.a - What is Privacy?"
- *
- * Rules:
- * - Section numbering is fixed by product spec (Privacy=1, Accessibility=2, ADM=3, GenAI=4).
- * - Subsection letters come from index-based ordering (a, b, c...).
- * - Prefer frontmatter `title` (pageTitle) when present; otherwise prettify the slug.
- *
- * This version reuses the same numbering logic as ContentsSidebar.
- */
+  /**
+   * Formats the compact page header that sits above the divider, e.g.:
+   * "1.a - What is Privacy?"
+   *
+   * Rules:
+   * - Section numbering is fixed by product spec (Privacy=1, Accessibility=2, ADM=3, GenAI=4).
+   * - Subsection letters come from index-based ordering (a, b, c...).
+   * - Prefer frontmatter `title` (pageTitle) when present; otherwise prettify the slug.
+   *
+   * This version reuses the same numbering logic as ContentsSidebar.
+   */
 
-// ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
-const SECTION_NUMBER_MAP = {
-  privacy: "1",
-  accessibility: "2",
-  "automated-decision-making": "3",
-  "generative-ai": "4",
-};
+  // ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
+  const SECTION_NUMBER_MAP = {
+    privacy: "1",
+    accessibility: "2",
+    "automated-decision-making": "3",
+    "generative-ai": "4",
+  };
 
-// convert 0 -> 'a', 1 -> 'b', etc.
-function indexToLetter(index) {
-  let s = "";
-  let i = index;
-  do {
-    s = String.fromCharCode(97 + (i % 26)) + s;
-    i = Math.floor(i / 26) - 1;
-  } while (i >= 0);
-  return s;
-}
-
-// prettify "what-is-privacy" → "What Is Privacy"
-function prettifySlug(slug = "") {
-  return String(slug)
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (m) => m.toUpperCase())
-    .trim();
-}
-
-/**
- * Build a formatted header string using the loaded subsections array.
- * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
- *
- * @param {string} sectionId
- * @param {string} subsectionId
- * @param {string} pageTitle
- * @param {Array} subsectionsArr  // array of { id, title, order, ... }
- * @returns {string}
- */
-function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = []) {
-  const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
-
-  let letter = "";
-  if (subsectionId && Array.isArray(subsectionsArr) && subsectionsArr.length > 0) {
-    const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
-    if (idx >= 0) letter = indexToLetter(idx);
+  // convert 0 -> 'a', 1 -> 'b', etc.
+  function indexToLetter(index) {
+    let s = "";
+    let i = index;
+    do {
+      s = String.fromCharCode(97 + (i % 26)) + s;
+      i = Math.floor(i / 26) - 1;
+    } while (i >= 0);
+    return s;
   }
 
-  const titleText =
-    pageTitle && pageTitle.trim()
-      ? pageTitle.trim()
-      : prettifySlug(subsectionId || sectionId || "");
+  // prettify "what-is-privacy" → "What Is Privacy"
+  function prettifySlug(slug = "") {
+    return String(slug)
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase())
+      .trim();
+  }
 
-  return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
-}
+  /**
+   * Build a formatted header string using the loaded subsections array.
+   * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
+   *
+   * @param {string} sectionId
+   * @param {string} subsectionId
+   * @param {string} pageTitle
+   * @param {Array} subsectionsArr  // array of { id, title, order, ... }
+   * @returns {string}
+   */
+  function getFormattedTitle(
+    sectionId,
+    subsectionId,
+    pageTitle,
+    subsectionsArr = []
+  ) {
+    const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
+
+    let letter = "";
+    if (
+      subsectionId &&
+      Array.isArray(subsectionsArr) &&
+      subsectionsArr.length > 0
+    ) {
+      const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
+      if (idx >= 0) letter = indexToLetter(idx);
+    }
+
+    const titleText =
+      pageTitle && pageTitle.trim()
+        ? pageTitle.trim()
+        : prettifySlug(subsectionId || sectionId || "");
+
+    return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
+  }
 
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
-  
 
   //  Guard against undefined context (edge cases/tests)
   const layout = useLayout() || {};
   const { openRightDrawer, closeRightDrawer } = layout;
 
   // 🧩 Highlight from URL state
-  const highlight = location.state?.highlight || "";
+  const highlight = useMemo(() => {
+    let hl = location.state?.highlight;
+    if (!hl) {
+      const params = new URLSearchParams(location.search);
+      hl = params.get("highlight");
+    }
+    return hl;
+  }, [location.state, location.search]);
 
   // 🧩 Drawer & sidebar states
   const [sidebar, setSidebar] = useState({});
@@ -229,7 +246,9 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
           //  sanitize subsections to remove falsy/drawer entries
           const validSubs = (subs || [])
             .filter((s) => s && s.id && typeof s.id === "string")
-            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+            .filter(
+              (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+            )
             .map((s) => ({
               ...s,
               title:
@@ -247,7 +266,8 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
           setSubsections(validSubs);
 
           if (!result.content.trim() || result.content.trim().length < 50) {
-            if (validSubs.length > 0) navigate(`/${sectionId}/${validSubs[0].id}`);
+            if (validSubs.length > 0)
+              navigate(`/${sectionId}/${validSubs[0].id}`);
           }
         } else {
           toast({
@@ -304,7 +324,9 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
         if (!active) return;
         const validSubs = (data || [])
           .filter((s) => s && s.id && typeof s.id === "string")
-          .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+          .filter(
+            (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+          )
           .map((s) => ({
             ...s,
             title:
@@ -333,16 +355,16 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
     const sidebarEntry = getSidebarContent(urlTerm);
 
     if (sidebarEntry) {
-    if (urlTerm && sidebar && sidebar[urlTerm]) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(
-        typeof sidebarEntry === "string"
-          ? sidebarEntry
-          : sidebarEntry.content || " "
-      );
-      setIsDrawerOpen(true);
+      if (urlTerm && sidebar && sidebar[urlTerm]) {
+        setDrawerTerm(urlTerm);
+        setDrawerContent(
+          typeof sidebarEntry === "string"
+            ? sidebarEntry
+            : sidebarEntry.content || " "
+        );
+        setIsDrawerOpen(true);
+      }
     }
-  }
   }, [urlTerm, sidebar]);
 
   // --- Utility navigation check ---
@@ -381,7 +403,9 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
         if (contentExists) navigate(`/${path}`);
         else {
           toast({
-            title: targetSubsectionId ? "Subsection Not Found" : "Section Not Found",
+            title: targetSubsectionId
+              ? "Subsection Not Found"
+              : "Section Not Found",
             description: targetSubsectionId
               ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
               : `The section "${targetSectionId}" could not be found.`,
@@ -514,7 +538,10 @@ function getFormattedTitle(sectionId, subsectionId, pageTitle, subsectionsArr = 
             color="var(--color-accent)"
             borderColor="var(--color-accent)"
           >
-            {sidebar[drawerTerm]?.heading || drawerTerm}
+            {highlightText(
+              sidebar[drawerTerm]?.heading || drawerTerm,
+              highlight
+            )}
           </DrawerHeader>
           <DrawerBody>
             <MarkdownRenderer
