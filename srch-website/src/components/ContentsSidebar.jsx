@@ -19,7 +19,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
 import { useLayout } from "../layouts/LayoutContext";
-
+import "../index.css";
 /* ----------------------------- File Overview --------------------------------
 ContentsSidebar
 - Renders the left-hand "Contents" navigation.
@@ -111,19 +111,7 @@ function parseSubsections(content) {
 
 /* ----------------------------- UI Helpers --------------------------------- */
 const BetaTag = () => (
-  <Box
-    display="inline-flex"
-    alignItems="center"
-    justifyContent="center"
-    bg="blue.100"
-    color="blue.700"
-    fontWeight="bold"
-    fontSize="xs"
-    px={2}
-    py={0.5}
-    borderRadius="md"
-    ml={2}
-    verticalAlign="middle"
+  <Box className="beta-tag"
   >
     BETA
   </Box>
@@ -153,7 +141,6 @@ export default function ContentsSidebar({ className = "" }) {
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
   // hash for third-level anchors
-  const currentHash = location.hash ? location.hash.substring(1) : "";
 
   /**
    * Local nav state

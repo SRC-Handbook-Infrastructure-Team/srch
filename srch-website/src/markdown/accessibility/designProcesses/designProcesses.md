@@ -6,7 +6,7 @@ final: false
 
 # Design Processeses
 
-When designing any product, processes may be followed to iterate from ideation to implementation and incorporate user feedback. Thoughtful design processes that include deep considerations of users can support **usability** and [nav:accessibility](accessibility/whatIsAccessibility) for diverse target markets.
+When designing any product, processes may be followed to iterate from ideation to implementation and incorporate user feedback. Thoughtful design processes that include deep considerations of users can support **usability** and [accessibility](whatIsAccessibility) for diverse target markets.
 
 ## Design Goals: Defining a User Market
 
@@ -19,7 +19,7 @@ The relationship between controls and their effects should be intuitive. Poorly 
 ## Design Processes
 
 ![This is a flow chart showing the progression of design processes with increasing user consideration. From least to most user consideration, the design processes are "Abiding by Legal Requirements," "Following Standards and Best Practices," "Creating User Personas and Stories Based on Research," and "Engaging Users in Participatory Design Practices."](/srch-s25/assets/primer-photos/flow.png)
-To carry out the aforementioned design goals, specific design processes may be engaged with varying degrees of consideration for accessibility and usability. At a minimum, products must abide by legal requirements. In the US context, these may be requirements set by the [nav:Button Americans with Disabilities Act](accStandards). Beyond legality, designers may abide by standards or best practices in their domains. For example, web accessibility standards are defined by the [nav:Button Web Content Accessibility Guidelines](accStandards).
+To carry out the aforementioned design goals, specific design processes may be engaged with varying degrees of consideration for accessibility and usability. At a minimum, products must abide by legal requirements. In the US context, these may be requirements set by the [Button Americans with Disabilities Act](accStandards). Beyond legality, designers may abide by standards or best practices in their domains. For example, web accessibility standards are defined by the [Button Web Content Accessibility Guidelines](accStandards).
 
 While following legal requirements and best practices is important, intentionally including target users in design processes has many benefits. Deep consideration of user needs can produce better-designed products and lead to greater buy-in from target markets.
 
@@ -36,7 +36,7 @@ _“When creating products I recommend you always ask: Who else? Who else should
 - **Parallel Low Fidelity Prototyping**: A design process where multiple basic (low-fidelity) prototypes are created simultaneously, allowing designers to explore a wide range of design ideas concurrently before settling on a single direction. Typically using quick and simple methods like paper sketches on basic wireframes to rapidly test and iterate on different concepts.
 
 ## All Sidebar Content Below
-Curb-Cut-Effect: 
+
+Curb-Cut-Effect:
 Heading: Curb Cut Effect
 After World War II, disabled veterans in the United States advocated for curb cuts to increase their access in the built environment. Advocacy and lobbying eventually led to legislation that made it mandatory for federally funded facilities to include certain accessibility features, including curb cuts. Curb cuts are also useful for people without disabilities - people pushing strollers or luggage also benefit from increased ease navigating the built environment. The curb cut effect refers to the phenomenon that accessible and usable design benefits disabled target users, but also a larger group of people than they were designed for.
-
