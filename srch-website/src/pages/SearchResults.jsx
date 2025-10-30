@@ -3,7 +3,7 @@ import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
-import background from "/Users/willtolmie/Documents/srch-s25/srch-website/src/assets/search-results-background.jpg";
+import background from "../assets/search-results-background.jpg";
 
 function SearchResults() {
   const { query } = useParams();
@@ -57,6 +57,7 @@ function SearchResults() {
           setSearchQuery={setSearchQuery}
           searchQuery={searchQuery}
           canExpand={false}
+          maxResults={4}
         />
         <ResultsWindow searchQuery={decodedQuery} />
       </div>

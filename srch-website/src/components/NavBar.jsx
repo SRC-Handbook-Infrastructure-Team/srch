@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Text, Image, HStack, VStack, Icon } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  HStack,
+  VStack,
+  IconButton,
+  Image,
+  Text,
+  Icon,
+} from "@chakra-ui/react";
+import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { SearchBar } from "./SearchBar";
 import logo from "../assets/logo.png";
@@ -22,6 +30,8 @@ function NavBar({ className = "" }) {
   const pathParts = currentPath.split("/").filter(Boolean);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModulesExpanded, setIsModulesExpanded] = useState(false);
 
   /**
    * Data for sections + subsections.
@@ -179,13 +189,10 @@ function NavBar({ className = "" }) {
       top={0}
       left={0}
       width="100vw"
-      height="min-content"
       margin={0}
       borderBottom="1px solid"
       borderColor="gray.200"
       bg="white"
-      overflowY="auto"
-      overflow="visible"
       boxShadow="2px 2px 5px rgba(0, 0, 0, 0.1)"
       zIndex={20}
       sx={{
@@ -194,7 +201,7 @@ function NavBar({ className = "" }) {
       }}
     >
       <HStack
-        align="stretch"
+        align="center"
         justify="space-between"
         spacing={2}
         overflow="visible"
@@ -202,8 +209,12 @@ function NavBar({ className = "" }) {
         px={4}
         height={"min-content"}
       >
-        {/* Logo section */}
-        <Box cursor="pointer" onClick={() => navigate("/")}>
+        <Box
+          cursor="pointer"
+          onClick={() => navigate("/")}
+          whiteSpace="nowrap"
+          flexShrink={0}
+        >
           <HStack alignItems={"center"}>
             <Image
               src={logo}
@@ -219,8 +230,7 @@ function NavBar({ className = "" }) {
           </HStack>
         </Box>
 
-        {/* Navigation links */}
-        <HStack spacing={4} ml="auto">
+        <HStack spacing={4} ml="auto" display={{ base: "none", xl: "flex" }}>
           <NavDropdown
             title="Modules"
             items={sections.slice(1).map((section) => ({
@@ -275,9 +285,119 @@ function NavBar({ className = "" }) {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             canExpand={true}
+            maxResults={3}
           />
         </HStack>
+
+        <IconButton
+          icon={<HamburgerIcon color="black" fontSize={"4xl"} />}
+          aria-label="Open menu"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          variant="unstyled"
+          fontSize="2xl"
+          display={{ base: "inline-flex", xl: "none" }}
+        />
       </HStack>
+
+      {isMenuOpen && (
+        <VStack
+          display={{ base: "flex", xl: "none" }}
+          px={4}
+          pt={2}
+          pb={4}
+          borderTop="1px solid"
+          borderColor="gray.200"
+          backgroundColor="white"
+          spacing={3}
+          align="stretch"
+        >
+          <Box
+            p={2}
+            borderRadius="md"
+            cursor="pointer"
+            textAlign="left"
+            onClick={() => {
+              setIsMenuOpen(false);
+              const sectionSubsections = subsections[sections[0].id];
+              if (sectionSubsections && sectionSubsections.length > 0) {
+                navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
+              } else {
+                navigate(`/${sections[0].id}`);
+              }
+            }}
+            _hover={{ color: "#9D0013" }}
+          >
+            About
+          </Box>
+
+          <Box>
+            <Box
+              px={2}
+              pb={2}
+              borderRadius="md"
+              cursor="pointer"
+              textAlign="left"
+              onClick={() => setIsModulesExpanded(!isModulesExpanded)}
+              _hover={{ color: "#9D0013" }}
+            >
+              Modules
+              <Icon
+                as={ChevronDownIcon}
+                transform={isModulesExpanded ? "rotate(180deg)" : undefined}
+                transition="transform 0.2s"
+                w={5}
+                h={5}
+              />
+            </Box>
+
+            {isModulesExpanded && (
+              <VStack pl={6} align="stretch" spacing={2}>
+                {sections.slice(1).map((section) => (
+                  <Box
+                    key={section.id}
+                    cursor="pointer"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      const sectionSubsections = subsections[section.id];
+                      if (sectionSubsections && sectionSubsections.length > 0) {
+                        navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                      } else {
+                        navigate(`/${section.id}`);
+                      }
+                      toggleSection(section.id, null);
+                    }}
+                    _hover={{ color: "#9D0013" }}
+                  >
+                    {section.title}
+                  </Box>
+                ))}
+              </VStack>
+            )}
+          </Box>
+
+          <Box
+            p={2}
+            borderRadius="md"
+            cursor="pointer"
+            textAlign="left"
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate("/acknowledgements/leadership");
+            }}
+            _hover={{ color: "#9D0013" }}
+          >
+            Acknowledgements
+          </Box>
+
+          <SearchBar
+            className="nav-search"
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            canExpand={false}
+            maxResults={1}
+          />
+        </VStack>
+      )}
     </Box>
   );
 }

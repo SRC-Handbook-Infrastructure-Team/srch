@@ -11,12 +11,15 @@ import { SearchResults } from "./pages/SearchResults";
 function AppRoutes() {
   const location = useLocation();
   const isSearchPage = location.pathname.startsWith("/search");
-  const isAcknowledgementsPage = location.pathname.startsWith("/acknowledgements");
+  const isAcknowledgementsPage =
+    location.pathname.startsWith("/acknowledgements");
   const isHomePage = location.pathname === "/";
 
   return (
     <>
-      {!isSearchPage && !isHomePage && isAcknowledgementsPage && <ContentsSidebar />}
+      {!isSearchPage && !isHomePage && !isAcknowledgementsPage && (
+        <ContentsSidebar />
+      )}
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />

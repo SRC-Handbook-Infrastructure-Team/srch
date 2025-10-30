@@ -19,7 +19,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-
   /* ------------------------------------------------------------------------
      🎨 Design Tokens — Base Color System
      ------------------------------------------------------------------------ */
@@ -31,7 +30,6 @@
   --color-border: #e0d7ce; /* from new theme */
   --color-accent: #7b4b24; /* new accent color */
   --color-accent-light: #f3ece6;
-  )
 
   .layout {
     width: 1512px;
@@ -306,7 +304,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 16px;
-    display: inline-flex;
+    display: flex;
   }
 
   .search-icon {
@@ -602,7 +600,9 @@
   }
 
   a:hover {
-    color: #6b3f1f;
+    background-color: white;
+    outline: var(--color-accent);
+    color: var(--color-accent);
     text-decoration: underline;
   }
 
@@ -796,13 +796,14 @@
     color: var(--color-accent);
     font-weight: 600;
     border-radius: 3px;
-    padding: 2px 4px;
+    padding: 2px 2px;
   }
 
   /* ========================================================================== 
    Sidebar Links
    ========================================================================== */
   .sidebar-link-active {
+    color: var(--color-accent);
     color: var(--color-accent) !important;
     font-weight: 600;
   }
@@ -950,11 +951,9 @@
 
   .searchbar-container {
     position: relative;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     overflow: visible;
-    min-width: 40px;
-    transition: width 0.3s ease;
   }
 
   .searchbar-container.expanded {
@@ -1012,7 +1011,7 @@
     position: absolute !important;
     width: 0px;
     left: 0 !important;
-    z-index: 2;
+    z-index: 9999999;
     color: black !important;
     outline: 0 !important;
     box-shadow: none !important;
