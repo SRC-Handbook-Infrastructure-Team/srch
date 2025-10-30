@@ -57,6 +57,7 @@ function SearchResults() {
           setSearchQuery={setSearchQuery}
           searchQuery={searchQuery}
           canExpand={false}
+          maxResults={4}
         />
         <ResultsWindow searchQuery={decodedQuery} />
       </div>

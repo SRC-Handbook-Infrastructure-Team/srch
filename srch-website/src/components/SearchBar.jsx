@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
 import "../index.css"; // Import the CSS file
 
-function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
+function SearchBar({ searchQuery, setSearchQuery, canExpand, maxResults }) {
   const containerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -81,24 +81,12 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand }) {
             onMouseDown={() => setIsFocused(false)}
           />
           <Box className="searchbar-results-window">
-            {canExpand && isExpanded && searchQuery && (
+            {isExpanded && searchQuery && (
               <Box>
                 <Box className="results-window results-white-background">
                   <ResultsWindow
                     searchQuery={searchQuery}
-                    maxResults={3}
-                    setIsExpanded={setIsExpanded}
-                    canExpand={canExpand}
-                  />
-                </Box>
-              </Box>
-            )}
-            {!canExpand && isExpanded && searchQuery && (
-              <Box>
-                <Box className="results-window results-white-background">
-                  <ResultsWindow
-                    searchQuery={searchQuery}
-                    maxResults={5}
+                    maxResults={maxResults}
                     setIsExpanded={setIsExpanded}
                     canExpand={canExpand}
                   />
