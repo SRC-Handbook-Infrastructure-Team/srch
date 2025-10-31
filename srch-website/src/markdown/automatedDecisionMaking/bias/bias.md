@@ -50,7 +50,6 @@ This can occur in two ways:
 
 {Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores}
 
-
 ![Summary of bias in the data generation pipeline](/srch-s25/assets/primer-photos/dataGenerationBias.png)  
 Figure 1: Bias in Data Generation (Suresh et al.)
 
@@ -91,7 +90,7 @@ The impact of bias in ADS is far reaching and never fully known. For an overview
 
 ## Mitigating Bias In Automated-Decision Making Systems
 
-Understanding sources of bias in AI is an essential first step to developing fairer technology. Check out the primer on Mitigating Bias in Automated-Decision Making Systems (coming soon!) and [nav:AI Governance](governance) for more information.
+Understanding sources of bias in AI is an essential first step to developing fairer technology. Check out the primer on Mitigating Bias in Automated-Decision Making Systems (coming soon!) and [AI Governance](governance) for more information.
 
 ## References
 
@@ -148,7 +147,7 @@ Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Rese
 
 ## Sidebar
 
-ai-dev-lifecycle: 
+ai-dev-lifecycle:
 Heading: Understanding AI Development Lifecycle
 
 The AI development lifecycle provides a framework for understanding how bias is introduced to automated-decision making systems.
@@ -164,12 +163,10 @@ In this phase, data is generated and a dataset is created. Data can be generated
 [^1]: Suresh, “A Framework for Understanding Sources of Harm"
 [^2]: “Memory and New Controls for ChatGPT”
 
-
 Data-Generation:
 Heading: Understanding Data Generation Phase of AI Development
 
-In this phase, data is generated and a dataset is created. Data can be generated naturalistically or through experiments. A dataset is created by defining and sampling from a target population, measuring variables of interest, pre-processing the dataset, and defining a train/test split. For example, in a weather prediction AI model, weather data is generated naturally and simply needs to be measured to be collected. Questions of which regions to include (e.g. US or global), what kind of weather variables to include (e.g. temperature or precipitation, continuous or categorical values), what preprocessing steps to take, and how to define the testing dataset are all decisions with trade-offs.  
-
+In this phase, data is generated and a dataset is created. Data can be generated naturalistically or through experiments. A dataset is created by defining and sampling from a target population, measuring variables of interest, pre-processing the dataset, and defining a train/test split. For example, in a weather prediction AI model, weather data is generated naturally and simply needs to be measured to be collected. Questions of which regions to include (e.g. US or global), what kind of weather variables to include (e.g. temperature or precipitation, continuous or categorical values), what preprocessing steps to take, and how to define the testing dataset are all decisions with trade-offs.
 
 Model-Creation:
 Heading: Understanding Model Creation Phase of AI Development
@@ -186,32 +183,25 @@ Societal gender biases are widely reflected in media, which is used to train lar
 [^1]: Garg, _Word Embeddings_
 [^2]: Hoffman, _AI Generates Covertly Racist Decisions_; Yi, _Jailbreak Attacks_
 
-
-
 Representation-Bias-Case-Study--Underrepresentation-In-Automated-Mental-Illness-Detection:
 Heading: Underrepresentation in Automated Mental Illness Detection
-For example, research out of Stanford showed that AI could detect anxiety and depression with 93% and 87% accuracy respectively. However, because the research study occurred at Stanford’s research hospital which serves a primarily White community, 0 black people were included in the study. If this AI model were used in healthcare systems serving diverse communities, the target population would fail to represent the use population, leading to sampling bias and higher error rates for people of color. In medicine, multi-site research studies are a common method to normalize regional data differences and enhance diversity. In AI, collecting data from diverse locations can be a way to reach diverse audiences and mitigate sampling bias.  
-
+For example, research out of Stanford showed that AI could detect anxiety and depression with 93% and 87% accuracy respectively. However, because the research study occurred at Stanford’s research hospital which serves a primarily White community, 0 black people were included in the study. If this AI model were used in healthcare systems serving diverse communities, the target population would fail to represent the use population, leading to sampling bias and higher error rates for people of color. In medicine, multi-site research studies are a common method to normalize regional data differences and enhance diversity. In AI, collecting data from diverse locations can be a way to reach diverse audiences and mitigate sampling bias.
 
 Why-Representation-Bias-in-AI-is-Different:
-There are two unique ways that representation bias in AI is different from representation bias in other fields. 
+There are two unique ways that representation bias in AI is different from representation bias in other fields.
 
-1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.   
-2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias. 
+1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.
+2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias.
 
-In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^1]) and regulated via governance structures. For more information on AI governance \[nav:check out this primer\](governance).    
+In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^1]) and regulated via governance structures. For more information on AI governance \[nav:check out this primer\](governance).
 
-
-[^1]:  Buolamwini, “Gender Shades”
-
+[^1]: Buolamwini, “Gender Shades”
 
 Oversimplification-Case-Study-Healthcare-Proxies-In-High-Risk-Care-Management:
 Heading: Healthcare Proxies In High Risk Care Management
 Predictive algorithms used to approve high risk care management programs in healthcare screen 200 million people in the US each year. Algorithms produce risk scores to identify patients who will benefit most from these programs. However, healthcare spending was used as a proxy for health issues. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients, with an average of 26.3% more chronic illnesses. As a result, measurement bias leads to higher need Black patients being denied access to high risk care management programs compared with lower need White patients with equivalent healthcare spending. In response, the healthcare company worked with researchers to develop a better proxy that combined health prediction with cost prediction, leading to an 84% reduction in bias.[^1]
 
 [^1]: Obermeyer, “Dissecting Racial Bias”
-
-
 
 Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores:
 Heading: Impact Of Over Policing-On Recidivism Scores
@@ -225,12 +215,11 @@ AI-based reading assistants have been developed to aid reading comprehension by 
 [^2]: Nerušil, “Eye Tracking”
 [^3]: “Dyslexia FAQ”
 
-
 Learning-Bias-Case-Study-Distillation-In-Medical-Models-Misses-Rare-Cancers:
 Heading: Distillation In Medical Models Misses Rare Cancers
-When AI models are distilled to be more compact, they lose the nuance necessary to capture under-represented features in the data. For example, **in AI-based breast cancer screening**, **rare cancers are under-represented in medical images.** If a breast cancer detection model is distilled, performance disparities for under-represented cancers will increase because the distilled model has fewer parameters with which it can learn complex underrepresented features in the data.[^1] 
+When AI models are distilled to be more compact, they lose the nuance necessary to capture under-represented features in the data. For example, **in AI-based breast cancer screening**, **rare cancers are under-represented in medical images.** If a breast cancer detection model is distilled, performance disparities for under-represented cancers will increase because the distilled model has fewer parameters with which it can learn complex underrepresented features in the data.[^1]
 
-[^1]:  Zimmerman, *Self Supervised Learning*
+[^1]: Zimmerman, _Self Supervised Learning_
 
 Evaluation-Bias-Case-Study-Facial-Expression-Recognition-In-The-Wild:
 Heading: Facial Expression Recognition In The Wild
@@ -245,7 +234,6 @@ Often arising out of a lack of AI literacy and overreliance on technology, deplo
 
 [^1]: Angwin, _Machine Bias_
 [^2]: Collins, _Punishing Risk_
-
 
 Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
 Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^1]
@@ -275,9 +263,6 @@ E.g: False arrests due to erroneous facial recognition make it difficult for peo
 
 **If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the \[drawer:Justice Primer\](justice).
 
-[^1]:  Suresh, *A Framework for Understanding Sources of Harm*
-
-[^2]:  *Facial Recognition And The Facial Difference Community*
-
-[^3]:   MacMillan, *Police Ignore Standards*
-
+[^1]: Suresh, _A Framework for Understanding Sources of Harm_
+[^2]: _Facial Recognition And The Facial Difference Community_
+[^3]: MacMillan, _Police Ignore Standards_

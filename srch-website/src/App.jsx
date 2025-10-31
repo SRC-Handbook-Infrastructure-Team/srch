@@ -1,59 +1,20 @@
+// src/App.jsx
 import "./App.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import theme from "./theme";
-import NavBar from "./components/NavBar";
-import MarkdownPage from "./pages/MarkdownPage";
-import Home from "./pages/Home";
-import {
-  Acknowledgements,
-  Team,
-  AdditionalContributors,
-} from "./pages/Acknowledgements";
+import AppRoutes from "./AppRoutes"
 
+/**
+ * Main App Component
+ * --------------------------------------------------------------
+ * Uses a persistent SidebarLayout so the NavBar + SearchBar
+ * remain active on every route (including /search pages).
+ */
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <BrowserRouter basename="/srch-s25/">
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/:sectionId" element={<MarkdownPage />} />
-          <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
-          <Route
-            path="/:sectionId/:subsectionId/:term"
-            element={<MarkdownPage />}
-          />
-
-          {/* Acknowledgements paths */}
-          <Route
-            path="/acknowledgements"
-            element={<Team teamName="leadership" />}
-          />
-          <Route
-            path="/acknowledgements/leadership"
-            element={<Team teamName="leadership" />}
-          />
-          <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
-          <Route
-            path="/acknowledgements/privacy"
-            element={<Team teamName="privacy" />}
-          />
-          <Route
-            path="/acknowledgements/accessibility"
-            element={<Team teamName="accessibility" />}
-          />
-          <Route
-            path="/acknowledgements/product"
-            element={<Team teamName="product" />}
-          />
-          <Route
-            path="/acknowledgements/additional"
-            element={<AdditionalContributors />}
-          />
-        </Routes>
-      </BrowserRouter>
+      <AppRoutes />
     </ChakraProvider>
   );
 }

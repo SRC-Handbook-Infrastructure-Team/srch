@@ -1,94 +1,276 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
+  useToast,
+  Box,
   Drawer,
   DrawerBody,
   DrawerHeader,
   DrawerContent,
   DrawerCloseButton,
-  useMediaQuery,
-  useToast,
-  Box,
+  DrawerOverlay,
+  Divider,
+  Text,
 } from "@chakra-ui/react";
+import { useLayout } from "../layouts/LayoutContext";
 import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
+  getDrawerFile,
+  highlightText,
 } from "../util/MarkdownRenderer";
 import { BsSignIntersectionSideFill } from "react-icons/bs";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
+
+  /*
+
+  Hook Explanation: 
+  - sectionId: refers to the module name (ex: Privacy, Accessibility, Generative AI)
+  - subSectionId: refers to the article name (ex: bias, fairness, whatIsAccessibility)
+  - urlTerm: only used for sidebar content to create a unique slug for every sidebar
+  (ex:)
+  - sidebar and setSidebar: sidebar is the dictionary that maps all of the sidebar terms
+  (what the user sees and can click) to the actual content relating to that term
+  
+  drawerTerm and setDrawerTerm: drawerTerm is used to set the heading for each
+  sidebar, if a heading is provided then the drawer term is set to the heading
+  if not it is automatically pulled
+
+
+  */
+
+  /**
+   * Formats the compact page header that sits above the divider, e.g.:
+   * "1.a - What is Privacy?"
+   *
+   * Rules:
+   * - Section numbering is fixed by product spec (Privacy=1, Accessibility=2, ADM=3, GenAI=4).
+   * - Subsection letters come from index-based ordering (a, b, c...).
+   * - Prefer frontmatter `title` (pageTitle) when present; otherwise prettify the slug.
+   *
+   * This version reuses the same numbering logic as ContentsSidebar.
+   */
+
+  // ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
+  const SECTION_NUMBER_MAP = {
+    privacy: "1",
+    accessibility: "2",
+    "automated-decision-making": "3",
+    "generative-ai": "4",
+  };
+
+  // convert 0 -> 'a', 1 -> 'b', etc.
+  function indexToLetter(index) {
+    let s = "";
+    let i = index;
+    do {
+      s = String.fromCharCode(97 + (i % 26)) + s;
+      i = Math.floor(i / 26) - 1;
+    } while (i >= 0);
+    return s;
+  }
+
+  // prettify "what-is-privacy" → "What Is Privacy"
+  function prettifySlug(slug = "") {
+    return String(slug)
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase())
+      .trim();
+  }
+
+  /**
+   * Build a formatted header string using the loaded subsections array.
+   * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
+   *
+   * @param {string} sectionId
+   * @param {string} subsectionId
+   * @param {string} pageTitle
+   * @param {Array} subsectionsArr  // array of { id, title, order, ... }
+   * @returns {string}
+   */
+  function getFormattedTitle(
+    sectionId,
+    subsectionId,
+    pageTitle,
+    subsectionsArr = []
+  ) {
+    const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
+
+    let letter = "";
+    if (
+      subsectionId &&
+      Array.isArray(subsectionsArr) &&
+      subsectionsArr.length > 0
+    ) {
+      const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
+      if (idx >= 0) letter = indexToLetter(idx);
+    }
+
+    const titleText =
+      pageTitle && pageTitle.trim()
+        ? pageTitle.trim()
+        : prettifySlug(subsectionId || sectionId || "");
+
+    return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
+  }
+
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
-  // State for content
+  const cachedContent = useRef({});
+
+  //  Guard against undefined context (edge cases/tests)
+  const layout = useLayout() || {};
+  const { openRightDrawer, closeRightDrawer } = layout;
+
+  // 🧩 Highlight from URL state
+  const highlight = useMemo(() => {
+    let hl = location.state?.highlight;
+    if (!hl) {
+      const params = new URLSearchParams(location.search);
+      hl = params.get("highlight");
+    }
+    return hl;
+  }, [location.state, location.search]);
+
+  // 🧩 Drawer & sidebar states
+  const [sidebar, setSidebar] = useState({});
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerTerm, setDrawerTerm] = useState("");
+
   const [mainContent, setMainContent] = useState("");
   const [drawerContent, setDrawerContent] = useState("");
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
-  const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
   const [contentFinal, setContentFinal] = useState(undefined);
+  const [pageTitle, setPageTitle] = useState("");
+  const [subsections, setSubsections] = useState([]);
 
-  // Drawer resize state
   const [drawerWidth, setDrawerWidth] = useState(() => {
     try {
       const savedWidth = localStorage.getItem("drawerWidth");
-      return savedWidth ? parseInt(savedWidth) : 400; // Default width if not found
-    } catch (error) {
-      console.error("Error reading from localStorage:", error);
-      return 400; // Default width on error
+      return savedWidth ? parseInt(savedWidth) : 400;
+    } catch {
+      return 400;
     }
   });
+
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef(null);
+  const contentRef = useRef(null);
+
+  // compute header once subsections are available to avoid '?' and race conditions
+  const formattedTitle = useMemo(
+    () => getFormattedTitle(sectionId, subsectionId, pageTitle, subsections),
+    [sectionId, subsectionId, pageTitle, subsections]
+  );
+
+  // Helper function to generate cache key based on the section and subsection
+  function getCacheKey(section, subsection = null) {
+    return subsection ? `${section}/${subsection}` : section;
+  }
+
+  async function getCachedContent(section, subsection = null) {
+    const cacheKey = getCacheKey(section, subsection);
+
+    // if the content is already cached, then we just want to retrieve it
+    if (cachedContent.current[cacheKey]) {
+      return cachedContent.current[cacheKey];
+    }
+
+    // if the content has not been cached, cache it
+    const result = await getContent(section, subsection);
+    if (result) {
+      cachedContent.current[cacheKey] = result;
+    }
+
+    return result;
+  }
+
+  function getSidebarContent(
+    term,
+    targetSectionId = sectionId,
+    targetSubsectionId = subsectionId
+  ) {
+    if (sidebar && sidebar[term]) {
+      return sidebar[term];
+    }
+
+    const cacheKey = getCacheKey(targetSectionId, targetSubsectionId);
+    const storedContent = cachedContent.current[cacheKey];
+
+    if (storedContent && storedContent.sidebar && storedContent.sidebar[term]) {
+      return storedContent.sidebar[term];
+    }
+
+    return null;
+  }
 
   // Store the current valid path whenever content loads successfully
+  // --- Store valid previous path ---
   useEffect(() => {
-    if (mainContent && !isLoading) {
-      setPreviousPath(location.pathname);
-    }
+    if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  // Load content based on URL parameters
+  /** Fetches and loads main markdown content based on current route params. */
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
 
-      // If no section specified, load the main index or redirect to first section
       if (!sectionId) {
         const sections = await getSections();
-        if (sections.length > 0) {
-          navigate(`/${sections[0].id}`);
-        }
+        if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
       }
 
-      // If section but no subsection specified
+      // Load top-level section
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
 
         if (result) {
-          setMainContent(result.content);
+          // Strip leading H1 and blank lines to avoid duplicate title below divider
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+          setMainContent(cleaned);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
 
-          // Preload subsections in case we need them
-          const subsections = await getSubsections(sectionId);
+          //  renamed local variable to avoid shadowing
+          const subs = await getSubsections(sectionId);
 
-          // If no specific section content or it's very minimal, redirect to first subsection
+          //  sanitize subsections to remove falsy/drawer entries
+          const validSubs = (subs || [])
+            .filter((s) => s && s.id && typeof s.id === "string")
+            .filter(
+              (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+            )
+            .map((s) => ({
+              ...s,
+              title:
+                (s.title && String(s.title).trim()) ||
+                String(s.id || "")
+                  .replace(/[-_]/g, " ")
+                  .replace(/\b\w/g, (m) => m.toUpperCase()),
+            }))
+            .sort(
+              (a, b) =>
+                (Number.isFinite(a.order) ? a.order : 999) -
+                (Number.isFinite(b.order) ? b.order : 999)
+            );
+
+          setSubsections(validSubs);
+
           if (!result.content.trim() || result.content.trim().length < 50) {
-            if (subsections.length > 0) {
-              navigate(`/${sectionId}/${subsections[0].id}`);
-            }
+            if (validSubs.length > 0)
+              navigate(`/${sectionId}/${validSubs[0].id}`);
           }
         } else {
-          // If section not found, show toast error and stay on the current page
           toast({
             title: "Section Not Found",
             description: `The section "${sectionId}" could not be found.`,
@@ -105,15 +287,18 @@ function MarkdownPage() {
         return;
       }
 
-      // If both section and subsection specified
+      // Load subsection
       if (sectionId && subsectionId) {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
-          setMainContent(result.content);
+          // Strip leading H1 and blank lines to avoid duplicate title below divider
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+          setMainContent(cleaned);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
         } else {
-          // If subsection not found, show toast error and stay on the current page
           toast({
             title: "Subsection Not Found",
             description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
@@ -122,8 +307,6 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
-
-          // Navigate back to the previous valid path instead of changing the URL
           navigate(previousPath, { replace: true });
         }
       }
@@ -133,28 +316,67 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
+  /** Loads and stores the ordered list of subsections for the current section. */
   useEffect(() => {
-    if (sidebar && sidebar[urlTerm]) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(sidebar[urlTerm].content);
-      setIsDrawerOpen(true);
+    if (!sectionId) return;
+    let active = true;
+    getSubsections(sectionId)
+      .then((data) => {
+        if (!active) return;
+        const validSubs = (data || [])
+          .filter((s) => s && s.id && typeof s.id === "string")
+          .filter(
+            (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+          )
+          .map((s) => ({
+            ...s,
+            title:
+              (s.title && String(s.title).trim()) ||
+              String(s.id || "")
+                .replace(/[-_]/g, " ")
+                .replace(/\b\w/g, (m) => m.toUpperCase()),
+          }))
+          .sort(
+            (a, b) =>
+              (Number.isFinite(a.order) ? a.order : 999) -
+              (Number.isFinite(b.order) ? b.order : 999)
+          );
+        setSubsections(validSubs);
+      })
+      .catch((err) => console.error("Failed to load subsections:", err));
+    return () => {
+      active = false;
+    };
+  }, [sectionId]);
+
+  /** Reacts when a URL drawer term is provided. */
+  useEffect(() => {
+    if (!urlTerm) return;
+
+    const sidebarEntry = getSidebarContent(urlTerm);
+
+    if (sidebarEntry) {
+      if (urlTerm && sidebar && sidebar[urlTerm]) {
+        setDrawerTerm(urlTerm);
+        setDrawerContent(
+          typeof sidebarEntry === "string"
+            ? sidebarEntry
+            : sidebarEntry.content || " "
+        );
+        setIsDrawerOpen(true);
+      }
     }
   }, [urlTerm, sidebar]);
 
-  // Pre-check if content exists before navigating
+  // --- Utility navigation check ---
   const checkAndNavigate = useCallback(
     async (path) => {
-      // Don't do anything if we're already loading content
       if (isLoading) return;
-
-      // Parse the path
       const pathParts = path.split("/").filter(Boolean);
 
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
-      const targetTerm = pathParts[2] || null;
 
-      // Check if the content exists before navigating
       try {
         let contentExists = false;
 
@@ -174,27 +396,15 @@ function MarkdownPage() {
           contentExists = result !== null;
         }
 
-        if (contentExists) {
-          // Content exists, navigate to it
-          navigate(`/${path}`);
-        } else {
-          // Content doesn't exist, show error
-          let errorTitle, errorDescription;
-
-          if (targetSubsectionId && targetTerm) {
-            errorTitle = `Sidebar Entry Not Found`;
-            errorDescription = `The sidebar entry "${targetTerm}" in subsection "${targetSubsectionId}" not found.`;
-          } else if (targetSubsectionId && !targetTerm) {
-            errorTitle = "Subsection Not Found";
-            errorDescription = `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`;
-          } else {
-            errorTitle = "Section Not Found";
-            errorDescription = `The section "${targetSectionId}" could not be found.`;
-          }
-
+        if (contentExists) navigate(`/${path}`);
+        else {
           toast({
-            title: errorTitle,
-            description: errorDescription,
+            title: targetSubsectionId
+              ? "Subsection Not Found"
+              : "Section Not Found",
+            description: targetSubsectionId
+              ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
+              : `The section "${targetSectionId}" could not be found.`,
             status: "error",
             duration: 5000,
             isClosable: true,
@@ -226,9 +436,11 @@ function MarkdownPage() {
       console.warn("Sidebar not loaded yet");
       return;
     }
-    const content = sidebar[term];
-    if (content) {
-      setDrawerContent(content);
+
+    const sidebarContent = sidebar[term];
+    if (sidebarContent) {
+      setDrawerTerm(urlTerm);
+      setDrawerContent(sidebarContent);
       setIsDrawerOpen(true);
 
       navigate(`/${sectionId}/${subsectionId}/${term}`);
@@ -244,140 +456,62 @@ function MarkdownPage() {
     }
   }
 
-  // Handle clicking navigation links
   function handleNavigation(targetId) {
-    // Close drawer if open
-    setIsDrawerOpen(false);
-
-    // Check if this is a path with section/subsection or just a section
+    closeRightDrawer();
     if (targetId.includes("/")) {
-      // Full path format: "section/subsection"
       checkAndNavigate(targetId);
     } else {
-      // Simple path - could be a subsection in current section or a different section
-
-      // If we're already in a section, assume it's a subsection of current section
       if (sectionId && !subsectionId) {
         checkAndNavigate(`${sectionId}/${targetId}`);
       } else {
-        // Otherwise treat it as a section
         checkAndNavigate(targetId);
       }
     }
   }
 
-  // Handle hash links (anchor scrolling)
+  /** Auto scrolls to anchors or top on content load. */
   useEffect(() => {
-    if (!mainContent) return; // Don't try to scroll if content isn't loaded
-
-    // Use a timeout to ensure DOM has updated with the new content
+    if (!mainContent) return;
     const timer = setTimeout(() => {
-      // Get hash from the location object (more reliable than window.location)
       if (location.hash) {
-        // Remove the # symbol
         const id = location.hash.replace("#", "");
-
-        // Find element and scroll to it
         const element = document.getElementById(id);
-        if (element) {
-          // Scroll with a slight delay to ensure rendering is complete
-          element.scrollIntoView({ behavior: "smooth" });
-        }
+        if (element) element.scrollIntoView({ behavior: "smooth" });
       } else {
-        // If no hash, scroll to top
         window.scrollTo(0, 0);
       }
-    }, 200); // Slightly longer timeout to ensure content is rendered
-
+    }, 200);
     return () => clearTimeout(timer);
-  }, [mainContent, location.hash]); // Respond to both content changes and hash changes
+  }, [mainContent, location.hash]);
 
-  // Handle drawer resize functionality
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsResizing(true);
-
-    // Record initial mouse position and drawer width
-    resizeRef.current = {
-      startX: e.clientX,
-      startWidth: drawerWidth,
-    };
-
-    // Add cursor styling to entire document during resize
-    document.body.style.cursor = "ew-resize";
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isResizing || !resizeRef.current) return;
-
-      // Calculate new width based on mouse movement
-      // For a right drawer, dragging left (negative delta) should increase width
-      const deltaX = e.clientX - resizeRef.current.startX;
-      // Since the drawer is on the right, moving mouse left (negative deltaX) makes drawer wider
-      const newWidth = Math.max(
-        300,
-        Math.min(800, resizeRef.current.startWidth - deltaX)
-      );
-
-      setDrawerWidth(newWidth);
-    };
-
-    const handleMouseUp = () => {
-      if (isResizing) {
-        setIsResizing(false);
-        document.body.style.cursor = "";
-
-        // Save width to localStorage when done resizing
-        try {
-          localStorage.setItem("drawerWidth", drawerWidth.toString());
-        } catch (error) {
-          console.error("Error saving to localStorage:", error);
-        }
-      }
-    };
-
-    if (isResizing) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "";
-    };
-  }, [isResizing, drawerWidth]);
-
-  useEffect(() => {
-    if (!urlTerm || !sidebar || Object.keys(sidebar).length === 0) return;
-    const entry = sidebar[urlTerm];
-    if (entry) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(typeof entry === "string" ? entry : entry.content || "");
-      setIsDrawerOpen(true);
-    } else {
-      console.warn(`No sidebar entry found for ${urlTerm}`);
-    }
-  }, [urlTerm, sidebar]);
-
+  /** Main render */
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      {/* Main content */}
+    <div className="markdown-page">
       {mainContent && (
-        <MarkdownRenderer
-          content={mainContent}
-          sidebar={sidebar}
-          sectionId={sectionId}
-          subsectionId={subsectionId}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          isFinal={contentFinal}
-        />
+        <Box mb={10}>
+          <Box mb={6}>
+            <Text fontSize="2xl" fontWeight="semibold" color="#4F3629" mb={2}>
+              {formattedTitle}
+            </Text>
+            <Divider borderColor="#4F3629" borderWidth="1.5px" mb={8} />
+          </Box>
+
+          <Box ref={contentRef}>
+            <MarkdownRenderer
+              content={mainContent}
+              sidebar={sidebar}
+              sectionId={sectionId}
+              subsectionId={subsectionId}
+              onDrawerOpen={handleDrawerOpen}
+              onNavigation={handleNavigation}
+              isFinal={contentFinal}
+              highlight={highlight}
+            />
+          </Box>
+        </Box>
       )}
 
-      {/* Drawer for additional content */}
+      {/* Drawer */}
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -388,35 +522,30 @@ function MarkdownPage() {
         blockScrollOnMount={false}
         trapFocus={false}
       >
+        {/* Added overlay for accessibility / UX */}
+        <DrawerOverlay />
         <DrawerContent
           sx={{ width: `${drawerWidth}px !important` }}
           maxWidth="80vw"
           position="relative"
         >
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px">
-            {sidebar[drawerTerm]?.heading || drawerTerm}
+          <DrawerHeader
+            borderBottomWidth="2px"
+            color="var(--color-accent)"
+            borderColor="var(--color-accent)"
+          >
+            {highlightText(
+              sidebar[drawerTerm]?.heading || drawerTerm,
+              highlight
+            )}
           </DrawerHeader>
-
-          {/* Resize handle */}
-          <Box
-            position="absolute"
-            left="0"
-            top="0"
-            bottom="0"
-            width="6px"
-            cursor="ew-resize"
-            bgColor={isResizing ? "blue.400" : "transparent"}
-            _hover={{ bgColor: "blue.200" }}
-            onMouseDown={handleMouseDown}
-            zIndex="999"
-          />
-
           <DrawerBody>
             <MarkdownRenderer
               content={drawerContent}
               onDrawerOpen={handleDrawerOpen}
               onNavigation={handleNavigation}
+              highlight={highlight}
             />
           </DrawerBody>
         </DrawerContent>

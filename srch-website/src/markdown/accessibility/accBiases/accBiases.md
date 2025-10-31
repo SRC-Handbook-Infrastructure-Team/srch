@@ -6,7 +6,7 @@ final: false
 
 # The Importance of Recognizing Biases
 
-Inclusive design is a method for creating products and experiences that are accessible, usable, and clear to a wide range of people. It expands beyond basic accessibility by addressing the diverse needs, backgrounds, and perspectives of users. For more information on inclusive design, see [nav:Design Processes](accessibility/designProcesses).
+Inclusive design is a method for creating products and experiences that are accessible, usable, and clear to a wide range of people. It expands beyond basic accessibility by addressing the diverse needs, backgrounds, and perspectives of users. For more information on inclusive design, see [Design Processes](accessibility/designProcesses).
 
 People develop [**mental models**](https://www.sciencedirect.com/topics/social-sciences/mental-model#:~:text=A%20mental%20model%20is%20a,of%20widespread%20erroneous%20mental%20models) based on past experiences. If a system contradicts familiar patterns, it becomes difficult to use. Cognitive biases, such as the tendency to rely on previous knowledge, influence how individuals expect technology to function. Aligning with well-established patterns and intuitive interactions minimizes confusion and improves usability.
 

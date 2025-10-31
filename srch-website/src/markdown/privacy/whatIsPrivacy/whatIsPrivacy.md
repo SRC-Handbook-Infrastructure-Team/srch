@@ -83,7 +83,7 @@ Privacy is relational and must be understood with respect to a certain person or
 
 "Consider the case of a couple having a quiet conversation in their home. While neither spouse has privacy with respect to the other and with regard to their feelings (assuming they are being honest), the couple have privacy with respect to the passersby who cannot hear or see them." (Véliz 2024, 83)
 
-The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [nav:Value of Privacy](privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
+The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
 ## References
 
@@ -166,34 +166,33 @@ Wheeler, Evan. _Security Risk Management: Building an Information Security Risk 
 ## Sidebar
 
 gate-we-can-open-close-to-others:
-Heading:Case 
-The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [*Van Buren v. United States*](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
+Heading:Case
+The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [_Van Buren v. United States_](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
 
-
-man-in-the-middle-attack: 
+man-in-the-middle-attack:
 For more details on man-in-the-middle (MITM) attacks, see [“What is a man-in-the-middle (MITM) attack?”](https://www.ibm.com/think/topics/man-in-the-middle) from IBM.
 
 **Case:** Edward Snowden publicized evidence that the U.S. National Security Agency (NSA) was intercepting traffic between Yahoo and Google data centers through a surveillance program known as MUSCULAR. See 2013 the Washington Post article ["NSA infiltrates links to Yahoo, Google data centers worldwide, Snowden documents say"](https://www.washingtonpost.com/world/national-security/nsa-infiltrates-links-to-yahoo-google-data-centers-worldwide-snowden-documents-say/2013/10/30/e51d661e-4166-11e3-8b74-d89d714ca4dd_story.html) by Gellman and Soltani to learn more.
 
 contextual-integrity:
-For more, watch and/or read Voices of VR’s ["Primer on the Contextual Integrity Theory of Privacy with Philosopher Helen Nissenbaum"](https://voicesofvr.com/998-primer-on-the-contextual-integrity-theory-of-privacy-with-philosopher-helen-nissenbaum/). 
+For more, watch and/or read Voices of VR’s ["Primer on the Contextual Integrity Theory of Privacy with Philosopher Helen Nissenbaum"](https://voicesofvr.com/998-primer-on-the-contextual-integrity-theory-of-privacy-with-philosopher-helen-nissenbaum/).
 
 Contextual integrity is applicable in legal and policy discussions of privacy. Its advocates assert that it is more comprehensive than the predominant [Fair Information Practice Principles](https://www.fpc.gov/resources/fipps/) (FIPPs) model.
 
-The information flow control (IFC) model in cybersecurity can be seen as operationalizing Nissenbaum’s principle of appropriate flow. IFC focuses on “what information is authorized to be transferred between entities” (Wheeler 2011, 269). To learn more, see Wheeler’s book [*Security Risk Management*](https://ebookcentral-proquest-com.revproxy.brown.edu/lib/brown/detail.action?docID=685406).
+The information flow control (IFC) model in cybersecurity can be seen as operationalizing Nissenbaum’s principle of appropriate flow. IFC focuses on “what information is authorized to be transferred between entities” (Wheeler 2011, 269). To learn more, see Wheeler’s book [_Security Risk Management_](https://ebookcentral-proquest-com.revproxy.brown.edu/lib/brown/detail.action?docID=685406).
 
 Not all aspects of Nissenbaum’s theory are straightforward to operationalize (e.g. some transmission principles such as “with consent”). IFC systems that allow for more nuanced control are an active area of research. The 2024 paper [“Sesame: Practical End-to-End Privacy Compliance with Policy Containers and Privacy Regions”](https://doi.org/10.1145/3694715.3695984) from Brown’s Efficient and Trustworthy Operating Systems (ETOS) Group is an example of such work.
 
 constitutionally-protected-reasonable-exprectation-of-privacy:
-**Case:** In his oft-cited concurrence to [*Katz v. United States*](https://www.oyez.org/cases/1967/35) (1967), Justice Harlan writes that a telephone booth is a private setting, more similar to one’s home, where one has a reasonable expectation of privacy, than to a field, where one does not have such an expectation. The delineation of public and private spheres in Katz is in relation to the Fourth Amendment protection against unreasonable searches and seizures by the government.
+**Case:** In his oft-cited concurrence to [_Katz v. United States_](https://www.oyez.org/cases/1967/35) (1967), Justice Harlan writes that a telephone booth is a private setting, more similar to one’s home, where one has a reasonable expectation of privacy, than to a field, where one does not have such an expectation. The delineation of public and private spheres in Katz is in relation to the Fourth Amendment protection against unreasonable searches and seizures by the government.
 
-**Case:** In [*Griswold v. Connecticut*](https://www.oyez.org/cases/1964/496) (1965), the Court found that a right to marital privacy inferred from the guarantees of the First, Third, Fourth, Fifth, and Ninth Amendments prevented the state from making contraceptive use illegal for married couples. This legal conception of privacy has been continually challenged. In a dissent to the original case, Justice Potter Stewart wrote, “I can find no such general right of privacy in the Bill of Rights, in any other part of the Constitution, or in any case ever before decided by this Court” (530). More recently, Justice Clarence Thomas rejected the argument behind Griswold in his concurrence to [*Dobbs v. Jackson Women’s Health Organization*](https://www.oyez.org/cases/2021/19-1392) (2022),  which eliminated the constitutional right to abortion.
+**Case:** In [_Griswold v. Connecticut_](https://www.oyez.org/cases/1964/496) (1965), the Court found that a right to marital privacy inferred from the guarantees of the First, Third, Fourth, Fifth, and Ninth Amendments prevented the state from making contraceptive use illegal for married couples. This legal conception of privacy has been continually challenged. In a dissent to the original case, Justice Potter Stewart wrote, “I can find no such general right of privacy in the Bill of Rights, in any other part of the Constitution, or in any case ever before decided by this Court” (530). More recently, Justice Clarence Thomas rejected the argument behind Griswold in his concurrence to [_Dobbs v. Jackson Women’s Health Organization_](https://www.oyez.org/cases/2021/19-1392) (2022), which eliminated the constitutional right to abortion.
 
 Warren-and-Brandeis:
 For more on Warren and Brandeis, see the original article ["The Right to Privacy"](https://groups.csail.mit.edu/mac/classes/6.805/articles/privacy/Privacy_brand_warr2.html) (1890) or explore their ideas further in ["The Right to Be Let Alone"](https://sk.sagepub.com/hnbk/edvol/the-sage-guide-to-key-issues-in-mass-media-ethics-and-law/chpt/20-right-be-let-alone?PageNum=306) (2015) by Freivogel.
 
 developing-appropriate-privacy-protections:
-Since 2000, the Supreme Court has considered how privacy protections apply to thermal-imaging ([*Kyllo v. United States*](https://www.oyez.org/cases/2000/99-8508)), GPS tracking ([*United States v. Jones*](https://www.oyez.org/cases/2011/10-1259)), and cellphone records ([*Carpenter v. United States*](https://www.oyez.org/cases/2017/16-402)) among other emerging technologies.
+Since 2000, the Supreme Court has considered how privacy protections apply to thermal-imaging ([_Kyllo v. United States_](https://www.oyez.org/cases/2000/99-8508)), GPS tracking ([_United States v. Jones_](https://www.oyez.org/cases/2011/10-1259)), and cellphone records ([_Carpenter v. United States_](https://www.oyez.org/cases/2017/16-402)) among other emerging technologies.
 
 previously-unimaginable-intrusions:
 As Véliz puts it, “What used to be the paradigmatic loci of the private—our homes and our minds—have become the paradigmatic loci of data collection” (2024, 45). For more on the mind component, see [“The Extended Mind”](https://www.jstor.org/stable/3328150) (1998) by Clark and Chalmers.
