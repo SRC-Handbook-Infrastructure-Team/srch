@@ -1,10 +1,7 @@
-import { useEffect } from "react";
-import "../index.css";
+
+import "../LandingPage.css";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { SearchBar } from "../components/SearchBar";
-import ResultsWindow from "../components/ResultsWindow";
-import { background, Heading } from "@chakra-ui/react";
 import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
@@ -15,7 +12,6 @@ import privacyIcon from "../assets/privacy-icon.jpg";
 import automatedIcon from "../assets/automated.png";
 import aiIcon from "../assets/ai-icon.png";
 import accessibilityIcon from "../assets/accessibility-icon.png";
-import backgroundGradient from "../assets/landing-page-background-gradient.png";
 
 function Home() {
   const navigate = useNavigate();
@@ -27,9 +23,8 @@ function Home() {
   return (
     <div className="layout">
       <NavBar />
-      <div className="Body">
+      <div className="body">
         <div className="upper-content">
-          <div className="background-gradient"></div>
           <div className="upper-text-section">
             <div className="website-title">Brown SRC Handbook</div>
             <div className="info-section">
@@ -44,104 +39,106 @@ function Home() {
         </div>
 
         <div className="lower-content">
-          <div className="curriculum-header">
-            <div className="curriculum-title">Check out our curriculum</div>
-            <div className="curriculum-subtext">
-              Explore our focus areas of socially responsible computing
+          <div className="content-section">
+            <div className="content-header">
+              <div className="curriculum-title">Check out our curriculum</div>
+              <div className="curriculum-subtext">
+                Explore our focus areas of socially responsible computing
+              </div>
             </div>
-          </div>
 
-          <div className="card-grid">
-            {/* Privacy Curriculum Card */}
-            <button
-              className="topic-card"
-              onClick={() => navigate(privacySlug)}
-            >
-              <div className="outline-tip">
-                <img
-                  src={privacyIcon}
-                  alt="Privacy Icon"
-                  width={75}
-                  height={92}
-                />
-              </div>
-              <div className="card">
-                <div className="card-heading">Privacy</div>
-                <div className="topic-subtext">
-                  Think critically about privacy and its applications to
-                  computer science.
+            <div className="card-grid">
+              {/* Privacy Curriculum Card */}
+              <button
+                className="topic-card"
+                onClick={() => navigate(privacySlug)}
+              >
+                <div className="outline-tip">
+                  <img
+                    src={privacyIcon}
+                    alt="Privacy Icon"
+                    width={75}
+                    height={92}
+                  />
                 </div>
-              </div>
-            </button>
+                <div className="card">
+                  <div className="card-heading">Privacy</div>
+                  <div className="topic-subtext">
+                    Think critically about privacy and its applications to
+                    computer science.
+                  </div>
+                </div>
+              </button>
 
-            {/* Accessibility Curriculum Card */}
-            <button
-              className="topic-card"
-              onClick={() => navigate(accessibilitySlug)}
-            >
-              <div className="outline-tip">
-                <img
-                  src={accessibilityIcon}
-                  alt="Accessibility Icon"
-                  width={75}
-                  height={92}
-                />
-              </div>
-              <div className="card">
-                <div className="card-heading">Accessibility</div>
-                <div className="topic-subtext">
-                  Think critically about accessibility and its applications to
-                  computer science.
+              {/* Accessibility Curriculum Card */}
+              <button
+                className="topic-card"
+                onClick={() => navigate(accessibilitySlug)}
+              >
+                <div className="outline-tip">
+                  <img
+                    src={accessibilityIcon}
+                    alt="Accessibility Icon"
+                    width={75}
+                    height={92}
+                  />
                 </div>
-              </div>
-            </button>
+                <div className="card">
+                  <div className="card-heading">Accessibility</div>
+                  <div className="topic-subtext">
+                    Think critically about accessibility and its applications to
+                    computer science.
+                  </div>
+                </div>
+              </button>
 
-            {/* Decision-Making Curriculum Card */}
-            <button
-              className="topic-card"
-              onClick={() => navigate(decisionSlug)}
-            >
-              <div className="outline-tip">
-                <img
-                  src={automatedIcon}
-                  alt="Automated Decision Making Icon"
-                  width={75}
-                  height={92}
-                />
-              </div>
-              <div className="card">
-                <div className="card-heading">Automated Decision Making</div>
-                <div className="topic-subtext">
-                  Think critically about automated decision making and its
-                  applications to computer science.
+              {/* Decision-Making Curriculum Card */}
+              <button
+                className="topic-card"
+                onClick={() => navigate(decisionSlug)}
+              >
+                <div className="outline-tip">
+                  <img
+                    src={automatedIcon}
+                    alt="Automated Decision Making Icon"
+                    width={75}
+                    height={92}
+                  />
                 </div>
-              </div>
-            </button>
+                <div className="card">
+                  <div className="card-heading">Automated Decision Making</div>
+                  <div className="topic-subtext">
+                    Think critically about automated decision making and its
+                    applications to computer science.
+                  </div>
+                </div>
+              </button>
 
-            {/* Generative AI Curriculum Card */}
-            <button className="topic-card" onClick={() => navigate(aiSlug)}>
-              <div className="outline-tip">
-                <img
-                  src={aiIcon}
-                  alt="Generative AI Icon"
-                  width={75}
-                  height={92}
-                />
-              </div>
-              <div className="card">
-                <div className="card-heading">Generative AI</div>
-                <div className="topic-subtext">
-                  Think critically about Generative AI and its applications to
-                  computer science.
+              {/* Generative AI Curriculum Card */}
+              <button className="topic-card" onClick={() => navigate(aiSlug)}>
+                <div className="outline-tip">
+                  <img
+                    src={aiIcon}
+                    alt="Generative AI Icon"
+                    width={75}
+                    height={92}
+                  />
                 </div>
-              </div>
-            </button>
+                <div className="card">
+                  <div className="card-heading">Generative AI</div>
+                  <div className="topic-subtext">
+                    Think critically about Generative AI and its applications to
+                    computer science.
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
 
           <div className="line-divider"></div>
 
-          <div className="search-section" style={{ paddingBottom: "84px" }}>
-            <div className="search-header">
+          <div className="content-section" style={{ paddingBottom: "84px" }}>
+            <div className="content-header">
               <h2 className="search-title" style={{ paddingTop: "84px" }}>
                 Search for Content
               </h2>
