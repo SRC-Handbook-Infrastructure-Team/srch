@@ -15,14 +15,6 @@ import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { SearchBar } from "./SearchBar";
 import logo from "../assets/logo.png";
 
-/**
- * NavBar
- * -----------------------------------------------------------------------------
- * The global top navigation bar of the site.
- * Handles navigation across sections and modules,
- * as well as the site search input and static navigation links.
- * -----------------------------------------------------------------------------
- */
 function NavBar({ className = "" }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,10 +26,6 @@ function NavBar({ className = "" }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
 
-  /**
-   * Data for sections + subsections.
-   * expandedSections is a map of sectionId -> boolean (expanded or not).
-   */
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
@@ -50,7 +38,7 @@ function NavBar({ className = "" }) {
   };
 
   useEffect(() => {
-    if (hasLoadedData.current) return; // prevent multiple fetches
+    if (hasLoadedData.current) return;
 
     async function loadAllData() {
       try {
@@ -61,7 +49,6 @@ function NavBar({ className = "" }) {
         setSections(sortedSections);
 
         const subsectionsMap = {};
-        // Fix: expandStateMap was missing declaration before use
         const expandStateMap = {};
 
         for (const section of sortedSections) {
@@ -96,7 +83,6 @@ function NavBar({ className = "" }) {
     loadAllData();
   }, []);
 
-  // Redirect from main section to first subsection
   useEffect(() => {
     if (
       currentSectionId &&
@@ -117,58 +103,29 @@ function NavBar({ className = "" }) {
       onToggle(e);
     };
     return (
-      <Box position="relative" cursor="pointer" pointerEvents="auto">
-        <Box
-          p={2}
-          borderRadius="md"
-          cursor="pointer"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          textAlign="center"
-          onClick={handleClick}
-          _hover={{ color: "#9D0013" }}
-        >
+      <Box className="nav-dropdown">
+        <Box className="nav-dropdown-title" onClick={handleClick}>
           <Text
-            cursor="pointer"
-            pointerEvents="auto"
+            className="nav-dropdown-title-text"
             color={isExpanded ? "#9D0013" : "inherit"}
           >
             {title}
           </Text>
           <Icon
             as={ChevronDownIcon}
-            transform={isExpanded ? "rotate(180deg)" : undefined}
-            transition="transform 0.2s"
-            w={5}
-            h={5}
+            className="nav-dropdown-chevron"
+            style={{ transform: isExpanded ? "rotate(180deg)" : undefined }}
           />
         </Box>
 
         {isExpanded && (
-          <Box
-            position="absolute"
-            top="100%"
-            left={0}
-            mt={1}
-            bg="white"
-            shadow="md"
-            borderRadius="md"
-            zIndex={10}
-            justifyContent="center"
-            width="max-content"
-          >
+          <Box className="nav-dropdown-menu">
             <VStack align="stretch" spacing={0}>
               {items.map((item) => (
                 <Box
                   key={item.id}
-                  paddingLeft={2}
-                  paddingRight={2}
-                  paddingTop={1}
-                  paddingBottom={1}
-                  cursor="pointer"
+                  className="nav-dropdown-item"
                   onClick={item.onClick}
-                  _hover={{ color: "#9D0013" }}
                 >
                   <Text fontWeight="medium" whiteSpace="nowrap">
                     {item.title}
@@ -183,42 +140,10 @@ function NavBar({ className = "" }) {
   };
 
   return (
-    <Box
-      as="header"
-      className={`top-navbar ${className}`.trim()}
-      position="fixed"
-      top={0}
-      left={0}
-      width="100vw"
-      px={4}
-      margin={0}
-      height={"min-content"}
-      alignContent={"center"}
-      borderBottom="1px solid"
-      borderColor="gray.200"
-      bg="white"
-      boxShadow="2px 2px 5px rgba(0, 0, 0, 0.1)"
-      zIndex={20}
-      sx={{
-        "& a:hover": { color: "#9D0013" },
-        "& a:button": { color: "#9D0013" },
-      }}
-    >
+    <Box as="header" className={`top-navbar ${className}`.trim()}>
       <Box>
-        <HStack
-          align="center"
-          justify="space-between"
-          spacing={2}
-          overflow="visible"
-          width="100%"
-          height={"60px"}
-        >
-          <Box
-            cursor="pointer"
-            onClick={() => navigate("/")}
-            whiteSpace="nowrap"
-            flexShrink={0}
-          >
+        <HStack className="header-hstack">
+          <Box className="navbar-logo-container" onClick={() => navigate("/")}>
             <HStack alignItems={"center"}>
               <Image
                 src={logo}
@@ -229,8 +154,8 @@ function NavBar({ className = "" }) {
             </HStack>
           </Box>
 
-          <HStack ml="auto">
-            <Box display={{ base: "none", md: "flex" }}>
+          <HStack className="right-hstack">
+            <Box className="hide-base show-md right-hstack">
               <NavDropdown
                 title="Modules"
                 items={sections.slice(1).map((section) => ({
@@ -251,10 +176,7 @@ function NavBar({ className = "" }) {
               />
 
               <Box
-                p={2}
-                borderRadius="md"
-                cursor="pointer"
-                textAlign="center"
+                className="nav-link-box"
                 onClick={() => {
                   const firstSection = sections[0];
                   const sectionSubsections = subsections[firstSection.id];
@@ -264,34 +186,30 @@ function NavBar({ className = "" }) {
                     navigate(`/${firstSection.id}`);
                   }
                 }}
-                _hover={{ color: "#9D0013" }}
               >
-                <Text>{"About"}</Text>
+                <Text>About</Text>
               </Box>
               <Box
-                p={2}
-                borderRadius="md"
-                cursor="pointer"
-                textAlign="center"
+                className="nav-link-box"
                 onClick={() => navigate("/acknowledgements/leadership")}
-                _hover={{ color: "#9D0013" }}
               >
-                <Text>{"Acknowledgements"}</Text>
+                <Text>Acknowledgements</Text>
               </Box>
             </Box>
+
             <IconButton
               icon={<MoonIcon color="black" fontSize={"lg"} />}
-              className="toggle-button"
-              display={{ base: "inline-flex" }}
+              className="icon-button"
+              aria-label="Toggle dark mode"
             />
-            <Box display={{ base: "none", md: "flex" }}>
+
+            <Box className="hide-base show-md">
               <SearchBar
                 className="nav-search"
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 canExpand={true}
                 maxResults={3}
-                display={{ base: "none", md: "flex" }}
               />
             </Box>
           </HStack>
@@ -299,26 +217,19 @@ function NavBar({ className = "" }) {
           <IconButton
             icon={<HamburgerIcon color="black" fontSize={"xl"} />}
             aria-label="Open menu"
-            className="toggle-button"
+            className="icon-button show-base hide-md"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             variant="unstyled"
-            display={{ base: "inline-flex", md: "none" }}
           />
         </HStack>
 
         {isMenuOpen && (
           <VStack
-            display={{ base: "flex", md: "none" }}
-            backgroundColor="white"
-            align="stretch"
-            pb={3}
+            align={"start"}
+            className="mobile-menu-vstack show-base hide-md"
           >
             <Box
-              borderRadius="md"
-              cursor="pointer"
-              textAlign="left"
-              pb={1}
-              width={"min-content"}
+              className="nav-link-box"
               onClick={() => {
                 setIsMenuOpen(false);
                 const sectionSubsections = subsections[sections[0].id];
@@ -328,47 +239,41 @@ function NavBar({ className = "" }) {
                   navigate(`/${sections[0].id}`);
                 }
               }}
-              _hover={{ color: "#9D0013" }}
             >
               About
             </Box>
 
-            <Box onMouseEnter={() => setIsModulesExpanded(true)}>
+            <Box
+              className="mobile-modules-container"
+              onMouseEnter={() => setIsModulesExpanded(true)}
+            >
               <Box
-                borderRadius="md"
-                cursor="pointer"
-                textAlign="left"
-                pb={1}
-                width={"min-content"}
-                whiteSpace={"nowrap"}
-                _hover={{ color: "#9D0013" }}
+                className="mobile-modules-toggle"
+                onClick={() => setIsModulesExpanded(!isModulesExpanded)}
               >
                 Modules
                 <Icon
                   as={ChevronDownIcon}
-                  transform={
-                    isModulesExpanded ? "rotate(180deg)" : "rotate(0deg)"
-                  }
-                  onClick={() => setIsModulesExpanded(!isModulesExpanded)}
-                  transition="transform 0.3s"
-                  w={5}
-                  h={5}
+                  className="mobile-modules-chevron"
+                  style={{
+                    transform: isModulesExpanded
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                  }}
                 />
               </Box>
               <Collapse
                 in={isModulesExpanded}
                 animateOpacity={true}
-                style={{ overflow: "visible" }}
+                style={{ overflow: "visible", width: "min-content" }}
                 duration={0.3}
-                width={"min-content"}
+                className="mobile-modules-collapse"
               >
-                <VStack pl={6} align="stretch" spacing={2}>
+                <VStack align="stretch" spacing={2}>
                   {sections.slice(1).map((section) => (
                     <Box
-                      width={"min-content"}
-                      whiteSpace={"nowrap"}
                       key={section.id}
-                      cursor="pointer"
+                      className="mobile-module-item"
                       onClick={() => {
                         setIsMenuOpen(false);
                         const sectionSubsections = subsections[section.id];
@@ -384,7 +289,6 @@ function NavBar({ className = "" }) {
                         }
                         toggleSection(section.id, null);
                       }}
-                      _hover={{ color: "#9D0013" }}
                     >
                       {section.title}
                     </Box>
@@ -392,19 +296,17 @@ function NavBar({ className = "" }) {
                 </VStack>
               </Collapse>
             </Box>
+
             <Box
-              borderRadius="md"
-              cursor="pointer"
-              textAlign="left"
+              className="nav-link-box"
               onClick={() => {
                 setIsMenuOpen(false);
                 navigate("/acknowledgements/leadership");
               }}
-              _hover={{ color: "#9D0013" }}
-              width={"min-content"}
             >
               Acknowledgements
             </Box>
+
             <SearchBar
               className="nav-search"
               searchQuery={searchQuery}
