@@ -10,7 +10,12 @@ import {
   Icon,
   Collapse,
 } from "@chakra-ui/react";
-import { HamburgerIcon, ChevronDownIcon, MoonIcon } from "@chakra-ui/icons";
+import {
+  HamburgerIcon,
+  ChevronDownIcon,
+  MoonIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { SearchBar } from "./SearchBar";
 import logo from "../assets/logo.png";
@@ -24,6 +29,7 @@ function NavBar({ className = "" }) {
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
 
   const [sections, setSections] = useState([]);
@@ -155,7 +161,7 @@ function NavBar({ className = "" }) {
           </Box>
 
           <HStack className="right-hstack">
-            <Box className="hide-base show-md right-hstack">
+            <Box className="hide-base show-md">
               <NavDropdown
                 title="Modules"
                 items={sections.slice(1).map((section) => ({
@@ -174,53 +180,43 @@ function NavBar({ className = "" }) {
                 isExpanded={openSection === "modules"}
                 onToggle={(e) => toggleSection("modules", e)}
               />
-
-              <Box
-                className="nav-link-box"
-                onClick={() => {
-                  const firstSection = sections[0];
-                  const sectionSubsections = subsections[firstSection.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${firstSection.id}`);
-                  }
-                }}
-              >
-                <Text>About</Text>
-              </Box>
-              <Box
-                className="nav-link-box"
-                onClick={() => navigate("/acknowledgements/leadership")}
-              >
-                <Text>Acknowledgements</Text>
-              </Box>
             </Box>
-
-            <IconButton
-              icon={<MoonIcon color="black" fontSize={"lg"} />}
+            <Box
+              className="nav-link-box hide-base show-md"
+              onClick={() => {
+                const firstSection = sections[0];
+                const sectionSubsections = subsections[firstSection.id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${firstSection.id}`);
+                }
+              }}
+            >
+              <Text>About</Text>
+            </Box>
+            <Box
+              className="nav-link-box hide-base show-md"
+              onClick={() => navigate("/acknowledgements/leadership")}
+            >
+              <Text>Acknowledgements</Text>
+            </Box>
+            <Box className="icon-button">
+              <MoonIcon color="black" fontSize={"lg"}></MoonIcon>
+            </Box>
+            <Box
               className="icon-button"
-              aria-label="Toggle dark mode"
-            />
-
-            <Box className="hide-base show-md">
-              <SearchBar
-                className="nav-search"
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                canExpand={true}
-                maxResults={3}
-              />
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            >
+              <SearchIcon color="black" fontSize={"lg"}></SearchIcon>
+            </Box>
+            <Box
+              className="icon-button show-base hide-md"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <HamburgerIcon color="black" fontSize={"x-large"}></HamburgerIcon>
             </Box>
           </HStack>
-
-          <IconButton
-            icon={<HamburgerIcon color="black" fontSize={"xl"} />}
-            aria-label="Open menu"
-            className="icon-button show-base hide-md"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            variant="unstyled"
-          />
         </HStack>
 
         {isMenuOpen && (
@@ -242,7 +238,6 @@ function NavBar({ className = "" }) {
             >
               About
             </Box>
-
             <Box
               className="mobile-modules-container"
               onMouseEnter={() => setIsModulesExpanded(true)}
@@ -269,7 +264,7 @@ function NavBar({ className = "" }) {
                 duration={0.3}
                 className="mobile-modules-collapse"
               >
-                <VStack align="stretch" spacing={2}>
+                <VStack align="stretch" spacing={1}>
                   {sections.slice(1).map((section) => (
                     <Box
                       key={section.id}
@@ -296,7 +291,6 @@ function NavBar({ className = "" }) {
                 </VStack>
               </Collapse>
             </Box>
-
             <Box
               className="nav-link-box"
               onClick={() => {
@@ -306,18 +300,18 @@ function NavBar({ className = "" }) {
             >
               Acknowledgements
             </Box>
-
+          </VStack>
+        )}
+        {isSearchOpen && (
+          <Box className="nav-search">
             <SearchBar
-              className="nav-search"
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               canExpand={false}
               maxResults={2}
-              px={4}
-              pb={4}
               align="stretch"
             />
-          </VStack>
+          </Box>
         )}
       </Box>
     </Box>
