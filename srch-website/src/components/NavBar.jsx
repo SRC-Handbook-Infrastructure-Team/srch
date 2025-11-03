@@ -8,8 +8,9 @@ import {
   Image,
   Text,
   Icon,
+  Collapse,
 } from "@chakra-ui/react";
-import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, ChevronDownIcon, MoonIcon } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { SearchBar } from "./SearchBar";
 import logo from "../assets/logo.png";
@@ -189,7 +190,10 @@ function NavBar({ className = "" }) {
       top={0}
       left={0}
       width="100vw"
+      px={4}
       margin={0}
+      height={"min-content"}
+      alignContent={"center"}
       borderBottom="1px solid"
       borderColor="gray.200"
       bg="white"
@@ -200,204 +204,220 @@ function NavBar({ className = "" }) {
         "& a:button": { color: "#9D0013" },
       }}
     >
-      <HStack
-        align="center"
-        justify="space-between"
-        spacing={2}
-        overflow="visible"
-        width="100%"
-        px={4}
-        height={"min-content"}
-      >
-        <Box
-          cursor="pointer"
-          onClick={() => navigate("/")}
-          whiteSpace="nowrap"
-          flexShrink={0}
+      <Box>
+        <HStack
+          align="center"
+          justify="space-between"
+          spacing={2}
+          overflow="visible"
+          width="100%"
+          height={"60px"}
         >
-          <HStack alignItems={"center"}>
-            <Image
-              src={logo}
-              alt="Logo"
-              boxSize="75px"
-              objectFit="contain"
-              paddingTop={2}
-              paddingBottom={2}
+          <Box
+            cursor="pointer"
+            onClick={() => navigate("/")}
+            whiteSpace="nowrap"
+            flexShrink={0}
+          >
+            <HStack alignItems={"center"}>
+              <Image
+                src={logo}
+                alt="Socially Responsible Computing Handbook"
+                height={"30px"}
+                objectFit="contain"
+              />
+            </HStack>
+          </Box>
+
+          <HStack ml="auto">
+            <Box display={{ base: "none", md: "flex" }}>
+              <NavDropdown
+                title="Modules"
+                items={sections.slice(1).map((section) => ({
+                  id: section.id,
+                  title: section.title,
+                  onClick: (e) => {
+                    const sectionSubsections = subsections[section.id];
+                    if (sectionSubsections && sectionSubsections.length > 0) {
+                      navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                    } else {
+                      navigate(`/${section.id}`);
+                    }
+                    toggleSection(section.id, e);
+                  },
+                }))}
+                isExpanded={openSection === "modules"}
+                onToggle={(e) => toggleSection("modules", e)}
+              />
+
+              <Box
+                p={2}
+                borderRadius="md"
+                cursor="pointer"
+                textAlign="center"
+                onClick={() => {
+                  const firstSection = sections[0];
+                  const sectionSubsections = subsections[firstSection.id];
+                  if (sectionSubsections && sectionSubsections.length > 0) {
+                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                  } else {
+                    navigate(`/${firstSection.id}`);
+                  }
+                }}
+                _hover={{ color: "#9D0013" }}
+              >
+                <Text>{"About"}</Text>
+              </Box>
+              <Box
+                p={2}
+                borderRadius="md"
+                cursor="pointer"
+                textAlign="center"
+                onClick={() => navigate("/acknowledgements/leadership")}
+                _hover={{ color: "#9D0013" }}
+              >
+                <Text>{"Acknowledgements"}</Text>
+              </Box>
+            </Box>
+            <IconButton
+              icon={<MoonIcon color="black" fontSize={"lg"} />}
+              className="toggle-button"
+              display={{ base: "inline-flex" }}
             />
-            <Text fontSize={"xx-large"} fontWeight={"bold"}>
-              SRC Handbook
-            </Text>
+            <Box display={{ base: "none", md: "flex" }}>
+              <SearchBar
+                className="nav-search"
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                canExpand={true}
+                maxResults={3}
+                display={{ base: "none", md: "flex" }}
+              />
+            </Box>
           </HStack>
-        </Box>
 
-        <HStack spacing={4} ml="auto" display={{ base: "none", xl: "flex" }}>
-          <NavDropdown
-            title="Modules"
-            items={sections.slice(1).map((section) => ({
-              id: section.id,
-              title: section.title,
-              onClick: (e) => {
-                const sectionSubsections = subsections[section.id];
-                if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                } else {
-                  navigate(`/${section.id}`);
-                }
-                toggleSection(section.id, e);
-              },
-            }))}
-            isExpanded={openSection === "modules"}
-            onToggle={(e) => toggleSection("modules", e)}
-          />
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="center"
-            onClick={() => {
-              const firstSection = sections[0];
-              const sectionSubsections = subsections[firstSection.id];
-              if (sectionSubsections && sectionSubsections.length > 0) {
-                navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-              } else {
-                navigate(`/${firstSection.id}`);
-              }
-            }}
-            _hover={{ color: "#9D0013" }}
-          >
-            <Text>{"About"}</Text>
-          </Box>
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="center"
-            onClick={() => navigate("/acknowledgements/leadership")}
-            _hover={{ color: "#9D0013" }}
-          >
-            <Text>{"Acknowledgements"}</Text>
-          </Box>
-
-          <SearchBar
-            className="nav-search"
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            canExpand={true}
-            maxResults={3}
+          <IconButton
+            icon={<HamburgerIcon color="black" fontSize={"xl"} />}
+            aria-label="Open menu"
+            className="toggle-button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            variant="unstyled"
+            display={{ base: "inline-flex", md: "none" }}
           />
         </HStack>
 
-        <IconButton
-          icon={<HamburgerIcon color="black" fontSize={"4xl"} />}
-          aria-label="Open menu"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          variant="unstyled"
-          fontSize="2xl"
-          display={{ base: "inline-flex", xl: "none" }}
-        />
-      </HStack>
-
-      {isMenuOpen && (
-        <VStack
-          display={{ base: "flex", xl: "none" }}
-          px={4}
-          pt={2}
-          pb={4}
-          borderTop="1px solid"
-          borderColor="gray.200"
-          backgroundColor="white"
-          spacing={3}
-          align="stretch"
-        >
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="left"
-            onClick={() => {
-              setIsMenuOpen(false);
-              const sectionSubsections = subsections[sections[0].id];
-              if (sectionSubsections && sectionSubsections.length > 0) {
-                navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
-              } else {
-                navigate(`/${sections[0].id}`);
-              }
-            }}
-            _hover={{ color: "#9D0013" }}
+        {isMenuOpen && (
+          <VStack
+            display={{ base: "flex", md: "none" }}
+            backgroundColor="white"
+            align="stretch"
+            pb={3}
           >
-            About
-          </Box>
-
-          <Box>
             <Box
-              px={2}
-              pb={2}
               borderRadius="md"
               cursor="pointer"
               textAlign="left"
-              onClick={() => setIsModulesExpanded(!isModulesExpanded)}
+              pb={1}
+              width={"min-content"}
+              onClick={() => {
+                setIsMenuOpen(false);
+                const sectionSubsections = subsections[sections[0].id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${sections[0].id}`);
+                }
+              }}
               _hover={{ color: "#9D0013" }}
             >
-              Modules
-              <Icon
-                as={ChevronDownIcon}
-                transform={isModulesExpanded ? "rotate(180deg)" : undefined}
-                transition="transform 0.2s"
-                w={5}
-                h={5}
-              />
+              About
             </Box>
 
-            {isModulesExpanded && (
-              <VStack pl={6} align="stretch" spacing={2}>
-                {sections.slice(1).map((section) => (
-                  <Box
-                    key={section.id}
-                    cursor="pointer"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      const sectionSubsections = subsections[section.id];
-                      if (sectionSubsections && sectionSubsections.length > 0) {
-                        navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                      } else {
-                        navigate(`/${section.id}`);
-                      }
-                      toggleSection(section.id, null);
-                    }}
-                    _hover={{ color: "#9D0013" }}
-                  >
-                    {section.title}
-                  </Box>
-                ))}
-              </VStack>
-            )}
-          </Box>
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="left"
-            onClick={() => {
-              setIsMenuOpen(false);
-              navigate("/acknowledgements/leadership");
-            }}
-            _hover={{ color: "#9D0013" }}
-          >
-            Acknowledgements
-          </Box>
-
-          <SearchBar
-            className="nav-search"
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            canExpand={false}
-            maxResults={1}
-          />
-        </VStack>
-      )}
+            <Box onMouseEnter={() => setIsModulesExpanded(true)}>
+              <Box
+                borderRadius="md"
+                cursor="pointer"
+                textAlign="left"
+                pb={1}
+                width={"min-content"}
+                whiteSpace={"nowrap"}
+                _hover={{ color: "#9D0013" }}
+              >
+                Modules
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={
+                    isModulesExpanded ? "rotate(180deg)" : "rotate(0deg)"
+                  }
+                  onClick={() => setIsModulesExpanded(!isModulesExpanded)}
+                  transition="transform 0.3s"
+                  w={5}
+                  h={5}
+                />
+              </Box>
+              <Collapse
+                in={isModulesExpanded}
+                animateOpacity={true}
+                style={{ overflow: "visible" }}
+                duration={0.3}
+                width={"min-content"}
+              >
+                <VStack pl={6} align="stretch" spacing={2}>
+                  {sections.slice(1).map((section) => (
+                    <Box
+                      width={"min-content"}
+                      whiteSpace={"nowrap"}
+                      key={section.id}
+                      cursor="pointer"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        const sectionSubsections = subsections[section.id];
+                        if (
+                          sectionSubsections &&
+                          sectionSubsections.length > 0
+                        ) {
+                          navigate(
+                            `/${section.id}/${sectionSubsections[0].id}`
+                          );
+                        } else {
+                          navigate(`/${section.id}`);
+                        }
+                        toggleSection(section.id, null);
+                      }}
+                      _hover={{ color: "#9D0013" }}
+                    >
+                      {section.title}
+                    </Box>
+                  ))}
+                </VStack>
+              </Collapse>
+            </Box>
+            <Box
+              borderRadius="md"
+              cursor="pointer"
+              textAlign="left"
+              onClick={() => {
+                setIsMenuOpen(false);
+                navigate("/acknowledgements/leadership");
+              }}
+              _hover={{ color: "#9D0013" }}
+              width={"min-content"}
+            >
+              Acknowledgements
+            </Box>
+            <SearchBar
+              className="nav-search"
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              canExpand={false}
+              maxResults={2}
+              px={4}
+              pb={4}
+              align="stretch"
+            />
+          </VStack>
+        )}
+      </Box>
     </Box>
   );
 }

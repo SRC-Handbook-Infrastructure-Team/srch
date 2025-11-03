@@ -51,13 +51,13 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand, maxResults }) {
         ref={containerRef}
         className={`searchbar-container${isExpanded ? " expanded" : ""}`}
         style={{
-          width: !canExpand ? "100%" : isExpanded ? "500px" : "40px",
+          width: isExpanded ? "450px" : "40px",
         }}
       >
         <IconButton
           aria-label="Toggle search bar"
-          icon={<SearchIcon />}
-          className="searchbar-toggle-button"
+          icon={<SearchIcon fontSize={"lg"} />}
+          className="searchbar-toggle-button toggle-button"
           onClick={toggleExpand}
         />
         <Box className="searchbar-input-container">
@@ -83,13 +83,16 @@ function SearchBar({ searchQuery, setSearchQuery, canExpand, maxResults }) {
           <Box className="searchbar-results-window">
             {isExpanded && searchQuery && (
               <Box>
-                <Box className="results-window results-white-background">
-                  <ResultsWindow
-                    searchQuery={searchQuery}
-                    maxResults={maxResults}
-                    setIsExpanded={setIsExpanded}
-                    canExpand={canExpand}
-                  />
+                <Box className="results-window">
+                  <Box></Box>
+                  <Box>
+                    <ResultsWindow
+                      searchQuery={searchQuery}
+                      maxResults={maxResults}
+                      setIsExpanded={setIsExpanded}
+                      canExpand={canExpand}
+                    />
+                  </Box>
                 </Box>
               </Box>
             )}
