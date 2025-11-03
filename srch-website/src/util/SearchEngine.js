@@ -220,6 +220,9 @@ function getPlaintextFromMarkdown(content) {
   // Remove footnotes
   content = content.replace(/\[\^([^\]]+)\]/g, "");
 
+  // Remove Markdown table rows (lines starting and ending with |)
+  content = content.replace(/^\s*\|[-:\s|]+\|\s*$/gm, "");
+
   // Normalize spaces (but keep newlines)
   content = content.replace(/[ \t]{2,}/g, " ");
 
