@@ -8,7 +8,7 @@ import React, {
 import { Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { search, initializeIndex } from "../util/SearchEngine";
-import "../index.css";
+import "../ContentPage.css";
 
 const MAX_CLAMP_LENGTH = 100;
 

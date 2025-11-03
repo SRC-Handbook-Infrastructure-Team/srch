@@ -19,7 +19,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
 import { useLayout } from "../layouts/LayoutContext";
-import "../index.css";
+import "../ContentPage.css";
 /* ----------------------------- File Overview --------------------------------
 ContentsSidebar
 - Renders the left-hand "Contents" navigation.
