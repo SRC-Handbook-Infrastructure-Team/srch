@@ -1,4 +1,4 @@
-import { Box, Input, IconButton } from "@chakra-ui/react";
+import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,18 +9,23 @@ function NavSearchBar({
   searchQuery,
   setSearchQuery,
   setIsSearchOpen,
+  isSearchOpen,
   maxResults,
 }) {
   const containerRef = useRef(null);
   const inputRef = useRef(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (isSearchOpen && inputRef.current) {
+      // Delay focus to wait for Collapse animation to complete
+      const timer = setTimeout(() => {
+        inputRef.current.focus();
+      }, 300); // 300ms to match Collapse duration
+
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isSearchOpen]);
 
   function search() {
     navigate(`/search/${encodeURIComponent(searchQuery)}`);
@@ -34,44 +39,45 @@ function NavSearchBar({
   };
 
   return (
-    <Box ref={containerRef} className={`navsearchbar-container${" expanded"}`}>
-      <IconButton
-        aria-label="Toggle nav search bar"
-        icon={<SearchIcon fontSize={"lg"} />}
-        className="searchbar-toggle-button toggle-button"
-        onClick={search}
-      />
-      <Input
-        ref={inputRef}
-        className={"navsearchbar-input"}
-        type="text"
-        placeholder={"Search for topics, case studies, terms..."}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
-        style={{
-          opacity: 1,
-          pointerEvents: "auto",
-        }}
-        _focus={{ boxShadow: "none", outline: "none", borderColor: "inherit" }}
-        _focusVisible={{
-          boxShadow: "none",
-          outline: "none",
-          borderColor: "inherit",
-        }}
-      />
-      <Box className="searchbar-results-window">
-        {searchQuery && (
-          <Box>
-            <ResultsWindow
-              searchQuery={searchQuery}
-              maxResults={maxResults}
-              setIsSearchOpen={setIsSearchOpen}
-              floating={false}
-            />
-          </Box>
-        )}
+    <Box ref={containerRef} className={`navsearchbar-container`}>
+      <Box className={`navsearchbar-input-container`}>
+        <IconButton
+          aria-label="Toggle nav search bar"
+          icon={<SearchIcon fontSize={"lg"} />}
+          className="searchbar-toggle-button toggle-button"
+          onClick={search}
+        />
+        <Input
+          autoFocus
+          ref={inputRef}
+          style={{ padding: 0 }}
+          onFocus={() => console.log("Input focused")}
+          className={"navsearchbar-input"}
+          type="text"
+          placeholder={"Search for topics, case studies, terms..."}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          _focus={{
+            boxShadow: "none",
+            outline: "none",
+            borderColor: "inherit",
+          }}
+          _focusVisible={{
+            boxShadow: "none",
+            outline: "none",
+            borderColor: "inherit",
+          }}
+        />
       </Box>
+      <Collapse in={searchQuery} animateOpacity>
+        <ResultsWindow
+          searchQuery={searchQuery}
+          maxResults={maxResults}
+          setIsSearchOpen={setIsSearchOpen}
+          floating={false}
+        />
+      </Collapse>
     </Box>
   );
 }

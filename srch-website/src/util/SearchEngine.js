@@ -84,7 +84,7 @@ function extractHeadingBlocks(
 
   const pushBlock = () => {
     if (currentTitle !== null) {
-      if (currentTitle === "All Sidebar Content Below") {
+      if (currentTitle === "Sidebar") {
         let currentAnchorLocal = null;
         let anchorLines = [];
         currentLines.forEach((line) => {

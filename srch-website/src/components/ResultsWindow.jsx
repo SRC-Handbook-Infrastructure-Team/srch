@@ -60,7 +60,7 @@ export const ResultsWindow = React.memo(
           className={classSuffix("results-list", floating)}
           style={
             maxResults != null
-              ? { maxHeight: `${87 * maxResults}px`, overflowY: "auto" }
+              ? { maxHeight: `${95 * maxResults}px`, overflowY: "auto" }
               : { overflowY: "auto" }
           }
         >
@@ -112,7 +112,9 @@ export const ResultsWindow = React.memo(
                       {doc.sectionTitle || doc.section || "Unnamed Section"}
                     </div>
                     <div className={"results-title"}>
-                      {doc.title || "Unnamed Header"}
+                      {doc.title === snippetToRender.replace(/<[^>]*>/g, "")
+                        ? "Section Header"
+                        : doc.title || "Unnamed Header"}
                     </div>
                   </div>
                   <ResultSnippet
@@ -128,7 +130,7 @@ export const ResultsWindow = React.memo(
         </div>
         {maxResults != null && (
           <div className={"results-view-all"}>
-            <div className={classSuffix("results-count", floating)}>
+            <div className={"results-count"}>
               {`Showing ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
               }`}
