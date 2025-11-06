@@ -57,3 +57,5 @@ Heading: Screen Readers v. Privacy:
 Document-Accessibility-vs-Privacy-Protections:
 Heading: Document Accessibility vs. Privacy Protections
 **Overview:** <br />Enhancing digital document accessibility—through searchable PDFs or Optical Character Recognition (OCR)—can sometimes lead to unintentional privacy risks. For example, metadata embedded in documents or data extracted via OCR may reveal sensitive personal information. This case study highlights the need for privacy-preserving accessibility measures, such as metadata redaction and controlled access.<br /><br />**Challenges Include:** <br />- Exposure of sensitive metadata from accessible public records <br />- Potential privacy risks from automated OCR processes<br /><br />**Sources:** <br />- [Microsoft’s guide to OCR data privacy and security](https://learn.microsoft.com/en-us/legal/cognitive-services/computer-vision/ocr-data-privacy-security)<br />- [Smallpdf on mitigating PDF metadata risks](https://smallpdf.com/blog/security-risks-with-pdf-metadata-and-how-to-mitigate-them)
+
+_Last updated November 06 2025._
