@@ -1,6 +1,6 @@
-
 import "../LandingPage.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import NavBar from "../components/NavBar";
 import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
@@ -12,6 +12,8 @@ import privacyIcon from "../assets/privacy-icon.jpg";
 import automatedIcon from "../assets/automated.png";
 import aiIcon from "../assets/ai-icon.png";
 import accessibilityIcon from "../assets/accessibility-icon.png";
+import { SearchBar } from "../components/SearchBar";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ function Home() {
   const accessibilitySlug = "/accessibility/whatIsAccessibility";
   const decisionSlug = "/automatedDecisionMaking/fairness";
   const aiSlug = "/generativeAI/copyright";
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className="layout">
@@ -146,20 +149,13 @@ function Home() {
                 Find specific topics, case studies, and resources quickly
               </p>
             </div>
-
-            <div className="search-bar">
-              <svg className="search-icon" viewBox="0 0 28 28" fill="none">
-                <path
-                  d="M11.1366 19.2731C8.86249 19.2731 6.93809 18.4853 5.36336 16.9098C3.78862 15.3342 3.00084 13.4098 3 11.1366C2.99917 8.86333 3.78695 6.93893 5.36336 5.36336C6.93976 3.78779 8.86416 3 11.1366 3C13.409 3 15.3338 3.78779 16.911 5.36336C18.4883 6.93893 19.2756 8.86333 19.2731 11.1366C19.2731 12.0545 19.1271 12.9203 18.835 13.734C18.5429 14.5477 18.1465 15.2674 17.6458 15.8933L24.6558 22.9033C24.8853 23.1328 25 23.4248 25 23.7795C25 24.1342 24.8853 24.4263 24.6558 24.6558C24.4263 24.8853 24.1342 25 23.7795 25C23.4248 25 23.1328 24.8853 22.9033 24.6558L15.8933 17.6458C15.2674 18.1465 14.5477 18.5429 13.734 18.835C12.9203 19.1271 12.0545 19.2731 11.1366 19.2731ZM11.1366 16.7696C12.7013 16.7696 14.0315 16.2221 15.1272 15.1272C16.2229 14.0323 16.7704 12.7021 16.7696 11.1366C16.7687 9.571 16.2213 8.24119 15.1272 7.14714C14.0332 6.05309 12.7029 5.50522 11.1366 5.50356C9.57017 5.50189 8.24036 6.04975 7.14714 7.14714C6.05392 8.24453 5.50606 9.57434 5.50356 11.1366C5.50105 12.6988 6.04891 14.029 7.14714 15.1272C8.24537 16.2255 9.57517 16.7729 11.1366 16.7696Z"
-                  fill="#222222"
-                />
-              </svg>
-              <input
-                type="text"
-                className="search-placeholder"
-                placeholder="Search for topics, case studies, terms..."
-              />
-            </div>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              canExpand={false}
+              maxResults={2}
+              align="stretch"
+            ></SearchBar>
           </div>
 
           <div className="line-divider"></div>
