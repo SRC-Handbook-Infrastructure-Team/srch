@@ -1164,3 +1164,15 @@ html body .main-content {
 /* When collapsed (default), we want the chevrons pointing down;
    When "Collapse all", flip them to up. We can do this in JSX
    by rotating the container if you want a single rule. */
+
+/* Page section label at top of MarkdownPage */
+.markdown-page .page-section-label {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 12px;
+  line-height: 24px;
+  font-weight: 400;            /* tweak if you want lighter */
+  letter-spacing: 0.02em;      /* optional, matches figma-ish */
+  color: var(--srch-brown);
+  margin: 0 0 4px 0;           /* small gap above the H1 */
+  text-transform: uppercase;   /* optional, matches figma */
+}

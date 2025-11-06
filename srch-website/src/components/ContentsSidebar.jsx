@@ -279,6 +279,7 @@ export default function ContentsSidebar({
             >
               <Box display="flex" alignItems="center" gap="6px">
                 <Text className="sidebar-section-title">
+                  {/* ✅ Section format: `1. Privacy` (no trailing period) */}
                   {displayNumber}. {section.title}
                 </Text>
                 {section.final === false && <BetaTag />}
@@ -300,7 +301,8 @@ export default function ContentsSidebar({
                 {sectionSubs.map((sub, subIdx) => {
                   const isSubActive = isActiveSection && currentSubsectionId === sub.id;
                   const subLetter = indexToLetter(subIdx);
-                  const subDisplay = `${displayNumber}.${subLetter}`;
+                  // ✅ Subsection format: `1.a. What is Privacy?` (period after letter, no dash)
+                  const subPrefix = `${displayNumber}.${subLetter}.`;
                   return (
                     <Box key={sub.id} mb={1}>
                       <Link to={`/${section.id}/${sub.id}`}>
@@ -319,7 +321,7 @@ export default function ContentsSidebar({
                             fontWeight={isSubActive ? "600" : "400"}
                             color={isSubActive ? "white" : "#1a1a1a"}
                           >
-                            {subDisplay} - {sub.title}
+                            {subPrefix} {sub.title}
                           </Text>
                         </Box>
                       </Link>
@@ -348,14 +350,13 @@ export default function ContentsSidebar({
             <DrawerBody>
               <div className="sidebar-header-controls">
                 <button
-  className="sidebar-expand-toggle"
-  onClick={toggleExpandCollapse}
-  aria-pressed={allExpanded}
->
-  {allExpanded ? "Collapse all" : "Expand all"}
-  <span className="double-chevron">{allExpanded ? "⟰" : "⟱"}</span>
-</button>
-
+                  className="sidebar-expand-toggle"
+                  onClick={toggleExpandCollapse}
+                  aria-pressed={allExpanded}
+                >
+                  {allExpanded ? "Collapse all" : "Expand all"}
+                  <span className="double-chevron">{allExpanded ? "⟰" : "⟱"}</span>
+                </button>
               </div>
               <NavContent />
             </DrawerBody>
@@ -387,41 +388,40 @@ export default function ContentsSidebar({
       }}
     >
       {/* FIX APPLIED HERE */}
-<div className="sidebar-header-controls">
-  <div
-    style={{
-      position: "sticky",
-      top: 0,
-      zIndex: 20,
-      background: "#fff",
-      // moved it to the right & removed any visual divider line
-      padding: "8px 16px 4px",
-      display: "flex",
-      justifyContent: "flex-end"
-    }}
-  >
-    <button
-      className="sidebar-toggle"
-      onClick={toggleExpandCollapse}
-      aria-pressed={allExpanded}
-    >
-      {allExpanded ? "Collapse all" : "Expand all"}
-      <span
-        className="icon-double-chevron"
-        aria-hidden="true"
-        style={{ marginLeft: 6, transform: allExpanded ? "rotate(180deg)" : "none" }}
+      <div className="sidebar-header-controls">
+        <div
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 20,
+            background: "#fff",
+            // moved it to the right & removed any visual divider line
+            padding: "8px 16px 4px",
+            display: "flex",
+            justifyContent: "flex-end"
+          }}
+        >
+          <button
+            className="sidebar-toggle"
+            onClick={toggleExpandCollapse}
+            aria-pressed={allExpanded}
+          >
+            {allExpanded ? "Collapse all" : "Expand all"}
+            <span
+              className="icon-double-chevron"
+              aria-hidden="true"
+              style={{ marginLeft: 6, transform: allExpanded ? "rotate(180deg)" : "none" }}
 
-      >
-        {/* up/down naturally flip with CSS rotate depending on state */}
-        <svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" /></svg>
-        <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
-          <path d="M1 5l4-4 4 4" />
-        </svg>
-      </span>
-    </button>
-  </div>
-</div>
-
+            >
+              {/* up/down naturally flip with CSS rotate depending on state */}
+              <svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" /></svg>
+              <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
+                <path d="M1 5l4-4 4 4" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
 
       <Box p={4}>
         <NavContent />
