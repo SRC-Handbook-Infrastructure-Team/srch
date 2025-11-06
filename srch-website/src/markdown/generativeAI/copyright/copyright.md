@@ -211,4 +211,3 @@ Yang, Angela. “Senator Introduces Bill to Compel More Transparency from AI Dev
 
 Yew, Rui-Jie. “Break It ’Til You Make It: An Exploration of the Ramifications of Copyright Liability under a Pre-Training Paradigm of AI Development.” Proceedings of the Symposium on Computer Science and Law, March 12, 2024, 64–72. https://doi.org/10.1145/3614407.3643707.
 
-_Last updated November 06 2025._

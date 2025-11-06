@@ -285,7 +285,24 @@ export const getContent = async (sectionId, subsectionId) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
         });
 
-        return { content: parsedContent, sidebar, frontmatter };
+        // Extract lastUpdated from frontmatter if available
+        let lastUpdated = null;
+
+        // fontMatter lastUpdated takes precedence
+        if (frontmatter.lastUpdated) {
+          lastUpdated = frontmatter.lastUpdated;
+        } else {
+          // Fallback: look for a line like "_Last updated Month Day Year._" at the end
+          const footerMatch = mainContent.match(/_Last updated\s+(.+?)\._/i);
+          if (footerMatch) {
+            lastUpdated = footerMatch[1].trim();
+          }
+        }
+        return {
+          content: parsedContent,
+          sidebar,
+          frontmatter: { ...frontmatter, lastUpdated },
+        };
       }
     }
 

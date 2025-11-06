@@ -143,6 +143,7 @@ mark {
   border: 1px solid transparent;
   border-radius: 6px;
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  
 }
 
 /*  Route-aware highlight (via .is-active class from JSX) */
@@ -1287,4 +1288,17 @@ html body .main-content.frozen {
 /* optional “snap” at end (you already add .release in JS) */
 html body .main-content.frozen.release {
   transition: transform 180ms ease, width 1ms linear !important;
+}
+
+.page-last-updated {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--srch-brown);
+  margin-left: 16px;
+  left: -40px;
+  margin-top: 12px;
+  white-space: nowrap;
+  transform: translateX(12px); /* Moves the element 12px to the left */
 }
