@@ -864,7 +864,7 @@ mark {
   }
   
 
-}
+
 .drawer-content { padding: 12px !important; }
 
 
@@ -891,11 +891,6 @@ mark {
   font-weight: 400 !important;
   font-size: 14px !important;
 }
-
-
-
-
-
 
 
 
@@ -928,6 +923,7 @@ html body .main-content {
   padding-top: 12px;
   padding-bottom: 12px;
 }
+
 
 
 
@@ -1091,3 +1087,80 @@ html body .main-content {
   gap: 10px;
 }
 
+/* Expand/Collapse All — Figma spec */
+.sidebar-expand-toggle {
+  /* neutralize global button look */
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+
+  /* Figma typography + color */
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4F3629;
+
+  /* layout/behavior */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sidebar-expand-toggle:hover { opacity: 0.95; }
+
+.double-chevron {
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  top: 1px; /* small visual nudge */
+}
+
+/* center the control in the header strip */
+.sidebar-header-controls {
+  display: flex;
+  justify-content: right;
+  padding: 8px 0;
+}
+/* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
+.sidebar-toggle {
+  /* nuke default button look */
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  color: #4F3629;
+  cursor: pointer;
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid #9d0013;
+  outline-offset: 2px;
+}
+
+/* optional subtle hover, no underline or box */
+.sidebar-toggle:hover { opacity: 0.85; }
+
+/* double chevrons */
+.icon-double-chevron {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 0;
+}
+.icon-double-chevron svg {
+  width: 12px;
+  height: 6px;
+  display: block;
+  fill: currentColor;
+}
+
+/* When collapsed (default), we want the chevrons pointing down;
+   When "Collapse all", flip them to up. We can do this in JSX
+   by rotating the container if you want a single rule. */
