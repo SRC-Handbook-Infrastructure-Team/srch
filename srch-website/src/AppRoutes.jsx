@@ -7,6 +7,7 @@ import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import { Team, AdditionalContributors } from "./pages/Acknowledgements";
 import { SearchResults } from "./pages/SearchResults";
+import SidebarLayout from "./layouts/SidebarLayout"; // ✅ Added import
 
 function AppRoutes() {
   const location = useLocation();
@@ -15,50 +16,66 @@ function AppRoutes() {
     location.pathname.startsWith("/acknowledgements");
   const isHomePage = location.pathname === "/";
 
+  // ✅ Use SidebarLayout for Markdown content pages
+  const isMarkdownPage =
+    !isHomePage && !isSearchPage && !isAcknowledgementsPage;
+
   return (
     <>
-      {!isSearchPage && !isHomePage && !isAcknowledgementsPage && (
-        <ContentsSidebar />
+      {isMarkdownPage ? (
+        <SidebarLayout>
+          <Routes>
+            <Route path="/:sectionId" element={<MarkdownPage />} />
+            <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
+            <Route
+              path="/:sectionId/:subsectionId/:term"
+              element={<MarkdownPage />}
+            />
+          </Routes>
+        </SidebarLayout>
+      ) : (
+        <>
+          {!isSearchPage && !isHomePage && !isAcknowledgementsPage && (
+            <ContentsSidebar />
+          )}
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            {/* Acknowledgements paths */}
+            <Route
+              path="/acknowledgements"
+              element={<Team teamName="leadership" />}
+            />
+            <Route
+              path="/acknowledgements/leadership"
+              element={<Team teamName="leadership" />}
+            />
+            <Route
+              path="/acknowledgements/ai"
+              element={<Team teamName="ai" />}
+            />
+            <Route
+              path="/acknowledgements/privacy"
+              element={<Team teamName="privacy" />}
+            />
+            <Route
+              path="/acknowledgements/accessibility"
+              element={<Team teamName="accessibility" />}
+            />
+            <Route
+              path="/acknowledgements/product"
+              element={<Team teamName="product" />}
+            />
+            <Route
+              path="/acknowledgements/additional"
+              element={<AdditionalContributors />}
+            />
+            <Route path="/search/:query" element={<SearchResults />} />
+            <Route path="/search" element={<SearchResults />} />
+          </Routes>
+          <NavBar />
+        </>
       )}
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/:sectionId" element={<MarkdownPage />} />
-        <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
-        <Route
-          path="/:sectionId/:subsectionId/:term"
-          element={<MarkdownPage />}
-        />
-        {/* Acknowledgements paths */}
-        <Route
-          path="/acknowledgements"
-          element={<Team teamName="leadership" />}
-        />
-        <Route
-          path="/acknowledgements/leadership"
-          element={<Team teamName="leadership" />}
-        />
-        <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
-        <Route
-          path="/acknowledgements/privacy"
-          element={<Team teamName="privacy" />}
-        />
-        <Route
-          path="/acknowledgements/accessibility"
-          element={<Team teamName="accessibility" />}
-        />
-        <Route
-          path="/acknowledgements/product"
-          element={<Team teamName="product" />}
-        />
-        <Route
-          path="/acknowledgements/additional"
-          element={<AdditionalContributors />}
-        />
-        <Route path="/search/:query" element={<SearchResults />} />
-        <Route path="/search" element={<SearchResults />} />
-      </Routes>
-      <NavBar />
     </>
   );
 }

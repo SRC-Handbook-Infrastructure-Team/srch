@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  useToast,
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerOverlay,
-  Divider,
-  Text,
-} from "@chakra-ui/react";
+import { useToast, Box } from "@chakra-ui/react";
 import { useLayout } from "../layouts/LayoutContext";
 import MarkdownRenderer, {
   getSections,
@@ -20,7 +9,6 @@ import MarkdownRenderer, {
   getDrawerFile,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { BsSignIntersectionSideFill } from "react-icons/bs";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -58,8 +46,8 @@ function MarkdownPage() {
   const SECTION_NUMBER_MAP = {
     privacy: "1",
     accessibility: "2",
-    "automated-decision-making": "3",
-    "generative-ai": "4",
+    "automatedDecisionMaking": "3",
+    "generativeAI": "4",
   };
 
   // convert 0 -> 'a', 1 -> 'b', etc.
@@ -81,16 +69,6 @@ function MarkdownPage() {
       .trim();
   }
 
-  /**
-   * Build a formatted header string using the loaded subsections array.
-   * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
-   *
-   * @param {string} sectionId
-   * @param {string} subsectionId
-   * @param {string} pageTitle
-   * @param {Array} subsectionsArr  // array of { id, title, order, ... }
-   * @returns {string}
-   */
   function getFormattedTitle(
     sectionId,
     subsectionId,
@@ -98,22 +76,15 @@ function MarkdownPage() {
     subsectionsArr = []
   ) {
     const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
-
     let letter = "";
-    if (
-      subsectionId &&
-      Array.isArray(subsectionsArr) &&
-      subsectionsArr.length > 0
-    ) {
+    if (subsectionId && Array.isArray(subsectionsArr) && subsectionsArr.length > 0) {
       const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
       if (idx >= 0) letter = indexToLetter(idx);
     }
-
     const titleText =
       pageTitle && pageTitle.trim()
         ? pageTitle.trim()
         : prettifySlug(subsectionId || sectionId || "");
-
     return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
   }
 
@@ -123,11 +94,9 @@ function MarkdownPage() {
   const toast = useToast();
   const cachedContent = useRef({});
 
-  //  Guard against undefined context (edge cases/tests)
   const layout = useLayout() || {};
-  const { openRightDrawer, closeRightDrawer } = layout;
+  const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
 
-  // 🧩 Highlight from URL state
   const highlight = useMemo(() => {
     let hl = location.state?.highlight;
     if (!hl) {
@@ -137,57 +106,32 @@ function MarkdownPage() {
     return hl;
   }, [location.state, location.search]);
 
-  // 🧩 Drawer & sidebar states
   const [sidebar, setSidebar] = useState({});
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
 
   const [mainContent, setMainContent] = useState("");
-  const [drawerContent, setDrawerContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
 
-  const [drawerWidth, setDrawerWidth] = useState(() => {
-    try {
-      const savedWidth = localStorage.getItem("drawerWidth");
-      return savedWidth ? parseInt(savedWidth) : 400;
-    } catch {
-      return 400;
-    }
-  });
-
-  const [isResizing, setIsResizing] = useState(false);
-  const resizeRef = useRef(null);
   const contentRef = useRef(null);
 
-  // compute header once subsections are available to avoid '?' and race conditions
   const formattedTitle = useMemo(
     () => getFormattedTitle(sectionId, subsectionId, pageTitle, subsections),
     [sectionId, subsectionId, pageTitle, subsections]
   );
 
-  // Helper function to generate cache key based on the section and subsection
   function getCacheKey(section, subsection = null) {
     return subsection ? `${section}/${subsection}` : section;
   }
 
   async function getCachedContent(section, subsection = null) {
     const cacheKey = getCacheKey(section, subsection);
-
-    // if the content is already cached, then we just want to retrieve it
-    if (cachedContent.current[cacheKey]) {
-      return cachedContent.current[cacheKey];
-    }
-
-    // if the content has not been cached, cache it
+    if (cachedContent.current[cacheKey]) return cachedContent.current[cacheKey];
     const result = await getContent(section, subsection);
-    if (result) {
-      cachedContent.current[cacheKey] = result;
-    }
-
+    if (result) cachedContent.current[cacheKey] = result;
     return result;
   }
 
@@ -196,27 +140,70 @@ function MarkdownPage() {
     targetSectionId = sectionId,
     targetSubsectionId = subsectionId
   ) {
-    if (sidebar && sidebar[term]) {
-      return sidebar[term];
-    }
-
+    const key = (term || "").toString().toLowerCase();
+    if (sidebar && sidebar[key]) return sidebar[key];
     const cacheKey = getCacheKey(targetSectionId, targetSubsectionId);
     const storedContent = cachedContent.current[cacheKey];
-
-    if (storedContent && storedContent.sidebar && storedContent.sidebar[term]) {
-      return storedContent.sidebar[term];
+    if (storedContent && storedContent.sidebar) {
+      const maybe = storedContent.sidebar[key];
+      if (maybe) return maybe;
     }
-
     return null;
   }
 
-  // Store the current valid path whenever content loads successfully
-  // --- Store valid previous path ---
+  async function openGlobalDrawerForTerm(term) {
+    if (!term) return;
+    const key = String(term).toLowerCase();
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      return;
+    }
+
+    let drawerFile = null;
+    try {
+      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+    } catch (e) {}
+
+    const contentToShow =
+      drawerFile?.content ||
+      (typeof sidebarEntry === "string" ? sidebarEntry : sidebarEntry.content) ||
+      "";
+
+    const heading =
+      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+      String(term).replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:");
+
+    const node = (
+      <div>
+        <div className="drawer-header">{highlightText(heading, highlight)}</div>
+        <div className="drawer-content">
+          <MarkdownRenderer
+            content={contentToShow}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            highlight={highlight}
+          />
+        </div>
+      </div>
+    );
+
+    setDrawerTerm(key);
+    openRightDrawer(node);
+    navigate(`/${sectionId}/${subsectionId}/${term}`);
+  }
+
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  /** Fetches and loads main markdown content based on current route params. */
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
@@ -228,12 +215,9 @@ function MarkdownPage() {
         return;
       }
 
-      // Load top-level section
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
-
         if (result) {
-          // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
@@ -241,15 +225,10 @@ function MarkdownPage() {
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
 
-          //  renamed local variable to avoid shadowing
           const subs = await getSubsections(sectionId);
-
-          //  sanitize subsections to remove falsy/drawer entries
           const validSubs = (subs || [])
             .filter((s) => s && s.id && typeof s.id === "string")
-            .filter(
-              (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
-            )
+            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
             .map((s) => ({
               ...s,
               title:
@@ -267,8 +246,7 @@ function MarkdownPage() {
           setSubsections(validSubs);
 
           if (!result.content.trim() || result.content.trim().length < 50) {
-            if (validSubs.length > 0)
-              navigate(`/${sectionId}/${validSubs[0].id}`);
+            if (validSubs.length > 0) navigate(`/${sectionId}/${validSubs[0].id}`);
           }
         } else {
           toast({
@@ -279,19 +257,15 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
-
-          // Naviga5te back to the previous valid path instead of changing the URL
           navigate(previousPath, { replace: true });
         }
         setIsLoading(false);
         return;
       }
 
-      // Load subsection
       if (sectionId && subsectionId) {
         const result = await getContent(sectionId, subsectionId);
         if (result) {
-          // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
@@ -316,7 +290,6 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
-  /** Loads and stores the ordered list of subsections for the current section. */
   useEffect(() => {
     if (!sectionId) return;
     let active = true;
@@ -325,9 +298,7 @@ function MarkdownPage() {
         if (!active) return;
         const validSubs = (data || [])
           .filter((s) => s && s.id && typeof s.id === "string")
-          .filter(
-            (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
-          )
+          .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
           .map((s) => ({
             ...s,
             title:
@@ -349,26 +320,11 @@ function MarkdownPage() {
     };
   }, [sectionId]);
 
-  /** Reacts when a URL drawer term is provided. */
   useEffect(() => {
     if (!urlTerm) return;
-
-    const sidebarEntry = getSidebarContent(urlTerm);
-
-    if (sidebarEntry) {
-      if (urlTerm && sidebar && sidebar[urlTerm]) {
-        setDrawerTerm(urlTerm);
-        setDrawerContent(
-          typeof sidebarEntry === "string"
-            ? sidebarEntry
-            : sidebarEntry.content || " "
-        );
-        setIsDrawerOpen(true);
-      }
-    }
+    openGlobalDrawerForTerm(urlTerm);
   }, [urlTerm, sidebar]);
 
-  // --- Utility navigation check ---
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
@@ -379,29 +335,17 @@ function MarkdownPage() {
 
       try {
         let contentExists = false;
-
-        if (targetSubsectionId && targetTerm) {
-          const result = await getContent(targetSectionId, targetSubsectionId);
-          if (result && result.sidebar && result.sidebar[targetTerm]) {
-            contentExists = true;
-            handleDrawerOpen(targetTerm);
-          }
-        } else if (targetSubsectionId) {
-          // Check if the section and subsection exist
+        if (targetSubsectionId) {
           const result = await getContent(targetSectionId, targetSubsectionId);
           contentExists = result !== null;
         } else {
-          // Check if just the section exists
           const result = await getContent(targetSectionId);
           contentExists = result !== null;
         }
-
         if (contentExists) navigate(`/${path}`);
         else {
           toast({
-            title: targetSubsectionId
-              ? "Subsection Not Found"
-              : "Section Not Found",
+            title: targetSubsectionId ? "Subsection Not Found" : "Section Not Found",
             description: targetSubsectionId
               ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
               : `The section "${targetSectionId}" could not be found.`,
@@ -426,34 +370,8 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  // Handle clicking drawer links
   function handleDrawerOpen(term) {
-    // Load drawer content for the current section/subsection
-
-    setDrawerTerm(term);
-
-    if (!sidebar) {
-      console.warn("Sidebar not loaded yet");
-      return;
-    }
-
-    const sidebarContent = sidebar[term];
-    if (sidebarContent) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(sidebarContent);
-      setIsDrawerOpen(true);
-
-      navigate(`/${sectionId}/${subsectionId}/${term}`);
-    } else {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
+    openGlobalDrawerForTerm(term);
   }
 
   function handleNavigation(targetId) {
@@ -469,7 +387,6 @@ function MarkdownPage() {
     }
   }
 
-  /** Auto scrolls to anchors or top on content load. */
   useEffect(() => {
     if (!mainContent) return;
     const timer = setTimeout(() => {
@@ -484,74 +401,51 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
-  /** Main render */
-  return (
-    <div className="markdown-page">
-      {mainContent && (
-        <Box mb={10}>
-          <Box mb={6}>
-            <Text fontSize="2xl" fontWeight="semibold" color="#4F3629" mb={2}>
-              {formattedTitle}
-            </Text>
-            <Divider borderColor="#4F3629" borderWidth="1.5px" mb={8} />
-          </Box>
+  // ...existing code...
+return (
+  <div className="markdown-page">
+    <Box mb={10}>
+      <div className="page-header">
+        <p className="page-section-label">
+          {sectionId ? sectionId.replace(/-/g, " ").toUpperCase() : ""}
+        </p>
 
-          <Box ref={contentRef}>
-            <MarkdownRenderer
-              content={mainContent}
-              sidebar={sidebar}
-              sectionId={sectionId}
-              subsectionId={subsectionId}
-              onDrawerOpen={handleDrawerOpen}
-              onNavigation={handleNavigation}
-              isFinal={contentFinal}
-              highlight={highlight}
-            />
-          </Box>
+        {/* Title + single global arrow that toggles left sidebar — always rendered */}
+        <div className="page-header-row" style={{ position: "relative" }}>
+          <h1 className="page-title">{mainContent ? formattedTitle : ""}</h1>
+
+          <button
+            className="header-toggle"
+            onClick={() => (leftSidebar && leftSidebar.toggle) && leftSidebar.toggle()}
+            aria-label={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {/* Use a literal glyph so it's always visible */}
+            {leftSidebar && leftSidebar.collapsed ? ">" : "<"}
+          </button>
+        </div>
+
+        {/* Full-bleed divider that spans the whole viewport, Figma-style */}
+        <div className="page-divider page-divider--fullbleed" />
+      </div>
+
+      {mainContent && (
+        <Box ref={contentRef}>
+          <MarkdownRenderer
+            content={mainContent}
+            sidebar={sidebar}
+            sectionId={sectionId}
+            subsectionId={subsectionId}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            isFinal={contentFinal}
+            highlight={highlight}
+          />
         </Box>
       )}
-
-      {/* Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        placement="right"
-        onClose={() => {
-          setIsDrawerOpen(false);
-          navigate(`/${sectionId}/${subsectionId}`, { replace: true });
-        }}
-        blockScrollOnMount={false}
-        trapFocus={false}
-      >
-        {/* Added overlay for accessibility / UX */}
-        <DrawerOverlay />
-        <DrawerContent
-          sx={{ width: `${drawerWidth}px !important` }}
-          maxWidth="80vw"
-          position="relative"
-        >
-          <DrawerCloseButton />
-          <DrawerHeader
-            borderBottomWidth="2px"
-            color="var(--color-accent)"
-            borderColor="var(--color-accent)"
-          >
-            {highlightText(
-              sidebar[drawerTerm]?.heading || drawerTerm,
-              highlight
-            )}
-          </DrawerHeader>
-          <DrawerBody>
-            <MarkdownRenderer
-              content={drawerContent}
-              onDrawerOpen={handleDrawerOpen}
-              onNavigation={handleNavigation}
-              highlight={highlight}
-            />
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  );
+    </Box>
+  </div>
+);
 }
 
 export default MarkdownPage;
