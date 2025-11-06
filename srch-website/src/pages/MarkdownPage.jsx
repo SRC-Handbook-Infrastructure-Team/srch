@@ -86,7 +86,7 @@ function MarkdownPage() {
         ? pageTitle.trim()
         : prettifySlug(subsectionId || sectionId || "");
 
-    // ✅ Spec: include a period after the letter (e.g., "1.a." not "1.a")
+    //  Spec: include a period after the letter (e.g., "1.a." not "1.a")
     const numberedPrefix =
       sectionNum + (letter ? `.${letter}.` : "");
 
@@ -269,7 +269,7 @@ function MarkdownPage() {
       }
 
       if (sectionId && subsectionId) {
-        // ✅ Performance: fetch content + subsections in parallel to make the H1
+        //  Performance: fetch content + subsections in parallel to make the H1
         // numbering (letter) available ASAP on direct subsection loads.
         const [result, subs] = await Promise.all([
           getContent(sectionId, subsectionId),

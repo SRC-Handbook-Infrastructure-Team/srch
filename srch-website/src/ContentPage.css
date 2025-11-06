@@ -135,6 +135,31 @@ mark {
   z-index: 19;            /* below NavBar (20), above content */
 }
 
+/* ========================================================================== 
+   FEATURE 1 — Active Section Header Highlight (Figma-spec)
+   ========================================================================== */
+
+.sidebar-section-header {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/*  Route-aware highlight (via .is-active class from JSX) */
+.sidebar-section-header.is-active {
+  border-color: #C9C9C9 !important;
+  background-color: #C9C9C9 !important;
+}
+
+/*  Optional subtle hover, but DO NOT override active state */
+.sidebar-section-header:hover:not(.is-active) {
+  background-color: rgba(0,0,0,0.04);
+}
+
+/* Ensures the entire row feels clickable and avoids visual jitter */
+.sidebar-section-header * {
+  pointer-events: none;        /* interaction handled by container */
+}
 
  
 

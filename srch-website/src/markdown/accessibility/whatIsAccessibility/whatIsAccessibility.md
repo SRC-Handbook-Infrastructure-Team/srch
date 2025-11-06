@@ -142,3 +142,4 @@ Black Girls Code is an organization that promotes the education of Black girls a
 [^9]: Neal Broverman, “Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That’s Unacceptable,” _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
 
 
+_Last updated November 06 2025._
