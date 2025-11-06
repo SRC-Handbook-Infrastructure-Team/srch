@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -208,8 +208,8 @@ export const getContent = async (sectionId, subsectionId) => {
 
     /**
      * This code looks into all of the filepath and does the following:
-     * looks for the ## All Sidebar Content Below divider
-     * creates the sidebar dictionary to pull from later
+     * looks for the ## All Sidebar Content Below divider (or "## Sidebar")
+     * creates the sidebar dictionary to pull from later (keys stored lowercase)
      * extracts the Key (identical to the clickable term)
      * extracts the Value (the paragraphical content)
      * extracts the Heading (if provided used as the title heading for the sidbar)
@@ -220,52 +220,64 @@ export const getContent = async (sectionId, subsectionId) => {
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
 
-        const [mainRaw, sidebarRaw] = cleanContent.split(
-          "## All Sidebar Content Below"
-        );
-        // Optional Sidebar Parsing
-        const mainContent = mainRaw?.trim() || "";
+        // allow either of these headings as the sidebar divider
+        const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
+        const dividerMatch = dividerRegex.exec(cleanContent);
+
+        let mainContent = cleanContent;
+        let sidebarRaw = null;
+
+        if (dividerMatch) {
+          // split at the divider line; keep everything after it as sidebar raw
+          const splitIndex = dividerMatch.index;
+          mainContent = cleanContent.slice(0, splitIndex).trim();
+          // the remainder after the matched divider heading line
+          const afterDivider = cleanContent.slice(
+            dividerMatch.index + dividerMatch[0].length
+          );
+          sidebarRaw = afterDivider.trim();
+        }
 
         const sidebar = {};
         if (sidebarRaw) {
-          const lines = sidebarRaw.trim().split("\n");
-          let currentKey = null; // placeholder for the currentKey
-          let currentHeading = null; // placeholder for the currentValue
-          let currentValue = []; // placeholder for the current Value
+          const lines = sidebarRaw.split("\n");
+          let currentKey = null;
+          let currentHeading = null;
+          let currentValue = [];
 
           lines.forEach((line) => {
-            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/); // looks for the {clickable-term} in the sidebar content
-            if (match) {
+            const keyMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+            if (keyMatch) {
               if (currentKey) {
-                // if a key has already been found, set the heading and content
-                sidebar[currentKey] = {
+                // store with lowercase key for case-insensitive lookup
+                sidebar[currentKey.toLowerCase()] = {
                   heading: currentHeading || currentKey.replace(/-/g, " "),
                   content: currentValue.join("\n").trim(),
                 };
               }
 
-              // if not assign the key and create placeholders for the heading and value
-              currentKey = match[1].trim();
+              currentKey = keyMatch[1].trim();
               currentHeading = null;
               currentValue = [];
-
-              // if the line starts with heading set the following words as the current heading
             } else if (line.startsWith("Heading:")) {
-              // finds and sets the heading if applicable
               currentHeading = line.replace("Heading:", "").trim();
-
-              // if not a heading line, add the current line to the currentValue
             } else if (currentKey) {
-              currentValue.push(line); // sets the value to the paragraphical content
+              currentValue.push(line);
             }
           });
 
-          // after looping through each line,
           if (currentKey) {
-            sidebar[currentKey] = {
+            sidebar[currentKey.toLowerCase()] = {
               heading: currentHeading || currentKey.replace(/-/g, " "),
               content: currentValue.join("\n").trim(),
             };
+          }
+
+          // log success with loaded keys (case-insensitive keys)
+          try {
+            console.log(" Sidebar keys loaded:", Object.keys(sidebar));
+          } catch (e) {
+            /* ignore logging errors in constrained envs */
           }
         }
 
@@ -332,6 +344,65 @@ function MarkdownRenderer({
     return processed;
   }, [content]);
 
+  /* ------------------------------------------------------------------------
+   * Styling tokens used inside the components map
+   * --------------------------------------------------------------------- */
+  const RED = "#9D0013";
+  const RED_DARK = "#7a000f"; // hover shade
+  const BLACK = "#000000";
+
+  /* ------------------------------------------------------------------------
+   * Active drawer link state handling (no external integration required)
+   *
+   *  - We add 'srch-drawer-link-active' to the clicked <sidebar-ref>.
+   *  - A MutationObserver watches '.right-sidebar' for '.open'.
+   *    When it closes, we remove the active class from all sidebar-ref pills.
+   * --------------------------------------------------------------------- */
+  const observerRef = useRef(null);
+
+  useEffect(() => {
+    const drawer = document.querySelector(".right-sidebar");
+    if (!drawer) return;
+
+    const cleanupAllActive = () => {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+    };
+
+    const obs = new MutationObserver(() => {
+      const isOpen = drawer.classList.contains("open");
+      if (!isOpen) {
+        cleanupAllActive();
+      }
+    });
+
+    obs.observe(drawer, { attributes: true, attributeFilter: ["class"] });
+    observerRef.current = obs;
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      // Safety cleanup on unmount
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+    };
+  }, []);
+
+  const setActiveDrawerLink = (el) => {
+    try {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((n) => n.classList.remove("srch-drawer-link-active"));
+      if (el) el.classList.add("srch-drawer-link-active");
+    } catch (e) {
+      /* no-op */
+    }
+  };
+
   const BetaTag = () => (
     <Box
       display="inline-flex"
@@ -385,10 +456,17 @@ function MarkdownRenderer({
         );
       },
       p: (props) => (
-        <Text mb={3} lineHeight="1.6" {...props}>
+        <Text mb={3} lineHeight="1.6" color={BLACK} {...props}>
           {highlightText(props.children, highlight)}
         </Text>
       ),
+
+      /* ------------------------------------------------------------------
+       * Standard Markdown links (NOT sidebar-ref chips)
+       * - Base: red (#9D0013)
+       * - Hover: slightly darker red
+       * - Keeps normal underline behavior
+       * ---------------------------------------------------------------- */
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
@@ -397,12 +475,12 @@ function MarkdownRenderer({
           : [props.children];
         return (
           <Link
-            textColor="#9D0013"
+            color={RED}
             fontWeight="500"
             textDecoration="underline"
             _hover={{
+              color: RED_DARK,
               textDecoration: "underline",
-              color: "whiteAlpha.200",
             }}
             href={props.href}
             isExternal={isExternal}
@@ -422,12 +500,13 @@ function MarkdownRenderer({
           </Link>
         );
       },
+
       li: (props) => {
         const childrenArray = Array.isArray(props.children)
           ? props.children
           : [props.children];
         return (
-          <ListItem {...props}>
+          <ListItem color={BLACK} {...props}>
             {highlightText(childrenArray, highlight)}
           </ListItem>
         );
@@ -473,20 +552,46 @@ function MarkdownRenderer({
           display="block"
         />
       ),
+
+      /**
+       * sidebar-ref chip (inserted by {term} syntax in Markdown)
+       * - Base: red text on transparent
+       * - Hover: darker red text
+       * - Active (while drawer is open): white text on red pill w/ red border
+       */
       "sidebar-ref": ({ node }) => {
         const term = node.properties?.["term"];
-        const value = sidebar?.[term];
-        // Choose text to highlight (term, or `Missing: ${term}` if falsy)
+        const termKey = term ? String(term).toLowerCase() : "";
+        const value = sidebar?.[termKey];
+
+        // Choose text to highlight:
+        // - If present, show humanized term (as before)
+        // - If missing, show warning label and do not open drawer
         const toShow = value
-          ? term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-          : `Missing: ${term}`;
+          ? String(term).replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+          : `⚠️ Missing: ${term}`;
+
+        // Log missing keys
+        if (!value) {
+          try {
+            console.warn(`⚠️ Sidebar missing term: ${term}`);
+          } catch (e) {}
+        }
+
+        const isMissing = !value;
+
         return (
           <Box
             as={RouterLink}
             to={`/${sectionId}/${subsectionId}/${term}`}
             onClick={(e) => {
               e.preventDefault();
-              onDrawerOpen(term);
+              if (!isMissing) {
+                // Mark this chip active visually
+                setActiveDrawerLink(e.currentTarget);
+                // Open drawer via parent
+                onDrawerOpen && onDrawerOpen(term);
+              }
             }}
             display="inline-flex"
             alignItems="center"
@@ -494,17 +599,18 @@ function MarkdownRenderer({
             py="0.15em"
             mx="0.1em"
             borderRadius="md"
-            textColor={"#9D0013"}
-            textDecoration={"underline"}
-            color="white"
+            className="srch-drawer-link"
+            data-term={term || ""}
+            textDecoration="underline"
+            color={RED}
+            border="1px solid transparent"
             _hover={{
-              bg: "#633c1d",
-              color: "white",
-              textDecoration: "none",
+              color: RED_DARK,
+              textDecoration: "underline",
             }}
-            cursor="pointer"
+            cursor={isMissing ? "default" : "pointer"}
             whiteSpace="nowrap"
-            transition="background-color 0.2s ease"
+            transition="background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease"
           >
             <Text
               as="span"
@@ -518,6 +624,7 @@ function MarkdownRenderer({
           </Box>
         );
       },
+
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
@@ -551,8 +658,26 @@ function MarkdownRenderer({
     ]
   );
 
+  /* ------------------------------------------------------------------------
+   * Inline CSS to style the active chip class (scoped to this component)
+   * We rely on a class so that CSS transitions can animate nicely.
+   * --------------------------------------------------------------------- */
+  const ActiveChipStyles = () => (
+    <style>
+      {`
+        .srch-drawer-link.srch-drawer-link-active {
+          color: #FFFFFF !important;
+          background: ${RED} !important;
+          border-color: ${RED} !important;
+          text-decoration: none !important;
+        }
+      `}
+    </style>
+  );
+
   return (
     <div>
+      <ActiveChipStyles />
       <ReactMarkdown
         components={components}
         rehypePlugins={[rehypeRaw]}

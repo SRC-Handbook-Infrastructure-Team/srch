@@ -89,7 +89,7 @@ Ueda, Daiju, Taichi Kakinuma, Shohei Fujita, Koji Kamagata, Yasutaka Fushimi, Ri
 
 Zhu, Linna, Michael Neal, and Caitlin Young. “Racial Disparities in Automated Valuation Models: New Evidence Using Property Condition and Machine Learning,” n.d.
 
-## All Sidebar Content Below
+## Sidebar
 
 Systems-of-Oppression:
 Examples of systems of oppression include: racism, sexism, classism, ableism, ageism, homophobia, transphobia, xenophobia. 

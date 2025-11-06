@@ -66,7 +66,7 @@ Broverman, Neal. "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini
 [^8]: Akhilesh Ganti, "Unified Payments Interface (UPI),", Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
 [^9]: Neal Broverman, "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That's Unacceptable,", _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
 
-## All Sidebar Content Below
+## Sidebar
 we-are-familiar-with: 
 Heading: Familiar Case Studies
 ## Case Study: WCAG 1.2.1 Audio-only and Video-only (Pre-recorded)

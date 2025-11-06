@@ -1,4 +1,4 @@
-// ...existing code...
+// ...existing imports...
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -18,19 +18,18 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
-import { useLayout } from "../layouts/LayoutContext";
-import "../ContentPage.css";
+import "../index.css";
+
 /* ----------------------------- File Overview --------------------------------
 ContentsSidebar
 - Renders the left-hand "Contents" navigation.
-- Numbers top-level sections per SECTION_NUMBER_MAP (fallback to frontmatter order or index).
-- Shows subsections with lettered labels (a, b, c, ...).
-- Optionally shows third-level headings (i, ii, iii) under subsections — lazily loaded.
-- Persists expand state and merges initial "open current section" without overwriting user toggles.
+- Updated to accept explicit props: width, collapsed, isResizing, onToggleSidebar,
+  onStartResize, onHandleKeyDown.
+- Keeps expand/collapse logic unchanged.
+- Prevents text jitter & reflows during sidebar resizing.
 ----------------------------------------------------------------------------*/
 
 /* ----------------------------- Helpers ------------------------------------ */
-// Fixed mapping for top-level section numbers (customize as needed)
 const SECTION_NUMBER_MAP = {
   privacy: 1,
   accessibility: 2,
@@ -38,7 +37,6 @@ const SECTION_NUMBER_MAP = {
   "generative-ai": 4,
 };
 
-// convert 0 -> 'a', 1 -> 'b', ... 25 -> 'z', 26 -> 'aa'
 function indexToLetter(index) {
   let s = "";
   let i = index;
@@ -49,36 +47,18 @@ function indexToLetter(index) {
   return s;
 }
 
-// convert 0 -> 'i', 1 -> 'ii', 2 -> 'iii', ...
 function indexToRoman(index) {
   const n = index + 1;
   const romans = [
-    ["M", 1000],
-    ["CM", 900],
-    ["D", 500],
-    ["CD", 400],
-    ["C", 100],
-    ["XC", 90],
-    ["L", 50],
-    ["XL", 40],
-    ["X", 10],
-    ["IX", 9],
-    ["V", 5],
-    ["IV", 4],
-    ["I", 1],
+    ["M", 1000], ["CM", 900], ["D", 500], ["CD", 400],
+    ["C", 100], ["XC", 90], ["L", 50], ["XL", 40],
+    ["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1],
   ];
-  let num = n;
-  let res = "";
-  for (const [r, val] of romans) {
-    while (num >= val) {
-      res += r;
-      num -= val;
-    }
-  }
+  let num = n, res = "";
+  for (const [r, val] of romans) while (num >= val) { res += r; num -= val; }
   return res.toLowerCase();
 }
 
-// simple slugify for headings -> id (fallback if MarkdownRenderer doesn't provide IDs)
 function slugify(text = "") {
   return text
     .toString()
@@ -89,72 +69,47 @@ function slugify(text = "") {
     .replace(/-+/g, "-");
 }
 
-// parse markdown content for headings; returns level-3+ headings (### and deeper)
 function parseSubsections(content) {
   const headings = [];
   if (!content) return headings;
-  const re = /^(#{3,6})\s+(.*)$/gm; // only capture h3+ here for third-level items
+  const re = /^(#{3,6})\s+(.*)$/gm;
   let match;
   while ((match = re.exec(content)) !== null) {
-    const level = match[1].length; // 3 => h3, etc.
+    const level = match[1].length;
     const text = match[2].trim();
-    if (text) {
-      headings.push({
-        id: slugify(text),
-        text,
-        level,
-      });
-    }
+    if (text) headings.push({ id: slugify(text), text, level });
   }
   return headings;
 }
 
-/* ----------------------------- UI Helpers --------------------------------- */
-const BetaTag = () => (
-  <Box className="beta-tag"
-  >
-    BETA
-  </Box>
-);
+const BetaTag = () => <Box className="beta-tag">BETA</Box>;
 
 /* -------------------------------------------------------------------------- */
-export default function ContentsSidebar({ className = "" }) {
-  /**
-   * Layout / sidebar hooks
-   */
-  const { leftSidebar } = useLayout() || {};
-  const {
-    width: leftWidth = 250,
-    collapsed = false,
-    startResize = () => {},
-    handleKeyDown = () => {},
-    isResizing = false,
-  } = leftSidebar || {};
-
+export default function ContentsSidebar({
+  className = "",
+  width = 250,
+  collapsed = false,
+  isResizing = false,
+  onToggleSidebar = () => {},
+  onStartResize = () => {},
+  onHandleKeyDown = () => {},
+}) {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const location = useLocation();
   const navigate = useNavigate();
+
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
-  // hash for third-level anchors
 
-  /**
-   * Local nav state
-   */
   const [sections, setSections] = useState([]);
-  // subsections shape: { [sectionId]: [{ id, title, order, headings: null|[] }] }
   const [subsections, setSubsections] = useState({});
   const [expandedSections, setExpandedSections] = useState({});
   const [hasFetchedData, setHasFetchedData] = useState(false);
 
-  /**
-   * Load all sections and subsections metadata (minimal), sanitize results,
-   * and merge expand state so we don't overwrite user interactions on navigation.
-   */
+  /* ---------------------- Fetch table of contents ---------------------- */
   useEffect(() => {
     let active = true;
     async function loadAllData() {
@@ -163,8 +118,18 @@ export default function ContentsSidebar({ className = "" }) {
         const sortedSections = Array.isArray(sectionsData)
           ? [...sectionsData].sort((a, b) => (a.order || 999) - (b.order || 999))
           : [];
+
+        const ALLOWED_SECTION_IDS = new Set([
+          "privacy",
+          "accessibility",
+          "automatedDecisionMaking",
+          "generativeAI",
+        ]);
+        const filteredSections = sortedSections.filter(
+          (s) => s && ALLOWED_SECTION_IDS.has(s.id)
+        );
         if (!active) return;
-        setSections(sortedSections);
+        setSections(filteredSections);
 
         const subsectionsMap = {};
         const expandStateMap = {};
@@ -172,15 +137,9 @@ export default function ContentsSidebar({ className = "" }) {
         for (const section of sortedSections) {
           const rawSubsections = await getSubsections(section.id);
           if (!active) return;
-
           if (rawSubsections && rawSubsections.length > 0) {
-            // sanitize the list:
-            // - remove falsy entries
-            // - require an id string
-            // - ignore internal dirs like "drawer" or dotfiles
-            // - provide title fallback, set headings:null for lazy-load
             const sanitized = rawSubsections
-              .filter((s) => s && typeof s.id === "string" && s.id.trim().length > 0)
+              .filter((s) => s && typeof s.id === "string" && s.id.trim())
               .filter((s) => {
                 const id = (s.id || "").toLowerCase();
                 return !id.startsWith(".") && id !== "drawer" && id !== "_drawer";
@@ -190,6 +149,7 @@ export default function ContentsSidebar({ className = "" }) {
                 title:
                   (s.title && String(s.title).trim()) ||
                   String(s.id || "")
+                    .replace(/([A-Z])/g, " $1")
                     .replace(/[-_]/g, " ")
                     .replace(/\b\w/g, (m) => m.toUpperCase()),
                 headings: null,
@@ -206,11 +166,8 @@ export default function ContentsSidebar({ className = "" }) {
 
         if (!active) return;
         setSubsections(subsectionsMap);
-
-        // Merge expand state so we don't clobber user toggles on navigation
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
 
-        // navigate to first section if none selected (only on first load)
         if (!currentSectionId && sortedSections.length > 0 && !hasFetchedData) {
           navigate(`/${sortedSections[0].id}`, { replace: true });
         }
@@ -225,14 +182,8 @@ export default function ContentsSidebar({ className = "" }) {
     return () => {
       active = false;
     };
-    // intentionally depend on currentSectionId/currentSubsectionId so that the current section opens
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSectionId, currentSubsectionId, navigate]);
 
-  /**
-   * If a section is selected but no subsection provided, redirect to first subsection.
-   * This mirrors previous UX.
-   */
   useEffect(() => {
     if (currentSectionId && !currentSubsectionId) {
       const sectionSubsections = subsections[currentSectionId];
@@ -240,16 +191,12 @@ export default function ContentsSidebar({ className = "" }) {
         navigate(`/${currentSectionId}/${sectionSubsections[0].id}`, { replace: true });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSectionId, currentSubsectionId, subsections, navigate]);
 
-  /**
-   * Lazy load headings (third-level) for all subsections of a section when it is expanded.
-   */
+  /* ---------------------- Expand/Collapse logic ---------------------- */
   const fetchHeadingsForSection = async (sectionId) => {
     const sectionSubsections = subsections[sectionId];
     if (!sectionSubsections) return;
-
     const needFetch = sectionSubsections.some((s) => s.headings === null);
     if (!needFetch) return;
 
@@ -269,28 +216,41 @@ export default function ContentsSidebar({ className = "" }) {
     }
   };
 
-  /**
-   * Toggle a section open/closed. When expanding, trigger lazy fetch of headings.
-   */
   const toggleSection = (sectionId, event) => {
-    // allow icon clicks only to act as toggles (preserve navigation for main click)
     if (event && (event.target.tagName === "svg" || event.target.closest("svg"))) {
       event.preventDefault();
       setExpandedSections((prev) => {
         const willExpand = !prev[sectionId];
         const next = { ...prev, [sectionId]: willExpand };
-        if (willExpand) {
-          // fire and forget lazy load
-          fetchHeadingsForSection(sectionId);
-        }
+        if (willExpand) fetchHeadingsForSection(sectionId);
         return next;
       });
     }
   };
 
-  /**
-   * UI for the nav content
-   */
+  const [allExpanded, setAllExpanded] = useState(false);
+  const expandAllSections = () => {
+    const next = Object.fromEntries(sections.map((s) => [s.id, true]));
+    setExpandedSections(next);
+    sections.forEach((s) => fetchHeadingsForSection(s.id));
+    setAllExpanded(true);
+  };
+  const collapseAllSections = () => {
+    setExpandedSections({});
+    setAllExpanded(false);
+  };
+  const toggleExpandCollapse = () => {
+    if (allExpanded) collapseAllSections();
+    else expandAllSections();
+  };
+
+  useEffect(() => {
+    const ids = sections.map((s) => s.id);
+    const allAreExpanded = ids.length > 0 && ids.every((id) => !!expandedSections[id]);
+    if (allAreExpanded !== allExpanded) setAllExpanded(allAreExpanded);
+  }, [sections, expandedSections, allExpanded]);
+
+  /* ---------------------- Nav Rendering ---------------------- */
   const NavContent = () => (
     <VStack align="stretch" spacing={2}>
       {sections.map((section, idx) => {
@@ -298,36 +258,32 @@ export default function ContentsSidebar({ className = "" }) {
         const hasSubsections = sectionSubs.length > 0;
         const isExpanded = !!expandedSections[section.id];
         const isActiveSection = currentSectionId === section.id;
-
-        // determine display number: priority -> fixed map -> frontmatter order -> index fallback
         const displayNumber =
           SECTION_NUMBER_MAP[section.id] ??
           (typeof section.order === "number" ? section.order + 1 : idx + 1);
 
         return (
-          <Box key={section.id} mb={2}>
+          <Box key={section.id} mb={2} className={`sidebar-section`}>
+            {/* ✅ Modified parent row */}
             <Box
+              className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
               p={2}
               cursor="pointer"
               onClick={(e) => {
-                if (hasSubsections) {
-                  navigate(`/${section.id}/${sectionSubs[0].id}`);
-                } else {
-                  navigate(`/${section.id}`);
-                }
+                if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
+                else navigate(`/${section.id}`);
                 toggleSection(section.id, e);
               }}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
             >
-              <Box display="flex" alignItems="center">
-                <Text fontWeight="600" color="#1a1a1a" fontSize="md">
+              <Box display="flex" alignItems="center" gap="6px">
+                <Text className="sidebar-section-title">
                   {displayNumber}. {section.title}
                 </Text>
                 {section.final === false && <BetaTag />}
               </Box>
-
               {hasSubsections && (
                 <Icon
                   as={ChevronDownIcon}
@@ -340,14 +296,12 @@ export default function ContentsSidebar({ className = "" }) {
               )}
             </Box>
 
-            {/* Subsections (letters) */}
             {isExpanded && hasSubsections && (
-              <VStack align="stretch" pl={6} mt={1} spacing={0}>
+              <VStack className="sidebar-subsection-container" align="stretch" pl={6} mt={1} spacing={0}>
                 {sectionSubs.map((sub, subIdx) => {
                   const isSubActive = isActiveSection && currentSubsectionId === sub.id;
                   const subLetter = indexToLetter(subIdx);
                   const subDisplay = `${displayNumber}.${subLetter}`;
-
                   return (
                     <Box key={sub.id} mb={1}>
                       <Link to={`/${section.id}/${sub.id}`}>
@@ -362,7 +316,7 @@ export default function ContentsSidebar({ className = "" }) {
                           }}
                         >
                           <Text
-                            fontSize="sm"
+                            className="sidebar-subsection"
                             fontWeight={isSubActive ? "600" : "400"}
                             color={isSubActive ? "white" : "#1a1a1a"}
                           >
@@ -370,33 +324,6 @@ export default function ContentsSidebar({ className = "" }) {
                           </Text>
                         </Box>
                       </Link>
-
-                      {/* Third-level headings (i, ii, iii) */}
-                      {sub.headings && sub.headings.length > 0 && (
-                        <VStack align="stretch" pl={6} mt={1} spacing={0}>
-                          {sub.headings.map((h, hIdx) => {
-                            const roman = indexToRoman(hIdx);
-                            const thirdDisplay = `${subDisplay}.${roman}`;
-                            const anchor = h.id || slugify(h.text);
-                            return (
-                              <Box key={anchor} mb={0}>
-                                <Link to={`/${section.id}/${sub.id}#${anchor}`}>
-                                  <Box
-                                    px={2}
-                                    py={0.5}
-                                    borderRadius="md"
-                                    _hover={{ bg: "rgba(0,0,0,0.04)" }}
-                                  >
-                                    <Text fontSize="xs" color="#333">
-                                      {thirdDisplay} - {h.text}
-                                    </Text>
-                                  </Box>
-                                </Link>
-                              </Box>
-                            );
-                          })}
-                        </VStack>
-                      )}
                     </Box>
                   );
                 })}
@@ -408,7 +335,7 @@ export default function ContentsSidebar({ className = "" }) {
     </VStack>
   );
 
-  // Mobile Drawer: show same content in drawer
+  /* ---------------------- Mobile Drawer ---------------------- */
   if (isMobile) {
     return (
       <>
@@ -420,6 +347,15 @@ export default function ContentsSidebar({ className = "" }) {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody>
+              <div className="sidebar-header-controls">
+                <button
+                  className="sidebar-btn"
+                  onClick={toggleExpandCollapse}
+                  aria-pressed={allExpanded}
+                >
+                  {allExpanded ? "Collapse all" : "Expand all"}
+                </button>
+              </div>
               <NavContent />
             </DrawerBody>
           </DrawerContent>
@@ -428,8 +364,8 @@ export default function ContentsSidebar({ className = "" }) {
     );
   }
 
-  // Desktop sidebar
-  const visualWidth = collapsed ? 0 : leftWidth;
+  /* ---------------------- Desktop Sidebar ---------------------- */
+  const visualWidth = collapsed ? 0 : width;
 
   return (
     <Box
@@ -439,25 +375,40 @@ export default function ContentsSidebar({ className = "" }) {
       left={0}
       top={0}
       height="100vh"
-      borderRight="1px solid #eee"
       bg="#fff"
       overflowY="auto"
       overflowX="hidden"
-      p={4}
+      p={0}
       zIndex={10}
       aria-label="Primary navigation"
       aria-expanded={!collapsed}
-      style={{ width: visualWidth }}
+      style={{
+        width: visualWidth,
+        transition: isResizing ? "none" : "width 0.25s ease",
+      }}
     >
-      <NavContent />
+      <div className="sidebar-header-controls">
+        <button
+          className="sidebar-btn"
+          onClick={toggleExpandCollapse}
+          aria-pressed={allExpanded}
+          style={{ marginLeft: "auto" }}
+        >
+          {allExpanded ? "Collapse all" : "Expand all"}
+        </button>
+      </div>
 
-      {/* Left resizer */}
+      <Box p={4}>
+        <NavContent />
+      </Box>
+
+      {/* Resize handle */}
       <Box
         className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
         width={collapsed ? "60px" : "6px"}
-        onMouseDown={startResize}
-        onTouchStart={startResize}
-        onKeyDown={handleKeyDown}
+        onMouseDown={onStartResize}
+        onTouchStart={onStartResize}
+        onKeyDown={onHandleKeyDown}
         role="separator"
         tabIndex={0}
         aria-orientation="vertical"
@@ -467,4 +418,3 @@ export default function ContentsSidebar({ className = "" }) {
     </Box>
   );
 }
-// ...existing code...
