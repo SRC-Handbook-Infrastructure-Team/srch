@@ -14,7 +14,6 @@ import aiIcon from "../assets/ai-icon.png";
 import accessibilityIcon from "../assets/accessibility-icon.png";
 import { SearchBar } from "../components/SearchBar";
 
-
 function Home() {
   const navigate = useNavigate();
   const privacySlug = "/privacy/whatIsPrivacy";
@@ -150,6 +149,7 @@ function Home() {
               </p>
             </div>
             <SearchBar
+              className="searchbar-border"
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               canExpand={false}

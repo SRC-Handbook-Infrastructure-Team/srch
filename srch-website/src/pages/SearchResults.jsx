@@ -15,7 +15,10 @@ function SearchResults() {
   }, [decodedQuery]);
 
   return (
-    <div style={{ minHeight: "100vh", overflow: "hidden" }}>
+    <div
+      className="markdown-page"
+      style={{ minHeight: "100vh", overflow: "hidden" }}
+    >
       <div
         style={{
           position: "absolute",
