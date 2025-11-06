@@ -93,6 +93,22 @@ function MarkdownPage() {
     return `${numberedPrefix} - ${titleText}`;
   }
 
+  function formatDate(dateString) {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+  } catch (e) {}
+  return dateString; // fallback: show raw
+}
+
+
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -120,6 +136,8 @@ function MarkdownPage() {
   const [contentFinal, setContentFinal] = useState(undefined);
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState("");
+
 
   const contentRef = useRef(null);
 
@@ -223,47 +241,39 @@ function MarkdownPage() {
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
         if (result) {
-          const raw = result.content || "";
-          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
-          setMainContent(cleaned);
-          setSidebar(result.sidebar || {});
-          setContentFinal(result.frontmatter?.final);
-          setPageTitle(result.frontmatter?.title || "");
+  const raw = result.content || "";
+  const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+  setMainContent(cleaned);
+  setSidebar(result.sidebar || {});
+  setContentFinal(result.frontmatter?.final);
+  setPageTitle(result.frontmatter?.title || "");
 
-          const subs = await getSubsections(sectionId);
-          const validSubs = (subs || [])
-            .filter((s) => s && s.id && typeof s.id === "string")
-            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
-            .map((s) => ({
-              ...s,
-              title:
-                (s.title && String(s.title).trim()) ||
-                String(s.id || "")
-                  .replace(/[-_]/g, " ")
-                  .replace(/\b\w/g, (m) => m.toUpperCase()),
-            }))
-            .sort(
-              (a, b) =>
-                (Number.isFinite(a.order) ? a.order : 999) -
-                (Number.isFinite(b.order) ? b.order : 999)
-            );
+  // ✅ Prefer subsection lastUpdated; fallback to section-level lastUpdated
+  let lu = result.frontmatter?.lastUpdated || "";
 
-          setSubsections(validSubs);
+  if (!lu) {
+    try {
+      const parent = await getContent(sectionId);
+      lu = parent?.frontmatter?.lastUpdated || "";
+    } catch (e) {
+      // ignore — fallback will simply remain empty
+    }
+  }
 
-          if (!result.content.trim() || result.content.trim().length < 50) {
-            if (validSubs.length > 0) navigate(`/${sectionId}/${validSubs[0].id}`);
-          }
-        } else {
-          toast({
-            title: "Section Not Found",
-            description: `The section "${sectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-          navigate(previousPath, { replace: true });
-        }
+  setLastUpdated(lu);
+
+} else {
+  toast({
+    title: "Subsection Not Found",
+    description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+    position: "bottom-right",
+  });
+  navigate(previousPath, { replace: true });
+}
+
         setIsLoading(false);
         return;
       }
@@ -297,23 +307,39 @@ function MarkdownPage() {
         }
 
         if (result) {
-          const raw = result.content || "";
-          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
-          setMainContent(cleaned);
-          setSidebar(result.sidebar || {});
-          setContentFinal(result.frontmatter?.final);
-          setPageTitle(result.frontmatter?.title || "");
-        } else {
-          toast({
-            title: "Subsection Not Found",
-            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-          navigate(previousPath, { replace: true });
-        }
+  const raw = result.content || "";
+  const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+  setMainContent(cleaned);
+  setSidebar(result.sidebar || {});
+  setContentFinal(result.frontmatter?.final);
+  setPageTitle(result.frontmatter?.title || "");
+
+  // ✅ Prefer subsection lastUpdated; fallback to section-level lastUpdated
+  let lu = result.frontmatter?.lastUpdated || "";
+
+  if (!lu) {
+    try {
+      const parent = await getContent(sectionId);
+      lu = parent?.frontmatter?.lastUpdated || "";
+    } catch (e) {
+      // ignore — fallback will simply remain empty
+    }
+  }
+
+  setLastUpdated(lu);
+
+} else {
+  toast({
+    title: "Subsection Not Found",
+    description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+    position: "bottom-right",
+  });
+  navigate(previousPath, { replace: true });
+}
+
       }
       setIsLoading(false);
     }
@@ -440,20 +466,26 @@ function MarkdownPage() {
             {sectionId ? sectionId.replace(/-/g, " ").toUpperCase() : ""}
           </p>
 
-          {/* Title + single global arrow that toggles left sidebar — always rendered */}
-          <div className="page-header-row" style={{ position: "relative" }}>
-            <h1 className="page-title">{formattedTitle}</h1>
+          {/* Title + last updated + sidebar toggle in one flex row */}
+<div className="page-header-row">
+  <h1 className="page-title">{formattedTitle}</h1>
 
-            <button
-              className="header-toggle"
-              onClick={() => (leftSidebar && leftSidebar.toggle) && leftSidebar.toggle()}
-              aria-label={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              title={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {/* Use a literal glyph so it's always visible */}
-              {leftSidebar && leftSidebar.collapsed ? ">" : "<"}
-            </button>
-          </div>
+  {lastUpdated && (
+    <div className="page-last-updated">
+      Last updated on {formatDate(lastUpdated)}
+
+    </div>
+  )}
+
+  <button
+    className="header-toggle"
+    onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
+    aria-label={leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+    title={leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+  >
+    {leftSidebar?.collapsed ? ">" : "<"}
+  </button>
+</div>
 
           {/* Full-bleed divider that spans the whole viewport, Figma-style */}
           <div className="page-divider page-divider--fullbleed" />

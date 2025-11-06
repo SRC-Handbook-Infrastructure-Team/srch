@@ -267,4 +267,3 @@ E.g: False arrests due to erroneous facial recognition make it difficult for peo
 [^2]: _Facial Recognition And The Facial Difference Community_
 [^3]: MacMillan, _Police Ignore Standards_
 
-_Last updated November 06 2025._
