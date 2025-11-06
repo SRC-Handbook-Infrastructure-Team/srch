@@ -8,7 +8,7 @@ import React, {
 import { Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { search, initializeIndex } from "../util/SearchEngine";
-import "../index.css";
+import "../ContentPage.css";
 
 const MAX_CLAMP_LENGTH = 100;
 
@@ -25,65 +25,55 @@ const ResultSnippet = React.memo(
     const [expanded, setExpanded] = useState(false);
     const [isClamped, setIsClamped] = useState(true);
 
-    const clampedSnippet = useMemo(() => {
-      if (!snippet) return "";
-      const markIndex = snippet.toLowerCase().indexOf("<mark");
-      if (markIndex === -1 || snippet.length <= MAX_CLAMP_LENGTH) {
-        return snippet;
-      }
-      const beforeMark = snippet.slice(0, markIndex);
-      const spaces = [];
-      for (let i = 0; i < beforeMark.length; i++) {
-        if (beforeMark[i] === " ") spaces.push(i);
-      }
-      let startIndex;
-      if (spaces.length >= 2) {
-        startIndex = spaces[spaces.length - 2];
-      } else if (spaces.length === 1) {
-        startIndex = spaces[0];
-      } else {
-        startIndex = 0;
-      }
-      const clampStart = Math.max(0, startIndex);
-      let clamped = snippet.slice(clampStart);
-      if (clampStart > 0) {
-        if (clamped.startsWith(" ")) {
-          clamped = "..." + clamped.slice(1);
-        } else {
-          clamped = "..." + clamped;
-        }
-      }
-      return clamped;
-    }, [snippet]);
+    const clampedSnippet = snippet;
 
-    function handleClick() {
-      if (canExpand) {
-        setIsExpanded(false);
-      }
-    }
+    // const clampedSnippet = useMemo(() => {
+    //   if (!snippet) return "";
+    //   const markIndex = snippet.toLowerCase().indexOf("<mark");
+    //   if (markIndex === -1 || snippet.length <= MAX_CLAMP_LENGTH) {
+    //     return snippet;
+    //   }
+    //   const beforeMark = snippet.slice(0, markIndex);
+    //   const spaces = [];
+    //   for (let i = 0; i < beforeMark.length; i++) {
+    //     if (beforeMark[i] === " ") spaces.push(i);
+    //   }
+    //   let startIndex;
+    //   if (spaces.length >= 2) {
+    //     startIndex = spaces[spaces.length - 2];
+    //   } else if (spaces.length === 1) {
+    //     startIndex = spaces[0];
+    //   } else {
+    //     startIndex = 0;
+    //   }
+    //   const clampStart = Math.max(0, startIndex);
+    //   let clamped = snippet.slice(clampStart);
+    //   if (clampStart > 0) {
+    //     if (clamped.startsWith(" ")) {
+    //       clamped = "..." + clamped.slice(1);
+    //     } else {
+    //       clamped = "..." + clamped;
+    //     }
+    //   }
+    //   return clamped;
+    // }, [snippet]);
 
     return (
       <div className="result-snippet">
-        <Link
-          state={{ highlight: searchQuery }}
-          to={{ pathname, hash }}
-          className="result-snippet-link"
-          aria-label={`Open result for ${searchQuery}`}
-          onClick={handleClick}
-        >
-          {!expanded ? (
-            <span
-              className={`result-snippet-text${!expanded ? " clamped" : ""}`}
-              dangerouslySetInnerHTML={{ __html: clampedSnippet }}
-            />
-          ) : (
+        {/* {!expanded ? ( */}
+        <span
+          className={`result-snippet-text${
+            maxResults == null ? " clamped" : ""
+          }`}
+          dangerouslySetInnerHTML={{ __html: clampedSnippet }}
+        />
+        {/* ) : (
             <span
               className="result-snippet-text"
               dangerouslySetInnerHTML={{ __html: snippet }}
             />
-          )}
-        </Link>
-        {!expanded && isClamped && maxResults == null && (
+          )} */}
+        {/* {!expanded && isClamped && maxResults == null && (
           <div
             className="result-snippet-readmore"
             onMouseEnter={(e) => e.stopPropagation()}
@@ -102,7 +92,7 @@ const ResultSnippet = React.memo(
               Read more
             </Button>
           </div>
-        )}
+        )} */}
       </div>
     );
   }
@@ -114,13 +104,15 @@ export const ResultsWindow = React.memo(
     const [isIndexInitialized, setIndexInitialized] = useState(false);
     const navigate = useNavigate();
 
-    const limitedResults = useMemo(
-      () =>
-        maxResults && searchResults.length > maxResults
-          ? searchResults.slice(0, maxResults)
-          : searchResults,
-      [searchResults, maxResults]
-    );
+    // const limitedResults = useMemo(
+    //   () =>
+    //     maxResults && searchResults.length > maxResults
+    //       ? searchResults.slice(0, maxResults)
+    //       : searchResults,
+    //   [searchResults, maxResults]
+    // );
+
+    const limitedResults = searchResults;
 
     useEffect(() => {
       const init = async () => {
@@ -158,7 +150,12 @@ export const ResultsWindow = React.memo(
 
     return (
       <div>
-        <div className={`results-list${maxResults != null ? " short" : ""}`}>
+        <div
+          className={`results-list`}
+          style={
+            maxResults != null ? { height: `${115 * maxResults}px` } : undefined
+          }
+        >
           {maxResults == null && (
             <div className="results-count">
               {`Showing ${searchResults.length} result${
@@ -175,7 +172,32 @@ export const ResultsWindow = React.memo(
                   doc.title || ""
                 }-${idx}`;
               return (
-                <div className="results-item" key={key}>
+                <div
+                  className="results-item"
+                  key={key}
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => {
+                    navigate(
+                      `/${doc.section}/${doc.subsection || ""}${
+                        doc.isDrawer ? `/${doc.anchor}` : `#${doc.anchor}`
+                      }`
+                    );
+                    if (canExpand) setIsExpanded(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(
+                        `/${doc.section}/${doc.subsection || ""}${
+                          doc.isDrawer ? `/${doc.anchor}` : `#${doc.anchor}`
+                        }`
+                      );
+                      if (canExpand) setIsExpanded(false);
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
                   <div className="results-header">
                     <div className="results-section">
                       {doc.sectionTitle || doc.section || "Unnamed Section"}
@@ -191,14 +213,6 @@ export const ResultsWindow = React.memo(
                   </div>
                   <ResultSnippet
                     snippet={item.snippet}
-                    pathname={
-                      doc.isDrawer
-                        ? `/${doc.section}/${doc.subsection || ""}/${
-                            doc.anchor
-                          }`
-                        : `/${doc.section}/${doc.subsection || ""}`
-                    }
-                    hash={doc.isDrawer ? undefined : `#${doc.anchor}`}
                     searchQuery={searchQuery}
                     maxResults={maxResults}
                     canExpand={canExpand}
@@ -214,11 +228,7 @@ export const ResultsWindow = React.memo(
         {maxResults != null && (
           <div className="results-view-all">
             <div className="results-count">
-              {`Showing ${
-                searchResults.length >= maxResults
-                  ? maxResults
-                  : searchResults.length
-              } of ${searchResults.length} result${
+              {`Showing ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
               }`}
             </div>

@@ -41,634 +41,7 @@
   --color-accent: #7b4b24;
   --color-accent-light: #f3ece6;
 
-
-  /* SRCH + Figma parity */
-  --srch-brown: #531C00;
-  --sidebar-bg: #FBFBFA;
-  --drawer-bg: #FFFFFF;
-  --border-1: #E7E2DC;
-
-
-  /* Optional tokens referenced in some rules */
-  --button-bg: #531C00;
-  --button-hover-border: #7b4b24;
-  --button-focus-outline: #9d0013;
-  --scrollbar-thumb-color: #c7b8aa;
-  --scrollbar-thumb-hover-color: #b39a82;
-}
-
-
-.beta-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #ebf8ff;
-  color:#2b6cb0;
-  font-weight: bold;
-  font-size: x-small;
-  vertical-align: middle;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  border-radius: 0.375rem;
-  margin-left: 0.375rem;
-}
-
-
-  .layout {
-    width: 1512px;
-    background: white;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: inline-flex;
-  }
-
-
-  .body {
-    align-self: stretch;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 36px;
-    display: flex;
-  }
-
-
-  .upper-content {
-    align-self: stretch;
-    padding-bottom: 24px;
-    padding-left: 200px;
-    padding-right: 200px;
-    position: relative;
-    border-top: 1px white solid;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 56px;
-    display: inline-flex;
-  }
-
-
-  .background-gradient {
-    width: 1512px;
-    height: 568px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background-image: url("../src/assets/landing-page-background-gradient.png");
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: 0;
-  }
-
-
-  .upper-text-section {
-    width: 582px;
-    padding-top: 100px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 36px;
-    display: inline-flex;
-    z-index: 1;
-  }
-
-
-  .website-title {
-    align-self: stretch;
-    color: black;
-    font-size: 84px;
-    font-family: "Funnel Sans", sans-serif;
-    color: #000;
-    font-style: normal;
-    font-weight: 900;
-    line-height: 100px;
-    word-wrap: break-word;
-  }
-
-
-  .info-section {
-    align-self: stretch;
-    color: black;
-    font-size: 18px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400px;
-    line-height: 28px;
-    word-wrap: break-word;
-  }
-
-
-  .lower-content {
-    display: flexbox;
-    padding: 72px 200px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 84px;
-    align-self: stretch;
-    background: #fff;
-  }
-
-
-  .section-divider {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 36;
-    display: inline-flex;
-  }
-
-
-  .curriculum-header {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex;
-  }
-
-
-  .curriculum-title {
-    color: black;
-    font-size: 48px;
-    font-family: "Funnel Sans", sans-serif;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
-
-
-  .curriculum-subtext {
-    width: 1112px;
-    text-align: center;
-    color: black;
-    font-size: 18px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    line-height: 28px;
-    word-wrap: break-word;
-  }
-
-
-  .card-section {
-    align-self: stretch;
-    justify-content: center;
-    align-items: center;
-    gap: 12;
-    display: inline-flex;
-  }
-
-
-  .topic-card {
-    width: 100%;
-    height: auto;
-    min-height: 24px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 24px;
-    padding: 24px;
-    background: white;
-    border-radius: 16px;
-    border: none;
-    outline: 1px solid #755543;
-    outline-offset: -1px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0, 08);
-    overflow: hidden;
-    cursor: pointer;
-    text-align: left;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 24px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px;
-  }
-
-
-  .outline-tip {
-    width: 100px;
-    height: 100px;
-    position: relative;
-    overflow: hidden;
-  }
-
-
-  .vector {
-    left: 12.5px;
-    top: 4.17px;
-    position: absolute;
-  }
-
-
-  .card {
-    flex: 1 1 0;
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 6px;
-    display: inline-flex;
-  }
-
-
-  .topic-text {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-  }
-
-
-  .card-heading {
-    color: black;
-    font-size: 28px;
-    font-family: "Funnel Sans", sans-serif;
-    font-weight: 700;
-    word-wrap: break-word;
-  }
-
-
-  .topic-subtext {
-    align-self: stretch;
-    color: black;
-    font-size: 16px;
-    font-family: "Be Vietnam Pro";
-    font-weight: 400;
-    word-wrap: break-word;
-  }
-
-
-  .line-divider {
-    width: 100%;
-    max-width: 1108px;
-    height: 2px;
-    background: rgba(90, 45, 0, 0.5);
-    margin: 0 auto;
-  }
-
-
-  .search-section {
-    align-self: stretch;
-    padding-bottom: 24px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 36px;
-    display: flex;
-  }
-
-
-  .search-header {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: flex;
-  }
-
-
-  .search-title {
-    color: black;
-    font-size: 48px;
-    font-family: "Funnel Sans", sans-serif;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
-
-
-  .search-subtitle {
-    width: 100%;
-    max-width: 1112px;
-    text-align: center;
-    color: black;
-    font-size: 18px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    line-height: 28px;
-    word-wrap: break-word;
-  }
-
-
-  .search-bar {
-    width: 100%;
-    max-width: 878px;
-    height: 56px;
-    padding: 10px 24px;
-    background: white;
-    border-radius: 24px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 16px;
-    display: flex;
-  }
-
-
-  .search-icon {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-
-
-  .search-placeholder {
-    flex: 1;
-    color: #656565;
-    font-size: 18px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    line-height: 28px;
-    border: none;
-    outline: none;
-    background: transparent;
-  }
-
-
-  .search-placeholder::placeholder {
-    color: #656565;
-  }
-
-
-  .section-title {
-    align-self: stretch;
-    text-align: center;
-    color: black;
-    font-size: 48px;
-    padding-bottom: 36px;
-    font-family: "Funnel Sans", sans-serif;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
-
-
-  .how-to-info {
-    align-self: stretch;
-    flex-direction: column;
-    padding-top: 12px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 18px;
-    display: flex;
-  }
-
-
-  .info-list {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 16px;
-    display: flex;
-  }
-
-
-  .list-item {
-    align-self: stretch;
-    padding: 0 24px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 16px;
-    display: inline-flex;
-  }
-
-
-  .list-icon {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-
-
-  .list-text {
-    flex: 1;
-    color: black;
-    font-size: 20px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    line-height: 28px;
-    word-wrap: break-word;
-  }
-
-
-  /* Learn More Button*/
-  .learn-more-container {
-    align-self: stretch;
-    justify-content: flex-end;
-    align-items: right;
-    gap: 10px;
-    padding-top: 12px;
-    padding-bottom: 36px;
-    display: inline-flex;
-  }
-
-
-  .learn-more-button {
-    padding: 10px 20px;
-    border-radius: 16px;
-    outline: 2px solid rgba(83, 28, 0, 0.25);
-    outline-offset: -2px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-
-  .learn-more-button:hover {
-    background: rgba(83, 28, 0, 0.05);
-    outline-color: rgba(83, 28, 0, 0.4);
-  }
-
-
-  .learn-more-text {
-    color: black;
-    font-size: 20px;
-    font-family: "Be Vietnam Pro", san-serif;
-    font-weight: 400;
-    word-wrap: break-word;
-  }
-
-
-  .button-icon {
-    width: 28px;
-    height: 28px;
-  }
-
-
-  /* Link Section - Footer Container */
-  .link-section {
-    align-self: stretch;
-    justify-content: space-between;
-    align-items: flex-start;
-    display: flex;
-    gap: 40px;
-    padding: 40px 0;
-  }
-
-
-  /* Logo Area */
-  .logo-area {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    display: flex;
-  }
-
-
-  .footer-logo {
-    width: 100px;
-    height: 91px;
-    object-fit: contain;
-    display: block;
-  }
-
-
-  /* Modules Section */
-  .modules {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 18px;
-    display: flex;
-    flex: 1; /* This allows equal spacing */
-  }
-
-
-  .modules-heading,
-  .module-heading {
-    color: black;
-    font-size: 20px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 600;
-    word-wrap: break-word;
-  }
-
-
-  /* Primer Links */
-  .primer-link {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-    width: 100%;
-  }
-
-
-  .primer-link-photo {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-
-  .primer-link-photo img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-  }
-
-
-  /* Module Links */
-  .module-links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-
-
-  .module-link {
-    color: black;
-    font-size: 20px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    word-wrap: break-word;
-    background: none;
-    border: none;
-    padding: 0;
-    text-align: left;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-
-  .module-link:hover {
-    color: #9d0013;
-  }
-
-
-  /* Feedback Contact */
-  .feedback-contact {
-    color: black;
-    font-size: 20px;
-    font-family: "Be Vietnam Pro", sans-serif;
-    font-weight: 400;
-    line-height: 30px;
-    word-wrap: break-word;
-  }
-
-
-  .feedback-contact a {
-    color: #9d0013;
-    text-decoration: underline;
-    transition: color 0.2s;
-  }
-
-
-  .feedback-contact a:hover {
-    color: #7a000f;
-  }
-  /* Responsive Design */
-  @media (max-width: 1024px) {
-    .link-area {
-      flex-wrap: wrap;
-      gap: 30px;
-    }
-
-
-    .logo-area {
-      padding-right: 50px;
-    }
-  }
-
-
-  @media (max-width: 768px) {
-    .link-area {
-      flex-direction: column;
-      gap: 40px;
-    }
-
-
-    .logo-area {
-      padding-right: 0;
-    }
-
-
-    .modules {
-      width: 100%;
-    }
-  }
+  --space-lg: 400px;
 
 
   ------ general styles -------
@@ -835,7 +208,8 @@ mark {
    Markdown & Content
    ========================================================================== */
   .markdown-page {
-    padding: var(--space-lg);
+    padding-left: 100px;
+    padding-right: 100px;
   }
 
 
@@ -918,8 +292,6 @@ mark {
   .nav-section-text {
     font-weight: 500;
   }
-
-
   .nav-subsection {
     display: flex;
     align-items: center;
@@ -968,12 +340,233 @@ mark {
     margin: 16px 0;
   }
 
+  /* ========================================================================== 
+   Navigation Bar
+   ========================================================================== */
 
-  /* ==========================================================================
+  .top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    height: min-content;
+    align-content: center;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+  }
+
+  .top-navbar a:hover,
+  .top-navbar a:button,
+  .top-navbar .nav-link:hover,
+  .top-navbar .nav-button:hover {
+    color: #9d0013;
+  }
+
+  .navbar-logo-container {
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-hstack {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    overflow: visible;
+    width: 100%;
+    height: min-content;
+  }
+
+  .right-hstack {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 1rem;
+  }
+
+  .nav-dropdown {
+    position: relative;
+    cursor: pointer;
+    pointer-events: auto;
+    user-select: none;
+  }
+
+  .nav-dropdown-title {
+    border-radius: 0.375rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+    transition: color 0.2s;
+  }
+
+  .nav-dropdown-title:hover {
+    color: #9d0013;
+  }
+
+  .nav-dropdown-title-text {
+    pointer-events: auto;
+    user-select: none;
+    color: inherit;
+    cursor: pointer;
+    margin-right: 0.25rem;
+    font-weight: 500;
+  }
+
+  .nav-dropdown-chevron {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s;
+    user-select: none;
+  }
+
+  .nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.25rem;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    min-width: max-content;
+    justify-content: center;
+  }
+
+  .nav-dropdown-item {
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-dropdown-item:hover {
+    color: #9d0013;
+  }
+
+  /* Text boxes for simple nav links */
+  .nav-link-box {
+    height: min-content;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-link-box:hover {
+    color: #9d0013;
+  }
+
+  .mobile-menu-vstack {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    width: 100%;
+  }
+
+  .mobile-modules-container {
+    position: relative;
+  }
+
+  .mobile-modules-toggle {
+    border-radius: 0.375rem;
+    cursor: pointer;
+    text-align: left;
+    width: min-content;
+    white-space: nowrap;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color 0.3s;
+  }
+
+  .mobile-modules-toggle:hover {
+    color: #9d0013;
+  }
+
+  .mobile-modules-chevron {
+    transition: transform 0.3s;
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-modules-collapse {
+    overflow: visible;
+    width: min-content;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-module-item {
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    transition: color 0.2s;
+  }
+
+  .mobile-module-item:hover {
+    color: #9d0013;
+  }
+
+  .icon-button {
+    padding: 0rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 48em) {
+    .hide-md {
+      display: none !important;
+    }
+    .show-md {
+      display: flex !important;
+    }
+  }
+
+  @media (max-width: 47.99em) {
+    .hide-base {
+      display: none !important;
+    }
+    .show-base {
+      display: inline-flex !important;
+    }
+  }
+
+  /* ========================================================================== 
    Search Bar
    ========================================================================== */
   .nav-search {
     z-index: 999;
+    padding-top: 0.25rem;
   }
   .searchbar-outer {
     /* background: white; */
@@ -1007,7 +600,7 @@ mark {
 
 
   .searchbar-input {
-    font-size: 0.875rem; /* 'sm' */
+    font-size: 0.875rem;
     padding-left: 2.5rem;
     transition: opacity 0.3s ease;
     background: transparent;
@@ -1047,11 +640,8 @@ mark {
     color: white;
   }
 
-
-  .searchbar-toggle-button {
-    position: absolute !important;
+  .toggle-button {
     width: 0px;
-    left: 0 !important;
     z-index: 9999999;
     color: black !important;
     outline: 0 !important;
@@ -1060,6 +650,10 @@ mark {
     background: transparent !important;
   }
 
+  .searchbar-toggle-button {
+    position: absolute !important;
+    left: 0 !important;
+  }
 
   .searchbar-toggle-button:hover {
     outline: 0 !important;
@@ -1089,12 +683,24 @@ mark {
     position: absolute;
     left: 0;
     right: 0;
-    overflow-y: auto;
     border-width: 2px;
     border-color: #5d3210;
     border-radius: 6px;
     transform: translateY(-40px);
-    padding-top: 30px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .results-window > div:first-child {
+    flex-shrink: 0;
+    background: white;
+    height: 38px;
+  }
+
+  .results-window > div:last-child {
+    overflow-y: auto;
+    flex-grow: 1;
   }
 
 
@@ -1112,12 +718,7 @@ mark {
 
   .results-list {
     overflow-y: auto;
-    padding: 0.5rem 0.5rem 0 0.5rem;
-  }
-
-
-  .short {
-    height: min-content;
+    padding: 0 0.5rem 0 0.5rem;
   }
 
 
@@ -1175,6 +776,8 @@ mark {
   .result-snippet {
     font-size: 0.875rem;
     color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
 
@@ -1190,13 +793,17 @@ mark {
 
 
   .result-snippet-text {
-    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
 
   .result-snippet-text.clamped {
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1230,7 +837,6 @@ mark {
 
 
   .results-view-all {
-    background: white;
     padding: 0.5rem 0.75rem;
     display: flex;
     justify-content: space-between;
