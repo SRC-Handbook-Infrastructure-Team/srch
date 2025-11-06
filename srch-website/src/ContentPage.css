@@ -411,11 +411,11 @@
     top: 0;
     left: 0;
     width: 100vw;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     margin: 0;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     height: min-content;
     align-content: center;
     border-bottom: 1px solid #e2e8f0;
@@ -624,25 +624,86 @@
   }
 
   /* ========================================================================== 
-   Search Bar
+   Nav Search Bar
    ========================================================================== */
   .nav-search {
     z-index: 999;
-    padding-top: 0.25rem;
+    padding-top: 1rem;
   }
-  .searchbar-outer {
-    /* background: white; */
-    /* justify-content: flex-end; */
+
+  .navsearchbar-container {
+    position: relative;
+    width: 100%;
+    /* overflow: visible; */
   }
+
+  .navsearchbar-input::placeholder {
+    color: black;
+    opacity: 1;
+  }
+
+  .navsearchbar-input {
+    font-size: 1rem;
+    padding-left: 2.5rem;
+    transition: opacity 0.3s ease;
+    background: transparent;
+    border-width: 0;
+    z-index: 9;
+  }
+
+  .navsearchbar-input.expanded {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navsearchbar-input.collapsed {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .navsearchbar-input:focus,
+  .navsearchbar-input:focus-visible {
+    box-shadow: none;
+    outline: none;
+    border-color: inherit;
+  }
+
+  .navsearchbar-results-window {
+    color: white;
+  }
+
+  .navsearchbar-toggle-button {
+    position: absolute !important;
+    left: 0 !important;
+  }
+
+  .navsearchbar-toggle-button:hover {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #9d0013 !important;
+    background: transparent !important;
+  }
+
+  .navsearchbar-toggle-button:focus,
+  .navsearchbar-toggle-button:focus-visible,
+  .navsearchbar-toggle-button:active {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* ========================================================================== 
+   Search Bar
+   ========================================================================== */
 
   .searchbar-container {
     position: relative;
     display: flex;
     align-items: center;
     overflow: visible;
-  }
-
-  .searchbar-container.expanded {
+    width: 450px;
   }
 
   .searchbar-input-container {
@@ -662,35 +723,45 @@
     transition: opacity 0.3s ease;
     background: transparent;
     z-index: 9;
+    border-width: 0;
+    opacity: 1;
+    pointer-events: auto;
   }
+
   .searchbar-input:focus,
   .searchbar-input:focus-visible,
   .searchbar-input:active,
   .searchbar-input:focus,
-  .searchbar-input:focus-within {
-    border-width: 0;
-    border-color: #531c00;
-  }
-
+  .searchbar-input:focus-within,
   .searchbar-input:hover {
     border-width: 0;
-    border-color: #531c00;
-  }
-
-  .searchbar-input:not(.visible) {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .searchbar-input.visible {
-    opacity: 1;
-    border-width: 2px;
-    border-color: #531c00;
-    pointer-events: auto;
+    box-shadow: none;
   }
 
   .searchbar-results-window {
     color: white;
+  }
+
+  .searchbar-toggle-button {
+    position: absolute !important;
+    left: 0 !important;
+  }
+
+  .searchbar-toggle-button:hover {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #9d0013 !important;
+    background: transparent !important;
+  }
+
+  .searchbar-toggle-button:focus,
+  .searchbar-toggle-button:focus-visible,
+  .searchbar-toggle-button:active {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
   }
 
   .toggle-button {
@@ -724,34 +795,11 @@
     border: none !important;
     background: transparent !important;
   }
+  */
 
   /* ========================================================================== 
    Search Results Window
    ========================================================================== */
-
-  .results-window {
-    position: absolute;
-    left: 0;
-    right: 0;
-    border-width: 2px;
-    border-color: #5d3210;
-    border-radius: 6px;
-    transform: translateY(-40px);
-    background: white;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .results-window > div:first-child {
-    flex-shrink: 0;
-    background: white;
-    height: 38px;
-  }
-
-  .results-window > div:last-child {
-    overflow-y: auto;
-    flex-grow: 1;
-  }
 
   .results-autofill {
     z-index: 999999999999999999;
@@ -766,6 +814,7 @@
   .results-list {
     overflow-y: auto;
     padding: 0 0.5rem 0 0.5rem;
+    z-index: 999999999999999999;
   }
 
   .results-count {
@@ -787,30 +836,26 @@
 
   .results-section {
     background: #9d0013;
+    display: block;
     color: white;
     padding: 0rem 1rem;
     border-radius: 9999px;
     font-size: 0.875rem;
     margin-right: 0.75rem;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
   }
 
-  .results-subsection {
-    display: flex;
+  .results-title {
+    display: block;
     align-items: center;
     font-size: 0.875rem;
     font-weight: 600;
     color: #4a5568;
-  }
-
-  .results-title {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #4a5568;
-    font-weight: bold;
-    text-decoration: underline;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
   }
 
   .result-snippet {
@@ -884,6 +929,130 @@
   }
 
   .view-all-link:hover {
+    color: #2b6cb0;
+  }
+
+  /* ========================================================================== 
+   Search Results Window (Floating)
+   ========================================================================== */
+
+  .results-window-floating {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-color: whitesmoke;
+    border-width: 3px;
+    border-radius: 6px;
+    padding-top: 40px;
+    transform: translateY(-40px);
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .results-autofill-floating {
+    z-index: 999999999999999999;
+    background-color: transparent;
+    color: black !important;
+  }
+
+  .results-white-background-floating {
+    background: white;
+  }
+
+  .results-list-floating {
+    overflow-y: auto;
+    padding: 0 0.5rem 0 0.5rem;
+  }
+
+  .results-count-floating {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-item-floating {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .results-header-floating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+  
+  .result-snippet-floating {
+    font-size: 0.875rem;
+    color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .result-snippet-link-floating {
+    text-decoration: none;
+    display: block;
+  }
+
+  .result-snippet-link-floating:hover {
+    text-decoration: underline;
+  }
+
+  .result-snippet-text-floating {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .result-snippet-text-floating.clamped-floating {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .read-more-button-floating,
+  .result-snippet-readmore-floating {
+    position: static !important;
+    z-index: 0 !important;
+    pointer-events: auto !important;
+    text-align: right;
+    justify-self: flex-start;
+  }
+
+  .read-more-button-floating {
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    background: darkgray !important;
+    color: white !important;
+    font-size: 0.75rem;
+    border: none;
+  }
+
+  .results-none-floating {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .results-view-all-floating {
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .view-all-link-floating {
+    cursor: pointer;
+    color: #3182ce;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    outline: none;
+  }
+
+  .view-all-link-floating:hover {
     color: #2b6cb0;
   }
 }

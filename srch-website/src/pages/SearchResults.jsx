@@ -56,10 +56,9 @@ function SearchResults() {
           className="results-autofill"
           setSearchQuery={setSearchQuery}
           searchQuery={searchQuery}
-          canExpand={false}
           maxResults={4}
         />
-        <ResultsWindow searchQuery={decodedQuery} />
+        <ResultsWindow searchQuery={decodedQuery} floating={false} />
       </div>
     </div>
   );
