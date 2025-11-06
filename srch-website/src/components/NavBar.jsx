@@ -247,7 +247,7 @@ function NavBar({ className = "" }) {
         </HStack>
       </HStack>
 
-      {isMenuOpen && (
+      <Collapse in={isMenuOpen} animateOpacity>
         <VStack
           align={"start"}
           className="mobile-menu-vstack show-base hide-md"
@@ -326,8 +326,8 @@ function NavBar({ className = "" }) {
             </Collapse>
           </Box>
         </VStack>
-      )}
-      {isSearchOpen && (
+      </Collapse>
+      <Collapse in={isSearchOpen} animateOpacity>
         <Box className="nav-search">
           <NavSearchBar
             searchQuery={searchQuery}
@@ -337,7 +337,7 @@ function NavBar({ className = "" }) {
             align="stretch"
           />
         </Box>
-      )}
+      </Collapse>
     </Box>
   );
 }
