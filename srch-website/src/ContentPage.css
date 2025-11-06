@@ -945,7 +945,7 @@ html body .main-content {
 
 
 
-/* Left sidebar */
+/* Left sidebar — overlay mode (no page resizing) */
 .left-sidebar {
   position: fixed !important;
   top: var(--navbar-height) !important;
@@ -954,12 +954,21 @@ html body .main-content {
   width: var(--left-sidebar-width) !important;
   background: var(--sidebar-bg) !important;
   border-right: 1px solid var(--border-1) !important;
-  overflow: hidden auto !important;
+  overflow-y: auto !important;
+
+  /* ✅ Sidebar slides over content */
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 0.35s ease, opacity 0.25s ease;
+
+  /* ✅ Prevents it from resizing layout */
+  position: fixed;
+  z-index: 50;
 }
-.left-sidebar.open { transform: translateX(0); opacity: 1; }
+.left-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
 
 
 /* Left resizer */

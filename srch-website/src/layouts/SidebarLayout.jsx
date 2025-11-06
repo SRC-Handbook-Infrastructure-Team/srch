@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import NavBar from "../components/NavBar";
 import ContentsSidebar from "../components/ContentsSidebar";
+import { useLocation } from "react-router-dom";
 
 /**
  * SidebarLayout
@@ -19,11 +20,14 @@ import ContentsSidebar from "../components/ContentsSidebar";
  * -----------------------------------------------------------------------------
  */
 export default function SidebarLayout({ children }) {
+  /** ---------------- REFS FOR DOM ELEMENTS (performance) ---------------- */
+  const mainRef = useRef(null);
+  const innerRef = useRef(null);
 
   /** ---------------- FREEZE / RELEASE MAIN CONTENT ---------------- */
-  const freezeMainContent = () => {
-    const main = document.querySelector(".main-content");
-    const inner = document.querySelector(".main-content .main-shift");
+  const freezeMainContent = useCallback(() => {
+    const main = mainRef.current;
+    const inner = innerRef.current;
     if (!main || !inner) return;
 
     const w = `${inner.offsetWidth}px`;
@@ -31,25 +35,22 @@ export default function SidebarLayout({ children }) {
 
     main.classList.add("main-frozen");
     inner.classList.add("frozen");
-
     inner.classList.remove("release");
-  };
+  }, []);
 
-  const releaseMainContent = () => {
-    const main = document.querySelector(".main-content");
-    const inner = document.querySelector(".main-content .main-shift");
+  const releaseMainContent = useCallback(() => {
+    const main = mainRef.current;
+    const inner = innerRef.current;
     if (!main || !inner) return;
 
-    
     inner.classList.remove("frozen");
     inner.classList.add("release");
 
-    // cleanup after animation (CSS snap is about 180ms)
     setTimeout(() => {
       main.classList.remove("release");
       document.documentElement.style.removeProperty("--main-freeze-width");
     }, 220);
-  };
+  }, []);
 
   /** ---------------- LEFT SIDEBAR CONFIG ---------------- */
   const leftSidebar = useResizableSidebar({
@@ -60,8 +61,6 @@ export default function SidebarLayout({ children }) {
     collapsedWidth: 0,
     side: "left",
     cssVarName: "--left-sidebar-width",
-
-    /** Hook lifecycle integration */
     onStartResize: freezeMainContent,
     onStopResize: releaseMainContent,
   });
@@ -80,20 +79,48 @@ export default function SidebarLayout({ children }) {
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
-  const openRightDrawer = (content) => {
-    setIsRightOpen(true);
-    setRightContent(content);
-    document.documentElement.style.setProperty(
-      "--right-sidebar-width",
-      `${rightSidebar.width}px`
-    );
-  };
-
-  const closeRightDrawer = () => {
+  /** Memoized drawer functions (performance) */
+  const closeRightDrawer = useCallback(() => {
     setIsRightOpen(false);
     setRightContent(null);
-    document.documentElement.style.setProperty("--right-sidebar-width", `0px`);
+  }, []);
+
+  const openRightDrawer = useCallback(
+    (content) => {
+      setRightContent(content);
+      setIsRightOpen(true);
+    },
+    []
+  );
+
+  /** Sync drawer width to CSS var (single effect — avoids redundancy) */
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--right-sidebar-width",
+      isRightOpen ? `${rightSidebar.width}px` : "0px"
+    );
+  }, [isRightOpen, rightSidebar.width]);
+
+  /** ---------------- AUTO-CLOSE DRAWER ON *PAGE* CHANGE ---------------- */
+  const location = useLocation();
+
+  const getBasePath = (path = "") => {
+    const parts = path.split("/").filter(Boolean);
+    return `/${parts.slice(0, 2).join("/") || ""}`;
   };
+
+  const prevBasePathRef = useRef(getBasePath(location.pathname));
+
+  useEffect(() => {
+    const nextBase = getBasePath(location.pathname);
+    const prevBase = prevBasePathRef.current;
+
+    if (nextBase !== prevBase && isRightOpen) {
+      closeRightDrawer();
+    }
+
+    prevBasePathRef.current = nextBase;
+  }, [location.pathname, isRightOpen, closeRightDrawer]);
 
   /** ---------------- RESPONSIVE SAFEGUARD ---------------- */
   const MIN_MAIN_WIDTH = 700;
@@ -102,22 +129,16 @@ export default function SidebarLayout({ children }) {
   );
 
   useEffect(() => {
-    const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
+    const available = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
 
-    if (leftSidebar.width + rightSidebar.width > availableForSidebars) {
+    if (leftSidebar.width + rightSidebar.width > available) {
       if (leftSidebar.width > rightSidebar.width) {
         leftSidebar.setWidth(
-          Math.max(
-            availableForSidebars - rightSidebar.width,
-            leftSidebar.minWidth
-          )
+          Math.max(available - rightSidebar.width, leftSidebar.minWidth)
         );
       } else {
         rightSidebar.setWidth(
-          Math.max(
-            availableForSidebars - leftSidebar.width,
-            rightSidebar.minWidth
-          )
+          Math.max(available - leftSidebar.width, rightSidebar.minWidth)
         );
       }
     }
@@ -137,11 +158,13 @@ export default function SidebarLayout({ children }) {
 
     const setHeightVars = () => {
       const navH = `${navbar.offsetHeight || 0}px`;
-      const toolH = toolbar
-        ? `${toolbar.offsetHeight || 0}px`
-        : getComputedStyle(document.documentElement).getPropertyValue(
-            "--toolbar-height"
-          ) || "0px";
+      const toolH =
+        toolbar?.offsetHeight != null
+          ? `${toolbar.offsetHeight}px`
+          : getComputedStyle(document.documentElement).getPropertyValue(
+              "--toolbar-height"
+            ) || "0px";
+
       document.documentElement.style.setProperty("--navbar-height", navH);
       document.documentElement.style.setProperty("--nav-bar-height", navH);
       document.documentElement.style.setProperty("--toolbar-height", toolH);
@@ -149,19 +172,19 @@ export default function SidebarLayout({ children }) {
 
     setHeightVars();
 
-    const observers = [];
     if (typeof ResizeObserver !== "undefined") {
-      const navObserver = new ResizeObserver(setHeightVars);
-      navObserver.observe(navbar);
-      observers.push(navObserver);
+      const observers = [];
+      const navObs = new ResizeObserver(setHeightVars);
+      navObs.observe(navbar);
+      observers.push(navObs);
 
       if (toolbar) {
-        const toolObserver = new ResizeObserver(setHeightVars);
-        toolObserver.observe(toolbar);
-        observers.push(toolObserver);
+        const toolObs = new ResizeObserver(setHeightVars);
+        toolObs.observe(toolbar);
+        observers.push(toolObs);
       }
+      return () => observers.forEach((o) => o.disconnect());
     }
-    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   /** ---------------- VIEWPORT WIDTH TRACKER ---------------- */
@@ -170,14 +193,6 @@ export default function SidebarLayout({ children }) {
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  /** ---------------- RIGHT WIDTH CSS VAR ---------------- */
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--right-sidebar-width",
-      `${isRightOpen ? rightSidebar.width : 0}px`
-    );
-  }, [rightSidebar.width, isRightOpen]);
 
   /** ---------------- KEYBOARD RESIZE SUPPORT ---------------- */
   useEffect(() => {
@@ -225,6 +240,8 @@ export default function SidebarLayout({ children }) {
       rightSidebar,
       rightContent,
       isRightOpen,
+      openRightDrawer,
+      closeRightDrawer,
       leftSidebar.width,
       leftSidebar.collapsed,
       leftSidebar.minWidth,
@@ -251,24 +268,20 @@ export default function SidebarLayout({ children }) {
           />
         )}
 
-        <main id="main" className="main-content">
-  {/* This inner wrapper is what we shift during drag */}
-  <div className="main-shift">
-    {children}
-  </div>
-</main>
+        <main id="main" className="main-content" ref={mainRef}>
+          <div className="main-shift" ref={innerRef}>
+            {children}
+          </div>
+        </main>
 
-
-        {/* Right Drawer */}
         <aside
-          className={`right-sidebar ${isRightOpen ? "open" : ""}`}
+          className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
           aria-label="Right sidebar drawer"
         >
           {isRightOpen && (
             <>
               <div className="drawer-header">
                 <span>Additional Information</span>
-
                 <button
                   onClick={closeRightDrawer}
                   onKeyDown={(e) => {
