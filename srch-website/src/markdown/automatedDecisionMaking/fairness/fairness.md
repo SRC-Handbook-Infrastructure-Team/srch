@@ -162,3 +162,4 @@ Heading: Papers Addressing the Impossibility of Fairness
 - *[Pushing the limits of fairness impossibility: Who’s the fairest of them all?](https://proceedings.neurips.cc/paper_files/paper/2022/file/d3222559698f41247261b7a6c2bbaedc-Paper-Conference.pdf)*: A post-processor that improves fairness across various definitions simultaneously 
 
 
+_Last updated November 06 2025._

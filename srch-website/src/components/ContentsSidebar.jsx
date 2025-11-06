@@ -251,90 +251,98 @@ export default function ContentsSidebar({
   }, [sections, expandedSections, allExpanded]);
 
   /* ---------------------- Nav Rendering ---------------------- */
-  const NavContent = () => (
-    <VStack align="stretch" spacing={2}>
-      {sections.map((section, idx) => {
-        const sectionSubs = subsections[section.id] || [];
-        const hasSubsections = sectionSubs.length > 0;
-        const isExpanded = !!expandedSections[section.id];
-        const isActiveSection = currentSectionId === section.id;
-        const displayNumber =
-          SECTION_NUMBER_MAP[section.id] ??
-          (typeof section.order === "number" ? section.order + 1 : idx + 1);
+const NavContent = () => (
+  <VStack align="stretch" spacing={2}>
+    {sections.map((section, idx) => {
+      const sectionSubs = subsections[section.id] || [];
+      const hasSubsections = sectionSubs.length > 0;
+      const isExpanded = !!expandedSections[section.id];
+      const isActiveSection = currentSectionId === section.id;   // ✅ route-aware
+      const displayNumber =
+        SECTION_NUMBER_MAP[section.id] ??
+        (typeof section.order === "number" ? section.order + 1 : idx + 1);
 
-        return (
-          <Box key={section.id} mb={2} className={`sidebar-section`}>
-            <Box
-              className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
-              p={2}
-              cursor="pointer"
-              onClick={(e) => {
-                if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
-                else navigate(`/${section.id}`);
-                toggleSection(section.id, e);
-              }}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box display="flex" alignItems="center" gap="6px">
-                <Text className="sidebar-section-title">
-                  {/* ✅ Section format: `1. Privacy` (no trailing period) */}
-                  {displayNumber}. {section.title}
-                </Text>
-                {section.final === false && <BetaTag />}
-              </Box>
-              {hasSubsections && (
-                <Icon
-                  as={ChevronDownIcon}
-                  transform={isExpanded ? "rotate(180deg)" : undefined}
-                  transition="transform 0.2s"
-                  w={5}
-                  h={5}
-                  color={isActiveSection ? "#531C00" : "inherit"}
-                />
-              )}
+      return (
+        <Box key={section.id} mb={2} className={`sidebar-section`}>
+          <Box
+            /*  NEW: route-aware class to activate Figma highlight styles */
+            className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
+            p={2}
+            cursor="pointer"
+            onClick={(e) => {
+              if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
+              else navigate(`/${section.id}`);
+              toggleSection(section.id, e);
+            }}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box display="flex" alignItems="center" gap="6px">
+              <Text className="sidebar-section-title">
+                {displayNumber}. {section.title}
+              </Text>
+              {section.final === false && <BetaTag />}
             </Box>
 
-            {isExpanded && hasSubsections && (
-              <VStack className="sidebar-subsection-container" align="stretch" pl={6} mt={1} spacing={0}>
-                {sectionSubs.map((sub, subIdx) => {
-                  const isSubActive = isActiveSection && currentSubsectionId === sub.id;
-                  const subLetter = indexToLetter(subIdx);
-                  // ✅ Subsection format: `1.a. What is Privacy?` (period after letter, no dash)
-                  const subPrefix = `${displayNumber}.${subLetter}.`;
-                  return (
-                    <Box key={sub.id} mb={1}>
-                      <Link to={`/${section.id}/${sub.id}`}>
-                        <Box
-                          px={2}
-                          py={1}
-                          borderRadius="md"
-                          bg={isSubActive ? "#531C00" : "transparent"}
-                          transition="background-color 0.2s ease"
-                          _hover={{
-                            bg: isSubActive ? "#531C00" : "rgba(83,28,0,0.06)",
-                          }}
-                        >
-                          <Text
-                            className="sidebar-subsection"
-                            fontWeight={isSubActive ? "600" : "400"}
-                            color={isSubActive ? "white" : "#1a1a1a"}
-                          >
-                            {subPrefix} {sub.title}
-                          </Text>
-                        </Box>
-                      </Link>
-                    </Box>
-                  );
-                })}
-              </VStack>
+            {hasSubsections && (
+              <Icon
+                as={ChevronDownIcon}
+                transform={isExpanded ? "rotate(180deg)" : undefined}
+                transition="transform 0.2s"
+                w={5}
+                h={5}
+                color={isActiveSection ? "#531C00" : "inherit"}   // accent on active
+              />
             )}
           </Box>
-        );
-      })}
-    </VStack>
-  );
+
+          {isExpanded && hasSubsections && (
+            <VStack
+              className="sidebar-subsection-container"
+              align="stretch"
+              pl={6}
+              mt={1}
+              spacing={0}
+            >
+              {sectionSubs.map((sub, subIdx) => {
+                const isSubActive = isActiveSection && currentSubsectionId === sub.id;
+                const subLetter = indexToLetter(subIdx);
+                const subPrefix = `${displayNumber}.${subLetter}.`;
+
+                return (
+                  <Box key={sub.id} mb={1}>
+                    <Link to={`/${section.id}/${sub.id}`}>
+                      <Box
+                        px={2}
+                        py={1}
+                        borderRadius="md"
+                        bg={isSubActive ? "#531C00" : "transparent"}
+                        transition="background-color 0.2s ease"
+                        _hover={{
+                          bg: isSubActive ? "#531C00" : "rgba(83,28,0,0.06)",
+                        }}
+                      >
+                        <Text
+                          className="sidebar-subsection"
+                          fontWeight={isSubActive ? "600" : "400"}
+                          color={isSubActive ? "white" : "#1a1a1a"}
+                        >
+                          {subPrefix} {sub.title}
+                        </Text>
+                      </Box>
+                    </Link>
+                  </Box>
+                );
+              })}
+            </VStack>
+          )}
+        </Box>
+      );
+    })}
+  </VStack>
+);
+
 
   /* ---------------------- Mobile Drawer ---------------------- */
   if (isMobile) {

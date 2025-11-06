@@ -40,3 +40,5 @@ _“When creating products I recommend you always ask: Who else? Who else should
 Curb-Cut-Effect:
 Heading: Curb Cut Effect
 After World War II, disabled veterans in the United States advocated for curb cuts to increase their access in the built environment. Advocacy and lobbying eventually led to legislation that made it mandatory for federally funded facilities to include certain accessibility features, including curb cuts. Curb cuts are also useful for people without disabilities - people pushing strollers or luggage also benefit from increased ease navigating the built environment. The curb cut effect refers to the phenomenon that accessible and usable design benefits disabled target users, but also a larger group of people than they were designed for.
+
+_Last updated November 06 2025._

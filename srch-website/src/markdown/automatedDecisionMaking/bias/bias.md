@@ -266,3 +266,5 @@ E.g: False arrests due to erroneous facial recognition make it difficult for peo
 [^1]: Suresh, _A Framework for Understanding Sources of Harm_
 [^2]: _Facial Recognition And The Facial Difference Community_
 [^3]: MacMillan, _Police Ignore Standards_
+
+_Last updated November 06 2025._

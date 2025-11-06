@@ -200,3 +200,5 @@ As Véliz puts it, “What used to be the paradigmatic loci of the private—our
 
 framework:
 For more, see the [Harvard University Privacy Tools Project](https://privacytools.seas.harvard.edu/differential-privacy). Or explore ["A list of real-world uses of differential privacy"](https://desfontain.es/blog/real-world-differential-privacy.html) by Damien Desfontaines.
+
+_Last updated November 06 2025._

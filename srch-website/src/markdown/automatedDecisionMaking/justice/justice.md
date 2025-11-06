@@ -332,3 +332,4 @@ Insurance companies have increasingly adopted AI to optimize pricing for car ins
 
 [Further Reading](https://www.governing.com/policy/michigans-fair-and-reasonable-reforms-allowed-car-insurers-to-charge-more-in-black-neighborhoods?utm_source=chatgpt.com)
 
+_Last updated November 06 2025._
