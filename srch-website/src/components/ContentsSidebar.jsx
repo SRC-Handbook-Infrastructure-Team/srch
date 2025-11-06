@@ -18,7 +18,7 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
-import "../index.css";
+import "../ContentPage.css";
 
 /* ----------------------------- File Overview --------------------------------
 ContentsSidebar
@@ -264,7 +264,6 @@ export default function ContentsSidebar({
 
         return (
           <Box key={section.id} mb={2} className={`sidebar-section`}>
-            {/* ✅ Modified parent row */}
             <Box
               className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
               p={2}
@@ -349,12 +348,14 @@ export default function ContentsSidebar({
             <DrawerBody>
               <div className="sidebar-header-controls">
                 <button
-                  className="sidebar-btn"
-                  onClick={toggleExpandCollapse}
-                  aria-pressed={allExpanded}
-                >
-                  {allExpanded ? "Collapse all" : "Expand all"}
-                </button>
+  className="sidebar-expand-toggle"
+  onClick={toggleExpandCollapse}
+  aria-pressed={allExpanded}
+>
+  {allExpanded ? "Collapse all" : "Expand all"}
+  <span className="double-chevron">{allExpanded ? "⟰" : "⟱"}</span>
+</button>
+
               </div>
               <NavContent />
             </DrawerBody>
@@ -373,8 +374,6 @@ export default function ContentsSidebar({
       className={`left-sidebar ${className}`.trim()}
       position="fixed"
       left={0}
-      top={0}
-      height="100vh"
       bg="#fff"
       overflowY="auto"
       overflowX="hidden"
@@ -387,16 +386,42 @@ export default function ContentsSidebar({
         transition: isResizing ? "none" : "width 0.25s ease",
       }}
     >
-      <div className="sidebar-header-controls">
-        <button
-          className="sidebar-btn"
-          onClick={toggleExpandCollapse}
-          aria-pressed={allExpanded}
-          style={{ marginLeft: "auto" }}
-        >
-          {allExpanded ? "Collapse all" : "Expand all"}
-        </button>
-      </div>
+      {/* FIX APPLIED HERE */}
+<div className="sidebar-header-controls">
+  <div
+    style={{
+      position: "sticky",
+      top: 0,
+      zIndex: 20,
+      background: "#fff",
+      // moved it to the right & removed any visual divider line
+      padding: "8px 16px 4px",
+      display: "flex",
+      justifyContent: "flex-end"
+    }}
+  >
+    <button
+      className="sidebar-toggle"
+      onClick={toggleExpandCollapse}
+      aria-pressed={allExpanded}
+    >
+      {allExpanded ? "Collapse all" : "Expand all"}
+      <span
+        className="icon-double-chevron"
+        aria-hidden="true"
+        style={{ marginLeft: 6, transform: allExpanded ? "rotate(180deg)" : "none" }}
+
+      >
+        {/* up/down naturally flip with CSS rotate depending on state */}
+        <svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" /></svg>
+        <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
+          <path d="M1 5l4-4 4 4" />
+        </svg>
+      </span>
+    </button>
+  </div>
+</div>
+
 
       <Box p={4}>
         <NavContent />
