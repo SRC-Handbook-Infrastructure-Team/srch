@@ -38,7 +38,7 @@ function NavSearchBar({
       <IconButton
         aria-label="Toggle nav search bar"
         icon={<SearchIcon fontSize={"lg"} />}
-        className="navsearchbar-toggle-button toggle-button"
+        className="searchbar-toggle-button toggle-button"
         onClick={search}
       />
       <Input
@@ -60,14 +60,14 @@ function NavSearchBar({
           borderColor: "inherit",
         }}
       />
-      <Box className="navsearchbar-results-window">
+      <Box className="searchbar-results-window">
         {searchQuery && (
           <Box>
             <ResultsWindow
               searchQuery={searchQuery}
               maxResults={maxResults}
               setIsSearchOpen={setIsSearchOpen}
-              navBar={true}
+              floating={false}
             />
           </Box>
         )}

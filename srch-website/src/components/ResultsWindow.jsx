@@ -5,23 +5,18 @@ import { initializeIndex, search } from "../util/SearchEngine";
 const classSuffix = (className, floating) =>
   floating ? `${className}-floating` : className;
 
-const ResultSnippet = React.memo(
-  ({ snippet, maxResults, floating = false }) => {
-    if (!snippet) return null;
+const ResultSnippet = React.memo(({ snippet, maxResults }) => {
+  if (!snippet) return null;
 
-    return (
-      <div className={classSuffix("result-snippet", floating)}>
-        <span
-          className={classSuffix(
-            `result-snippet-text${maxResults == null ? " clamped" : ""}`,
-            floating
-          )}
-          dangerouslySetInnerHTML={{ __html: snippet }}
-        />
-      </div>
-    );
-  }
-);
+  return (
+    <div className={"result-snippet"}>
+      <span
+        className={`result-snippet-text${maxResults == null ? " clamped" : ""}`}
+        dangerouslySetInnerHTML={{ __html: snippet }}
+      />
+    </div>
+  );
+});
 
 export const ResultsWindow = React.memo(
   ({
@@ -70,7 +65,7 @@ export const ResultsWindow = React.memo(
           }
         >
           {maxResults == null && (
-            <div className={classSuffix("results-count", floating)}>
+            <div className={"results-count"}>
               {`Showing ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
               } for "${searchQuery}"`}
@@ -87,7 +82,7 @@ export const ResultsWindow = React.memo(
               const snippetToRender = item.snippet;
               return (
                 <div
-                  className={classSuffix("results-item", floating)}
+                  className={"results-item"}
                   key={key}
                   role="link"
                   tabIndex={0}
@@ -123,19 +118,16 @@ export const ResultsWindow = React.memo(
                   <ResultSnippet
                     snippet={snippetToRender}
                     maxResults={maxResults}
-                    floating={floating}
                   />
                 </div>
               );
             })
           ) : (
-            <div className={classSuffix("results-none", floating)}>
-              No results found
-            </div>
+            <div className={"results-none"}>No results found</div>
           )}
         </div>
         {maxResults != null && (
-          <div className={classSuffix("results-view-all", floating)}>
+          <div className={"results-view-all"}>
             <div className={classSuffix("results-count", floating)}>
               {`Showing ${searchResults.length} result${
                 searchResults.length === 1 ? "" : "s"
@@ -143,7 +135,7 @@ export const ResultsWindow = React.memo(
             </div>
             <div>
               <a
-                className={classSuffix("view-all-link", floating)}
+                className={"view-all-link"}
                 onClick={() => handleClick()}
                 aria-label={`View all search results`}
               >
