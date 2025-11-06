@@ -1241,3 +1241,25 @@ html body .main-content.frozen {
 html body .main-content.frozen.release {
   transition: transform 180ms ease, width 1ms linear;
 }
+
+/* Keep the normal margins… */
+html body .main-content {
+  margin-left: var(--left-sidebar-width) !important;
+  margin-right: var(--right-sidebar-width) !important;
+  padding-top: var(--navbar-height) !important;
+  min-height: 100vh;
+}
+
+/* …but during drag (frozen), don't also apply margin-left. */
+html body .main-content.frozen {
+  margin-left: 0 !important;                 /* ← remove double-shift */
+  transform: translateX(var(--left-sidebar-width)) !important;
+  width: var(--main-freeze-width) !important;
+  will-change: transform;
+  transition: none !important;
+}
+
+/* optional “snap” at end (you already add .release in JS) */
+html body .main-content.frozen.release {
+  transition: transform 180ms ease, width 1ms linear !important;
+}
