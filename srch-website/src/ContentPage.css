@@ -139,28 +139,19 @@ mark {
 
 /*  Route-aware highlight (via .is-active class from JSX) */
 .sidebar-section-header.is-active {
-  border-color: #C9C9C9 !important;
-  background-color: #C9C9C9 !important;
+  border-color: #c9c9c9 !important;
+  background-color: #c9c9c9 !important;
 }
 
 /*  Optional subtle hover, but DO NOT override active state */
 .sidebar-section-header:hover:not(.is-active) {
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 /* Ensures the entire row feels clickable and avoids visual jitter */
 .sidebar-section-header * {
-  pointer-events: none;        /* interaction handled by container */
+  pointer-events: none; /* interaction handled by container */
 }
-
- 
-
-
- 
-
-
- 
-
 
 /* ==========================================================================
    RIGHT SIDEBAR (Drawer)
@@ -591,6 +582,14 @@ h4 {
   box-shadow: none;
   outline: none;
   border-color: inherit;
+}
+
+.navsearchbar-button {
+  color: black;
+}
+
+.navsearchbar-button:hover {
+  color: #9d0013;
 }
 
 /* ========================================================================== 
@@ -1144,11 +1143,11 @@ html body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400;            /* tweak if you want lighter */
-  letter-spacing: 0.02em;      /* optional, matches figma-ish */
+  font-weight: 400; /* tweak if you want lighter */
+  letter-spacing: 0.02em; /* optional, matches figma-ish */
   color: var(--srch-brown);
-  margin: 0 0 4px 0;           /* small gap above the H1 */
-  text-transform: uppercase;   /* optional, matches figma */
+  margin: 0 0 4px 0; /* small gap above the H1 */
+  text-transform: uppercase; /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -1158,7 +1157,7 @@ html body .main-content {
 
 .srch-drawer-link {
   /* Base look (variable width) */
-  color: #9D0013 !important;
+  color: #9d0013 !important;
   text-decoration: none !important;
   background: transparent !important;
   border: 1px solid transparent !important;
@@ -1166,32 +1165,29 @@ html body .main-content {
   height: 32px !important;
 
   /* Motion */
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    transform 120ms ease !important;
+  transition: border-color 160ms ease, background-color 160ms ease,
+    color 160ms ease, transform 120ms ease !important;
   transform-origin: center center;
 }
 
 .srch-drawer-link:hover {
   /* Same red; only border appears + slight scale */
-  color: #9D0013 !important;
+  color: #9d0013 !important;
   text-decoration: none !important;
-  border-color: #9D0013 !important;
+  border-color: #9d0013 !important;
   transform: scale(1.01);
 }
 
 .srch-drawer-link:focus-visible {
-  outline: 2px solid #9D0013;
+  outline: 2px solid #9d0013;
   outline-offset: 2px;
 }
 
 /* Active state: filled red pill, white text + icon */
 .srch-drawer-link.srch-drawer-link-active {
-  color: #FFFFFF !important;
-  background: #9D0013 !important;
-  border-color: #9D0013 !important;
+  color: #ffffff !important;
+  background: #9d0013 !important;
+  border-color: #9d0013 !important;
   text-decoration: none !important;
 }
 
@@ -1202,8 +1198,8 @@ html body .main-content {
 
 /* Make left sidebar behave like right: isolate its layout/painting and promote */
 .left-sidebar {
-  contain: layout paint style;      /* ← like right drawer */
-  will-change: transform;           /* smoother slide-in */
+  contain: layout paint style; /* ← like right drawer */
+  will-change: transform; /* smoother slide-in */
 }
 
 /* (You already have this for right, keep it) */
@@ -1235,7 +1231,7 @@ html body .main-content {
 
 /* …but during drag (frozen), don't also apply margin-left. */
 html body .main-content.frozen {
-  margin-left: 0 !important;                 /* ← remove double-shift */
+  margin-left: 0 !important; /* ← remove double-shift */
   transform: translateX(var(--left-sidebar-width)) !important;
   width: var(--main-freeze-width) !important;
   will-change: transform;

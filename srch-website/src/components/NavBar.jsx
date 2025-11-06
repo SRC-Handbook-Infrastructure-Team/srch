@@ -19,6 +19,7 @@ import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
 import "../ContentPage.css";
+import { color } from "framer-motion";
 
 function NavBar({ className = "" }) {
   const location = useLocation();
@@ -257,7 +258,10 @@ function NavBar({ className = "" }) {
               <Text>Acknowledgements</Text>
             </Box>
             <Box className="icon-button">
-              <MoonIcon color="black" fontSize={"lg"}></MoonIcon>
+              <MoonIcon
+                className="navsearchbar-button"
+                fontSize={"lg"}
+              ></MoonIcon>
             </Box>
             <Box
               className="icon-button"
@@ -269,7 +273,10 @@ function NavBar({ className = "" }) {
                 }
               }}
             >
-              <SearchIcon color="black" fontSize={"lg"}></SearchIcon>
+              <SearchIcon
+                className="navsearchbar-button"
+                fontSize={"lg"}
+              ></SearchIcon>
             </Box>
             <Box
               className="icon-button show-base hide-md"
