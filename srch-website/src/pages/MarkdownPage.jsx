@@ -85,7 +85,12 @@ function MarkdownPage() {
       pageTitle && pageTitle.trim()
         ? pageTitle.trim()
         : prettifySlug(subsectionId || sectionId || "");
-    return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
+
+    // ✅ Spec: include a period after the letter (e.g., "1.a." not "1.a")
+    const numberedPrefix =
+      sectionNum + (letter ? `.${letter}.` : "");
+
+    return `${numberedPrefix} - ${titleText}`;
   }
 
   const { sectionId, subsectionId, term: urlTerm } = useParams();
@@ -264,7 +269,33 @@ function MarkdownPage() {
       }
 
       if (sectionId && subsectionId) {
-        const result = await getContent(sectionId, subsectionId);
+        // ✅ Performance: fetch content + subsections in parallel to make the H1
+        // numbering (letter) available ASAP on direct subsection loads.
+        const [result, subs] = await Promise.all([
+          getContent(sectionId, subsectionId),
+          getSubsections(sectionId).catch(() => []),
+        ]);
+
+        if (Array.isArray(subs)) {
+          const validSubs = subs
+            .filter((s) => s && s.id && typeof s.id === "string")
+            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+            .map((s) => ({
+              ...s,
+              title:
+                (s.title && String(s.title).trim()) ||
+                String(s.id || "")
+                  .replace(/[-_]/g, " ")
+                  .replace(/\b\w/g, (m) => m.toUpperCase()),
+            }))
+            .sort(
+              (a, b) =>
+                (Number.isFinite(a.order) ? a.order : 999) -
+                (Number.isFinite(b.order) ? b.order : 999)
+            );
+          setSubsections(validSubs);
+        }
+
         if (result) {
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
@@ -401,50 +432,50 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
-return (
-  <div className="markdown-page">
-    <Box mb={10}>
-      <div className="page-header">
-        <p className="page-section-label">
-          {sectionId ? sectionId.replace(/-/g, " ").toUpperCase() : ""}
-        </p>
+  return (
+    <div className="markdown-page">
+      <Box mb={10}>
+        <div className="page-header">
+          <p className="page-section-label">
+            {sectionId ? sectionId.replace(/-/g, " ").toUpperCase() : ""}
+          </p>
 
-        {/* Title + single global arrow that toggles left sidebar — always rendered */}
-        <div className="page-header-row" style={{ position: "relative" }}>
-          <h1 className="page-title">{formattedTitle}</h1>
+          {/* Title + single global arrow that toggles left sidebar — always rendered */}
+          <div className="page-header-row" style={{ position: "relative" }}>
+            <h1 className="page-title">{formattedTitle}</h1>
 
-          <button
-            className="header-toggle"
-            onClick={() => (leftSidebar && leftSidebar.toggle) && leftSidebar.toggle()}
-            aria-label={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {/* Use a literal glyph so it's always visible */}
-            {leftSidebar && leftSidebar.collapsed ? ">" : "<"}
-          </button>
+            <button
+              className="header-toggle"
+              onClick={() => (leftSidebar && leftSidebar.toggle) && leftSidebar.toggle()}
+              aria-label={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={leftSidebar && leftSidebar.collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {/* Use a literal glyph so it's always visible */}
+              {leftSidebar && leftSidebar.collapsed ? ">" : "<"}
+            </button>
+          </div>
+
+          {/* Full-bleed divider that spans the whole viewport, Figma-style */}
+          <div className="page-divider page-divider--fullbleed" />
         </div>
 
-        {/* Full-bleed divider that spans the whole viewport, Figma-style */}
-        <div className="page-divider page-divider--fullbleed" />
-      </div>
-
-      {mainContent && (
-        <Box ref={contentRef}>
-          <MarkdownRenderer
-            content={mainContent}
-            sidebar={sidebar}
-            sectionId={sectionId}
-            subsectionId={subsectionId}
-            onDrawerOpen={handleDrawerOpen}
-            onNavigation={handleNavigation}
-            isFinal={contentFinal}
-            highlight={highlight}
-          />
-        </Box>
-      )}
-    </Box>
-  </div>
-);
+        {mainContent && (
+          <Box ref={contentRef}>
+            <MarkdownRenderer
+              content={mainContent}
+              sidebar={sidebar}
+              sectionId={sectionId}
+              subsectionId={subsectionId}
+              onDrawerOpen={handleDrawerOpen}
+              onNavigation={handleNavigation}
+              isFinal={contentFinal}
+              highlight={highlight}
+            />
+          </Box>
+        )}
+      </Box>
+    </div>
+  );
 }
 
 export default MarkdownPage;
