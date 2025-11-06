@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -348,7 +348,7 @@ function MarkdownRenderer({
    * Styling tokens used inside the components map
    * --------------------------------------------------------------------- */
   const RED = "#9D0013";
-  const RED_DARK = "#7a000f"; // hover shade
+  const RED_DARK = "#7a000f"; // hover shade (kept for compatibility; not used on chips)
   const BLACK = "#000000";
 
   /* ------------------------------------------------------------------------
@@ -359,6 +359,7 @@ function MarkdownRenderer({
    *    When it closes, we remove the active class from all sidebar-ref pills.
    * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
+  const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
   useEffect(() => {
     const drawer = document.querySelector(".right-sidebar");
@@ -368,6 +369,7 @@ function MarkdownRenderer({
       document
         .querySelectorAll(".srch-drawer-link-active")
         .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
     };
 
     const obs = new MutationObserver(() => {
@@ -389,6 +391,7 @@ function MarkdownRenderer({
       document
         .querySelectorAll(".srch-drawer-link-active")
         .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
     };
   }, []);
 
@@ -397,7 +400,13 @@ function MarkdownRenderer({
       document
         .querySelectorAll(".srch-drawer-link-active")
         .forEach((n) => n.classList.remove("srch-drawer-link-active"));
-      if (el) el.classList.add("srch-drawer-link-active");
+      if (el) {
+        el.classList.add("srch-drawer-link-active");
+        const term = el.dataset?.term || el.getAttribute?.("data-term") || null;
+        setActiveDrawerLinkState(term);
+      } else {
+        setActiveDrawerLinkState(null);
+      }
     } catch (e) {
       /* no-op */
     }
@@ -463,9 +472,6 @@ function MarkdownRenderer({
 
       /* ------------------------------------------------------------------
        * Standard Markdown links (NOT sidebar-ref chips)
-       * - Base: red (#9D0013)
-       * - Hover: slightly darker red
-       * - Keeps normal underline behavior
        * ---------------------------------------------------------------- */
       a: (props) => {
         const isExternal =
@@ -555,80 +561,79 @@ function MarkdownRenderer({
 
       /**
        * sidebar-ref chip (inserted by {term} syntax in Markdown)
-       * - Base: red text on transparent
-       * - Hover: darker red text
-       * - Active (while drawer is open): white text on red pill w/ red border
+       * Visual spec:
+       * - Base: red text (#9D0013), NO underline, transparent bg
+       * - Hover: red 1px border appears + scale up slightly; color stays #9D0013
+       * - Active: white text on filled red pill, red border; Info icon inherits white
+       * - Shape: radius 17px, height 32px, variable width
        */
       "sidebar-ref": ({ node }) => {
-        const term = node.properties?.["term"];
-        const termKey = term ? String(term).toLowerCase() : "";
-        const value = sidebar?.[termKey];
+  let raw = node.properties?.["term"] || "";
+  let term = raw;
+  let label = null;
 
-        // Choose text to highlight:
-        // - If present, show humanized term (as before)
-        // - If missing, show warning label and do not open drawer
-        const toShow = value
-          ? String(term).replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-          : `⚠️ Missing: ${term}`;
+  //  Support alias syntax {term|Custom Label}
+  if (raw.includes("|")) {
+    const [keyPart, labelPart] = raw.split("|");
+    term = keyPart.trim();
+    label = labelPart.trim();
+  }
 
-        // Log missing keys
-        if (!value) {
-          try {
-            console.warn(`⚠️ Sidebar missing term: ${term}`);
-          } catch (e) {}
+  const termKey = term.toLowerCase();
+  const value = sidebar?.[termKey];
+
+  const toShow = value
+    ? label ||
+      term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+    : `⚠️ Missing: ${term}`;
+
+  const isMissing = !value;
+
+  return (
+    <Box
+      as={RouterLink}
+      to={`/${sectionId}/${subsectionId}/${term}`}
+      onClick={(e) => {
+        e.preventDefault();
+        if (!isMissing) {
+          setActiveDrawerLink(e.currentTarget);
+          onDrawerOpen && onDrawerOpen(term);
         }
+      }}
+      className={`srch-drawer-link ${
+        activeDrawerLink === term ? "srch-drawer-link-active" : ""
+      }`}
+      data-term={term}
+      display="inline-flex"
+      alignItems="center"
+      gap="6px"
+      h="32px"
+      px="10px"
+      borderRadius="17px"
+      color={RED}
+      textDecoration="none"
+      border="1px solid transparent"
+      cursor={isMissing ? "default" : "pointer"}
+      whiteSpace="nowrap"
+    >
+      <Text
+        as="span"
+        fontWeight="medium"
+        fontSize="inherit"
+        lineHeight="1.2"
+      >
+        {highlightText(toShow, highlight)}
+      </Text>
+      <Icon as={InfoIcon} boxSize="0.9em" />
+    </Box>
+  );
+},
 
-        const isMissing = !value;
 
-        return (
-          <Box
-            as={RouterLink}
-            to={`/${sectionId}/${subsectionId}/${term}`}
-            onClick={(e) => {
-              e.preventDefault();
-              if (!isMissing) {
-                // Mark this chip active visually
-                setActiveDrawerLink(e.currentTarget);
-                // Open drawer via parent
-                onDrawerOpen && onDrawerOpen(term);
-              }
-            }}
-            display="inline-flex"
-            alignItems="center"
-            px="0.3em"
-            py="0.15em"
-            mx="0.1em"
-            borderRadius="md"
-            className="srch-drawer-link"
-            data-term={term || ""}
-            textDecoration="underline"
-            color={RED}
-            border="1px solid transparent"
-            _hover={{
-              color: RED_DARK,
-              textDecoration: "underline",
-            }}
-            cursor={isMissing ? "default" : "pointer"}
-            whiteSpace="nowrap"
-            transition="background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease"
-          >
-            <Text
-              as="span"
-              fontWeight="medium"
-              fontSize="inherit"
-              lineHeight="1.4"
-            >
-              {highlightText(toShow, highlight)}
-            </Text>
-            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
-          </Box>
-        );
-      },
 
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
-        // highlightText can handle plain string or array input
         return (
           <HStack
             as="button"
@@ -658,26 +663,8 @@ function MarkdownRenderer({
     ]
   );
 
-  /* ------------------------------------------------------------------------
-   * Inline CSS to style the active chip class (scoped to this component)
-   * We rely on a class so that CSS transitions can animate nicely.
-   * --------------------------------------------------------------------- */
-  const ActiveChipStyles = () => (
-    <style>
-      {`
-        .srch-drawer-link.srch-drawer-link-active {
-          color: #FFFFFF !important;
-          background: ${RED} !important;
-          border-color: ${RED} !important;
-          text-decoration: none !important;
-        }
-      `}
-    </style>
-  );
-
   return (
     <div>
-      <ActiveChipStyles />
       <ReactMarkdown
         components={components}
         rehypePlugins={[rehypeRaw]}

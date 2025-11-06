@@ -136,16 +136,7 @@ mark {
 }
 
 
-  /* --------------------------------------------------------------------------
-   Main Content Area
-   -------------------------------------------------------------------------- */
-  .sidebar-layout .main-content {
-    margin-left: calc(var(--left-sidebar-width) - 50px);
-    margin-right: calc(var(--right-sidebar-width) - 40px);
-    transition: margin 150ms ease;
-    min-height: 100vh;
-    padding-top: calc(var(--navbar-height) + var(--toolbar-height));
-  }
+ 
 
 
  
@@ -1175,4 +1166,78 @@ html body .main-content {
   color: var(--srch-brown);
   margin: 0 0 4px 0;           /* small gap above the H1 */
   text-transform: uppercase;   /* optional, matches figma */
+}
+
+/* ==========================================================================
+   Sidebar-ref Chip Styles (MarkdownRenderer)
+   Spec: #9D0013 text, no underline; hover shows border + scale; active is filled
+   ========================================================================== */
+
+.srch-drawer-link {
+  /* Base look (variable width) */
+  color: #9D0013 !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 17px !important;
+  height: 32px !important;
+
+  /* Motion */
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease !important;
+  transform-origin: center center;
+}
+
+.srch-drawer-link:hover {
+  /* Same red; only border appears + slight scale */
+  color: #9D0013 !important;
+  text-decoration: none !important;
+  border-color: #9D0013 !important;
+  transform: scale(1.01);
+}
+
+.srch-drawer-link:focus-visible {
+  outline: 2px solid #9D0013;
+  outline-offset: 2px;
+}
+
+/* Active state: filled red pill, white text + icon */
+.srch-drawer-link.srch-drawer-link-active {
+  color: #FFFFFF !important;
+  background: #9D0013 !important;
+  border-color: #9D0013 !important;
+  text-decoration: none !important;
+}
+
+/* Ensure the Info icon inherits currentColor (turns white on active) */
+.srch-drawer-link .chakra-icon {
+  color: currentColor;
+}
+
+/* Make left sidebar behave like right: isolate its layout/painting and promote */
+.left-sidebar {
+  contain: layout paint style;      /* ← like right drawer */
+  will-change: transform;           /* smoother slide-in */
+}
+
+/* (You already have this for right, keep it) */
+.right-sidebar {
+  will-change: transform;
+}
+
+/* Freeze main content width during drag; shift as a block by left width */
+html body .main-content.frozen {
+  width: var(--main-freeze-width) !important; /* px captured at drag start */
+  transform: translateX(var(--left-sidebar-width)); /* block shift */
+  will-change: transform;
+  transition: none !important; /* no easing while dragging */
+  overflow: hidden; /* avoid accidental horizontal scrollbars */
+}
+
+/* Optional: smoother end-of-drag snap */
+html body .main-content.frozen.release {
+  transition: transform 180ms ease, width 1ms linear;
 }

@@ -14,7 +14,8 @@ Most people colloquially understand privacy as the condition of restricted acces
 
 ### Access as a gateway
 
-Through this lens, privacy functions as {gate-we-can-open-close-to-others}. Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
+Through this lens, privacy functions {gate-we-can-open-close-to-others|as a gate we can open or close to others}.
+ Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
 
 ### Anti-informational definitions of privacy
 
