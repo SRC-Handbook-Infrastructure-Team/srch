@@ -394,7 +394,7 @@ export default function ContentsSidebar({
           aria-pressed={allExpanded}
           style={{ marginLeft: "auto" }}
         >
-          {allExpanded ? "Collapse all ⇓" : "Expand all ⇑"}
+          {allExpanded ? "Collapse all" : "Expand all"}
         </button>
       </div>
 

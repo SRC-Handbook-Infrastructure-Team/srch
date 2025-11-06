@@ -401,7 +401,6 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
-  // ...existing code...
 return (
   <div className="markdown-page">
     <Box mb={10}>
@@ -412,7 +411,7 @@ return (
 
         {/* Title + single global arrow that toggles left sidebar — always rendered */}
         <div className="page-header-row" style={{ position: "relative" }}>
-          <h1 className="page-title">{mainContent ? formattedTitle : ""}</h1>
+          <h1 className="page-title">{formattedTitle}</h1>
 
           <button
             className="header-toggle"
