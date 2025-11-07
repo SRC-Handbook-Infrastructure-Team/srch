@@ -22,13 +22,14 @@
    ============================================================================ */
 
 .ack-hero {
-  width: 100vw;
-  height: 60vh;
+  width: 55vw;
+  height: 55vh;
 
   background-image: url("../src/assets/Property 1=Default.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-size: contain;
+background-position: top center;
+background-repeat: no-repeat;
+
 
   display: flex;
   align-items: center;
@@ -48,7 +49,7 @@
   font-weight: 800;
   font-size: 84px;
   line-height: 100px;
-  transform: translateY(-50px);
+  transform: translateY(-10px);
 }
 
 
@@ -359,20 +360,27 @@
 
 /* --- LOWER CONTENT starts after hero (slides over it) --- */
 .ack-lower-content {
-  margin-top: 100vh;      /* critical: begins below the fixed hero */
+  margin-top: 70vh;      /* critical: begins below the fixed hero */
   position: relative;
   z-index: 1;             /* above the hero */
   background: #fff;
   padding: 72px 200px;    /* same horizontal rhythm as Home’s lower-content */
 }
 
-/* Divider same as Home */
 .line-divider {
-  width: 75vw;
+  width: 100vw;                       /* full viewport width */
   height: 2px;
   background: rgba(90, 45, 0, 0.5);
-  margin: 0 auto;
+
+  /* Ensures the divider ignores parent padding */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+
+  margin: 40px 0;                     /* vertical spacing only */
 }
+
 
 /* Footer block styles (copied from your LandingPage.css) */
 .link-section {
@@ -462,4 +470,15 @@
   .ack-lower-content { padding: 48px 24px; }
   .link-section { flex-direction: column; gap: 40px; }
   .modules { width: 100%; }
+}
+
+/* ============================================================================
+   Placeholder Rectangle (for members without photos)
+   ============================================================================ */
+
+.ack-photo-placeholder {
+  width: 302px;
+  height: 296px;
+  background-color: #d9d9d9;
+  border-radius: 6px;
 }
