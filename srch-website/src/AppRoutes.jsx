@@ -5,20 +5,23 @@ import NavBar from "./components/NavBar";
 import ContentsSidebar from "./components/ContentsSideBar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import Acknowledgements from "./pages/Acknowledgements"; // ✅ now ONE page
+import Acknowledgements from "./pages/Acknowledgements"; //  now ONE page
 import { SearchResults } from "./pages/SearchResults";
 import SidebarLayout from "./layouts/SidebarLayout";
+import About from "./pages/About";
 
 function AppRoutes() {
   const location = useLocation();
   const isSearchPage = location.pathname.startsWith("/search");
   const isAcknowledgementsPage =
     location.pathname.startsWith("/acknowledgements");
+  const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
 
-  // ✅ Markdown layout logic stays unchanged
+
+  //  Markdown layout logic
   const isMarkdownPage =
-    !isHomePage && !isSearchPage && !isAcknowledgementsPage;
+    !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
 
   return (
     <>
@@ -35,8 +38,8 @@ function AppRoutes() {
         </SidebarLayout>
       ) : (
         <>
-          {/* ✅ Sidebar on every non-home, non-search, non-acknowledgements page */}
-          {!isSearchPage && !isHomePage && !isAcknowledgementsPage && (
+          {/*  Sidebar on every non-home, non-search, non-acknowledgements, non-about page */}
+          {!isSearchPage && !isHomePage && !isAcknowledgementsPage && !isAboutPage && (
             <ContentsSidebar />
           )}
 
@@ -45,10 +48,11 @@ function AppRoutes() {
           <Routes>
             <Route path="/" element={<Home />} />
 
-            {/* ✅ ONE SINGLE ACKNOWLEDGEMENTS PAGE */}
+            {/*  ONE SINGLE ACKNOWLEDGEMENTS PAGE */}
             <Route path="/acknowledgements" element={<Acknowledgements />} />
+            <Route path="/about" element={<About />} />
 
-            {/* ✅ Search */}
+            {/*  Search */}
             <Route path="/search/:query" element={<SearchResults />} />
             <Route path="/search" element={<SearchResults />} />
           </Routes>
