@@ -49,7 +49,7 @@ background-repeat: no-repeat;
   font-weight: 800;
   font-size: 84px;
   line-height: 100px;
-  transform: translateY(-10px);
+  transform: translateY(20px);
 }
 
 
@@ -368,21 +368,17 @@ background-repeat: no-repeat;
 }
 
 .line-divider {
-  width: 100vw;                       /* full viewport width */
-  height: 2px;
-  background: rgba(90, 45, 0, 0.5);
-
-  /* Ensures the divider ignores parent padding */
+  width: 100%; 
+  height: 1px;
+  background: rgba(96, 70, 58, 1);
   position: relative;
-  left: 50%;
-  right: 50%;
-  transform: translateX(-50%);
+  transform: scaleX(1.35);     /* stretch WITHOUT affecting height */
+  transform-origin: center;
 
-  margin: 40px 0;                     /* vertical spacing only */
 }
 
 
-/* Footer block styles (copied from your LandingPage.css) */
+/* Footer block styles (copied from LandingPage.css) */
 .link-section {
   align-self: stretch;
   justify-content: space-between;
@@ -405,8 +401,7 @@ background-repeat: no-repeat;
   display: block;
 }
 
-/* modules / primer-link / module-link / feedback-contact
-   (if not already present in Acknowledgements.css) */
+
 .modules {
   display: flex;
   flex-direction: column;
