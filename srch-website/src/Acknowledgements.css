@@ -1,6 +1,30 @@
+/* ============================================================================
+   Acknowledgements.css
+   ----------------------------------------------------------------------------
+   Handles all presentation styling for the Acknowledgements page.
+
+   Includes:
+     • Hero banner
+     • Team member card layout
+     • Card typography & icons
+     • Footer (modules, quick links, feedback, logo)
+     • Responsive adjustments
+
+   Each block is documented for future designers/developers.
+   ============================================================================ */
+
+
+/* ============================================================================
+   1. HERO BANNER
+   ----------------------------------------------------------------------------
+   A full-width background image with centered vertical alignment. Padding
+   ensures the hero aligns with the main content column.
+   ============================================================================ */
+
 .ack-hero {
   width: 100vw;
   height: 60vh;
+
   background-image: url("../src/assets/Property 1=Default.png");
   background-size: cover;
   background-position: center;
@@ -8,6 +32,7 @@
 
   display: flex;
   align-items: center;
+
   padding-left: 13vw;
   padding-right: 13vw;
   margin-top: 40px; /* navbar offset */
@@ -17,39 +42,57 @@
   background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
+/* Large Hero Title */
 .website-title {
-  font: Funnel Sans Bold;
+  font-family: "Funnel Sans Bold", sans-serif;
   font-weight: 800;
   font-size: 84px;
   line-height: 100px;
   transform: translateY(-50px);
 }
 
-/* ===========================================================================
-   ✅ CARD CONTAINER (matches 302 × 296px spec)
-   =========================================================================== */
+
+/* ============================================================================
+   2. TEAM MEMBER CARD CONTAINER
+   ----------------------------------------------------------------------------
+   Controls the rigid outer structure of each card.
+   Card size must remain consistent for clean grid alignment.
+   ============================================================================ */
+
 .ack-card {
   width: 290px;
-  height: 302px;
+  height: 433px; /* accommodates photo + text + icons */
   display: flex;
   flex-direction: column;
   font-family: "Be Vietnam Pro", sans-serif;
 }
 
-/* ===========================================================================
-   ✅ PHOTO (exact dimension from screenshot)
-   =========================================================================== */
+
+/* ============================================================================
+   3. CARD PHOTO REGION
+   ----------------------------------------------------------------------------
+   Matches visual dimensions from Figma. The image fills the frame but is clipped
+   to avoid distortion.
+   ============================================================================ */
+
 .ack-card-photo {
   width: 302px;
-  height: 188px;
+  height: 296px;
+  border-radius: 6px;
   background-color: #d9d9d9;
-  border-radius: 8px;
   object-fit: cover;
 }
 
-/* ===========================================================================
-   ✅ NAME + PRONOUNS
-   =========================================================================== */
+
+/* ============================================================================
+   4. CARD TEXT (NAME / PRONOUNS / SUB-INFO)
+   ----------------------------------------------------------------------------
+   Text styling mirrors Figma:
+     • Full name — 20px, 600 weight, brand brown color
+     • Pronouns — lighter #00000085
+     • Role/Degree Info — 16px standard body text
+   ============================================================================ */
+
 .ack-card-name {
   margin-top: 12px;
   display: flex;
@@ -61,7 +104,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 40px;
-  color: #5a2d0c;
+  color: #531C00;
 }
 
 .ack-card-pronouns {
@@ -70,9 +113,6 @@
   color: #00000085;
 }
 
-/* ===========================================================================
-   ✅ ROLE / DEGREE / GRAD YEAR
-   =========================================================================== */
 .ack-card-subinfo {
   font-size: 16px;
   font-weight: 400;
@@ -81,26 +121,30 @@
   color: #000000;
 }
 
-/* ===========================================================================
-   ✅ ICON ROW
-   =========================================================================== */
+
+/* ============================================================================
+   5. ICON ROW (EMAIL, LINKEDIN, WEBSITE)
+   ----------------------------------------------------------------------------
+   Encapsulates icons inside circular frames that invert color on hover.
+   Matches Figma’s interactive style.
+   ============================================================================ */
+
 .ack-card-icons {
   display: flex;
   gap: 10px;
   margin-top: 12px;
 }
 
-/* ===========================================================================
-   ✅ ICON BUTTON
-   =========================================================================== */
 .ack-icon-btn {
   width: 31px;
   height: 30px;
   border-radius: 50%;
   border: 0.75px solid #5a2d0c;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   color: #5a2d0c;
   transition: 0.2s ease;
 }
@@ -108,4 +152,314 @@
 .ack-icon-btn:hover {
   background-color: #5a2d0c;
   color: white;
+}
+
+
+/* ============================================================================
+   6. FOOTER SECTION (MODULES, QUICK LINKS, FEEDBACK)
+   ----------------------------------------------------------------------------
+   Lifted from landingpage.css and integrated into this layout.
+
+   The layout contains three columns:
+     • Logo
+     • Modules with icons
+     • Quick Links
+     • Feedback Contact
+   ============================================================================ */
+
+/* Footer container */
+.link-section {
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex;
+  gap: 40px;
+  padding: 40px 0;
+}
+
+/* Logo layout */
+.logo-area {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  display: flex;
+}
+
+.footer-logo {
+  width: 100px;
+  height: 91px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Modules column */
+.modules {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 18px;
+  display: flex;
+  flex: 1;
+}
+
+.modules-heading,
+.module-heading {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+/* Primer links (module rows with icon + text) */
+.primer-link {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.primer-link-photo {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primer-link-photo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Quick Links (stack of buttons) */
+.module-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.module-link {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+
+  background: none;
+  border: none;
+  padding: 0;
+
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+}
+
+.module-link:hover {
+  color: #9d0013;
+}
+
+/* Feedback text */
+.feedback-contact {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  line-height: 30px;
+}
+
+.feedback-contact a {
+  color: #9d0013;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.feedback-contact a:hover {
+  color: #7a000f;
+}
+
+
+/* ============================================================================
+   7. RESPONSIVE BEHAVIOR
+   ----------------------------------------------------------------------------
+   Ensures footer columns stack properly on smaller viewports.
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  .link-section {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .link-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .modules {
+    width: 100%;
+  }
+}
+
+/* --- HERO behaves like Home’s .upper-content --- */
+.ack-hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-image: url("../src/assets/Property 1=Default.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* align text inside the hero */
+  display: flex;
+  align-items: flex-start; /* text block sits a bit below the top */
+  padding: 0 13.22vw;
+  border-top: 1px white solid; /* parity with Home */
+}
+
+.ack-hero:hover {
+  background-image: url("../src/assets/Property 1=Variant2.png");
+}
+
+/* Optional: reuse your existing upper-text styles (match Home) */
+.upper-text-section {
+  width: 33vw;
+  margin-top: 20vh;           /* push copy down a bit */
+  display: inline-flex;
+  flex-direction: column;
+  gap: 36px;
+  z-index: 1;                 /* above background */
+}
+
+.website-title {
+  font-family: "Funnel Sans", sans-serif;
+  font-weight: 900;
+  font-size: 84px;
+  line-height: 100px;
+  color: #1a1a1a;
+}
+
+.info-section {
+  color: #1a1a1a;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+/* --- LOWER CONTENT starts after hero (slides over it) --- */
+.ack-lower-content {
+  margin-top: 100vh;      /* critical: begins below the fixed hero */
+  position: relative;
+  z-index: 1;             /* above the hero */
+  background: #fff;
+  padding: 72px 200px;    /* same horizontal rhythm as Home’s lower-content */
+}
+
+/* Divider same as Home */
+.line-divider {
+  width: 75vw;
+  height: 2px;
+  background: rgba(90, 45, 0, 0.5);
+  margin: 0 auto;
+}
+
+/* Footer block styles (copied from your LandingPage.css) */
+.link-section {
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex;
+  gap: 40px;
+  padding: 40px 0;
+}
+
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-logo {
+  width: 100px;
+  height: 91px;
+  object-fit: contain;
+  display: block;
+}
+
+/* modules / primer-link / module-link / feedback-contact
+   (if not already present in Acknowledgements.css) */
+.modules {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+.modules-heading,
+.module-heading {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: 600;
+}
+.primer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.primer-link-photo {
+  width: 24px;
+  height: 24px;
+  display: flex; align-items: center; justify-content: center;
+}
+.primer-link-photo img { width: 24px; height: 24px; object-fit: contain; }
+
+.module-links { display: flex; flex-direction: column; gap: 12px; }
+.module-link {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.module-link:hover { color: #9d0013; }
+
+.feedback-contact {
+  color: var(--color-text);
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  line-height: 30px;
+}
+.feedback-contact a {
+  color: #9d0013;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.feedback-contact a:hover { color: #7a000f; }
+
+/* responsive parity with Home */
+@media (max-width: 1024px) {
+  .ack-lower-content { padding: 72px 80px; }
+}
+@media (max-width: 768px) {
+  .ack-lower-content { padding: 48px 24px; }
+  .link-section { flex-direction: column; gap: 40px; }
+  .modules { width: 100%; }
 }
