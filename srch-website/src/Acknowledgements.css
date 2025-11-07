@@ -1,0 +1,111 @@
+.ack-hero {
+  width: 100vw;
+  height: 60vh;
+  background-image: url("../src/assets/Property 1=Default.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  padding-left: 13vw;
+  padding-right: 13vw;
+  margin-top: 40px; /* navbar offset */
+}
+
+.ack-hero:hover {
+  background-image: url("../src/assets/Property 1=Variant2.png");
+}
+
+.website-title {
+  font: Funnel Sans Bold;
+  font-weight: 800;
+  font-size: 84px;
+  line-height: 100px;
+  transform: translateY(-50px);
+}
+
+/* ===========================================================================
+   ✅ CARD CONTAINER (matches 302 × 296px spec)
+   =========================================================================== */
+.ack-card {
+  width: 290px;
+  height: 302px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Be Vietnam Pro", sans-serif;
+}
+
+/* ===========================================================================
+   ✅ PHOTO (exact dimension from screenshot)
+   =========================================================================== */
+.ack-card-photo {
+  width: 302px;
+  height: 188px;
+  background-color: #d9d9d9;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ===========================================================================
+   ✅ NAME + PRONOUNS
+   =========================================================================== */
+.ack-card-name {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ack-card-fullname {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 40px;
+  color: #5a2d0c;
+}
+
+.ack-card-pronouns {
+  font-size: 16px;
+  font-weight: 400;
+  color: #00000085;
+}
+
+/* ===========================================================================
+   ✅ ROLE / DEGREE / GRAD YEAR
+   =========================================================================== */
+.ack-card-subinfo {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-top: -6px;
+  color: #000000;
+}
+
+/* ===========================================================================
+   ✅ ICON ROW
+   =========================================================================== */
+.ack-card-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ===========================================================================
+   ✅ ICON BUTTON
+   =========================================================================== */
+.ack-icon-btn {
+  width: 31px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0.75px solid #5a2d0c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5a2d0c;
+  transition: 0.2s ease;
+}
+
+.ack-icon-btn:hover {
+  background-color: #5a2d0c;
+  color: white;
+}

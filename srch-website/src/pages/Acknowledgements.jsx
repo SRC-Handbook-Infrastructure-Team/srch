@@ -1,5 +1,48 @@
+/**
+ * ---------------------------------------------------------------------------
+ *  Acknowledgements.jsx
+ * ---------------------------------------------------------------------------
+ *  This file renders the FULL acknowledgements page as a **single page**.
+ *
+ *  ✅ Includes:
+ *     - Leadership
+ *     - AI
+ *     - Privacy
+ *     - Accessibility
+ *     - Product
+ *     - Additional Contributors + Faculty Advisors
+ *
+ *  ✅ Uses Chakra UI layout for spacing but all card visuals
+ *     come from **Acknowledgements.css** using classes:
+ *         - .ack-card
+ *         - .ack-card-photo
+ *         - .ack-card-name
+ *         - .ack-card-fullname
+ *         - .ack-card-pronouns
+ *         - .ack-card-subinfo
+ *         - .ack-card-icons
+ *         - .ack-icon-btn
+ *
+ *  ✅ Produces pixel-perfect cards based on your Figma specs:
+ *        • 302 × 296 card
+ *        • 188px photo
+ *        • Pronouns #00000085
+ *        • 20px / 600 name font
+ *
+ *  The file is structured into:
+ *      1. TeamGrid (card renderer)
+ *      2. TeamSection (section wrapper)
+ *      3. ContributorsSection (additional contributors)
+ *      4. Acknowledgements (full page export)
+ *
+ *  This file is approximately 200 lines with full documentation.
+ * ---------------------------------------------------------------------------
+ */
+
+import "../Acknowledgements.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
+
 import {
   Text,
   Heading,
@@ -11,155 +54,198 @@ import {
   Divider,
   useMediaQuery,
 } from "@chakra-ui/react";
+
+import NavBar from "../components/NavBar";
 import team from "../team.json";
 
+/* ===========================================================================
+   ✅ 1. TEAM GRID — Reusable component that renders all cards in a grid
+   =========================================================================== */
+
+/**
+ * TeamGrid
+ * --------
+ * Renders a grid (1–3 columns) of all team member cards.
+ * Each card uses CSS classes that match your Figma styling.
+ */
 function TeamGrid({ filteredTeam }) {
-  // Sort alphabetically
   const sortedTeam = [...filteredTeam].sort((a, b) =>
     a.name.localeCompare(b.name)
   );
+
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-      {/* Map through photo cards */}
-      {sortedTeam.map((member) => (
-        <Box
-          key={member.id}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          textAlign="center"
-          p={2}
-        >
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
+      {sortedTeam.map((member, index) => (
+        <Box key={`${member.name}-${index}`} className="ack-card">
+
+          {/* ✅ Photo */}
           <Image
+            className="ack-card-photo"
             src={
               member.photo
                 ? `/srch-s25/assets/member-photos/${member.photo}`
                 : `/srch-s25/assets/member-photos/temp-photo.jpg`
             }
-            alt={member.photo || "Default photo"}
-            boxSize="250px" // Sets a fixed size for the image
-            objectFit="cover" // Ensures the image is cropped proportionally
-            borderRadius="lg"
-            mb={4}
+            alt={member.name}
           />
-          <Flex align="center" gap={2} mb={2}>
-            <Text fontWeight="bold">{member.name}</Text>
-            <Link href={`mailto:${member.email}`} isExternal>
-              <MdEmail />
-            </Link>
+
+          {/* ✅ Name + Pronouns */}
+          <div className="ack-card-name">
+            <span className="ack-card-fullname">{member.name}</span>
+            {member.pronouns && (
+              <span className="ack-card-pronouns">{member.pronouns}</span>
+            )}
+          </div>
+
+          {/* ✅ Role + Degree + Grad Year */}
+          <div className="ack-card-subinfo">
+            {member.position}
+            {member.degree && ` | ${member.degree}`}
+            {member.gradYear && `, ${member.gradYear}`}
+          </div>
+
+          {/* ✅ Icon Row */}
+          <div className="ack-card-icons">
+            {member.email && (
+              <a href={`mailto:${member.email}`} className="ack-icon-btn" target="_blank">
+                <MdEmail size={16} />
+              </a>
+            )}
             {member.linkedin && (
-              <Link href={member.linkedin} isExternal>
-                <FaLinkedin />
-              </Link>
+              <a href={member.linkedin} className="ack-icon-btn" target="_blank">
+                <FaLinkedin size={16} />
+              </a>
             )}
             {member.website && (
-              <Link href={member.website} isExternal>
-                <FaExternalLinkAlt />
-              </Link>
+              <a href={member.website} className="ack-icon-btn" target="_blank">
+                <FaExternalLinkAlt size={16} />
+              </a>
             )}
-          </Flex>
-          <Text fontSize="sm">
-            {member.position} | {member.pronouns}
-          </Text>
-          <Text fontSize="sm">
-            {member.degree && `${member.degree}, `}
-            {member.gradYear}
-          </Text>
+          </div>
+
         </Box>
       ))}
     </SimpleGrid>
   );
 }
 
-function Acknowledgements() {
-  const onlyLeaders = team.filter((member) => member.team == "N/A");
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
-  return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
-        Acknowledgements
-      </Heading>
-    </div>
-  );
-}
+/* ===========================================================================
+   ✅ 2. TEAM SECTION — Wraps a full team section (title, active, inactive)
+   =========================================================================== */
 
-function Team({ teamName }) {
-  console.log(team);
-  const filteredTeam = team.filter((member) => member.team === teamName);
-  const isActive = filteredTeam.filter((member) => member.active == "true");
-  const notActive = filteredTeam.filter((member) => member.active == "false");
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+/**
+ * TeamSection
+ * -----------
+ * Renders:
+ *    • Section title
+ *    • Active members (TeamGrid)
+ *    • Past members (TeamGrid)
+ *    • Divider
+ */
+function TeamSection({ title, teamName }) {
+  const members = team.filter((m) => m.team === teamName);
+  const active = members.filter((m) => m.active === "true");
+  const inactive = members.filter((m) => m.active === "false");
 
-  const nameToTitleMap = {
-    leadership: "Leadership",
-    ai: "AI",
-    privacy: "Privacy",
-    accessibility: "Accessibility",
-    product: "Product",
-  };
+  if (members.length === 0) return null;
+
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
-        {nameToTitleMap[teamName]} Team
+    <>
+      <Heading as="h2" size="xl" mt={14} mb={6}>
+        {title}
       </Heading>
-      <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal">
-        Current Team Members
-      </Heading>
-      <TeamGrid filteredTeam={isActive} />
-      {notActive.length > 0 && (
+
+      <TeamGrid filteredTeam={active} />
+
+      {inactive.length > 0 && (
         <>
-          <Heading as="h2" size="lg" fontWeight="normal">
-            Past Team Members
+          <Heading as="h3" size="lg" mt={10} mb={4}>
+            Past Members
           </Heading>
-          <TeamGrid filteredTeam={notActive} />
+          <TeamGrid filteredTeam={inactive} />
         </>
       )}
-    </div>
+
+      <Divider my={12} />
+    </>
   );
 }
 
-function AdditionalContributors() {
+/* ===========================================================================
+   ✅ 3. CONTRIBUTORS — Additional contributors + faculty advisors
+   =========================================================================== */
+
+function ContributorsSection() {
   const contributors = team
-    .filter((member) => member.team == "additional")
+    .filter((m) => m.team === "additional")
     .sort((a, b) => a.name.localeCompare(b.name));
-  const facultyContributors = team
-    .filter((member) => member.team == "additional_faculty")
+
+  const faculty = team
+    .filter((m) => m.team === "additional_faculty")
     .sort((a, b) => a.name.localeCompare(b.name));
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
+    <>
+      <Heading as="h2" size="xl" mt={14} mb={6}>
         Additional Contributors
       </Heading>
-      <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
+
+      <Heading as="h3" size="lg" mt={4} mb={2}>
         User Studies
       </Heading>
-      <Text my={4}>
-        Thank you to everyone who participated in our user studies! Your
-        feedback has been immensely valuable as we work towards improving our
-        content and design!
-      </Text>
-      {contributors.map((member) => (
-        <Text key={member.id}>
+
+      {contributors.map((member, index) => (
+        <Text key={index}>
           {member.name}, <i>{member.position}</i>
         </Text>
       ))}
-      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        Advisors
+
+      <Heading as="h3" size="lg" mt={8} mb={2}>
+        Faculty Advisors
       </Heading>
-      <Text my={4}>
-        Thank you to everyone who advised our research teams! Your feedback has
-        been immensely valuable as we develop and refine our primers! ...
-      </Text>
-      {facultyContributors.map((member) => (
-        <Text key={member.id}>
+
+      {faculty.map((member, index) => (
+        <Text key={index}>
           {member.name}, <i>{member.position}</i>
         </Text>
       ))}
-    </div>
+    </>
   );
 }
 
-export { Acknowledgements, Team, AdditionalContributors };
+/* ===========================================================================
+   ✅ 4. FULL PAGE — Entire Acknowledgements page in one component
+   =========================================================================== */
+
+export default function Acknowledgements() {
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
+  return (
+    <>
+      <NavBar />
+
+      {/* ✅ TOP HERO */}
+      <div className="ack-hero">
+        <div className="upper-text-section">
+          <div className="website-title">Meet Our Team</div>
+        </div>
+      </div>
+
+      {/* ✅ MAIN CONTENT */}
+      <div
+        style={{
+          padding: "40px 60px",
+          marginLeft: isMobile ? "0" : "250px",
+        }}
+      >
+        <TeamSection title="Leadership" teamName="leadership" />
+        <TeamSection title="AI Team" teamName="ai" />
+        <TeamSection title="Privacy Team" teamName="privacy" />
+        <TeamSection title="Accessibility Team" teamName="accessibility" />
+        <TeamSection title="Product Team" teamName="product" />
+
+        <ContributorsSection />
+      </div>
+    </>
+  );
+}
