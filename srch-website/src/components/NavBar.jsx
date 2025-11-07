@@ -253,7 +253,7 @@ function NavBar({ className = "" }) {
             </Box>
             <Box
               className="nav-link-box hide-base show-md"
-              onClick={() => navigate("/acknowledgements/leadership")}
+              onClick={() => navigate("/acknowledgements")}
             >
               <Text>Acknowledgements</Text>
             </Box>
@@ -317,7 +317,7 @@ function NavBar({ className = "" }) {
               className="nav-link-box"
               onClick={() => {
                 setIsMenuOpen(false);
-                navigate("/acknowledgements/leadership");
+                navigate("/acknowledgements");
               }}
             >
               Acknowledgements
