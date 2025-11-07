@@ -1,73 +1,38 @@
 /**
- * ---------------------------------------------------------------------------
- *  Acknowledgements.jsx
- * ---------------------------------------------------------------------------
- *  This file renders the FULL acknowledgements page as a **single page**.
- *
- *  ✅ Includes:
- *     - Leadership
- *     - AI
- *     - Privacy
- *     - Accessibility
- *     - Product
- *     - Additional Contributors + Faculty Advisors
- *
- *  ✅ Uses Chakra UI layout for spacing but all card visuals
- *     come from **Acknowledgements.css** using classes:
- *         - .ack-card
- *         - .ack-card-photo
- *         - .ack-card-name
- *         - .ack-card-fullname
- *         - .ack-card-pronouns
- *         - .ack-card-subinfo
- *         - .ack-card-icons
- *         - .ack-icon-btn
- *
- *  ✅ Produces pixel-perfect cards based on your Figma specs:
- *        • 302 × 296 card
- *        • 188px photo
- *        • Pronouns #00000085
- *        • 20px / 600 name font
- *
- *  The file is structured into:
- *      1. TeamGrid (card renderer)
- *      2. TeamSection (section wrapper)
- *      3. ContributorsSection (additional contributors)
- *      4. Acknowledgements (full page export)
- *
- *  This file is approximately 200 lines with full documentation.
- * ---------------------------------------------------------------------------
+ * ============================================================================
+ * Acknowledgements.jsx (hero-as-overlay version)
+ * ----------------------------------------------------------------------------
+ * This version mirrors the Home page structure:
+ *   • Fixed full-viewport hero (gradient + title/description)
+ *   • “Lower content” wrapper that starts after the hero via margin-top: 100vh
+ *   • Same footer (logo + modules + quick links + feedback)
+ * ============================================================================
  */
 
 import "../Acknowledgements.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
-
 import {
   Text,
   Heading,
   SimpleGrid,
-  Link,
-  Flex,
   Box,
   Image,
   Divider,
-  useMediaQuery,
 } from "@chakra-ui/react";
-
 import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
+
+// assets used in footer (same as Home)
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.jpg";
+import automatedIcon from "../assets/automated.png";
+import aiIcon from "../assets/ai-icon.png";
+import accessibilityIcon from "../assets/accessibility-icon.png";
+
 import team from "../team.json";
 
-/* ===========================================================================
-   ✅ 1. TEAM GRID — Reusable component that renders all cards in a grid
-   =========================================================================== */
-
-/**
- * TeamGrid
- * --------
- * Renders a grid (1–3 columns) of all team member cards.
- * Each card uses CSS classes that match your Figma styling.
- */
+/* ---------- small helpers from your previous version ---------- */
 function TeamGrid({ filteredTeam }) {
   const sortedTeam = [...filteredTeam].sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -75,10 +40,8 @@ function TeamGrid({ filteredTeam }) {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
-      {sortedTeam.map((member, index) => (
-        <Box key={`${member.name}-${index}`} className="ack-card">
-
-          {/* ✅ Photo */}
+      {sortedTeam.map((member, idx) => (
+        <Box key={`${member.name}-${idx}`} className="ack-card">
           <Image
             className="ack-card-photo"
             src={
@@ -89,7 +52,6 @@ function TeamGrid({ filteredTeam }) {
             alt={member.name}
           />
 
-          {/* ✅ Name + Pronouns */}
           <div className="ack-card-name">
             <span className="ack-card-fullname">{member.name}</span>
             {member.pronouns && (
@@ -97,17 +59,19 @@ function TeamGrid({ filteredTeam }) {
             )}
           </div>
 
-          {/* ✅ Role + Degree + Grad Year */}
           <div className="ack-card-subinfo">
             {member.position}
             {member.degree && ` | ${member.degree}`}
             {member.gradYear && `, ${member.gradYear}`}
           </div>
 
-          {/* ✅ Icon Row */}
           <div className="ack-card-icons">
             {member.email && (
-              <a href={`mailto:${member.email}`} className="ack-icon-btn" target="_blank">
+              <a
+                href={`mailto:${member.email}`}
+                className="ack-icon-btn"
+                target="_blank"
+              >
                 <MdEmail size={16} />
               </a>
             )}
@@ -122,31 +86,16 @@ function TeamGrid({ filteredTeam }) {
               </a>
             )}
           </div>
-
         </Box>
       ))}
     </SimpleGrid>
   );
 }
 
-/* ===========================================================================
-   ✅ 2. TEAM SECTION — Wraps a full team section (title, active, inactive)
-   =========================================================================== */
-
-/**
- * TeamSection
- * -----------
- * Renders:
- *    • Section title
- *    • Active members (TeamGrid)
- *    • Past members (TeamGrid)
- *    • Divider
- */
 function TeamSection({ title, teamName }) {
   const members = team.filter((m) => m.team === teamName);
   const active = members.filter((m) => m.active === "true");
   const inactive = members.filter((m) => m.active === "false");
-
   if (members.length === 0) return null;
 
   return (
@@ -171,10 +120,6 @@ function TeamSection({ title, teamName }) {
   );
 }
 
-/* ===========================================================================
-   ✅ 3. CONTRIBUTORS — Additional contributors + faculty advisors
-   =========================================================================== */
-
 function ContributorsSection() {
   const contributors = team
     .filter((m) => m.team === "additional")
@@ -186,16 +131,15 @@ function ContributorsSection() {
 
   return (
     <>
-      <Heading as="h2" size="xl" mt={14} mb={6}>
+      <Heading as="h2" size="xl" mt={12} mb={6}>
         Additional Contributors
       </Heading>
 
       <Heading as="h3" size="lg" mt={4} mb={2}>
         User Studies
       </Heading>
-
-      {contributors.map((member, index) => (
-        <Text key={index}>
+      {contributors.map((member, i) => (
+        <Text key={i}>
           {member.name}, <i>{member.position}</i>
         </Text>
       ))}
@@ -203,9 +147,8 @@ function ContributorsSection() {
       <Heading as="h3" size="lg" mt={8} mb={2}>
         Faculty Advisors
       </Heading>
-
-      {faculty.map((member, index) => (
-        <Text key={index}>
+      {faculty.map((member, i) => (
+        <Text key={i}>
           {member.name}, <i>{member.position}</i>
         </Text>
       ))}
@@ -213,31 +156,34 @@ function ContributorsSection() {
   );
 }
 
-/* ===========================================================================
-   ✅ 4. FULL PAGE — Entire Acknowledgements page in one component
-   =========================================================================== */
-
+/* ==============================
+   Default export: full page
+   ============================== */
 export default function Acknowledgements() {
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const navigate = useNavigate();
+
+  // same slugs as Home
+  const privacySlug = "/privacy/whatIsPrivacy";
+  const accessibilitySlug = "/accessibility/whatIsAccessibility";
+  const decisionSlug = "/automatedDecisionMaking/fairness";
+  const aiSlug = "/generativeAI/copyright";
 
   return (
     <>
       <NavBar />
 
-      {/* ✅ TOP HERO */}
+      {/* 1) FIXED HERO (like Home’s .upper-content) */}
       <div className="ack-hero">
         <div className="upper-text-section">
           <div className="website-title">Meet Our Team</div>
+          <div className="info-section">
+          </div>
         </div>
       </div>
 
-      {/* ✅ MAIN CONTENT */}
-      <div
-        style={{
-          padding: "40px 60px",
-          marginLeft: isMobile ? "0" : "250px",
-        }}
-      >
+      {/* 2) LOWER CONTENT starts AFTER the hero (slides over it) */}
+      <div className="ack-lower-content">
+        {/* Team sections */}
         <TeamSection title="Leadership" teamName="leadership" />
         <TeamSection title="AI Team" teamName="ai" />
         <TeamSection title="Privacy Team" teamName="privacy" />
@@ -245,6 +191,87 @@ export default function Acknowledgements() {
         <TeamSection title="Product Team" teamName="product" />
 
         <ContributorsSection />
+
+        {/* Divider + Footer (identical structure to Home) */}
+        <div className="line-divider"></div>
+
+        <div className="link-section">
+          <div className="logo-area">
+            <img src={logoImage} alt="SRC Handbook Logo" className="footer-logo" />
+          </div>
+
+          <div className="modules">
+            <div className="modules-heading">Modules</div>
+
+            <div className="primer-link">
+              <div className="primer-link-photo">
+                <img src={privacyIcon} alt="Privacy Icon" />
+              </div>
+              <button
+                onClick={() => navigate(privacySlug)}
+                className="module-link"
+              >
+                Privacy
+              </button>
+            </div>
+
+            <div className="primer-link">
+              <div className="primer-link-photo">
+                <img src={accessibilityIcon} alt="Accessibility Icon" />
+              </div>
+              <button
+                onClick={() => navigate(accessibilitySlug)}
+                className="module-link"
+              >
+                Accessibility
+              </button>
+            </div>
+
+            <div className="primer-link">
+              <div className="primer-link-photo">
+                <img src={automatedIcon} alt="Automated Decision Making Icon" />
+              </div>
+              <button
+                onClick={() => navigate(decisionSlug)}
+                className="module-link"
+              >
+                Automated Decision Making
+              </button>
+            </div>
+
+            <div className="primer-link">
+              <div className="primer-link-photo">
+                <img src={aiIcon} alt="Generative AI Icon" />
+              </div>
+              <button onClick={() => navigate(aiSlug)} className="module-link">
+                Generative AI
+              </button>
+            </div>
+          </div>
+
+          <div className="modules">
+            <div className="module-heading">Quick Links</div>
+            <div className="module-links">
+              <button onClick={() => navigate("/about")} className="module-link">
+                About
+              </button>
+              <button
+                onClick={() => navigate("/acknowledgements")}
+                className="module-link"
+              >
+                Acknowledgements
+              </button>
+            </div>
+          </div>
+
+          <div className="modules">
+            <div className="module-heading">Have Feedback?</div>
+            <p className="feedback-contact">
+              Contact:{" "}
+              <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );
