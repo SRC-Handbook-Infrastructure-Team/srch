@@ -1171,10 +1171,14 @@ html body .main-content {
   border-radius: 17px !important;
   height: 32px !important;
 
-  /* Motion */
+  /* Motion */ 
   transition: border-color 160ms ease, background-color 160ms ease,
     color 160ms ease, transform 120ms ease !important;
   transform-origin: center center;
+  font-weight: bold !important;
+  font-style: bold !important;
+  font-family: "Be Vietnam Pro" !important;
+  font-weight: 700 !important; /* or bold */
 }
 
 .srch-drawer-link:hover {
@@ -1183,11 +1187,13 @@ html body .main-content {
   text-decoration: none !important;
   border-color: #9d0013 !important;
   transform: scale(1.01);
+  font-weight: bold !important;
 }
 
 .srch-drawer-link:focus-visible {
   outline: 2px solid #9d0013;
   outline-offset: 2px;
+  font-weight: bold !important;
 }
 
 /* Active state: filled red pill, white text + icon */
@@ -1196,12 +1202,14 @@ html body .main-content {
   background: #9d0013 !important;
   border-color: #9d0013 !important;
   text-decoration: none !important;
+  font-weight: bold !important;
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
 .srch-drawer-link .chakra-icon {
   color: currentColor;
 }
+
 
 /* Make left sidebar behave like right: isolate its layout/painting and promote */
 .left-sidebar {
