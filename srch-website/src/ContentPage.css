@@ -135,7 +135,6 @@ mark {
   border: 1px solid transparent;
   border-radius: 6px;
   transition: background-color 0.15s ease, border-color 0.15s ease;
-  
 }
 
 /*  Route-aware highlight (via .is-active class from JSX) */
@@ -603,15 +602,8 @@ h4 {
   align-items: center;
   overflow: visible;
   width: 450px;
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
-}
-
-.searchbar-border {
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
+  background-color: white;
+  border-radius: 10px;
 }
 
 .searchbar-input-container {
@@ -695,9 +687,8 @@ h4 {
    ========================================================================== */
 
   .results-autofill {
+  position: relative;
   z-index: 999999999999999999;
-  background-color: transparent;
-  color: black !important;
 }
 
 .results-white-background {
@@ -735,6 +726,7 @@ h4 {
   border-radius: 9999px;
   font-size: 0.875rem;
   margin-right: 0.75rem;
+  white-space: nowrap;
 }
 
 .results-title {
@@ -826,6 +818,9 @@ h4 {
   background: white;
   display: flex;
   flex-direction: column;
+  border-color: #5d3210;
+  border-width: 1px;
+  border-radius: 16px;
 }
 
 .results-list-floating {
@@ -1171,7 +1166,7 @@ html body .main-content {
   border-radius: 17px !important;
   height: 32px !important;
 
-  /* Motion */ 
+  /* Motion */
   transition: border-color 160ms ease, background-color 160ms ease,
     color 160ms ease, transform 120ms ease !important;
   transform-origin: center center;
@@ -1209,7 +1204,6 @@ html body .main-content {
 .srch-drawer-link .chakra-icon {
   color: currentColor;
 }
-
 
 /* Make left sidebar behave like right: isolate its layout/painting and promote */
 .left-sidebar {

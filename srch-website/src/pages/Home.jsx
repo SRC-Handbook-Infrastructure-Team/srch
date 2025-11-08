@@ -1,4 +1,5 @@
 import "../LandingPage.css";
+import "../ContentPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NavBar from "../components/NavBar";
@@ -149,13 +150,11 @@ function Home() {
               </p>
             </div>
             <SearchBar
-              className="searchbar-border"
-              searchQuery={searchQuery}
+              className="results-autofill"
               setSearchQuery={setSearchQuery}
-              canExpand={false}
+              searchQuery={searchQuery}
               maxResults={2}
-              align="stretch"
-            ></SearchBar>
+            />
           </div>
 
           <div className="line-divider"></div>

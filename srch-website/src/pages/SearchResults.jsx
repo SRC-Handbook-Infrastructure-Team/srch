@@ -59,8 +59,9 @@ function SearchResults() {
           className="results-autofill"
           setSearchQuery={setSearchQuery}
           searchQuery={searchQuery}
-          maxResults={4}
+          maxResults={0}
         />
+        <br></br>
         <ResultsWindow searchQuery={decodedQuery} floating={false} />
       </div>
     </div>
