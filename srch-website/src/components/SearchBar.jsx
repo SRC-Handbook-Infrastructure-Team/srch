@@ -16,13 +16,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   };
 
   return (
-    <Box
-      ref={containerRef}
-      className={"searchbar-container"}
-      borderColor={maxResults === 2 ? "whitesmoke" : "transparent"}
-      borderWidth={maxResults === 2 ? "3px" : "0"}
-      borderRadius={maxResults === 2 ? "6px" : "0"}
-    >
+    <Box ref={containerRef} className={"searchbar-container"}>
       <IconButton
         aria-label="Toggle search bar"
         icon={<SearchIcon fontSize={"lg"} />}
@@ -39,19 +33,11 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Collapse in={searchQuery} animateOpacity>
-          <Box>
-            <Box className="results-window">
-              <Box>
-                <ResultsWindow
-                  searchQuery={searchQuery}
-                  maxResults={maxResults}
-                  floating={true}
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Collapse>
+        <ResultsWindow
+          searchQuery={searchQuery}
+          maxResults={maxResults}
+          floating={true}
+        />
       </Box>
       <Collapse in={searchQuery} animateOpacity>
         <IconButton

@@ -286,10 +286,12 @@
   }
 
   .line-divider {
+    position: relative;
     width: 75vw;
     height: 2px;
     background: rgba(90, 45, 0, 0.5);
     margin: 0 auto;
+    z-index: -1;
   }
 
   .content-section {
