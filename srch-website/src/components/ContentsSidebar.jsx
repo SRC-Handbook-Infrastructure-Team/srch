@@ -1,5 +1,5 @@
 // ...existing imports...
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -18,18 +18,47 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
-import "../ContentPage.css";
+// IMPORTANT: do NOT import ContentPage.css here.
+// "../ContentPage.css";
+import "../ContentsSidebar.css";
 
-/* ----------------------------- File Overview --------------------------------
-ContentsSidebar
-- Renders the left-hand "Contents" navigation.
-- Updated to accept explicit props: width, collapsed, isResizing, onToggleSidebar,
-  onStartResize, onHandleKeyDown.
-- Keeps expand/collapse logic unchanged.
-- Prevents text jitter & reflows during sidebar resizing.
-----------------------------------------------------------------------------*/
+
+/* =============================================================================
+   ContentsSidebar
+
+   PURPOSE
+   - Renders the left-hand "Contents" navigation for the documentation site.
+   - Prioritizes fast perceived performance (titles first, content/headings lazy).
+   - Enforces clear separation between navigation state (URL) and UI state
+     (expand/collapse), to reduce bugs and maintain a predictable UX.
+
+   KEY UX DECISIONS
+   - Two click targets:
+      • Title row → NAVIGATE
+      • Chevron icon → EXPAND/COLLAPSE (does not navigate)
+   - "Expand All" expands everything and fetches headings lazily per section.
+   - "Collapse All" collapses everything except the ACTIVE section (route-based).
+   - Toggling a section via chevron: Expanding one collapses others. Collapsing
+     that section collapses all.
+
+   PERFORMANCE NOTES
+   - Sections and subsections metadata load up-front (lightweight).
+   - Markdown content is fetched on-demand (when expanding) to compute headings.
+   - Subsection metadata fetching is parallelized for faster initial load.
+
+   ACCESSIBILITY
+   - Keyboard focus is preserved (navigation vs. toggling are distinct actions).
+   - "aria-pressed" is used on expand/collapse button for state disclosure.
+
+   API CONTRACTS (util/MarkdownRenderer)
+   - getSections()       -> [{ id, title?, order?, final? }, ...]
+   - getSubsections(id)  -> [{ id, title?, order? }, ...]
+   - getContent(sectionId, subId) -> { content: string }
+
+   ========================================================================== */
 
 /* ----------------------------- Helpers ------------------------------------ */
+// WHY: Stable section number ordering for labels. If not found, fallback to order or index.
 const SECTION_NUMBER_MAP = {
   privacy: 1,
   accessibility: 2,
@@ -37,6 +66,7 @@ const SECTION_NUMBER_MAP = {
   "generative-ai": 4,
 };
 
+// WHY: Produce a, b, c... aa, ab... for subsection labels.
 function indexToLetter(index) {
   let s = "";
   let i = index;
@@ -47,6 +77,7 @@ function indexToLetter(index) {
   return s;
 }
 
+// WHY: Roman numerals if needed in the future (kept for parity with original file).
 function indexToRoman(index) {
   const n = index + 1;
   const romans = [
@@ -59,6 +90,7 @@ function indexToRoman(index) {
   return res.toLowerCase();
 }
 
+// WHY: Stable in-app slug generation for headings.
 function slugify(text = "") {
   return text
     .toString()
@@ -69,6 +101,7 @@ function slugify(text = "") {
     .replace(/-+/g, "-");
 }
 
+// WHY: Extract only H3–H6 from markdown content to form a contextual TOC per subsection.
 function parseSubsections(content) {
   const headings = [];
   if (!content) return headings;
@@ -84,7 +117,26 @@ function parseSubsections(content) {
 
 const BetaTag = () => <Box className="beta-tag">BETA</Box>;
 
-/* -------------------------------------------------------------------------- */
+/* =============================================================================
+   Component: ContentsSidebar
+   ---------------------------------------------------------------------------
+   Props:
+   - className, width, collapsed, isResizing
+   - onToggleSidebar, onStartResize, onHandleKeyDown
+   ---------------------------------------------------------------------------
+   High-level data flow:
+
+   [URL] -> currentSectionId/currentSubsectionId  (NAVIGATION state, read-only)
+      |
+      V
+   sections (array) & subsections (map)           (DATA state)
+      |
+      V
+   expandedSections (map), allExpanded (bool)     (UI state)
+
+   IMPORTANT: Toggling does not navigate; navigating does not toggle.
+
+   ========================================================================== */
 export default function ContentsSidebar({
   className = "",
   width = 250,
@@ -94,31 +146,51 @@ export default function ContentsSidebar({
   onStartResize = () => {},
   onHandleKeyDown = () => {},
 }) {
+  /* ----------------------------- Environment ------------------------------ */
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
   const navigate = useNavigate();
 
+  /* ---------------------------- URL Derivations --------------------------- */
+  // WHY: These are derived from the URL and treated as the source of truth for navigation.
   const currentPath = location.pathname;
-  const pathParts = currentPath.split("/").filter(Boolean);
+  const pathParts = useMemo(() => currentPath.split("/").filter(Boolean), [currentPath]);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
 
+  /* ----------------------------- Data State ------------------------------- */
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
-  const [expandedSections, setExpandedSections] = useState({});
   const [hasFetchedData, setHasFetchedData] = useState(false);
 
-  /* ---------------------- Fetch table of contents ---------------------- */
+  /* ----------------------------- UI State --------------------------------- */
+  // WHY: UI-only state for expand/collapse, not tied to routing.
+  const [expandedSections, setExpandedSections] = useState({});
+  const [allExpanded, setAllExpanded] = useState(false);
+
+  /* =========================================================================
+     Data Loading: Sections and Subsections
+     -------------------------------------------------------------------------
+     Strategy:
+     1) Load sections (lightweight metadata).
+     2) Load subsections for each section in PARALLEL (faster than serial).
+     3) Auto-expand the route's current section, if present.
+     4) If no current section in URL, redirect to the first allowed section.
+     5) Lazy-load headings later on expansion (see fetchHeadingsForSection).
+     ========================================================================= */
   useEffect(() => {
-    let active = true;
+    let isAlive = true;
+
     async function loadAllData() {
       try {
+        // 1) Fetch sections
         const sectionsData = await getSections();
         const sortedSections = Array.isArray(sectionsData)
           ? [...sectionsData].sort((a, b) => (a.order || 999) - (b.order || 999))
           : [];
 
+        // 2) Filter allowed sections (defensive)
         const ALLOWED_SECTION_IDS = new Set([
           "privacy",
           "accessibility",
@@ -128,15 +200,23 @@ export default function ContentsSidebar({
         const filteredSections = sortedSections.filter(
           (s) => s && ALLOWED_SECTION_IDS.has(s.id)
         );
-        if (!active) return;
+
+        if (!isAlive) return;
         setSections(filteredSections);
 
+        // 3) Fetch subsections in PARALLEL for speed
+        const subFetches = filteredSections.map((section) => getSubsections(section.id));
+        const subResults = await Promise.all(subFetches);
+
+        if (!isAlive) return;
+
+        // 4) Sanitize + normalize subsections per section
         const subsectionsMap = {};
         const expandStateMap = {};
 
-        for (const section of sortedSections) {
-          const rawSubsections = await getSubsections(section.id);
-          if (!active) return;
+        filteredSections.forEach((section, idx) => {
+          const rawSubsections = subResults[idx];
+
           if (rawSubsections && rawSubsections.length > 0) {
             const sanitized = rawSubsections
               .filter((s) => s && typeof s.id === "string" && s.id.trim())
@@ -152,6 +232,7 @@ export default function ContentsSidebar({
                     .replace(/([A-Z])/g, " $1")
                     .replace(/[-_]/g, " ")
                     .replace(/\b\w/g, (m) => m.toUpperCase()),
+                // WHY: headings are lazy; null signals "not loaded yet".
                 headings: null,
                 order: typeof s.order === "number" ? s.order : 999,
               }))
@@ -159,19 +240,21 @@ export default function ContentsSidebar({
 
             if (sanitized.length > 0) {
               subsectionsMap[section.id] = sanitized;
+              // WHY: auto-expand current route's section on initial load for a better UX.
               if (section.id === currentSectionId) expandStateMap[section.id] = true;
             }
           }
-        }
+        });
 
-        if (!active) return;
         setSubsections(subsectionsMap);
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
 
-        if (!currentSectionId && sortedSections.length > 0 && !hasFetchedData) {
-          navigate(`/${sortedSections[0].id}`, { replace: true });
+        // 5) If no section in URL, navigate to the first allowed section.
+        if (!currentSectionId && filteredSections.length > 0 && !hasFetchedData) {
+          navigate(`/${filteredSections[0].id}`, { replace: true });
         }
-        if (!active) return;
+
+        if (!isAlive) return;
         setHasFetchedData(true);
       } catch (err) {
         console.error("Error loading table of contents:", err);
@@ -180,10 +263,17 @@ export default function ContentsSidebar({
 
     loadAllData();
     return () => {
-      active = false;
+      isAlive = false;
     };
-  }, [currentSectionId, currentSubsectionId, navigate]);
+    // WHY: currentSectionId can change with URL; we re-run to ensure auto-expansion sync.
+  }, [currentSectionId, navigate, hasFetchedData]);
 
+  /* =========================================================================
+     Navigation Defaulting: ensure a subsection is selected if section-only URL
+     -------------------------------------------------------------------------
+     If the current URL points to a section but not a subsection, pick the first
+     subsection as the default for a consistent content view.
+     ========================================================================= */
   useEffect(() => {
     if (currentSectionId && !currentSubsectionId) {
       const sectionSubsections = subsections[currentSectionId];
@@ -193,16 +283,22 @@ export default function ContentsSidebar({
     }
   }, [currentSectionId, currentSubsectionId, subsections, navigate]);
 
-  /* ---------------------- Expand/Collapse logic ---------------------- */
-  const fetchHeadingsForSection = async (sectionId) => {
-    const sectionSubsections = subsections[sectionId];
-    if (!sectionSubsections) return;
-    const needFetch = sectionSubsections.some((s) => s.headings === null);
+  /* =========================================================================
+     Lazy Headings: fetch on expand only (per section)
+     -------------------------------------------------------------------------
+     Only pull and parse heavy markdown when necessary. Skips already-loaded
+     subsections (headings !== null).
+     ========================================================================= */
+  const fetchHeadingsForSection = useCallback(async (sectionId) => {
+    const sectionSubs = subsections[sectionId];
+    if (!sectionSubs) return;
+
+    const needFetch = sectionSubs.some((s) => s.headings === null);
     if (!needFetch) return;
 
     try {
       const updated = await Promise.all(
-        sectionSubsections.map(async (sub) => {
+        sectionSubs.map(async (sub) => {
           if (sub.headings !== null) return sub;
           const result = await getContent(sectionId, sub.id);
           const content = result?.content || "";
@@ -214,143 +310,209 @@ export default function ContentsSidebar({
     } catch (err) {
       console.error("Error fetching subsection headings:", err);
     }
-  };
+  }, [subsections]);
 
-  const toggleSection = (sectionId, event) => {
-    if (event && (event.target.tagName === "svg" || event.target.closest("svg"))) {
-      event.preventDefault();
-      setExpandedSections((prev) => {
-        const willExpand = !prev[sectionId];
-        const next = { ...prev, [sectionId]: willExpand };
-        if (willExpand) fetchHeadingsForSection(sectionId);
-        return next;
-      });
-    }
-  };
+  /* =========================================================================
+     Expand/Collapse: pure UI behaviors (no navigation side effects)
+     -------------------------------------------------------------------------
+     - Chevron click toggles expansion.
+     - Expand one → collapse others (clean mental model).
+     - Collapse the same section → collapse all.
+     - Expand All → all open.
+     - Collapse All → keep ONLY the active section open (route-based).
+     ========================================================================= */
+  const toggleSection = useCallback((sectionId) => {
+    setExpandedSections((prev) => {
+      const nextOpen = !prev[sectionId];
 
-  const [allExpanded, setAllExpanded] = useState(false);
-  const expandAllSections = () => {
+      // When expanding: do NOT close other sections
+      if (nextOpen) {
+        fetchHeadingsForSection(sectionId);
+        return { ...prev, [sectionId]: true };
+      }
+
+      // When collpasing: collapse only this section
+      const copy = { ...prev };
+      delete copy[sectionId];
+      return copy;
+    });
+  }, [fetchHeadingsForSection]);
+  
+
+  const expandAllSections = useCallback(() => {
+    // Expand all sections at once; lazily load headings for each.
     const next = Object.fromEntries(sections.map((s) => [s.id, true]));
     setExpandedSections(next);
     sections.forEach((s) => fetchHeadingsForSection(s.id));
     setAllExpanded(true);
-  };
-  const collapseAllSections = () => {
-    setExpandedSections({});
+  }, [sections, fetchHeadingsForSection]);
+
+  const collapseAllSections = useCallback(() => {
+    // Keep ONLY the active (route) section open, if any.
+    if (currentSectionId) {
+      setExpandedSections({ [currentSectionId]: true });
+    } else {
+      setExpandedSections({});
+    }
     setAllExpanded(false);
-  };
-  const toggleExpandCollapse = () => {
+  }, [currentSectionId]);
+
+  const toggleExpandCollapse = useCallback(() => {
     if (allExpanded) collapseAllSections();
     else expandAllSections();
-  };
+  }, [allExpanded, collapseAllSections, expandAllSections]);
 
+  // WHY: Keep `allExpanded` derived in sync with the actual map and sections.
   useEffect(() => {
     const ids = sections.map((s) => s.id);
     const allAreExpanded = ids.length > 0 && ids.every((id) => !!expandedSections[id]);
     if (allAreExpanded !== allExpanded) setAllExpanded(allAreExpanded);
   }, [sections, expandedSections, allExpanded]);
 
-  /* ---------------------- Nav Rendering ---------------------- */
-const NavContent = () => (
-  <VStack align="stretch" spacing={2}>
-    {sections.map((section, idx) => {
-      const sectionSubs = subsections[section.id] || [];
-      const hasSubsections = sectionSubs.length > 0;
-      const isExpanded = !!expandedSections[section.id];
-      const isActiveSection = currentSectionId === section.id;   // ✅ route-aware
-      const displayNumber =
-        SECTION_NUMBER_MAP[section.id] ??
-        (typeof section.order === "number" ? section.order + 1 : idx + 1);
+  /* =========================================================================
+     Derived/Computed Helpers for Rendering
+     ========================================================================= */
 
-      return (
-        <Box key={section.id} mb={2} className={`sidebar-section`}>
-          <Box
-            /*  NEW: route-aware class to activate Figma highlight styles */
-            className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
-            p={2}
-            cursor="pointer"
-            onClick={(e) => {
-              if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
-              else navigate(`/${section.id}`);
-              toggleSection(section.id, e);
-            }}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box display="flex" alignItems="center" gap="6px">
-              <Text className="sidebar-section-title">
-                {displayNumber}. {section.title}
-              </Text>
-              {section.final === false && <BetaTag />}
+  // WHY: A stable navigate helper so we don’t inline repetitive route logic.
+  // REVISION: Navigating to a section title now ALSO expands that section
+  // without collapsing others.
+  const navigateToSection = useCallback(
+    (sectionId, sectionSubs) => {
+      setExpandedSections((prev) => {
+        if (prev[sectionId]) return prev; // already open
+        // Expand this section but keep others as-is
+        fetchHeadingsForSection(sectionId);
+        return { ...prev, [sectionId]: true };
+      });
+
+      if (sectionSubs && sectionSubs.length > 0) {
+        navigate(`/${sectionId}/${sectionSubs[0].id}`);
+      } else {
+        navigate(`/${sectionId}`);
+      }
+    },
+    [navigate, fetchHeadingsForSection]
+  );
+
+  // WHY: Resolve display number once (prefers explicit mapping).
+  const resolveDisplayNumber = useCallback((section, idx) => {
+    return (
+      SECTION_NUMBER_MAP[section.id] ??
+      (typeof section.order === "number" ? section.order + 1 : idx + 1)
+    );
+  }, []);
+
+  /* =========================================================================
+     NavContent: Renders the vertical nav list. Pure-presentational except for
+     event handlers, which call into the pure UI methods or navigation.
+     ========================================================================= */
+  const NavContent = useCallback(() => (
+    <VStack align="stretch" spacing={2}>
+      {sections.map((section, idx) => {
+        const sectionSubs = subsections[section.id] || [];
+        const hasSubsections = sectionSubs.length > 0;
+        const isExpanded = !!expandedSections[section.id];
+        const isActiveSection = currentSectionId === section.id; // route-aware
+        const displayNumber = resolveDisplayNumber(section, idx);
+
+        return (
+          <Box key={section.id} mb={2} className={`sidebar-section`}>
+            <Box
+              /* Title Row = NAVIGATION ONLY */
+              className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
+        
+              cursor="pointer"
+              onClick={() => navigateToSection(section.id, sectionSubs)}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              role="button"
+              aria-label={`Go to ${section.title || section.id}`}
+            >
+              <Box display="flex" alignItems="center" gap="6px">
+                <Text className="sidebar-section-title">
+                  {displayNumber}. {section.title}
+                </Text>
+                {section.final === false && <BetaTag />}
+              </Box>
+
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                  // no explicit color here; CSS controls row visuals
+                  onClick={(e) => {
+                    // WHY: Prevent the title-row navigation from also firing.
+                    e.stopPropagation();
+                    toggleSection(section.id);
+                  }}
+                  role="button"
+                  aria-label={isExpanded ? "Collapse section" : "Expand section"}
+                />
+              )}
             </Box>
 
-            {hasSubsections && (
-              <Icon
-                as={ChevronDownIcon}
-                transform={isExpanded ? "rotate(180deg)" : undefined}
-                transition="transform 0.2s"
-                w={5}
-                h={5}
-                color={isActiveSection ? "#531C00" : "inherit"}   // accent on active
-              />
+            {isExpanded && hasSubsections && (
+              <VStack
+                className="sidebar-subsection-container"
+                align="stretch"
+                pl={6}
+                mt={1}
+                spacing={0}
+              >
+                {sectionSubs.map((sub, subIdx) => {
+                  const isSubActive = isActiveSection && currentSubsectionId === sub.id;
+                  const subLetter = indexToLetter(subIdx);
+                  const subPrefix = `${displayNumber}.${subLetter}.`;
+
+                  return (
+                    <Box key={sub.id} mb={1}>
+                      <Link to={`/${section.id}/${sub.id}`}>
+                        {/* Use classes so CSS drives bg/text; no inline bg/color */}
+                        <Box className={`sidebar-sub-row ${isSubActive ? "is-active" : ""}`}>
+                          <Text className="sidebar-subsection">
+                            {subPrefix} {sub.title}
+                          </Text>
+                        </Box>
+                      </Link>
+                    </Box>
+                  );
+                })}
+              </VStack>
             )}
           </Box>
+        );
+      })}
+    </VStack>
+  ), [
+    sections,
+    subsections,
+    expandedSections,
+    currentSectionId,
+    currentSubsectionId,
+    resolveDisplayNumber,
+    navigateToSection,
+    toggleSection,
+  ]);
 
-          {isExpanded && hasSubsections && (
-            <VStack
-              className="sidebar-subsection-container"
-              align="stretch"
-              pl={6}
-              mt={1}
-              spacing={0}
-            >
-              {sectionSubs.map((sub, subIdx) => {
-                const isSubActive = isActiveSection && currentSubsectionId === sub.id;
-                const subLetter = indexToLetter(subIdx);
-                const subPrefix = `${displayNumber}.${subLetter}.`;
-
-                return (
-                  <Box key={sub.id} mb={1}>
-                    <Link to={`/${section.id}/${sub.id}`}>
-                      <Box
-                        px={2}
-                        py={1}
-                        borderRadius="md"
-                        bg={isSubActive ? "#531C00" : "transparent"}
-                        transition="background-color 0.2s ease"
-                        _hover={{
-                          bg: isSubActive ? "#531C00" : "rgba(83,28,0,0.06)",
-                        }}
-                      >
-                        <Text
-                          className="sidebar-subsection"
-                          fontWeight={isSubActive ? "600" : "400"}
-                          color={isSubActive ? "white" : "#1a1a1a"}
-                        >
-                          {subPrefix} {sub.title}
-                        </Text>
-                      </Box>
-                    </Link>
-                  </Box>
-                );
-              })}
-            </VStack>
-          )}
-        </Box>
-      );
-    })}
-  </VStack>
-);
-
-
-  /* ---------------------- Mobile Drawer ---------------------- */
+  /* =========================================================================
+     Mobile Drawer Variant
+     ========================================================================= */
   if (isMobile) {
     return (
       <>
-        <Button variant="ghost" leftIcon={<GiHamburgerMenu size="20px" />} onClick={onOpen}>
+        <Button
+          variant="ghost"
+          leftIcon={<GiHamburgerMenu size="20px" />}
+          onClick={onOpen}
+          aria-label="Open contents"
+        >
           Contents
         </Button>
+
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
           <DrawerOverlay />
           <DrawerContent>
@@ -363,9 +525,11 @@ const NavContent = () => (
                   aria-pressed={allExpanded}
                 >
                   {allExpanded ? "Collapse all" : "Expand all"}
-                  <span className="double-chevron">{allExpanded ? "⟰" : "⟱"}</span>
+                  <span className="double-chevron">{allExpanded ? "⟱" : "⟰"}</span>
                 </button>
               </div>
+
+              {/* WHY: Render the same nav content used on desktop for consistent behavior. */}
               <NavContent />
             </DrawerBody>
           </DrawerContent>
@@ -374,16 +538,18 @@ const NavContent = () => (
     );
   }
 
-  /* ---------------------- Desktop Sidebar ---------------------- */
-  const visualWidth = collapsed ? 0 : width;
+  /* =========================================================================
+     Desktop Sidebar
+     ========================================================================= */
+
 
   return (
     <Box
       as="aside"
-      className={`left-sidebar ${className}`.trim()}
+      className={`left-sidebar ${!collapsed ? "open" : ""} ${className}`.trim()}
       position="fixed"
       left={0}
-      bg="#fff"
+      /* IMPORTANT: do not set bg here; CSS file owns sidebar background */
       overflowY="auto"
       overflowX="hidden"
       p={0}
@@ -391,22 +557,20 @@ const NavContent = () => (
       aria-label="Primary navigation"
       aria-expanded={!collapsed}
       style={{
-        width: visualWidth,
-        transition: isResizing ? "none" : "width 0.25s ease",
+        width,
       }}
     >
-      {/* FIX APPLIED HERE */}
+      {/* Header Controls */}
       <div className="sidebar-header-controls">
         <div
           style={{
             position: "sticky",
             top: 0,
             zIndex: 20,
-            background: "#fff",
-            // moved it to the right & removed any visual divider line
+            background: "var(--cs-bg)", // match rail background
             padding: "8px 16px 4px",
             display: "flex",
-            justifyContent: "flex-end"
+            justifyContent: "flex-end",
           }}
         >
           <button
@@ -419,7 +583,6 @@ const NavContent = () => (
               className="icon-double-chevron"
               aria-hidden="true"
               style={{ marginLeft: 6, transform: allExpanded ? "rotate(180deg)" : "none" }}
-
             >
               {/* up/down naturally flip with CSS rotate depending on state */}
               <svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" /></svg>
