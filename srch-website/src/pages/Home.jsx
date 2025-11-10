@@ -1,17 +1,18 @@
 import "../LandingPage.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import logoImage from "../assets/logo.png";
-import buttonArrow from "../assets/button-arrow.png";
-import targetIcon from "../assets/targetIcon.png";
-import bookIcon from "../assets/bookIcon.png";
-import lightbulbIcon from "../assets/lightbulbIcon.png";
-import peopleIcon from "../assets/peopleIcon.png";
-import privacyIcon from "../assets/privacy-icon.jpg";
-import automatedIcon from "../assets/automated.png";
-import aiIcon from "../assets/ai-icon.png";
-import accessibilityIcon from "../assets/accessibility-icon.png";
+import buttonArrow from "../assets/arrow.svg";
+import targetIcon from "../assets/target.svg";
+import bookIcon from "../assets/book.svg";
+import lightbulbIcon from "../assets/lightbulb.svg";
+import peopleIcon from "../assets/people.svg";
+import privacyIcon from "../assets/privacy.svg";
+import automatedIcon from "../assets/automated-decision-making.svg";
+import aiIcon from "../assets/generative-ai.svg";
+import accessibilityIcon from "../assets/accessibility.svg";
+import backgroundGradient from "../assets/landing-page-background-gradient.png";
 import { SearchBar } from "../components/SearchBar";
 
 function Home() {
@@ -59,6 +60,7 @@ function Home() {
                   <img
                     src={privacyIcon}
                     alt="Privacy Icon"
+                    className="smaller-icon"
                     width={75}
                     height={92}
                   />
@@ -81,6 +83,7 @@ function Home() {
                   <img
                     src={accessibilityIcon}
                     alt="Accessibility Icon"
+                    className="smaller-icon"
                     width={75}
                     height={92}
                   />
@@ -122,6 +125,7 @@ function Home() {
                   <img
                     src={aiIcon}
                     alt="Generative AI Icon"
+                    className="smaller-icon"
                     width={75}
                     height={92}
                   />
@@ -179,6 +183,7 @@ function Home() {
                   <img
                     src={targetIcon}
                     alt="Target Icon"
+                    className="module-icon dark-mode-icon"
                     width={24}
                     height={24}
                   />
@@ -192,6 +197,7 @@ function Home() {
                   <img
                     src={peopleIcon}
                     alt="People Icon"
+                    className="module-icon dark-mode-icon"
                     width={24}
                     height={24}
                   />
@@ -204,6 +210,7 @@ function Home() {
                   <img
                     src={lightbulbIcon}
                     alt="Lightbulb Icon"
+                    className="module-icon dark-mode-icon"
                     width={24}
                     height={24}
                   />
@@ -213,7 +220,11 @@ function Home() {
                 </div>
 
                 <div className="list-item">
-                  <img src={bookIcon} alt="Book Icon" width={24} height={24} />
+                  <img src={bookIcon} alt="Book Icon" 
+                  className="module-icon dark-mode-icon"
+                  width={24}
+                  height={24}
+                  />
                   <p className="list-text">
                     Adapt and contribute content so it remains relevant and
                     impactful
@@ -232,8 +243,10 @@ function Home() {
               <img
                 src={buttonArrow}
                 alt="Arrow for the Learn More Button"
+                className="arrow-icon"
                 width={24}
                 height={24}
+                style={{ display: 'inline-block' }}
               />
             </button>
           </div>

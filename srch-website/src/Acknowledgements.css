@@ -13,6 +13,29 @@
    Each block is documented for future designers/developers.
    ============================================================================ */
 
+/* light theme (default) */
+:root {
+  --color-bg: #FFFFFF;
+  --color-text: #000000;
+  --color-text-secondary: #666666;
+  --color-card-bg: #FFFFFF;
+  --color-border: #E0E0E0;
+  --color-primary: #9d0013;
+  --color-accent: #5a2d0c;
+}
+
+/* dark theme */
+.dark {
+  --color-bg: #0E0E0E;
+  --color-text: #FFFFFF;
+  --color-text-secondary: #CCCCCC;
+  --color-card-bg: #181818;
+  --color-border: #333333;
+  --color-primary: #A5D8AE;
+  --color-accent: #005721;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
 
 /* ============================================================================
    1. HERO BANNER
@@ -24,16 +47,12 @@
 .ack-hero {
   width: 55vw;
   height: 55vh;
-
   background-image: url("../src/assets/Property 1=Default.png");
   background-size: contain;
-background-position: top center;
-background-repeat: no-repeat;
-
-
+  background-position: top center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
-
   padding-left: 13vw;
   padding-right: 13vw;
   margin-top: 40px; /* navbar offset */
@@ -66,8 +85,25 @@ background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   font-family: "Be Vietnam Pro", sans-serif;
+  background-color: #FFFFFF;
 }
 
+/* hover */
+/* 
+.ack-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+} */
+
+/* dark mode card styling */
+.dark .ack-card {
+  background-color: var(--color-card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark .ack-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
 
 /* ============================================================================
    3. CARD PHOTO REGION
@@ -82,6 +118,10 @@ background-repeat: no-repeat;
   border-radius: 6px;
   background-color: #d9d9d9;
   object-fit: cover;
+}
+
+.dark .ack-card-photo {
+  background-color: #333333;
 }
 
 
@@ -122,6 +162,28 @@ background-repeat: no-repeat;
   color: #000000;
 }
 
+/* dark mode text colors */
+.dark .ack-card-fullname {
+  color: #FFFFFF; 
+}
+
+.dark .ack-card-pronouns {
+  color: #CCCCCC; 
+}
+
+.dark .ack-card-subinfo {
+  color: #FFFFFF; 
+}
+
+.dark .ack-team-section h2,
+.dark .ack-team-section h3,
+.dark .ack-team-section h4,
+.dark .chakra-heading,
+.dark h2.chakra-heading,
+.dark .chakra-heading--2 {
+  color: #FFFFFF !important;
+}
+
 
 /* ============================================================================
    5. ICON ROW (EMAIL, LINKEDIN, WEBSITE)
@@ -141,11 +203,9 @@ background-repeat: no-repeat;
   height: 30px;
   border-radius: 50%;
   border: 0.75px solid #5a2d0c;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #5a2d0c;
   transition: 0.2s ease;
 }
@@ -154,6 +214,18 @@ background-repeat: no-repeat;
   background-color: #5a2d0c;
   color: white;
 }
+
+/* dark mode icon buttons */
+.dark .ack-icon-btn {
+  border-color: #A5D8AE; 
+  color: #A5D8AE; 
+}
+
+.dark .ack-icon-btn:hover {
+  background-color: #A5D8AE; 
+  color: #0E0E0E;
+}
+
 
 
 /* ============================================================================
@@ -260,10 +332,15 @@ background-repeat: no-repeat;
 }
 
 .module-link:hover {
-  color: #9d0013;
+  color: var(--color-primary);
 }
 
 /* Feedback text */
+.feedback-section {
+  flex: 1;
+  max-width: 300px;
+}
+
 .feedback-contact {
   color: var(--color-text);
   font-size: 20px;
@@ -273,7 +350,7 @@ background-repeat: no-repeat;
 }
 
 .feedback-contact a {
-  color: #9d0013;
+  color: var(--color-primary);
   text-decoration: underline;
   transition: color 0.2s;
 }

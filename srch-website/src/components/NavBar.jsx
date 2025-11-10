@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -8,15 +8,19 @@ import {
   Text,
   Icon,
   Collapse,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
   ChevronDownIcon,
   MoonIcon,
   SearchIcon,
+  SunIcon,
 } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
-import { NavSearchBar } from "../components/NavSearchBar";
+import { NavSearchBar } from "./NavSearchBar";
+import { ThemeContext } from "../App";
 import logo from "../assets/logo.png";
 import "../ContentPage.css";
 import { color } from "framer-motion";
@@ -24,6 +28,7 @@ import { color } from "framer-motion";
 function NavBar({ className = "" }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
@@ -257,11 +262,28 @@ function NavBar({ className = "" }) {
             >
               <Text>Acknowledgements</Text>
             </Box>
-            <Box className="icon-button">
-              <MoonIcon
-                className="navsearchbar-button"
-                fontSize={"lg"}
-              ></MoonIcon>
+            <Box 
+              className="icon-button"
+              onClick={toggleTheme}
+              title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              cursor="pointer"
+              p={2}
+              _hover={{
+                bg: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                borderRadius: 'md',
+              }}
+            >
+              {isDarkMode ? (
+                <SunIcon 
+                  boxSize={5} 
+                  color={isDarkMode ? 'white' : 'gray.800'}
+                />
+              ) : (
+                <MoonIcon 
+                  boxSize={5}
+                  color={isDarkMode ? 'white' : 'gray.800'}
+                />
+              )}
             </Box>
             <Box
               className="icon-button"
