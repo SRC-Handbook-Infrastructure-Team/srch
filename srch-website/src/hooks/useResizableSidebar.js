@@ -4,18 +4,9 @@ const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const isBrowser = () =>
   typeof window !== "undefined" && typeof document !== "undefined";
 
-/**
- * useResizableSidebar
- * -------------------------------------------------------------------------
- * High-performance resizable sidebar hook.
- *
- * Improvements from Google-level perf standards:
- * - Lifecycle callbacks (onStartResize / onStopResize)
- * - Correct passive event handling for mouse vs touch
- * - Lower-latency state sync (80ms throttled)
- * - Zero layout reads during drag
- * - Guaranteed rAF batching of DOM writes
- * -------------------------------------------------------------------------
+/** 
+ * Custom hook for creating a resizable sidebar with persistence, accessibility,
+ * and performance optimizations using requestAnimationFrame + throttled updates.
  */
 export default function useResizableSidebar({
   storageKey = "sidebarWidth",
@@ -23,16 +14,13 @@ export default function useResizableSidebar({
   minWidth = 180,
   maxWidth = 480,
   collapsedWidth = 0,
-  side = "left",
+  side = "left", // 'left' | 'right'
   saveOnEnd = true,
   cssVarName,
-
-  /** ✅ NEW optional callbacks */
-  onStartResize,
-  onStopResize,
+  // NEW: freeze/release callbacks provided by the layout (no-op by default)
+  onStartResize = () => {},
+  onStopResize = () => {},
 } = {}) {
-
-  /** ---------------- INITIALIZATION ---------------- */
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
     try {
@@ -58,64 +46,67 @@ export default function useResizableSidebar({
   const rafRef = useRef(null);
   const lastCommitTime = useRef(0);
   const pendingWidth = useRef(width);
-  const transitionDisabled = useRef(false);
 
-  /** ---------------- INTERNAL HELPERS ---------------- */
+  /** Safely clamps and updates width state */
   const setWidth = useCallback(
     (w) => setWidthState(() => clamp(Math.round(w), minWidth, maxWidth)),
     [minWidth, maxWidth]
   );
 
-  const commitToLocalStorage = useCallback(
-    (value) => {
-      if (!isBrowser()) return;
-      try {
-        const fn =
-          typeof window.requestIdleCallback === "function"
-            ? window.requestIdleCallback
-            : (cb) => setTimeout(cb, 150);
-
-        fn(() => {
-          window.localStorage.setItem(storageKey, String(value));
-        });
-      } catch {}
-    },
-    [storageKey]
-  );
-
-  /** ---------------- DRAG START ---------------- */
+  /** Handles start of drag resize */
   const startResize = useCallback(
     (e) => {
       e.preventDefault();
       e.stopPropagation();
       setIsResizing(true);
 
+      // Freeze main content immediately (layout supplies this)
+      if (typeof onStartResize === "function") onStartResize();
+
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       ref.current.startX = clientX;
       ref.current.startWidth = width;
 
-      /** ✅ fire callback */
-      onStartResize && onStartResize();
-
       if (isBrowser()) {
         document.body.style.cursor = "ew-resize";
-        document.body.style.userSelect = "none";
-
+        // Add performance class to the *correct* sidebar while dragging
         const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
-        const el = document.querySelector(selector);
-        if (el) {
-          el.classList.add("resizing");
-          if (!transitionDisabled.current) {
-            el.style.transition = "none";
-            transitionDisabled.current = true;
-          }
-        }
+        const sidebarEl = document.querySelector(selector);
+        if (sidebarEl) sidebarEl.classList.add("resizing");
       }
     },
     [width, side, onStartResize]
   );
 
-  /** ---------------- DRAG MOVE ---------------- */
+  /** Stops resizing and commits final width */
+  const stopResize = useCallback(() => {
+    if (!isResizing) return;
+    setIsResizing(false);
+
+    if (isBrowser()) {
+      document.body.style.cursor = "";
+      // Remove performance class when drag ends
+      const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
+      const sidebarEl = document.querySelector(selector);
+      if (sidebarEl) sidebarEl.classList.remove("resizing");
+    }
+
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+
+    // Final React + localStorage sync
+    setWidth(pendingWidth.current);
+    if (saveOnEnd && isBrowser()) {
+      try {
+        window.localStorage.setItem(storageKey, String(pendingWidth.current));
+      } catch {}
+    }
+
+    // Release main content after resize finishes
+    if (typeof onStopResize === "function") onStopResize();
+  }, [isResizing, saveOnEnd, setWidth, storageKey, side, onStopResize]);
+
+  /** Handles mouse and touch drag events efficiently */
   useEffect(() => {
     if (!isBrowser()) return;
 
@@ -123,69 +114,46 @@ export default function useResizableSidebar({
       if (!isResizing) return;
 
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const delta = (clientX - ref.current.startX) * 1.5;
+
+      /** 
+       * Sensitivity multiplier makes dragging feel faster — 
+       * small mouse movements result in larger sidebar width changes.
+       */
+      const sensitivity = 1.5;
+      const delta = (clientX - ref.current.startX) * sensitivity;
 
       const rawNext =
         side === "left"
           ? ref.current.startWidth + delta
           : ref.current.startWidth - delta;
 
+      // Immediately clamp to prevent dragging past limits
       const clampedNext = clamp(rawNext, minWidth, maxWidth);
       pendingWidth.current = clampedNext;
 
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        document.documentElement.style.setProperty(
-          cssVarName,
-          `${pendingWidth.current}px`
-        );
+        if (cssVarName) {
+          document.documentElement.style.setProperty(
+            cssVarName,
+            `${pendingWidth.current}px`
+          );
+        }
       });
 
-      /** ✅ faster React sync (80ms) */
-      const now = performance.now();
-      if (now - lastCommitTime.current > 80) {
+      // Throttle React updates for performance
+      const now = Date.now();
+      if (now - lastCommitTime.current > 120) {
         setWidth(pendingWidth.current);
         lastCommitTime.current = now;
       }
     };
 
-    const onUp = () => {
-      if (!isResizing) return;
-      setIsResizing(false);
-
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-
-      if (isBrowser()) {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-
-        const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
-        const el = document.querySelector(selector);
-
-        if (el) {
-          el.classList.remove("resizing");
-          if (transitionDisabled.current) {
-            el.style.transition = "";
-            transitionDisabled.current = false;
-          }
-        }
-      }
-
-      /** ✅ fire callback */
-      onStopResize && onStopResize();
-
-      /** ✅ final sync */
-      const finalWidth = clamp(pendingWidth.current, minWidth, maxWidth);
-      setWidth(finalWidth);
-      if (saveOnEnd) commitToLocalStorage(finalWidth);
-    };
+    const onUp = () => stopResize();
 
     if (isResizing) {
-      window.addEventListener("mousemove", onMove, { passive: true });
+      window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
-
-      /** ✅ correctly non-passive touch handling */
       window.addEventListener("touchmove", onMove, { passive: false });
       window.addEventListener("touchend", onUp);
     }
@@ -195,34 +163,28 @@ export default function useResizableSidebar({
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onUp);
+      cancelAnimationFrame(rafRef.current);
+      if (isBrowser()) document.body.style.cursor = "";
     };
-  }, [
-    isResizing,
-    setWidth,
-    side,
-    minWidth,
-    maxWidth,
-    cssVarName,
-    saveOnEnd,
-    commitToLocalStorage,
-    onStopResize,
-  ]);
+  }, [isResizing, setWidth, side, minWidth, maxWidth, cssVarName, stopResize]);
 
-  /** ---------------- KEYBOARD RESIZE ---------------- */
+  /** Handles keyboard-based resizing (arrow keys + A/D) */
   const handleKeyDown = useCallback(
     (e) => {
       const step = e.shiftKey ? 20 : 8;
       let delta = 0;
 
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+      const key = (e.key || "").toLowerCase();
+
+      if (key === "arrowleft" || key === "a") {
         delta = side === "left" ? -step : step;
-      } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+      } else if (key === "arrowright" || key === "d") {
         delta = side === "left" ? step : -step;
-      } else if (e.key === "Home") {
+      } else if (key === "home") {
         setWidth(minWidth);
         e.preventDefault();
         return;
-      } else if (e.key === "End") {
+      } else if (key === "end") {
         setWidth(maxWidth);
         e.preventDefault();
         return;
@@ -232,56 +194,92 @@ export default function useResizableSidebar({
         e.preventDefault();
         const newWidth = clamp(width + delta, minWidth, maxWidth);
         setWidth(newWidth);
-        commitToLocalStorage(newWidth);
+        try {
+          window.localStorage.setItem(storageKey, String(newWidth));
+        } catch {}
       }
     },
-    [width, minWidth, maxWidth, side, setWidth, commitToLocalStorage]
+    [width, minWidth, maxWidth, side, setWidth, storageKey]
   );
 
-  /** ---------------- COLLAPSE TOGGLE ---------------- */
+  /** Toggles collapsed state */
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {
       const next = !prev;
+
+      // Freeze main content immediately (SidebarLayout handles this class)
+      if (typeof onStartResize === "function") onStartResize();
+
       if (next) {
+        // Collapsing: remember previous width and set to collapsedWidth
         ref.current.previousWidth = width;
         setWidthState(collapsedWidth);
+
         if (isBrowser()) {
           try {
             window.localStorage.setItem(`${storageKey}:collapsed`, "1");
           } catch {}
         }
+
+        // Allow CSS transition to complete before releasing
+        setTimeout(() => {
+          if (typeof onStopResize === "function") onStopResize();
+        }, 400); // Match CSS transition duration
       } else {
+        // Expanding: restore previous or default width (clamped)
         const restore = ref.current.previousWidth || defaultWidth;
         setWidthState(clamp(restore, minWidth, maxWidth));
+
         if (isBrowser()) {
           try {
             window.localStorage.removeItem(`${storageKey}:collapsed`);
           } catch {}
         }
+
+        setTimeout(() => {
+          if (typeof onStopResize === "function") onStopResize();
+        }, 400); // Match CSS transition duration
       }
+
       return next;
     });
-  }, [collapsedWidth, width, minWidth, maxWidth, defaultWidth, storageKey]);
+  }, [
+    width,
+    collapsedWidth,
+    minWidth,
+    maxWidth,
+    defaultWidth,
+    storageKey,
+    onStartResize,
+    onStopResize,
+  ]);
 
-  /** ---------------- SYNC TO CSS VAR ---------------- */
+  /** Persists current width to localStorage */
+  const save = useCallback(() => {
+    if (!isBrowser()) return;
+    try {
+      window.localStorage.setItem(storageKey, String(width));
+    } catch {}
+  }, [storageKey, width]);
+
+  /** Syncs sidebar width to CSS custom property */
   useEffect(() => {
     if (!isBrowser() || !cssVarName) return;
-
-    document.documentElement.style.setProperty(
-      cssVarName,
-      `${collapsed ? collapsedWidth : width}px`
-    );
+    const value = `${collapsed ? collapsedWidth : width}px`;
+    document.documentElement.style.setProperty(cssVarName, value);
   }, [cssVarName, width, collapsed, collapsedWidth]);
 
-  /** ---------------- PUBLIC API ---------------- */
   return {
     width,
     setWidth,
     isResizing,
     startResize,
+    stopResize,
     handleKeyDown,
     collapsed,
     toggleCollapsed,
+    save,
+    // expose bounds so consumers (SidebarLayout, ARIA) can read them
     minWidth,
     maxWidth,
     collapsedWidth,
