@@ -162,7 +162,7 @@ function Home() {
           <div className="content-section">
             <h2 className="section-title" 
             style={{overflowWrap: "break-word"}}>
-              How to use the handbook
+              How to use the Handbook
             </h2>
             <div className="how-to-section">
               <p className="intro-text">
