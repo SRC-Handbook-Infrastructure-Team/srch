@@ -677,7 +677,7 @@ function MarkdownRenderer({
             onClick={() => onNavigation && onNavigation(target)}
             color="blue.400"
             cursor="pointer"
-            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            _hover={{ color: "purple.500", textDecoration: "none" }}
           >
             <Link>{highlightText(text, highlight)}</Link>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />

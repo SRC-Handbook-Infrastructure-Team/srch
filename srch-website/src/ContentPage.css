@@ -70,6 +70,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  max-width: 100vw;
 }
 
 a {
@@ -545,8 +546,7 @@ h4 {
   align-items: center;
   overflow: visible;
   background: transparent;
-
-  width: 450px;
+  width: 75vw;
   border-radius: 9999999999px;
 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -666,6 +666,10 @@ h4 {
   margin-top: 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #e2e8f0;
+}
+
+.results-item :hover {
+  background-color: #d8d7d7;
 }
 
 .results-header {
@@ -993,15 +997,17 @@ html body .main-content {
    Sidebar-ref Chip Styles (MarkdownRenderer)
    Spec: #9D0013 text, no underline; hover shows border + scale; active is filled
    ========================================================================== */
-
-.srch-drawer-link {
+.srch-drawer-item .srch-drawer-link {
   /* Base look (variable width) */
+  display: inline-flex;
+  white-space: normal;
+  max-width: 100%;
   color: #9d0013 !important;
   text-decoration: none !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   border-radius: 17px !important;
-  height: 32px !important;
+  height: auto !important;
 
   /* Motion */
   transition: border-color 160ms ease, background-color 160ms ease,
@@ -1064,7 +1070,6 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  white-space: nowrap;
   transform: translateX(12px); /* Moves the element 12px to the left */
 }
 
