@@ -1,4 +1,3 @@
-// ...existing imports...
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -18,7 +17,6 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
-// IMPORTANT: do NOT import ContentPage.css here.
 // "../ContentPage.css";
 import "../ContentsSidebar.css";
 
@@ -146,6 +144,18 @@ export default function ContentsSidebar({
   onStartResize = () => {},
   onHandleKeyDown = () => {},
 }) {
+
+
+  const [isAnimatingClose, setIsAnimatingClose] = useState(false);
+
+useEffect(() => {
+  if (collapsed) {
+    setIsAnimatingClose(true);
+    const t = setTimeout(() => setIsAnimatingClose(false), 350);
+    return () => clearTimeout(t);
+  }
+}, [collapsed]);
+
   /* ----------------------------- Environment ------------------------------ */
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -248,6 +258,17 @@ export default function ContentsSidebar({
 
         setSubsections(subsectionsMap);
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
+
+        // Metadata-first title: Cache subsection metadata globally
+        window.__SRCH_SUBSECTIONS_CACHE__ = window.__SRCH_SUBSECTIONS_CACHE__ || {};
+
+        for (const [sec, subs] of Object.entries(subsectionsMap)) {
+          window.__SRCH_SUBSECTIONS_CACHE__[sec] = subs.map((s => ({
+            id: s.id,
+            title: s.title,
+          })
+          ))
+        }
 
         // 5) If no section in URL, navigate to the first allowed section.
         if (!currentSectionId && filteredSections.length > 0 && !hasFetchedData) {
@@ -546,7 +567,10 @@ export default function ContentsSidebar({
   return (
     <Box
       as="aside"
-      className={`left-sidebar ${!collapsed ? "open" : ""} ${className}`.trim()}
+      className={`left-sidebar
+         ${!collapsed ? "open" : ""}
+         ${collapsed && isAnimatingClose ? "closing" : ""} 
+          ${className}`.trim()}
       position="fixed"
       left={0}
       /* IMPORTANT: do not set bg here; CSS file owns sidebar background */
