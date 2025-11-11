@@ -142,9 +142,7 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title">
-                Search for Content
-              </h2>
+              <h2 className="search-title">Search for Content</h2>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
@@ -160,15 +158,17 @@ function Home() {
           <div className="line-divider"></div>
 
           <div className="content-section">
-            <h2 className="section-title" 
-            style={{overflowWrap: "break-word"}}>
+            <h2
+              className="section-title"
+              style={{ overflowWrap: "break-word" }}
+            >
               How to use the Handbook
             </h2>
             <div className="how-to-section">
               <p className="intro-text">
                 Each section contains a series of primers that are loosely
-                aligned with learning objectives in the SRC curriculum. <br></br> Use them
-                to:
+                aligned with learning objectives in the SRC curriculum.{" "}
+                <br></br> Use them to:
               </p>
 
               <div className="info-list">
@@ -218,21 +218,20 @@ function Home() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="learn-more-container">
-            <button
-              className="learn-more-button"
-              onClick={() => navigate("/about")}
-            >
-              <span className="learn-more-text">Learn more</span>
-              <img
-                src={buttonArrow}
-                alt="Arrow for the Learn More Button"
-                width={24}
-                height={24}
-              />
-            </button>
+            <div className="learn-more-container">
+              <button
+                className="learn-more-button"
+                onClick={() => navigate("/about")}
+              >
+                <span className="learn-more-text">Learn more</span>
+                <img
+                  src={buttonArrow}
+                  alt="Arrow for the Learn More Button"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
           </div>
 
           <div className="line-divider"></div>
