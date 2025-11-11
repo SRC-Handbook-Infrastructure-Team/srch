@@ -2,7 +2,6 @@ import "../LandingPage.css";
 import "../ContentPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import NavBar from "../components/NavBar";
 import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
@@ -25,7 +24,6 @@ function Home() {
 
   return (
     <div className="layout">
-      <NavBar />
       <div className="body">
         <div className="upper-content">
           <div className="upper-text-section">
