@@ -1,9 +1,11 @@
+import "../LandingPage.css";
+import "../ContentPage.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
-import background from "../assets/search-results-background.jpg";
+import background from "../assets/landing-page-background-gradient.png";
 
 function SearchResults() {
   const { query } = useParams();
@@ -11,19 +13,17 @@ function SearchResults() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    setSearchQuery("");
+    setSearchQuery(decodedQuery);
   }, [decodedQuery]);
 
   return (
-    <div
-      className="markdown-page"
-      style={{ minHeight: "100vh", overflow: "hidden" }}
-    >
+    <div className="markdown-page" style={{ minHeight: "100vh" }}>
       <div
         style={{
           position: "absolute",
           zIndex: 0,
           inset: 0,
+          top: "0px",
           width: "100vw",
           height: "350px",
           backgroundImage: `url(${background})`,
@@ -37,10 +37,10 @@ function SearchResults() {
           position: "absolute",
           zIndex: 1,
           inset: 0,
+          top: "250px",
           width: "100%",
-          height: "350px",
-          background:
-            "linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255,255,255,1) 100%)",
+          height: "100px",
+          background:"linear-gradient(to bottom,rgba(255, 255, 255, 0) 0%,rgba(255, 255, 255, 0.5) 50%,rgba(255, 255, 255, 1) 100%)",
           pointerEvents: "none",
         }}
       />

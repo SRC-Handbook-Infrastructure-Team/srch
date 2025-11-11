@@ -272,13 +272,6 @@ export const getContent = async (sectionId, subsectionId) => {
               content: currentValue.join("\n").trim(),
             };
           }
-
-          // log success with loaded keys (case-insensitive keys)
-          try {
-            console.log(" Sidebar keys loaded:", Object.keys(sidebar));
-          } catch (e) {
-            /* ignore logging errors in constrained envs */
-          }
         }
 
         const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
@@ -449,24 +442,22 @@ function MarkdownRenderer({
   );
 
   /**
- * Safely removes ONLY whitespace-only text nodes inside <p> tags.
- * This avoids ReactMarkdown inserting empty "" or " " nodes
- * that create visual gaps between text + <sidebar-ref> chips.
- *
- * Critically:
- * - Does NOT remove spaces inside real text ("a dog" stays intact)
- * - Only affects direct children of <p>
- */
-function cleanParagraphChildren(children) {
-  return React.Children.toArray(children).filter((child) => {
-    if (typeof child === "string") {
-      return child.trim() !== ""; // keep text that has ANY non-space chars
-    }
-    return child; // keep React elements unchanged
-  });
-}
-
-
+   * Safely removes ONLY whitespace-only text nodes inside <p> tags.
+   * This avoids ReactMarkdown inserting empty "" or " " nodes
+   * that create visual gaps between text + <sidebar-ref> chips.
+   *
+   * Critically:
+   * - Does NOT remove spaces inside real text ("a dog" stays intact)
+   * - Only affects direct children of <p>
+   */
+  function cleanParagraphChildren(children) {
+    return React.Children.toArray(children).filter((child) => {
+      if (typeof child === "string") {
+        return child.trim() !== ""; // keep text that has ANY non-space chars
+      }
+      return child; // keep React elements unchanged
+    });
+  }
 
   const components = useMemo(
     () => ({
@@ -502,15 +493,13 @@ function cleanParagraphChildren(children) {
         );
       },
       p: (props) => {
-  const cleaned = cleanParagraphChildren(props.children);
-  return (
-    <Text mb={3} lineHeight="1.6" color={BLACK}>
-      {highlightText(cleaned, highlight)}
-    </Text>
-  );
-},
-
-
+        const cleaned = cleanParagraphChildren(props.children);
+        return (
+          <Text mb={3} lineHeight="1.6" color={BLACK}>
+            {highlightText(cleaned, highlight)}
+          </Text>
+        );
+      },
 
       /* ------------------------------------------------------------------
        * Standard Markdown links (NOT sidebar-ref chips)
@@ -610,72 +599,70 @@ function cleanParagraphChildren(children) {
        * - Shape: radius 17px, height 32px, variable width
        */
       "sidebar-ref": ({ node }) => {
-  let raw = node.properties?.["term"] || "";
-  let term = raw;
-  let label = null;
+        let raw = node.properties?.["term"] || "";
+        let term = raw;
+        let label = null;
 
-  //  Support alias syntax {term|Custom Label}
-  if (raw.includes("|")) {
-    const [keyPart, labelPart] = raw.split("|");
-    term = keyPart.trim();
-    label = labelPart.trim();
-  }
-
-  const termKey = term.toLowerCase();
-  const value = sidebar?.[termKey];
-
-  const toShow = value
-    ? label ||
-      term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-    : `⚠️ Missing: ${term}`;
-
-  const isMissing = !value;
-
-  return (
-    <Box
-      as={RouterLink}
-      to={`/${sectionId}/${subsectionId}/${term}`}
-      onClick={(e) => {
-        e.preventDefault();
-        if (!isMissing) {
-          setActiveDrawerLink(e.currentTarget);
-          onDrawerOpen && onDrawerOpen(term);
+        //  Support alias syntax {term|Custom Label}
+        if (raw.includes("|")) {
+          const [keyPart, labelPart] = raw.split("|");
+          term = keyPart.trim();
+          label = labelPart.trim();
         }
-      }}
-      className={`srch-drawer-link ${
-        activeDrawerLink === term ? "srch-drawer-link-active" : ""
-      }`}
-      data-term={term}
-      display="inline-flex"
-      verticalAlign="baseline"
-      m="0"
-      mx="0"
-      my="0"
-      alignItems="center"
-      gap="6px"
-      h="32px"
-      px="10px"
-      borderRadius="17px"
-      color={RED}
-      textDecoration="none"
-      border="1px solid transparent"
-      cursor={isMissing ? "default" : "pointer"}
-      whiteSpace="nowrap"
-    >
-      <Text
-        as="span"
-        fontWeight="medium"
-        fontSize="inherit"
-        lineHeight="1.2"
-      >
-        {highlightText(toShow, highlight)}
-      </Text>
-      <Icon as={InfoIcon} boxSize="0.9em" />
-    </Box>
-  );
-},
 
+        const termKey = term.toLowerCase();
+        const value = sidebar?.[termKey];
 
+        const toShow = value
+          ? label ||
+            term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+          : `⚠️ Missing: ${term}`;
+
+        const isMissing = !value;
+
+        return (
+          <Box
+            as={RouterLink}
+            to={`/${sectionId}/${subsectionId}/${term}`}
+            onClick={(e) => {
+              e.preventDefault();
+              if (!isMissing) {
+                setActiveDrawerLink(e.currentTarget);
+                onDrawerOpen && onDrawerOpen(term);
+              }
+            }}
+            className={`srch-drawer-link ${
+              activeDrawerLink === term ? "srch-drawer-link-active" : ""
+            }`}
+            data-term={term}
+            display="inline-flex"
+            verticalAlign="baseline"
+            m="0"
+            mx="0"
+            my="0"
+            alignItems="center"
+            gap="6px"
+            h="32px"
+            px="10px"
+            borderRadius="17px"
+            color={RED}
+            textDecoration="none"
+            border="1px solid transparent"
+            cursor={isMissing ? "default" : "pointer"}
+            whiteSpace="nowrap"
+          >
+            <Text
+              as="span"
+              fontWeight="medium"
+              fontSize="inherit"
+              lineHeight="1.2"
+            >
+              {highlightText(toShow, highlight)}
+            </Text>
+            <Icon as={InfoIcon} boxSize="0.9em" />
+          </Box>
+        );
+      },
 
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
