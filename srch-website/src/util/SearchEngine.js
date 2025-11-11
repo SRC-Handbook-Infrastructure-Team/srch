@@ -103,7 +103,6 @@ function extractHeadingBlocks(
           pushDrawerBlock(currentAnchorLocal, anchorLines);
         }
       } else {
-        console.log(sectionId);
         if (sectionId == "about") {
           sectionTitle = "About";
           subsectionTitle = "About";

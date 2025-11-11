@@ -41,10 +41,10 @@
   --sidebar-bg: rgba(251, 251, 250, 1);
 
   /* Shared sidebar palette (Figma) */
-  --cs-brown: #531C00;
-  --cs-text:  #4F3629;
-  --cs-bg:    rgba(251, 251, 250, 1);
-  --cs-active:#e6e2dd;
+  --cs-brown: #531c00;
+  --cs-text: #4f3629;
+  --cs-bg: rgba(251, 251, 250, 1);
+  --cs-active: #e6e2dd;
   --cs-divider: #c7beb5;
 }
 
@@ -142,7 +142,6 @@ mark {
   border: 1px solid transparent;
   border-radius: 6px;
   transition: background-color 0.15s ease, border-color 0.15s ease;
-  
 }
 
 /*  Route-aware highlight (via .is-active class from JSX) */
@@ -160,8 +159,6 @@ mark {
 .sidebar-section-header * {
   pointer-events: none; /* interaction handled by container */
 }
-
-
 
 /* ==========================================================================
    Markdown & Content
@@ -255,8 +252,6 @@ h4 {
 .nav-subsection-active {
   font-weight: 700;
 }
-
-
 
 /* Nav expand button */
 .nav-expand-all-btn {
@@ -549,10 +544,12 @@ h4 {
   display: flex;
   align-items: center;
   overflow: visible;
+  background: transparent;
+
   width: 450px;
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
+  border-radius: 9999999999px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .searchbar-border {
@@ -562,6 +559,8 @@ h4 {
 }
 
 .searchbar-input-container {
+  background: transparent;
+
   flex: 1;
 }
 
@@ -576,6 +575,7 @@ h4 {
   background: transparent;
   z-index: 9;
   border-width: 0 !important;
+  border-radius: 9999999999px;
   opacity: 1;
   pointer-events: auto;
 }
@@ -771,6 +771,7 @@ h4 {
   padding-top: 40px;
   transform: translateY(-40px);
   background: white;
+  border-radius: 9999999999px;
   display: flex;
   flex-direction: column;
 }
@@ -784,8 +785,10 @@ h4 {
   padding: 12px !important;
 }
 
+html {
+  scroll-padding-top: 70px;
+}
 
-/* Main content shifts with sidebars; sits below NavBar */
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
   margin-right: var(--right-sidebar-width) !important;
@@ -812,7 +815,6 @@ html body .main-content {
   padding-bottom: 12px;
 }
 
-
 /* Right header: single bottom divider */
 .drawer-header {
   font-family: "Be Vietnam Pro", sans-serif !important;
@@ -824,7 +826,6 @@ html body .main-content {
   border-bottom: 1px solid var(--border-1) !important;
 }
 
-
 /* Single global toggle that lives in the page header */
 .header-toggle {
   position: fixed;
@@ -832,7 +833,6 @@ html body .main-content {
   right: 0;
   z-index: 150;
   left: 12px;
-  
 
   display: inline-flex;
   align-items: center;
@@ -840,7 +840,7 @@ html body .main-content {
   width: 24.615px;
   height: 11.565px;
   transform: scale(1.2);
-  
+
   color: var(--srch-brown, #531c00);
   cursor: pointer;
   transition: transform 0.06s ease;
@@ -853,8 +853,6 @@ html body .main-content {
 .header-toggle:hover {
   transform: scale(1.25);
 }
-
-
 
 /* ==========================
    QUICK, SAFE OVERRIDES
@@ -887,8 +885,6 @@ html body .main-content {
   width: calc(100% + (var(--page-pad) * 2)) !important;
   margin-left: calc(-1 * var(--page-pad)) !important;
 }
-
-
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
@@ -1007,7 +1003,7 @@ html body .main-content {
   border-radius: 17px !important;
   height: 32px !important;
 
-  /* Motion */ 
+  /* Motion */
   transition: border-color 160ms ease, background-color 160ms ease,
     color 160ms ease, transform 120ms ease !important;
   transform-origin: center center;
@@ -1019,17 +1015,16 @@ html body .main-content {
 
 /* Collapse phantom inline spacing between chips and text */
 .srch-drawer-link {
-  margin-left: -2px;          /* pulls chip into collapsed inline gap */
+  margin-left: -2px; /* pulls chip into collapsed inline gap */
 }
 
 .srch-drawer-link + .srch-drawer-link {
-  margin-left: 0;             /* prevents chain-over-collapse for chip→chip */
+  margin-left: 0; /* prevents chain-over-collapse for chip→chip */
 }
 
 p > .srch-drawer-link:first-child {
-  margin-left: 0;             /* safety: don't pull chip into paragraph edge */
+  margin-left: 0; /* safety: don't pull chip into paragraph edge */
 }
-
 
 .srch-drawer-link:hover {
   /* Same red; only border appears + slight scale */
@@ -1087,9 +1082,7 @@ p > .srch-drawer-link:first-child {
 
   transform: translateX(100%);
   opacity: 0;
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.25s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
 
   will-change: transform;
   overflow: hidden auto !important;
@@ -1098,20 +1091,29 @@ p > .srch-drawer-link:first-child {
   contain: layout paint style;
 }
 
-.right-sidebar.open { transform: translateX(0); opacity: 1; }
-.right-sidebar.closing { transform: translateX(100%) !important; opacity: 0 !important; }
+.right-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+.right-sidebar.closing {
+  transform: translateX(100%) !important;
+  opacity: 0 !important;
+}
 
 /* Resizer (left edge of right drawer) — identical thickness/behavior as left */
 .right-resizer {
   position: absolute !important;
-  top: 0; left: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
 }
 
-.right-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
-
+.right-resizer.is-resizing {
+  background: rgba(83, 28, 0, 0.08) !important;
+}
 
 .right-sidebar .drawer-content .callout,
 .right-sidebar .drawer-content [class*="box"],
@@ -1151,5 +1153,3 @@ p > .srch-drawer-link:first-child {
   padding-top: 15px;
   padding-bottom: 10px;
 }
-
-
