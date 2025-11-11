@@ -505,19 +505,23 @@ function MarkdownRenderer({
        * Standard Markdown links (NOT sidebar-ref chips)
        * ---------------------------------------------------------------- */
       a: (props) => {
+        if ("data-footnote-backref" in props) return null;
+
+        const isFootnoteRef = "data-footnote-ref" in props;
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
         const childrenArray = Array.isArray(props.children)
           ? props.children
           : [props.children];
+
         return (
           <Link
             color={RED}
             fontWeight="500"
-            textDecoration="underline"
+            textDecoration={isFootnoteRef ? "none" : "underline"}
             _hover={{
               color: RED_DARK,
-              textDecoration: "underline",
+              textDecoration: isFootnoteRef ? "none" : "underline",
             }}
             href={props.href}
             isExternal={isExternal}
@@ -537,17 +541,76 @@ function MarkdownRenderer({
           </Link>
         );
       },
-
       li: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
+        const { id, children, ...rest } = props;
+        const childrenArray = Array.isArray(children) ? children : [children];
+
+        let number = null;
+        if (id && id.startsWith("user-content-fn-")) {
+          const match = id.match(/\d+/);
+          if (match) number = match[0];
+        }
+
         return (
-          <ListItem color={BLACK} {...props}>
+          <ListItem
+            color={BLACK}
+            id={id}
+            {...rest}
+            style={{
+              listStyle: "none",
+              paddingLeft: "1.5em",
+              position: "relative",
+            }}
+          >
+            {number && (
+              <Link
+                href={`#user-content-fnref-${number}`}
+                as="a"
+                position="absolute"
+                left={0}
+                top="50%"
+                transform="translateY(-50%)"
+                color={RED}
+                fontWeight="bold"
+                textDecoration="none"
+                aria-label={`Back to reference ${number}`}
+              >
+                {number}.
+              </Link>
+            )}
             {highlightText(childrenArray, highlight)}
           </ListItem>
         );
       },
+      sup: (props) => {
+        const child = props.children;
+        const number =
+          typeof child === "string"
+            ? child
+            : Array.isArray(child) && typeof child[0] === "string"
+            ? child[0]
+            : null;
+
+        if (number && /^\d+$/.test(number)) {
+          return (
+            <sup>
+              <Link
+                as="a"
+                href={`#user-content-fnref-${number}`}
+                color="#9D0013"
+                fontWeight="bold"
+                textDecoration="none"
+                aria-label={`Back to reference ${number}`}
+              >
+                {number}
+              </Link>
+            </sup>
+          );
+        }
+
+        return <sup {...props}>{props.children}</sup>;
+      },
+
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
       code: ({ inline, ...props }) =>
