@@ -22,8 +22,9 @@
  * Card behavior (Option 2 - Final)
  *   • If a member has a `photo` (string), we render an <Image>.
  *   • If photo is missing/empty, we render a DIV rectangle placeholder that
- *     matches the card spec (302×296, gray background). The name, pronouns,
- *     and sub-info are displayed below—never overlapping the placeholder.
+ *     matches the card spec (290×302, masked by ../src/assets/Photo.png).
+ *     The name, pronouns, and sub-info are displayed below—never overlapping
+ *     the placeholder.
  *   • Icons (email, LinkedIn, website) only render if the corresponding field
  *     is present. Each icon appears in a 31×30 circular framed button.
  *
@@ -39,7 +40,7 @@
  *
  * Styling
  *   • All visual styling comes from Acknowledgements.css.
- *   • Critical classes: .ack-card, .ack-card-photo, .ack-photo-placeholder,
+ *   • Critical classes: .ack-card, .ack-card-photo, .ack-photo-fallback,
  *     .ack-card-name, .ack-card-fullname, .ack-card-pronouns, .ack-card-subinfo,
  *     .ack-card-icons, .ack-icon-btn, .ack-hero, .ack-lower-content, .line-divider,
  *     .link-section, .logo-area, .footer-logo, .modules (…and its variants).
@@ -47,7 +48,7 @@
  * Notes
  *   • This file deliberately keeps presentational logic minimal and relies on
  *     CSS for consistent sizing/spacing to match Figma.
- *   • Grids are responsive via Chakra’s <SimpleGrid> (1–3 columns).
+ *   • Grid is a semantic <div class="ack-grid"> (1–4 columns via CSS).
  *   • Footer section is an exact structural match to Home so both pages align.
  * ============================================================================
  */
@@ -55,14 +56,7 @@
 import "../Acknowledgements.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
-import {
-  Text,
-  Heading,
-  SimpleGrid,
-  Box,
-  Image,
-  Divider,
-} from "@chakra-ui/react";
+import { Heading, Divider } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 
@@ -77,16 +71,32 @@ import accessibilityIcon from "../assets/accessibility-icon.svg";
 import team from "../team.json";
 
 /* =============================================================================
+ * Utilities
+ * -----------------------------------------------------------------------------
+ * Centralize how we compute an image src so it’s easy to swap storage paths.
+ * ===========================================================================*/
+function getMemberPhotoSrc(member) {
+  // Current convention: files in public/srch-s25/assets/member-photos
+  // Example: "suresh.jpg" -> "/srch-s25/assets/member-photos/suresh.jpg"
+  return `/srch-s25/assets/member-photos/${member.photo}`;
+}
+
+/* =============================================================================
  * TeamGrid
  * -----------------------------------------------------------------------------
  * Renders a grid of team member cards with consistent formatting.
  * - Sorting is alphabetical by name for stability
  * - Each card:
- *     1) Photo or gray rectangle placeholder (302×296)
+ *     1) Photo (masked by ../src/assets/Photo.png) or masked gray placeholder
  *     2) Name + Pronouns
  *     3) Position | Degree, GradYear
  *     4) Action icons (email/linkedin/website) if present
  * - All spacing, font sizes, and icon dims are handled via CSS classes.
+ *
+ * Netflix-quality notes:
+ * - No extra wrappers; image is the element being masked, so there’s no drift.
+ * - The masked geometry guarantees identical visual boxes across cards.
+ * - Icons sit close to text (not pinned to bottom) to match the Figma density.
  * ===========================================================================*/
 function TeamGrid({ filteredTeam }) {
   const sortedTeam = [...filteredTeam].sort((a, b) =>
@@ -94,22 +104,25 @@ function TeamGrid({ filteredTeam }) {
   );
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
+    <div className="ack-grid">
       {sortedTeam.map((member, idx) => {
         const hasPhoto =
           typeof member.photo === "string" && member.photo.trim().length > 0;
+        const photoSrc = hasPhoto ? getMemberPhotoSrc(member) : null;
 
         return (
-          <Box key={`${member.name}-${idx}`} className="ack-card">
-            {/* --- Photo region (image or placeholder rectangle) --- */}
-            {hasPhoto ? (
-              <Image
+          <div key={`${member.name}-${idx}`} className="ack-card">
+            {/* --- Photo (masked to 290×302 using ../src/assets/Photo.png) --- */}
+            {photoSrc ? (
+              <img
                 className="ack-card-photo"
-                src={`/srch-s25/assets/member-photos/${member.photo}`}
+                src={photoSrc}
                 alt={member.name}
+                loading="lazy"
+                decoding="async"
               />
             ) : (
-              <div className="ack-card-photo ack-photo-placeholder" aria-hidden="true" />
+              <div className="ack-card-photo ack-photo-fallback" aria-hidden="true" />
             )}
 
             {/* --- Name + Pronouns row --- */}
@@ -168,10 +181,10 @@ function TeamGrid({ filteredTeam }) {
                 </a>
               )}
             </div>
-          </Box>
+          </div>
         );
       })}
-    </SimpleGrid>
+    </div>
   );
 }
 
@@ -251,7 +264,7 @@ export default function Acknowledgements() {
       */}
       <div className="ack-hero">
         <div className="upper-text-section">
-          <div className="website-title">Meet Our Team</div>
+          <div className="website-title">Meet our Team</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
           <div className="info-section"></div>
         </div>

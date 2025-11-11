@@ -610,7 +610,7 @@ h4 {
 
 .toggle-button {
   width: 0px;
-  z-index: 9999999;
+  /* z-index: 9999999; */
   color: black !important;
   outline: 0 !important;
   box-shadow: none !important;
@@ -789,7 +789,7 @@ h4 {
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
   margin-right: var(--right-sidebar-width) !important;
-  padding-top: var(--navbar-height) !important;
+  margin-top: var(--navbar-height) !important;
   min-height: 100vh;
   transition: margin 160ms ease;
 }
@@ -1093,7 +1093,6 @@ p > .srch-drawer-link:first-child {
 
   will-change: transform;
   overflow: hidden auto !important;
-  z-index: 50;
   backface-visibility: hidden;
   contain: layout paint style;
 }

@@ -2,7 +2,7 @@ import "./App.css";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import ContentsSidebar from "./components/ContentsSideBar";
+import ContentsSidebar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import Acknowledgements from "./pages/Acknowledgements"; //  now ONE page
