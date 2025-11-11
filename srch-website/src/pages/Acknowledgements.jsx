@@ -68,10 +68,10 @@ import { useNavigate } from "react-router-dom";
 
 // Footer assets (shared with Home)
 import logoImage from "../assets/logo.png";
-import privacyIcon from "../assets/privacy-icon.jpg";
-import automatedIcon from "../assets/automated.png";
-import aiIcon from "../assets/ai-icon.png";
-import accessibilityIcon from "../assets/accessibility-icon.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
 
 // Data
 import team from "../team.json";

@@ -15,7 +15,7 @@ Most people colloquially understand privacy as the condition of restricted acces
 ### Access as a gateway
 
 Through this lens, privacy functions {gate-we-can-open-close-to-others|as a gate we can open or close to others}.
- Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
+Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
 
 ### Anti-informational definitions of privacy
 
@@ -84,7 +84,7 @@ Privacy is relational and must be understood with respect to a certain person or
 
 "Consider the case of a couple having a quiet conversation in their home. While neither spouse has privacy with respect to the other and with regard to their feelings (assuming they are being honest), the couple have privacy with respect to the passersby who cannot hear or see them." (Véliz 2024, 83)
 
-The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
+The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](/srch-s25/privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
 ## References
 
@@ -200,4 +200,3 @@ As Véliz puts it, “What used to be the paradigmatic loci of the private—our
 
 framework:
 For more, see the [Harvard University Privacy Tools Project](https://privacytools.seas.harvard.edu/differential-privacy). Or explore ["A list of real-world uses of differential privacy"](https://desfontain.es/blog/real-world-differential-privacy.html) by Damien Desfontaines.
-

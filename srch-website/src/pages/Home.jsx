@@ -9,10 +9,10 @@ import targetIcon from "../assets/targetIcon.png";
 import bookIcon from "../assets/bookIcon.png";
 import lightbulbIcon from "../assets/lightbulbIcon.png";
 import peopleIcon from "../assets/peopleIcon.png";
-import privacyIcon from "../assets/privacy-icon.jpg";
-import automatedIcon from "../assets/automated.png";
-import aiIcon from "../assets/ai-icon.png";
-import accessibilityIcon from "../assets/accessibility-icon.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
 
 function Home() {
@@ -140,9 +140,9 @@ function Home() {
 
           <div className="line-divider"></div>
 
-          <div className="content-section" style={{ paddingBottom: "84px" }}>
+          <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title" style={{ paddingTop: "84px" }}>
+              <h2 className="search-title">
                 Search for Content
               </h2>
               <p className="search-subtitle">
@@ -159,17 +159,15 @@ function Home() {
 
           <div className="line-divider"></div>
 
-          <div className="text-section">
-            <h2 className="section-title" style={{ paddingTop: "84px" }}>
+          <div className="content-section">
+            <h2 className="section-title" 
+            style={{overflowWrap: "break-word"}}>
               How to use the handbook
             </h2>
             <div className="how-to-section">
-              <p
-                className="intro-text"
-                style={{ fontSize: "20px", paddingBottom: "36px" }}
-              >
+              <p className="intro-text">
                 Each section contains a series of primers that are loosely
-                aligned with learning objectives in the SRC curriculum. Use them
+                aligned with learning objectives in the SRC curriculum. <br></br> Use them
                 to:
               </p>
 

@@ -193,7 +193,7 @@ There are two unique ways that representation bias in AI is different from repre
 1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.
 2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias.
 
-In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^1]) and regulated via governance structures. For more information on AI governance \[nav:check out this primer\](governance).
+In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^1]) and regulated via governance structures. For more information on AI governance \[check out this primer\](governance).
 
 [^1]: Buolamwini, “Gender Shades”
 
@@ -230,7 +230,7 @@ Evaluation bias is present in facial expression recognition datasets. Common ben
 Benefits-and-Risks-of-Benchmark-Datasets:
 Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^1]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[nav:Justice Primer\](justice).
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 [^1]: Angwin, _Machine Bias_
 [^2]: Collins, _Punishing Risk_
@@ -238,7 +238,7 @@ Often arising out of a lack of AI literacy and overreliance on technology, deplo
 Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
 Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^1]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[nav:Justice Primer\](justice).
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 [^1]: Angwin, _Machine Bias_
 [^2]: Collins, _Punishing Risk_
