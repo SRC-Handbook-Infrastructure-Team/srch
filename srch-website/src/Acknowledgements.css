@@ -26,15 +26,25 @@
 
 /* dark theme */
 .dark {
-  --color-bg: #0E0E0E;
+  --color-bg: #000000;
+  /* Changed to black */
   --color-text: #FFFFFF;
   --color-text-secondary: #CCCCCC;
-  --color-card-bg: #181818;
+  --color-card-bg: transparent;
   --color-border: #333333;
   --color-primary: #A5D8AE;
   --color-accent: #005721;
-  background-color: var(--color-bg);
   color: var(--color-text);
+}
+
+.dark body,
+.dark #root,
+.dark .layout {
+  background-color: #000000 !important;
+}
+
+.dark .ack-lower-content {
+  background-color: #000000;
 }
 
 /* ============================================================================
@@ -47,7 +57,7 @@
 .ack-hero {
   width: 55vw;
   height: 55vh;
-  background-image: url("../src/assets/Property 1=Default.png");
+  background-image: url("../src/assets/light-bg.svg");
   background-size: contain;
   background-position: top center;
   background-repeat: no-repeat;
@@ -55,7 +65,8 @@
   align-items: center;
   padding-left: 13vw;
   padding-right: 13vw;
-  margin-top: 40px; /* navbar offset */
+  margin-top: 40px;
+  /* navbar offset */
 }
 
 .ack-hero:hover {
@@ -81,7 +92,8 @@
 
 .ack-card {
   width: 290px;
-  height: 433px; /* accommodates photo + text + icons */
+  height: 433px;
+  /* accommodates photo + text + icons */
   display: flex;
   flex-direction: column;
   font-family: "Be Vietnam Pro", sans-serif;
@@ -97,8 +109,9 @@
 
 /* dark mode card styling */
 .dark .ack-card {
-  background-color: var(--color-card-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .dark .ack-card:hover {
@@ -121,7 +134,8 @@
 }
 
 .dark .ack-card-photo {
-  background-color: #333333;
+  background-color: transparent;
+  border: none;
 }
 
 
@@ -164,15 +178,15 @@
 
 /* dark mode text colors */
 .dark .ack-card-fullname {
-  color: #FFFFFF; 
+  color: #FFFFFF;
 }
 
 .dark .ack-card-pronouns {
-  color: #CCCCCC; 
+  color: #CCCCCC;
 }
 
 .dark .ack-card-subinfo {
-  color: #FFFFFF; 
+  color: #FFFFFF;
 }
 
 .dark .ack-team-section h2,
@@ -217,12 +231,12 @@
 
 /* dark mode icon buttons */
 .dark .ack-icon-btn {
-  border-color: #A5D8AE; 
-  color: #A5D8AE; 
+  border-color: #A5D8AE;
+  color: #A5D8AE;
 }
 
 .dark .ack-icon-btn:hover {
-  background-color: #A5D8AE; 
+  background-color: #A5D8AE;
   color: #0E0E0E;
 }
 
@@ -384,7 +398,6 @@
   }
 }
 
-/* --- HERO behaves like Home’s .upper-content --- */
 .ack-hero {
   position: fixed;
   top: 0;
@@ -394,30 +407,28 @@
   width: 100vw;
   height: 100vh;
 
-  background-image: url("../src/assets/Property 1=Default.png");
+  background-image: url("../src/assets/light-bg.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  /* align text inside the hero */
   display: flex;
-  align-items: flex-start; /* text block sits a bit below the top */
+  align-items: flex-start;
   padding: 0 13.22vw;
-  border-top: 1px white solid; /* parity with Home */
+  border-top: 1px white solid;
 }
 
 .ack-hero:hover {
   background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
-/* Optional: reuse your existing upper-text styles (match Home) */
 .upper-text-section {
   width: 33vw;
-  margin-top: 20vh;           /* push copy down a bit */
+  margin-top: 20vh;
   display: inline-flex;
   flex-direction: column;
   gap: 36px;
-  z-index: 1;                 /* above background */
+  z-index: 1;
 }
 
 .website-title {
@@ -435,27 +446,24 @@
   line-height: 28px;
 }
 
-/* --- LOWER CONTENT starts after hero (slides over it) --- */
 .ack-lower-content {
-  margin-top: 70vh;      /* critical: begins below the fixed hero */
+  margin-top: 70vh;
   position: relative;
-  z-index: 1;             /* above the hero */
+  z-index: 1;
   background: #fff;
-  padding: 72px 200px;    /* same horizontal rhythm as Home’s lower-content */
+  padding: 72px 200px;
 }
 
 .line-divider {
-  width: 100%; 
+  width: 100%;
   height: 1px;
   background: rgba(96, 70, 58, 1);
   position: relative;
-  transform: scaleX(1.35);     /* stretch WITHOUT affecting height */
+  transform: scaleX(1.35);
   transform-origin: center;
 
 }
 
-
-/* Footer block styles (copied from LandingPage.css) */
 .link-section {
   align-self: stretch;
   justify-content: space-between;
@@ -485,6 +493,7 @@
   gap: 18px;
   flex: 1;
 }
+
 .modules-heading,
 .module-heading {
   color: var(--color-text);
@@ -492,20 +501,34 @@
   font-family: var(--content-font);
   font-weight: 600;
 }
+
 .primer-link {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
 }
+
 .primer-link-photo {
   width: 24px;
   height: 24px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.primer-link-photo img { width: 24px; height: 24px; object-fit: contain; }
 
-.module-links { display: flex; flex-direction: column; gap: 12px; }
+.primer-link-photo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.module-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .module-link {
   color: var(--color-text);
   font-size: 20px;
@@ -518,7 +541,10 @@
   cursor: pointer;
   transition: color 0.2s;
 }
-.module-link:hover { color: #9d0013; }
+
+.module-link:hover {
+  color: #9d0013;
+}
 
 .feedback-contact {
   color: var(--color-text);
@@ -527,26 +553,38 @@
   font-weight: var(--sub-weight);
   line-height: 30px;
 }
+
 .feedback-contact a {
   color: #9d0013;
   text-decoration: underline;
   transition: color 0.2s;
 }
-.feedback-contact a:hover { color: #7a000f; }
+
+.feedback-contact a:hover {
+  color: #7a000f;
+}
 
 /* responsive parity with Home */
 @media (max-width: 1024px) {
-  .ack-lower-content { padding: 72px 80px; }
-}
-@media (max-width: 768px) {
-  .ack-lower-content { padding: 48px 24px; }
-  .link-section { flex-direction: column; gap: 40px; }
-  .modules { width: 100%; }
+  .ack-lower-content {
+    padding: 72px 80px;
+  }
 }
 
-/* ============================================================================
-   Placeholder Rectangle (for members without photos)
-   ============================================================================ */
+@media (max-width: 768px) {
+  .ack-lower-content {
+    padding: 48px 24px;
+  }
+
+  .link-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .modules {
+    width: 100%;
+  }
+}
 
 .ack-photo-placeholder {
   width: 302px;

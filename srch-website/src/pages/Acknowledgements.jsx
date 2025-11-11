@@ -65,9 +65,12 @@ import {
 } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ThemeContext } from "../App";
 
 // Footer assets (shared with Home)
-import logoImage from "../assets/logo.png";
+import logoImage from "../assets/logo.svg";
+import darkLogoImage from "../assets/dark-logo.svg";
 import privacyIcon from "../assets/privacy.svg";
 import automatedIcon from "../assets/automated-decision-making.svg";
 import aiIcon from "../assets/generative-ai.svg";
@@ -232,6 +235,8 @@ function TeamSection({ title, teamName }) {
  * ===========================================================================*/
 export default function Acknowledgements() {
   const navigate = useNavigate();
+  const { isDarkMode } = useContext(ThemeContext);
+  const currentLogo = isDarkMode ? darkLogoImage : logoImage;
 
   // Slugs borrowed from Home to keep navigation consistent
   const privacySlug = "/privacy/whatIsPrivacy";
@@ -284,7 +289,7 @@ export default function Acknowledgements() {
           {/* Logo column */}
           <div className="logo-area">
             <img
-              src={logoImage}
+              src={currentLogo}
               alt="SRC Handbook Logo"
               className="footer-logo"
             />

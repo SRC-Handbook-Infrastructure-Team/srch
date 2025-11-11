@@ -21,7 +21,8 @@ import {
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "./NavSearchBar";
 import { ThemeContext } from "../App";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
+import darkLogo from "../assets/dark-logo.svg";
 import "../ContentPage.css";
 import { color } from "framer-motion";
 
@@ -174,10 +175,11 @@ function NavBar({ className = "" }) {
           <Box className="navbar-logo-container" onClick={() => navigate("/")}>
             <HStack alignItems={"center"}>
               <Image
-                src={logo}
+                src={isDarkMode ? darkLogo : logo}
                 alt="Socially Responsible Computing Handbook"
                 height={"30px"}
                 objectFit="contain"
+                className={isDarkMode ? "dark-logo" : "light-logo"}
               />
             </HStack>
           </Box>
@@ -262,7 +264,7 @@ function NavBar({ className = "" }) {
             >
               <Text>Acknowledgements</Text>
             </Box>
-            <Box 
+            <Box
               className="icon-button"
               onClick={toggleTheme}
               title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -274,12 +276,12 @@ function NavBar({ className = "" }) {
               }}
             >
               {isDarkMode ? (
-                <SunIcon 
-                  boxSize={5} 
+                <SunIcon
+                  boxSize={5}
                   color={isDarkMode ? 'white' : 'gray.800'}
                 />
               ) : (
-                <MoonIcon 
+                <MoonIcon
                   boxSize={5}
                   color={isDarkMode ? 'white' : 'gray.800'}
                 />

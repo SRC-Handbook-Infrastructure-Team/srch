@@ -251,97 +251,104 @@ export default function ContentsSidebar({
   }, [sections, expandedSections, allExpanded]);
 
   /* ---------------------- Nav Rendering ---------------------- */
-const NavContent = () => (
-  <VStack align="stretch" spacing={2}>
-    {sections.map((section, idx) => {
-      const sectionSubs = subsections[section.id] || [];
-      const hasSubsections = sectionSubs.length > 0;
-      const isExpanded = !!expandedSections[section.id];
-      const isActiveSection = currentSectionId === section.id;   // ✅ route-aware
-      const displayNumber =
-        SECTION_NUMBER_MAP[section.id] ??
-        (typeof section.order === "number" ? section.order + 1 : idx + 1);
+  const NavContent = () => (
+    <VStack align="stretch" spacing={2}>
+      {sections.map((section, idx) => {
+        const sectionSubs = subsections[section.id] || [];
+        const hasSubsections = sectionSubs.length > 0;
+        const isExpanded = !!expandedSections[section.id];
+        const isActiveSection = currentSectionId === section.id;   // ✅ route-aware
+        const displayNumber =
+          SECTION_NUMBER_MAP[section.id] ??
+          (typeof section.order === "number" ? section.order + 1 : idx + 1);
 
-      return (
-        <Box key={section.id} mb={2} className={`sidebar-section`}>
-          <Box
-            /*  NEW: route-aware class to activate Figma highlight styles */
-            className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
-            p={2}
-            cursor="pointer"
-            onClick={(e) => {
-              if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
-              else navigate(`/${section.id}`);
-              toggleSection(section.id, e);
-            }}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box display="flex" alignItems="center" gap="6px">
-              <Text className="sidebar-section-title">
-                {displayNumber}. {section.title}
-              </Text>
-              {section.final === false && <BetaTag />}
+        return (
+          <Box key={section.id} mb={2} className={`sidebar-section`}>
+            <Box
+              className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
+              p={2}
+              cursor="pointer"
+              onClick={(e) => {
+                if (hasSubsections) navigate(`/${section.id}/${sectionSubs[0].id}`);
+                else navigate(`/${section.id}`);
+                toggleSection(section.id, e);
+              }}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" alignItems="center" gap="6px">
+                <Text className="sidebar-section-title">
+                  {displayNumber}. {section.title}
+                </Text>
+                {section.final === false && <BetaTag />}
+              </Box>
+
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                  className={`chevron-icon ${isActiveSection ? 'is-active' : ''}`}
+                  sx={{
+                    color: isActiveSection ? "#531C00" : "inherit",
+                    '.dark &': {
+                      color: isActiveSection ? "#A5D8AE" : "rgba(255, 255, 255, 0.7)",
+                      '&:hover': {
+                        color: '#A5D8AE',
+                        opacity: 1
+                      }
+                    },
+                    '&:hover': {
+                      opacity: 0.8
+                    }
+                  }}
+                />
+              )}
             </Box>
 
-            {hasSubsections && (
-              <Icon
-                as={ChevronDownIcon}
-                transform={isExpanded ? "rotate(180deg)" : undefined}
-                transition="transform 0.2s"
-                w={5}
-                h={5}
-                color={isActiveSection ? "#531C00" : "inherit"}   // accent on active
-              />
+            {isExpanded && hasSubsections && (
+              <VStack
+                className="sidebar-subsection-container"
+                align="stretch"
+                pl={6}
+                mt={1}
+                spacing={0}
+              >
+                {sectionSubs.map((sub, subIdx) => {
+                  const isSubActive = isActiveSection && currentSubsectionId === sub.id;
+                  const subLetter = indexToLetter(subIdx);
+                  const subPrefix = `${displayNumber}.${subLetter}.`;
+
+                  return (
+                    <Box key={sub.id} mb={1}>
+                      <Link to={`/${section.id}/${sub.id}`}>
+                        <Box
+                          px={2}
+                          py={1}
+                          borderRadius="md"
+                          className={`sidebar-subsection-container ${isSubActive ? 'is-active' : ''}`}
+                          transition="background-color 0.2s ease"
+                        >
+                          <Text
+                            className={`sidebar-subsection ${isSubActive ? 'is-active' : ''}`}
+                          >
+                            {subPrefix} {sub.title}
+                          </Text>
+                        </Box>
+                      </Link>
+                    </Box>
+                  );
+                })}
+              </VStack>
             )}
           </Box>
-
-          {isExpanded && hasSubsections && (
-            <VStack
-              className="sidebar-subsection-container"
-              align="stretch"
-              pl={6}
-              mt={1}
-              spacing={0}
-            >
-              {sectionSubs.map((sub, subIdx) => {
-                const isSubActive = isActiveSection && currentSubsectionId === sub.id;
-                const subLetter = indexToLetter(subIdx);
-                const subPrefix = `${displayNumber}.${subLetter}.`;
-
-                return (
-                  <Box key={sub.id} mb={1}>
-                    <Link to={`/${section.id}/${sub.id}`}>
-                      <Box
-                        px={2}
-                        py={1}
-                        borderRadius="md"
-                        bg={isSubActive ? "#531C00" : "transparent"}
-                        transition="background-color 0.2s ease"
-                        _hover={{
-                          bg: isSubActive ? "#531C00" : "rgba(83,28,0,0.06)",
-                        }}
-                      >
-                        <Text
-                          className="sidebar-subsection"
-                          fontWeight={isSubActive ? "600" : "400"}
-                          color={isSubActive ? "white" : "#1a1a1a"}
-                        >
-                          {subPrefix} {sub.title}
-                        </Text>
-                      </Box>
-                    </Link>
-                  </Box>
-                );
-              })}
-            </VStack>
-          )}
-        </Box>
-      );
-    })}
-  </VStack>
-);
+        );
+      })}
+    </VStack>
+  );
 
 
   /* ---------------------- Mobile Drawer ---------------------- */
@@ -397,30 +404,14 @@ const NavContent = () => (
     >
       {/* FIX APPLIED HERE */}
       <div className="sidebar-header-controls">
-        <div
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 20,
-            background: "#fff",
-            // moved it to the right & removed any visual divider line
-            padding: "8px 16px 4px",
-            display: "flex",
-            justifyContent: "flex-end"
-          }}
-        >
+        <div className="sidebar-header-controls-inner">
           <button
             className="sidebar-toggle"
             onClick={toggleExpandCollapse}
             aria-pressed={allExpanded}
           >
             {allExpanded ? "Collapse all" : "Expand all"}
-            <span
-              className="icon-double-chevron"
-              aria-hidden="true"
-              style={{ marginLeft: 6, transform: allExpanded ? "rotate(180deg)" : "none" }}
-
-            >
+            <span className="icon-double-chevron" aria-hidden="true">
               {/* up/down naturally flip with CSS rotate depending on state */}
               <svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" /></svg>
               <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>

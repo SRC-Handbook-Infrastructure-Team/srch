@@ -22,10 +22,10 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Layout metrics */
-  --navbar-height: 80px; /* unified */
-  --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
-  --left-sidebar-width: 0px; /* JS updates these */
-  --right-sidebar-width: 0px; /* JS updates these */
+  --navbar-height: 80px;
+  --toolbar-height: 0px;
+  --left-sidebar-width: 0px;
+  --right-sidebar-width: 0px;
 
   /* Colors / theme */
   --color-text: #1a1a1a;
@@ -41,14 +41,139 @@
   --sidebar-bg: #c9c9c9;
 }
 
+/* Dark mode styles */
+.dark {
+  --color-text: #ffffff;
+  --color-text-muted: #a0a0a0;
+  --color-bg: #000000;
+  --srch-brown: #A5D8AE;
+  --sidebar-bg: #121212;
+  color-scheme: dark;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Ensure all sidebar text is white in dark mode */
+.dark .sidebar-section,
+.dark .sidebar-section *,
+.dark .sidebar-subsection,
+.dark .sidebar-subsection *,
+.dark .sidebar-section-header,
+.dark .sidebar-section-header * {
+  color: #ffffff !important;
+}
+
+/* Dark mode form elements */
+.dark button,
+.dark input,
+.dark select,
+.dark textarea {
+  color: var(--color-text);
+  border-color: var(--color-border);
+  background: transparent;
+}
+
+/* Base elements */
+.dark body,
+.dark #root,
+.dark .layout {
+  background-color: #000000;
+}
+
+.dark,
+.dark p,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark .markdown-content {
+  color: #ffffff;
+}
+
+/* Links */
+.dark a {
+  color: #A5D8AE;
+}
+
+.dark a:hover {
+  color: #c5e8ca;
+  text-decoration: underline;
+}
+
+/* Code blocks */
+.dark pre,
+.dark code {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  border: 1px solid #333;
+}
+
+.dark .highlight,
+.dark .important-text {
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.dark mark {
+  background-color: rgba(38, 58, 38, 0.5);
+  color: #A5D8AE;
+}
+
+/* Buttons - Reset default button styles in dark mode */
+.dark button,
+.dark .button {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: inherit;
+  border: none;
+  box-shadow: none !important;
+}
+
+/* Specific button styles */
+.dark .sidebar-toggle,
+.dark .sidebar-toggle:hover,
+.dark .sidebar-toggle:focus {
+  color: #ffffff;
+  background: none;
+  opacity: 1;
+  box-shadow: none;
+}
+
+/* Drawer close button */
+.dark .chakra-drawer__close-btn,
+.dark .chakra-modal__close-btn {
+  background: transparent;
+  color: #ffffff;
+}
+
+.dark .chakra-drawer__close-btn:hover,
+.dark .chakra-drawer__close-btn:active,
+.dark .chakra-modal__close-btn:hover,
+.dark .chakra-modal__close-btn:active {
+  background: transparent;
+  color: #ffffff;
+  opacity: 0.8;
+}
+
 /* ------ general styles ------- */
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
+  background-color: transparent !important;
+  text-decoration: none;
+}
+
+dark a:hover {
+  color: #A5D8AE !important;
+  background-color: transparent !important;
+  text-decoration: none;
 }
 
 /* ==========================================================================  
@@ -70,6 +195,7 @@ a {
   color: var(--color-accent);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--color-accent);
   text-decoration: underline;
@@ -88,9 +214,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -124,34 +252,162 @@ mark {
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  z-index: 19; /* below NavBar (20), above content */
+  z-index: 19;
 }
 
 /* ========================================================================== 
-   FEATURE 1 — Active Section Header Highlight (Figma-spec)
+   SIDEBAR STYLES
    ========================================================================== */
 
+/* Section Headers */
 .sidebar-section-header {
   border: 1px solid transparent;
   border-radius: 6px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  
+  transition: background-color 0.15s ease, border-color 0.15s;
 }
 
-/*  Route-aware highlight (via .is-active class from JSX) */
+/* Active section header */
 .sidebar-section-header.is-active {
-  border-color: #c9c9c9 !important;
-  background-color: #c9c9c9 !important;
+  border-color: #c9c9c9;
+  background-color: #c9c9c9;
 }
 
-/*  Optional subtle hover, but DO NOT override active state */
+/* Dark mode overrides */
+.dark .sidebar-section-header.is-active {
+  background-color: #263A26;
+  border-color: #3a523a;
+}
+
+/* Hover states */
 .sidebar-section-header:hover:not(.is-active) {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-/* Ensures the entire row feels clickable and avoids visual jitter */
+.dark .sidebar-section-header:hover:not(.is-active) {
+  background-color: rgba(38, 58, 38, 0.5);
+}
+
+/* Clickable area */
 .sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
+  pointer-events: none;
+  /* Interaction handled by container */
+}
+
+/* Chevron Icons */
+.sidebar-section-header .chevron-icon {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Dark mode chevron colors */
+.dark .sidebar-section-header .chevron-icon,
+.dark .sidebar-section-header.is-active .chevron-icon,
+.dark .sidebar-section-header:hover .chevron-icon {
+  color: #A5D8AE;
+}
+
+.dark .sidebar-section-header:hover .chevron-icon {
+  opacity: 0.9;
+}
+
+/* Header Controls */
+.sidebar-header-controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: none;
+  padding: 8px 16px 4px;
+  display: flex;
+  justify-content: flex-end;
+  border: none;
+  margin: 0;
+}
+
+.sidebar-header-controls-inner {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  background: none;
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  all: unset;
+  color: #1a1a1a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.dark .sidebar-toggle {
+  color: #ffffff;
+}
+
+.sidebar-toggle,
+.sidebar-toggle:hover,
+.sidebar-toggle:focus {
+  color: #1a1a1a !important;
+  text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Dark mode styles */
+.dark .sidebar-toggle,
+.dark .sidebar-toggle:hover,
+.dark .sidebar-toggle:focus {
+  color: #ffffff !important;
+  background: none !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dark .sidebar-toggle {
+  color: #ffffff !important;
+  background: none !important;
+}
+
+.sidebar-toggle:hover {
+  background: none !important;
+  text-decoration: underline;
+}
+
+.dark .sidebar-toggle:hover {
+  background: none !important;
+  color: #ffffff !important;
+  opacity: 0.9;
+}
+
+/* Double chevron icon */
+.icon-double-chevron {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 4px;
+  height: 16px;
+  justify-content: center;
+}
+
+.icon-double-chevron svg {
+  width: 12px;
+  height: 6px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.dark .icon-double-chevron svg {
+  fill: #ffffff;
 }
 
 /* ==========================================================================
@@ -165,13 +421,16 @@ mark {
   height: calc(100vh - var(--navbar-height)) !important;
   width: var(--right-sidebar-width) !important;
   background: var(--drawer-bg) !important;
-  border-left: 1px solid var(--border-1) !important; /* single vertical border */
+  border-left: 1px solid var(--border-1) !important;
+  /* single vertical border */
   transform: translateX(100%);
   opacity: 0;
   transition: transform 0.35s ease, opacity 0.25s ease;
   overflow: hidden auto !important;
-  contain: layout paint style; /* isolates layout to the drawer for cheaper reflow */
+  contain: layout paint style;
+  /* isolates layout to the drawer for cheaper reflow */
 }
+
 .right-sidebar.open {
   transform: translateX(0);
   opacity: 1;
@@ -187,9 +446,11 @@ mark {
   align-items: center;
   color: var(--color-accent);
 }
+
 .right-sidebar .drawer-content {
   padding: var(--space-md);
 }
+
 .right-sidebar .drawer-close-btn {
   background: none;
   border: none;
@@ -199,6 +460,7 @@ mark {
   border-radius: var(--radius-md);
   padding: var(--space-xs) var(--space-sm);
 }
+
 .right-sidebar .drawer-close-btn:hover {
   background: var(--drawer-hover-bg);
 }
@@ -227,8 +489,99 @@ mark {
   color: var(--color-accent) !important;
   font-weight: 600;
 }
+
 .sidebar-link:hover {
   color: var(--color-accent);
+}
+
+/* Dark mode active states - must come after light mode to ensure proper override */
+.dark .sidebar-subsection-container.is-active,
+.dark .sidebar-subsection.is-active,
+.dark .sidebar-subsection-container.is-active *,
+.dark .sidebar-subsection.is-active * {
+  background-color: #263A26 !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}
+
+/* Light mode active states */
+.sidebar-subsection-container.is-active,
+.sidebar-subsection.is-active {
+  background-color: #531C00 !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}
+
+.sidebar-subsection.is-active {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Dark mode hover states */
+.dark .sidebar-subsection-container:hover:not(.is-active) {
+  background-color: rgba(38, 58, 38, 0.5) !important;
+}
+
+/* Light mode hover states */
+.sidebar-subsection-container:hover:not(.is-active) {
+  background-color: rgba(83, 28, 0, 0.06) !important;
+}
+
+.dark .sidebar-link:hover:not(.sidebar-link-active),
+.dark .sidebar-subsection:hover:not(.is-active) {
+  background-color: rgba(38, 58, 38, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* Target all sidebar list items in dark mode */
+.dark .sidebar-section-header ul li,
+.dark .sidebar-subsection {
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  margin: 2px 0;
+}
+
+.dark .sidebar-section-header ul li:hover,
+.dark .sidebar-subsection:hover {
+  background-color: rgba(38, 58, 38, 0.5) !important;
+}
+
+/* Ensure active state works for all sidebar items - enhanced */
+.dark .sidebar-section-header ul li.is-active,
+.dark .sidebar-subsection.is-active,
+.dark .sidebar-section-header ul li[aria-current="page"],
+.dark .sidebar-subsection[aria-current="page"],
+.dark .sidebar-section-header ul li[data-active="true"],
+.dark .sidebar-section-header ul li.active,
+.dark .sidebar-section-header ul li a.active,
+.dark .sidebar-section-header ul li a[aria-current="page"] {
+  background-color: #263A26 !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+  position: relative;
+}
+
+.dark .sidebar-section-header ul li.is-active::before,
+.dark .sidebar-section-header ul li[aria-current="page"]::before,
+.dark .sidebar-section-header ul li[data-active="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: #A5D8AE;
+  border-radius: 3px 0 0 3px;
+}
+
+.dark .sidebar-section-header ul li a[aria-current="page"],
+.dark .sidebar-subsection a[aria-current="page"] {
+  background-color: #263A26 !important;
+  color: #ffffff !important;
+  display: block;
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 /* ==========================================================================
@@ -273,6 +626,7 @@ h4 {
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .nav-section:hover {
   background-color: var(--nav-hover-bg);
 }
@@ -281,17 +635,21 @@ h4 {
   display: flex;
   align-items: center;
 }
+
 .nav-section-text {
   font-weight: 500;
 }
+
 .nav-subsection {
   display: flex;
   align-items: center;
 }
+
 .nav-subsection-text {
   font-size: 0.875rem;
   padding: 4px;
 }
+
 .nav-subsection-active {
   font-weight: 700;
 }
@@ -307,6 +665,7 @@ h4 {
   cursor: col-resize;
   background: transparent;
 }
+
 .left-resizer.is-resizing {
   background: rgba(37, 99, 235, 0.15);
 }
@@ -337,11 +696,33 @@ h4 {
   z-index: 20;
 }
 
-.top-navbar a:hover,
-.top-navbar a:button,
-.top-navbar .nav-link:hover,
-.top-navbar .nav-button:hover {
+.dark .top-navbar {
+  border-bottom-color: #303030;
+}
+
+/* Navbar link hover states */
+.top-navbar .nav-link-box:hover,
+.top-navbar .nav-dropdown-title:hover,
+.top-navbar .nav-dropdown-item:hover {
   color: #9d0013;
+  background-color: transparent !important;
+}
+
+/* Dark mode navbar link hover states */
+.dark .top-navbar .nav-link-box:hover,
+.dark .top-navbar .nav-dropdown-title:hover,
+.dark .top-navbar .nav-dropdown-item:hover,
+.dark .top-navbar .nav-link-box:focus,
+.dark .top-navbar .nav-dropdown-title:focus,
+.dark .top-navbar .nav-dropdown-item:focus {
+  color: #A5D8AE !important;
+  background-color: transparent !important;
+  text-decoration: none;
+}
+
+/* Ensure text color is inherited in dropdown items */
+.dark .top-navbar .nav-dropdown-item {
+  color: inherit;
 }
 
 .navbar-padding {
@@ -399,6 +780,17 @@ h4 {
   color: #9d0013;
 }
 
+/* Dark mode dropdown title hover */
+.dark .top-navbar .nav-dropdown:hover>.nav-dropdown-title,
+.dark .top-navbar .nav-dropdown-title:hover,
+.dark .top-navbar .nav-dropdown-title:hover .nav-dropdown-title-text,
+.dark .top-navbar .nav-dropdown:focus>.nav-dropdown-title,
+.dark .top-navbar .nav-dropdown-title:focus,
+.dark .top-navbar .nav-dropdown-title:focus .nav-dropdown-title-text {
+  color: #A5D8AE !important;
+  background-color: transparent !important;
+}
+
 .nav-dropdown-title-text {
   pointer-events: auto;
   user-select: none;
@@ -431,31 +823,65 @@ h4 {
 }
 
 .nav-dropdown-item {
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  color: inherit;
 }
 
 .nav-dropdown-item:hover {
   color: #9d0013;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Text boxes for simple nav links */
+/* Dark mode styles for dropdown menu */
+.dark .nav-dropdown-menu {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark .nav-dropdown-item {
+  color: #e0e0e0;
+}
+
+.dark .nav-dropdown-item:hover {
+  color: #A5D8AE;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .nav-link-box {
   height: min-content;
   border-radius: 0.375rem;
   cursor: pointer;
-  text-align: center;
-  user-select: none;
-  transition: color 0.2s;
+  padding: 0.5rem 0.75rem;
   white-space: nowrap;
+  display: inline-block;
 }
 
-.nav-link-box:hover {
+.nav-link-box,
+.nav-link-box * {
+  transition: color 0.2s ease;
+}
+
+.nav-link-box:hover,
+.nav-link-box:hover * {
   color: #9d0013;
+  background-color: transparent !important;
+  text-decoration: none;
+}
+
+.dark .nav-link-box,
+.dark .nav-link-box * {
+  color: #ffffff;
+}
+
+.dark .nav-link-box:hover,
+.dark .nav-link-box:hover * {
+  color: #A5D8AE !important;
+  background-color: transparent !important;
 }
 
 .mobile-menu-vstack {
@@ -529,6 +955,7 @@ h4 {
   .hide-md {
     display: none !important;
   }
+
   .show-md {
     display: flex !important;
   }
@@ -538,6 +965,7 @@ h4 {
   .hide-base {
     display: none !important;
   }
+
   .show-base {
     display: inline-flex !important;
   }
@@ -581,21 +1009,84 @@ h4 {
 .navsearchbar-input:focus,
 .navsearchbar-input:focus-visible {
   box-shadow: none;
-  outline: none;
+  outline: 2px solid #9d0013;
+  outline-offset: 2px;
   border-color: inherit;
+}
+
+.dark .navsearchbar-input:focus,
+.dark .navsearchbar-input:focus-visible {
+  outline-color: #263A26;
 }
 
 .navsearchbar-button {
   color: black;
+  transition: color 0.2s ease;
 }
 
 .navsearchbar-button:hover {
   color: #9d0013;
+  background: transparent !important;
+}
+
+.dark .navsearchbar-button {
+  color: white;
+}
+
+.dark .navsearchbar-button:hover {
+  color: #A5D8AE !important;
+  background: transparent !important;
 }
 
 /* ========================================================================== 
    Search Bar
    ========================================================================== */
+
+/* Ensure dark logo is used in dark mode */
+.dark .navbar-logo-container .light-logo {
+  display: none !important;
+}
+
+.dark .navbar-logo-container .dark-logo {
+  display: block !important;
+}
+
+/* Dark mode search bar */
+.dark .searchbar-container {
+  background-color: #181818 !important;
+  border: 1px solid #005721 !important;
+  border-radius: 6px;
+}
+
+.dark .searchbar-input {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.dark .searchbar-input::placeholder {
+  color: #a0a0a0 !important;
+  opacity: 1;
+}
+
+/* Search toggle button in dark mode */
+.dark .searchbar-toggle-button {
+  color: #ffffff !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Remove hover effect in dark mode */
+.dark .searchbar-toggle-button:hover,
+.dark .searchbar-toggle-button:focus,
+.dark .searchbar-toggle-button:focus-visible,
+.dark .searchbar-toggle-button:active {
+  color: #ffffff !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
 
 .searchbar-container {
   position: relative;
@@ -619,7 +1110,7 @@ h4 {
 }
 
 .searchbar-input::placeholder {
-  color: black;
+  color: #656565;
   opacity: 1;
 }
 
@@ -637,19 +1128,34 @@ h4 {
 .searchbar-input:focus-visible,
 .searchbar-input:active,
 .searchbar-input:focus,
-.searchbar-input:focus-within,
-.searchbar-input:hover {
+.searchbar-input:focus-within {
   border-width: 0 !important;
   box-shadow: none !important;
+  outline: 2px solid #9d0013 !important;
+  outline-offset: 2px;
+}
+
+.dark .searchbar-input:focus,
+.dark .searchbar-input:focus-visible,
+.dark .searchbar-input:active,
+.dark .searchbar-input:focus,
+.dark .searchbar-input:focus-within {
+  outline-color: #263A26 !important;
+}
+
+.searchbar-input:hover {
+  border-width: 0 !important;
   outline: none !important;
 }
 
+/* Light mode hover state */
 .searchbar-toggle-button:hover {
   outline: 0 !important;
   box-shadow: none !important;
   border: none !important;
   color: #9d0013 !important;
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 .searchbar-toggle-button:focus,
@@ -669,14 +1175,17 @@ h4 {
   box-shadow: none !important;
   border: none !important;
   background: transparent !important;
+  background-color: transparent !important;
 }
 
+/* Light mode hover state */
 .searchbar-toggle-button:hover {
   outline: 0 !important;
   box-shadow: none !important;
   border: none !important;
   color: #9d0013 !important;
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 .searchbar-toggle-button:focus,
@@ -687,14 +1196,13 @@ h4 {
   border: none !important;
   background: transparent !important;
 }
+
 */
-
-
-  /* ==========================================================================
+/* ==========================================================================
    Search Results Window
    ========================================================================== */
 
-  .results-autofill {
+.results-autofill {
   z-index: 999999999999999999;
   background-color: transparent;
   color: black !important;
@@ -847,6 +1355,7 @@ h4 {
   cursor: col-resize !important;
   background: transparent !important;
 }
+
 .right-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
@@ -858,6 +1367,7 @@ h4 {
   font-size: 16px !important;
   color: #1a1a1a !important;
 }
+
 .sidebar-subsection {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 400 !important;
@@ -911,6 +1421,7 @@ html body .main-content {
   position: fixed;
   z-index: 50;
 }
+
 .left-sidebar.open {
   transform: translateX(0);
   opacity: 1;
@@ -926,6 +1437,7 @@ html body .main-content {
   cursor: col-resize !important;
   background: transparent !important;
 }
+
 .left-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
@@ -933,11 +1445,13 @@ html body .main-content {
 .sidebar-btn:hover {
   opacity: 0.8;
 }
+
 .icon-double-chevron {
   display: inline-flex;
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 10px;
   height: 5px;
@@ -950,11 +1464,35 @@ html body .main-content {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 600 !important;
   font-size: 16px !important;
-  color: var(--srch-brown) !important;
   padding: 10px 12px !important;
-  background: #fff !important;
   border-bottom: 1px solid var(--border-1) !important;
+  background: transparent !important;
+  color: var(--srch-brown) !important;
 }
+
+/* Dark mode styles */
+body.dark .drawer-header {
+  color: #ffffff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
+}
+
+/* Remove background from close button in dark mode */
+body.dark .chakra-drawer__close-btn,
+body.dark .chakra-modal__close-btn {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Remove hover/active states */
+body.dark .chakra-drawer__close-btn:hover,
+body.dark .chakra-drawer__close-btn:active,
+body.dark .chakra-modal__close-btn:hover,
+body.dark .chakra-modal__close-btn:active {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
 .drawer-content {
   padding: 12px !important;
 }
@@ -969,6 +1507,7 @@ html body .main-content {
   cursor: col-resize !important;
   background: transparent !important;
 }
+
 .right-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
@@ -1002,9 +1541,11 @@ html body .main-content {
 }
 
 .header-toggle:focus-visible {
-  outline: 2px solid #9d0013; /* your brand color */
+  outline: 2px solid #9d0013;
+  /* your brand color */
   outline-offset: 2px;
 }
+
 .header-toggle:hover {
   transform: scale(1.1);
 }
@@ -1020,7 +1561,8 @@ html body .main-content {
 
 /* 1) Make markdown page padding a token we can cancel for the divider */
 .markdown-page {
-  --page-pad: 100px; /* matches your current 100px */
+  --page-pad: 100px;
+  /* matches your current 100px */
   padding-left: var(--page-pad);
   padding-right: var(--page-pad);
 }
@@ -1056,7 +1598,8 @@ html body .main-content {
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
-  position: relative; /* anchor for the toggle button */
+  position: relative;
+  /* anchor for the toggle button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1093,7 +1636,8 @@ html body .main-content {
   font-size: 11px;
   line-height: 1;
   position: relative;
-  top: 1px; /* small visual nudge */
+  top: 1px;
+  /* small visual nudge */
 }
 
 /* center the control in the header strip */
@@ -1102,6 +1646,7 @@ html body .main-content {
   justify-content: right;
   padding: 8px 0;
 }
+
 /* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
 .sidebar-toggle {
   /* nuke default button look */
@@ -1134,6 +1679,7 @@ html body .main-content {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -1150,11 +1696,14 @@ html body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400; /* tweak if you want lighter */
-  letter-spacing: 0.02em; /* optional, matches figma-ish */
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  /* optional, matches figma-ish */
   color: var(--srch-brown);
-  margin: 0 0 4px 0; /* small gap above the H1 */
-  text-transform: uppercase; /* optional, matches figma */
+  margin: 0 0 4px 0;
+  /* small gap above the H1 */
+  text-transform: uppercase;
+  /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -1166,22 +1715,36 @@ html body .main-content {
   /* Base look (variable width) */
   color: #9d0013 !important;
   text-decoration: none !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-radius: 17px !important;
-  height: 32px !important;
-
-  /* Motion */
-  transition: border-color 160ms ease, background-color 160ms ease,
-    color 160ms ease, transform 120ms ease !important;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem -0.25rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   transform-origin: center center;
 }
 
+.dark .srch-drawer-link {
+  color: #A5D8AE !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
 .srch-drawer-link:hover {
-  /* Same red; only border appears + slight scale */
-  color: #9d0013 !important;
+  /* Same color; only border appears + slight scale */
   text-decoration: none !important;
   border-color: #9d0013 !important;
+  transform: scale(1.01);
+}
+
+.dark .srch-drawer-link:hover {
+  color: #A5D8AE !important;
+  background: transparent !important;
+  border: 1px solid #A5D8AE !important;
   transform: scale(1.01);
 }
 
@@ -1190,12 +1753,37 @@ html body .main-content {
   outline-offset: 2px;
 }
 
-/* Active state: filled red pill, white text + icon */
-.srch-drawer-link.srch-drawer-link-active {
+.dark .srch-drawer-link:focus-visible {
+  outline: 2px solid #A5D8AE;
+  outline-offset: 2px;
+  background: transparent !important;
+}
+
+/* Active state in right drawer - white text only */
+.right-sidebar .srch-drawer-link.srch-drawer-link-active,
+.right-sidebar .srch-drawer-link.srch-drawer-link-active:hover,
+.right-sidebar .srch-drawer-link.srch-drawer-link-active:focus,
+.right-sidebar .srch-drawer-link.srch-drawer-link-active:active {
+  color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+/* Active state in main content - filled pill */
+:not(.right-sidebar) .srch-drawer-link.srch-drawer-link-active {
   color: #ffffff !important;
   background: #9d0013 !important;
   border-color: #9d0013 !important;
   text-decoration: none !important;
+}
+
+.dark :not(.right-sidebar) .srch-drawer-link.srch-drawer-link-active {
+  background: #263A26 !important;
+  border-color: #3a523a !important;
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
@@ -1205,8 +1793,10 @@ html body .main-content {
 
 /* Make left sidebar behave like right: isolate its layout/painting and promote */
 .left-sidebar {
-  contain: layout paint style; /* ← like right drawer */
-  will-change: transform; /* smoother slide-in */
+  contain: layout paint style;
+  /* ← like right drawer */
+  will-change: transform;
+  /* smoother slide-in */
 }
 
 /* (You already have this for right, keep it) */
@@ -1216,19 +1806,21 @@ html body .main-content {
 
 /* Freeze main content width during drag; shift as a block by left width */
 html body .main-content.frozen {
-  width: var(--main-freeze-width) !important; /* px captured at drag start */
-  transform: translateX(var(--left-sidebar-width)); /* block shift */
+  width: var(--main-freeze-width) !important;
+  /* px captured at drag start */
+  transform: translateX(var(--left-sidebar-width));
+  /* block shift */
   will-change: transform;
-  transition: none !important; /* no easing while dragging */
-  overflow: hidden; /* avoid accidental horizontal scrollbars */
+  transition: none !important;
+  /* no easing while dragging */
+  overflow: hidden;
+  /* avoid accidental horizontal scrollbars */
 }
 
-/* Optional: smoother end-of-drag snap */
 html body .main-content.frozen.release {
   transition: transform 180ms ease, width 1ms linear;
 }
 
-/* Keep the normal margins… */
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
   margin-right: var(--right-sidebar-width) !important;
@@ -1236,16 +1828,14 @@ html body .main-content {
   min-height: 100vh;
 }
 
-/* …but during drag (frozen), don't also apply margin-left. */
 html body .main-content.frozen {
-  margin-left: 0 !important; /* ← remove double-shift */
+  margin-left: 0 !important;
   transform: translateX(var(--left-sidebar-width)) !important;
   width: var(--main-freeze-width) !important;
   will-change: transform;
   transition: none !important;
 }
 
-/* optional “snap” at end (you already add .release in JS) */
 html body .main-content.frozen.release {
   transition: transform 180ms ease, width 1ms linear !important;
 }
@@ -1260,5 +1850,5 @@ html body .main-content.frozen.release {
   left: -40px;
   margin-top: 12px;
   white-space: nowrap;
-  transform: translateX(12px); /* Moves the element 12px to the left */
+  transform: translateX(12px);
 }

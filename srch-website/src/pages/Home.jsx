@@ -1,8 +1,10 @@
 import "../LandingPage.css";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import NavBar from "../components/NavBar";
-import logoImage from "../assets/logo.png";
+import { ThemeContext } from "../App";
+import logoImage from "../assets/logo.svg";
+import darkLogoImage from "../assets/dark-logo.svg";
 import buttonArrow from "../assets/arrow.svg";
 import targetIcon from "../assets/target.svg";
 import bookIcon from "../assets/book.svg";
@@ -17,6 +19,8 @@ import { SearchBar } from "../components/SearchBar";
 
 function Home() {
   const navigate = useNavigate();
+  const { isDarkMode } = useContext(ThemeContext);
+  const currentLogo = isDarkMode ? darkLogoImage : logoImage;
   const privacySlug = "/privacy/whatIsPrivacy";
   const accessibilitySlug = "/accessibility/whatIsAccessibility";
   const decisionSlug = "/automatedDecisionMaking/fairness";
@@ -256,7 +260,7 @@ function Home() {
           <div className="link-section">
             <div className="logo-area">
               <img
-                src={logoImage}
+                src={currentLogo}
                 alt="SRC Handbook Logo"
                 width={100}
                 height={91}
