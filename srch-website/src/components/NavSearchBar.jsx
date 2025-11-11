@@ -51,7 +51,6 @@ function NavSearchBar({
           autoFocus
           ref={inputRef}
           style={{ padding: 0 }}
-          onFocus={() => console.log("Input focused")}
           className={"navsearchbar-input"}
           type="text"
           placeholder={"Search for topics, case studies, terms..."}

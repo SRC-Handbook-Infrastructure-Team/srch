@@ -560,7 +560,6 @@ h4 {
 
 .searchbar-input-container {
   background: transparent;
-
   flex: 1;
 }
 
@@ -597,6 +596,7 @@ h4 {
   border: none !important;
   color: #9d0013 !important;
   background: transparent !important;
+  z-index: 9999999999 !important;
 }
 
 .searchbar-toggle-button:focus,
@@ -610,7 +610,7 @@ h4 {
 
 .toggle-button {
   width: 0px;
-  /* z-index: 9999999; */
+  z-index: 9999999;
   color: black !important;
   outline: 0 !important;
   box-shadow: none !important;
@@ -740,16 +740,13 @@ h4 {
   border: none;
 }
 
-.results-none {
-  color: #718096;
-  font-size: 0.875rem;
-}
-
 .results-view-all {
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #718096;
+  font-size: 0.875rem;
 }
 
 .view-all-link {
@@ -772,17 +769,19 @@ h4 {
   position: absolute;
   left: 0;
   right: 0;
-  padding-top: 40px;
-  transform: translateY(-40px);
+  margin-top: 20px;
+  /* transform: translateY(-40px); */
   background: white;
-  border-radius: 9999999999px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 1.25rem 0 1.25rem;
 }
 
 .results-list-floating {
   overflow-y: auto;
-  padding: 0 0.5rem 0 0.5rem;
+  
 }
 
 .drawer-content {
