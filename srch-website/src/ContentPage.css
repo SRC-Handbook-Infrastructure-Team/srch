@@ -38,7 +38,14 @@
 
   --space-lg: 400px;
   --srch-brown: #531c00;
-  --sidebar-bg: #c9c9c9;
+  --sidebar-bg: rgba(251, 251, 250, 1);
+
+  /* Shared sidebar palette (Figma) */
+  --cs-brown: #531C00;
+  --cs-text:  #4F3629;
+  --cs-bg:    rgba(251, 251, 250, 1);
+  --cs-active:#e6e2dd;
+  --cs-divider: #c7beb5;
 }
 
 /* ------ general styles ------- */
@@ -154,54 +161,7 @@ mark {
   pointer-events: none; /* interaction handled by container */
 }
 
-/* ==========================================================================
-   RIGHT SIDEBAR (Drawer)
-   ========================================================================== */
-/* Right drawer */
-.right-sidebar {
-  position: fixed !important;
-  top: var(--navbar-height) !important;
-  right: 0 !important;
-  height: calc(100vh - var(--navbar-height)) !important;
-  width: var(--right-sidebar-width) !important;
-  background: var(--drawer-bg) !important;
-  border-left: 1px solid var(--border-1) !important; /* single vertical border */
-  transform: translateX(100%);
-  opacity: 0;
-  transition: transform 0.35s ease, opacity 0.25s ease;
-  overflow: hidden auto !important;
-  contain: layout paint style; /* isolates layout to the drawer for cheaper reflow */
-}
-.right-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
 
-.right-sidebar .drawer-header {
-  border-bottom: 2px solid var(--color-accent);
-  padding: var(--space-sm) var(--space-md);
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--color-accent);
-}
-.right-sidebar .drawer-content {
-  padding: var(--space-md);
-}
-.right-sidebar .drawer-close-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-md);
-  padding: var(--space-xs) var(--space-sm);
-}
-.right-sidebar .drawer-close-btn:hover {
-  background: var(--drawer-hover-bg);
-}
 
 /* ==========================================================================
    Markdown & Content
@@ -296,20 +256,7 @@ h4 {
   font-weight: 700;
 }
 
-/* ==========================================================================
-   Left Sidebar Resizer (drag handle)
-   ========================================================================== */
-.left-resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  cursor: col-resize;
-  background: transparent;
-}
-.left-resizer.is-resizing {
-  background: rgba(37, 99, 235, 0.15);
-}
+
 
 /* Nav expand button */
 .nav-expand-all-btn {
@@ -837,32 +784,6 @@ h4 {
   padding: 12px !important;
 }
 
-/* Right resizer (on LEFT edge of drawer) */
-.right-resizer {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 6px !important;
-  cursor: col-resize !important;
-  background: transparent !important;
-}
-.right-resizer.is-resizing {
-  background: rgba(83, 28, 0, 0.08) !important;
-}
-
-/* =========================== TYPOGRAPHY IN SIDEBAR =========================== */
-.sidebar-section-title {
-  font-family: "Be Vietnam Pro", sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 16px !important;
-  color: #1a1a1a !important;
-}
-.sidebar-subsection {
-  font-family: "Be Vietnam Pro", sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 14px !important;
-}
 
 /* Main content shifts with sidebars; sits below NavBar */
 html body .main-content {
@@ -891,57 +812,6 @@ html body .main-content {
   padding-bottom: 12px;
 }
 
-/* Left sidebar — overlay mode (no page resizing) */
-.left-sidebar {
-  position: fixed !important;
-  top: var(--navbar-height) !important;
-  left: 0 !important;
-  height: calc(100vh - var(--navbar-height)) !important;
-  width: var(--left-sidebar-width) !important;
-  background: var(--sidebar-bg) !important;
-  border-right: 1px solid var(--border-1) !important;
-  overflow-y: auto !important;
-
-  /* ✅ Sidebar slides over content */
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform 0.35s ease, opacity 0.25s ease;
-
-  /* ✅ Prevents it from resizing layout */
-  position: fixed;
-  z-index: 50;
-}
-.left-sidebar.open { transform: translateX(0); opacity: 1; }
-
-
-/* Left resizer */
-.left-resizer {
-  position: absolute !important;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 6px !important;
-  cursor: col-resize !important;
-  background: transparent !important;
-}
-.left-resizer.is-resizing {
-  background: rgba(83, 28, 0, 0.08) !important;
-}
-
-.sidebar-btn:hover {
-  opacity: 0.8;
-}
-.icon-double-chevron {
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 0;
-}
-.icon-double-chevron svg {
-  width: 10px;
-  height: 5px;
-  display: block;
-  fill: currentColor;
-}
 
 /* Right header: single bottom divider */
 .drawer-header {
@@ -953,47 +823,24 @@ html body .main-content {
   background: #fff !important;
   border-bottom: 1px solid var(--border-1) !important;
 }
-.drawer-content {
-  padding: 12px !important;
-}
 
-/* Right resizer on left edge of drawer */
-.right-resizer {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 6px !important;
-  cursor: col-resize !important;
-  background: transparent !important;
-}
-.right-resizer.is-resizing {
-  background: rgba(83, 28, 0, 0.08) !important;
-}
-
-/* Sidebar typography */
-.sidebar-section-title {
-  font-family: "Be Vietnam Pro", sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 16px !important;
-  color: #1a1a1a !important;
-}
 
 /* Single global toggle that lives in the page header */
 .header-toggle {
   position: fixed;
-  top: calc(var(--navbar-height) + 12px);
+  top: calc(var(--navbar-height) + 19px);
   right: 0;
   z-index: 150;
   left: 12px;
+  
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 24.615px;
   height: 11.565px;
-  font: 700 18px/1 "Be Vietnam Pro", system-ui, -apple-system, Segoe UI, Roboto,
-    Arial;
+  transform: scale(1.2);
+  
   color: var(--srch-brown, #531c00);
   cursor: pointer;
   transition: transform 0.06s ease;
@@ -1004,13 +851,10 @@ html body .main-content {
   outline-offset: 2px;
 }
 .header-toggle:hover {
-  transform: scale(1.1);
+  transform: scale(1.25);
 }
 
-/* 2) Do NOT animate main-content margins; reflow should be instant at start/end */
-html body .main-content {
-  transition: none !important;
-}
+
 
 /* ==========================
    QUICK, SAFE OVERRIDES
@@ -1044,13 +888,7 @@ html body .main-content {
   margin-left: calc(-1 * var(--page-pad)) !important;
 }
 
-/* 3) Keep main-content margins authoritative (already in your file, but ensure consistency) */
-html body .main-content {
-  margin-left: var(--left-sidebar-width) !important;
-  margin-right: var(--right-sidebar-width) !important;
-  padding-top: calc(var(--navbar-height) + var(--toolbar-height)) !important;
-  transition: none !important;
-}
+
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
@@ -1070,7 +908,7 @@ html body .main-content {
   border-radius: 0;
 
   /* Figma typography + color */
-  font-family: "Be Vietnam Pro", sans-serif;
+  font: "Be Vietnam Pro";
   font-size: 12px;
   font-weight: 500;
   color: #4f3629;
@@ -1169,11 +1007,29 @@ html body .main-content {
   border-radius: 17px !important;
   height: 32px !important;
 
-  /* Motion */
+  /* Motion */ 
   transition: border-color 160ms ease, background-color 160ms ease,
     color 160ms ease, transform 120ms ease !important;
   transform-origin: center center;
+  font-weight: bold !important;
+  font-style: bold !important;
+  font-family: "Be Vietnam Pro" !important;
+  font-weight: 700 !important; /* or bold */
 }
+
+/* Collapse phantom inline spacing between chips and text */
+.srch-drawer-link {
+  margin-left: -2px;          /* pulls chip into collapsed inline gap */
+}
+
+.srch-drawer-link + .srch-drawer-link {
+  margin-left: 0;             /* prevents chain-over-collapse for chip→chip */
+}
+
+p > .srch-drawer-link:first-child {
+  margin-left: 0;             /* safety: don't pull chip into paragraph edge */
+}
+
 
 .srch-drawer-link:hover {
   /* Same red; only border appears + slight scale */
@@ -1181,11 +1037,13 @@ html body .main-content {
   text-decoration: none !important;
   border-color: #9d0013 !important;
   transform: scale(1.01);
+  font-weight: bold !important;
 }
 
 .srch-drawer-link:focus-visible {
   outline: 2px solid #9d0013;
   outline-offset: 2px;
+  font-weight: bold !important;
 }
 
 /* Active state: filled red pill, white text + icon */
@@ -1194,58 +1052,12 @@ html body .main-content {
   background: #9d0013 !important;
   border-color: #9d0013 !important;
   text-decoration: none !important;
+  font-weight: bold !important;
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
 .srch-drawer-link .chakra-icon {
   color: currentColor;
-}
-
-/* Make left sidebar behave like right: isolate its layout/painting and promote */
-.left-sidebar {
-  contain: layout paint style; /* ← like right drawer */
-  will-change: transform; /* smoother slide-in */
-}
-
-/* (You already have this for right, keep it) */
-.right-sidebar {
-  will-change: transform;
-}
-
-/* Freeze main content width during drag; shift as a block by left width */
-html body .main-content.frozen {
-  width: var(--main-freeze-width) !important; /* px captured at drag start */
-  transform: translateX(var(--left-sidebar-width)); /* block shift */
-  will-change: transform;
-  transition: none !important; /* no easing while dragging */
-  overflow: hidden; /* avoid accidental horizontal scrollbars */
-}
-
-/* Optional: smoother end-of-drag snap */
-html body .main-content.frozen.release {
-  transition: transform 180ms ease, width 1ms linear;
-}
-
-/* Keep the normal margins… */
-html body .main-content {
-  margin-left: var(--left-sidebar-width) !important;
-  margin-right: var(--right-sidebar-width) !important;
-  padding-top: var(--navbar-height) !important;
-  min-height: 100vh;
-}
-
-/* …but during drag (frozen), don't also apply margin-left. */
-html body .main-content.frozen {
-  margin-left: 0 !important; /* ← remove double-shift */
-  transform: translateX(var(--left-sidebar-width)) !important;
-  width: var(--main-freeze-width) !important;
-  will-change: transform;
-  transition: none !important;
-}
-
-/* optional “snap” at end (you already add .release in JS) */
-html body .main-content.frozen.release {
-  transition: transform 180ms ease, width 1ms linear !important;
 }
 
 .page-last-updated {
@@ -1260,3 +1072,84 @@ html body .main-content.frozen.release {
   white-space: nowrap;
   transform: translateX(12px); /* Moves the element 12px to the left */
 }
+
+/* RIGHT SIDEBAR (Drawer) */
+.right-sidebar {
+  position: fixed !important;
+  top: var(--navbar-height) !important;
+  right: 0 !important;
+  height: calc(100vh - var(--navbar-height)) !important;
+  width: var(--right-sidebar-width) !important;
+
+  /* match left */
+  background: var(--cs-bg) !important;
+  border-left: 1px solid var(--cs-divider) !important;
+
+  transform: translateX(100%);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
+
+  will-change: transform;
+  overflow: hidden auto !important;
+  z-index: 50;
+  backface-visibility: hidden;
+  contain: layout paint style;
+}
+
+.right-sidebar.open { transform: translateX(0); opacity: 1; }
+.right-sidebar.closing { transform: translateX(100%) !important; opacity: 0 !important; }
+
+/* Resizer (left edge of right drawer) — identical thickness/behavior as left */
+.right-resizer {
+  position: absolute !important;
+  top: 0; left: 0; bottom: 0;
+  width: 6px !important;
+  cursor: col-resize !important;
+  background: transparent !important;
+}
+
+.right-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
+
+.right-sidebar .drawer-content .callout,
+.right-sidebar .drawer-content [class*="box"],
+.right-sidebar .drawer-content [style*="background"] {
+  background: transparent !important;
+}
+
+/* Right drawer meta label (like “Familiar Case Studies”) */
+.drawer-meta-label {
+  font: "Funnel Sans";
+  font-size: 20px;
+  line-height: 40px;
+  font-weight: 600;
+  margin: 8px 0 4px;
+  color: var(--srch-brown);
+  padding-bottom: 12px;
+}
+
+/* Divider above the Case heading */
+.drawer-meta-divider {
+  width: 150%;
+  height: 1px;
+  background: var(--cs-divider);
+  margin-bottom: 12px;
+  margin-left: -10px;
+}
+
+/* Existing heading (.drawer-section-title) keeps doing “Case” */
+.drawer-section-title {
+  font-family: "Be Vietnam Pro";
+  font-style: bold;
+  font-weight: 700 !important;
+  line-height: 32px;
+  font-size: 25px !important;
+  color: var(--srch-brown) !important;
+  margin: 0 0 12px 0 !important;
+  padding-top: 15px;
+  padding-bottom: 10px;
+}
+
+

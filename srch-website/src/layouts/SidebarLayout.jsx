@@ -73,6 +73,8 @@ export default function SidebarLayout({ children }) {
     maxWidth: 700,
     side: "right",
     cssVarName: "--right-sidebar-width",
+    onStartResize: freezeMainContent,
+    onStopResize: releaseMainContent,
   });
 
   /** ---------------- RIGHT DRAWER STATE ---------------- */
@@ -280,24 +282,7 @@ export default function SidebarLayout({ children }) {
         >
           {isRightOpen && (
             <>
-              <div className="drawer-header">
-                <span>Additional Information</span>
-                <button
-                  onClick={closeRightDrawer}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      closeRightDrawer();
-                    }
-                  }}
-                  className="drawer-close-btn"
-                  tabIndex={0}
-                  aria-label="Close right sidebar"
-                  title="Close sidebar"
-                >
-                  ✕
-                </button>
-              </div>
+              
 
               <div className="drawer-content scrollable-drawer">
                 {rightContent}

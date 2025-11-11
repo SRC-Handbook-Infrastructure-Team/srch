@@ -11,7 +11,7 @@
   /* Sidebar palette (Figma) */
   --cs-brown: #531C00;       /* active pill background */
   --cs-text:  #4F3629;       /* default text in rail */
-  --cs-bg:    #f2f0ee;       /* sidebar background */
+  --cs-bg: rgba(251, 251, 250, 1);
   --cs-active:#e6e2dd;       /* active section row background */
   --cs-divider: #c7beb5;     /* vertical 1px divider on the right edge */
 
@@ -49,6 +49,13 @@
 }
 .left-sidebar.open { transform: translateX(0); opacity: 1; }
 
+.left-sidebar.closing {
+  transform: translateX(-100%) !important;
+  opacity: 0 !important;
+}
+
+
+
 /* Resize handle */
 .left-resizer {
   position: absolute !important;
@@ -80,6 +87,8 @@
   font-weight: 500;
   line-height: 1;
   color: var(--cs-text);                 /* #4F3629 */
+  
+
 }
 .sidebar-toggle:hover { opacity: 0.9; }
 .sidebar-toggle:focus-visible { outline: 2px solid #9d0013; outline-offset: 2px; }
@@ -186,4 +195,6 @@
 /* =============================================================================
    SMALL POLISH
    ========================================================================== */
-.sidebar-btn:hover { opacity: 0.8; }
+.sidebar-btn:hover {
+     opacity: 0.8;
+     }

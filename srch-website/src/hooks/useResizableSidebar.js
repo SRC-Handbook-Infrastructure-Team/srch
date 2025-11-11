@@ -213,7 +213,11 @@ export default function useResizableSidebar({
       if (next) {
         // Collapsing: remember previous width and set to collapsedWidth
         ref.current.previousWidth = width;
-        setWidthState(collapsedWidth);
+        // Instead of forcing width=0 immediately, let the CSS transition handle it
+
+        setTimeout(() => setWidthState(collapsedWidth), 350);
+        
+
 
         if (isBrowser()) {
           try {

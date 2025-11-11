@@ -448,6 +448,26 @@ function MarkdownRenderer({
     </Box>
   );
 
+  /**
+ * Safely removes ONLY whitespace-only text nodes inside <p> tags.
+ * This avoids ReactMarkdown inserting empty "" or " " nodes
+ * that create visual gaps between text + <sidebar-ref> chips.
+ *
+ * Critically:
+ * - Does NOT remove spaces inside real text ("a dog" stays intact)
+ * - Only affects direct children of <p>
+ */
+function cleanParagraphChildren(children) {
+  return React.Children.toArray(children).filter((child) => {
+    if (typeof child === "string") {
+      return child.trim() !== ""; // keep text that has ANY non-space chars
+    }
+    return child; // keep React elements unchanged
+  });
+}
+
+
+
   const components = useMemo(
     () => ({
       h1: (props) => (
@@ -481,11 +501,16 @@ function MarkdownRenderer({
           </Heading>
         );
       },
-      p: (props) => (
-        <Text mb={3} lineHeight="1.6" color={BLACK} {...props}>
-          {highlightText(props.children, highlight)}
-        </Text>
-      ),
+      p: (props) => {
+  const cleaned = cleanParagraphChildren(props.children);
+  return (
+    <Text mb={3} lineHeight="1.6" color={BLACK}>
+      {highlightText(cleaned, highlight)}
+    </Text>
+  );
+},
+
+
 
       /* ------------------------------------------------------------------
        * Standard Markdown links (NOT sidebar-ref chips)
@@ -622,6 +647,10 @@ function MarkdownRenderer({
       }`}
       data-term={term}
       display="inline-flex"
+      verticalAlign="baseline"
+      m="0"
+      mx="0"
+      my="0"
       alignItems="center"
       gap="6px"
       h="32px"
