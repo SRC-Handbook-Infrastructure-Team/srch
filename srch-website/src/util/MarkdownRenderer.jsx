@@ -772,42 +772,5 @@ function MarkdownRenderer({
   );
 }
 
-/**
- * Loads a Markdown file from the "drawer" subfolder.
- * Used for right-hand side drawer panels.
- *
- * @param {string} sectionId - The section slug (e.g. "privacy")
- * @param {string} subsectionId - The subsection slug (e.g. "what-is-privacy")
- * @param {string} term - The sidebar reference key (e.g. "case-study-1")
- * @returns {Promise<{content: string, frontmatter: object} | null>}
- */
-export const getDrawerFile = async (sectionId, subsectionId, term) => {
-  try {
-    const expectedPath = `../markdown/${sectionId}/${subsectionId}/drawer/${term}.md`;
-
-    for (const filePath in allMarkdownFiles) {
-      if (filePath.endsWith(expectedPath.slice(2))) {
-        const content = await allMarkdownFiles[filePath]();
-        const { content: cleanContent, frontmatter } =
-          parseFrontmatter(content);
-        return { content: cleanContent, frontmatter };
-      }
-    }
-
-    console.warn(
-      `Drawer file not found for ${sectionId}/${subsectionId}/${term}`
-    );
-    return null;
-  } catch (error) {
-    console.error(
-      "Error loading drawer file:",
-      sectionId,
-      subsectionId,
-      term,
-      error
-    );
-    return null;
-  }
-};
 
 export default MarkdownRenderer;

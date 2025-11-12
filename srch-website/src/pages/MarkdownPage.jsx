@@ -8,7 +8,6 @@ import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
-  getDrawerFile,
   highlightText,
 } from "../util/MarkdownRenderer";
 import logoImage from "../assets/logo.png";
@@ -226,68 +225,48 @@ function MarkdownPage() {
   }
 
   async function openGlobalDrawerForTerm(term, opts = {}) {
-    // opts used only by URL watcher
     const { noToggle = false, noNavigate = false } = opts;
-
     if (!term) return;
+
     const key = String(term).toLowerCase();
 
-    //
-    // 1) Prevent URL-triggered calls from toggling the drawer off
-    //
-    if (!noToggle && drawerActiveKey === key) {
-      closeRightDrawer();
-      setDrawerActiveKey(null);
+    // If switching to a different term, just replace content without closing drawer
+    openDrawerContent(key);
+
+    function openDrawerContent(keyToOpen) {
+      const sidebarEntry = getSidebarContent(keyToOpen);
+      const contentToShow =
+        (typeof sidebarEntry === "string"
+          ? sidebarEntry
+          : sidebarEntry?.content) || "";
+
+      const heading =
+        (typeof sidebarEntry === "object" && sidebarEntry?.heading) ||
+        String(term).replace(/-/g, " ");
+
+      const node = (
+        <>
+          <div className="drawer-meta-label">Familiar Case Studies</div>
+          <div className="drawer-meta-divider" />
+          <h2 className="drawer-section-title">
+            {highlightText(heading, highlight)}
+          </h2>
+          <MarkdownRenderer
+            content={contentToShow}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            highlight={highlight}
+          />
+        </>
+      );
+
+      // Update the active key and swap the content directly
+      setDrawerActiveKey(keyToOpen);
+      openRightDrawer(node);
 
       if (!noNavigate) {
-        navigate(`/${sectionId}/${subsectionId}`);
+        navigate(`/${sectionId}/${subsectionId}/${term}`);
       }
-
-      return;
-    }
-
-    // 2) Load sidebar entry
-    const sidebarEntry = getSidebarContent(key);
-
-    const contentToShow =
-      (typeof sidebarEntry === "string"
-        ? sidebarEntry
-        : sidebarEntry.content) || "";
-
-    const heading =
-      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-      String(term).replace(/-/g, " ");
-
-    //
-    // 4) Build node
-    //
-    const node = (
-      <>
-        <div className="drawer-meta-label">Familiar Case Studies</div>
-        <div className="drawer-meta-divider" />
-
-        <h2 className="drawer-section-title">
-          {highlightText(heading, highlight)}
-        </h2>
-
-        <MarkdownRenderer
-          content={contentToShow}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          highlight={highlight}
-        />
-      </>
-    );
-
-    // 5) Commit state
-    setDrawerActiveKey(key);
-    openRightDrawer(node);
-
-    //
-    // 6) Clicks should change URL — URL-triggered calls should NOT.
-    //
-    if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}/${term}`);
     }
   }
 
