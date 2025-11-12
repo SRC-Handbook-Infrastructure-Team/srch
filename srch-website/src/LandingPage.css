@@ -672,6 +672,9 @@ html {
   justify-self: center;
   justify-items: center;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .modules-section-primer-footer {
@@ -679,7 +682,7 @@ html {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 10px 30px;
+  gap: 20px 30px;
   padding: 10px 0;
 }
 
