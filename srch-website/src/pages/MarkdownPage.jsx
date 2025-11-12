@@ -466,25 +466,21 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-  if (!urlTerm) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-    return;
-  }
+    if (!urlTerm) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+      return;
+    }
 
-  if (!sidebar || Object.keys(sidebar).length === 0) {
-    return;
-  }
+    if (!sidebar || Object.keys(sidebar).length === 0) {
+      return;
+    }
 
-  const key = String(urlTerm).toLowerCase();
-
-  //  Only open if not already active
-  openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-}, [urlTerm, sidebar, closeRightDrawer, openGlobalDrawerForTerm]);
+    const key = String(urlTerm).toLowerCase();
 
     //  Only open if not already active
     openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-  }, [urlTerm]);
+  }, [urlTerm, sidebar, closeRightDrawer, openGlobalDrawerForTerm]);
 
   const checkAndNavigate = useCallback(
     async (path) => {
