@@ -18,7 +18,6 @@ function AppRoutes() {
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
 
-
   //  Markdown layout logic
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
@@ -29,7 +28,10 @@ function AppRoutes() {
         <SidebarLayout>
           <Routes>
             <Route path="/:sectionId" element={<MarkdownPage />} />
-            <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
+            <Route
+              path="/:sectionId/:subsectionId"
+              element={<MarkdownPage />}
+            />
             <Route
               path="/:sectionId/:subsectionId/:term"
               element={<MarkdownPage />}
@@ -39,9 +41,10 @@ function AppRoutes() {
       ) : (
         <>
           {/*  Sidebar on every non-home, non-search, non-acknowledgements, non-about page */}
-          {!isSearchPage && !isHomePage && !isAcknowledgementsPage && !isAboutPage && (
-            <ContentsSidebar />
-          )}
+          {!isSearchPage &&
+            !isHomePage &&
+            !isAcknowledgementsPage &&
+            !isAboutPage && <ContentsSidebar />}
 
           <NavBar />
 
