@@ -2,13 +2,18 @@ import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
-import { useState, useEffect } from "react";
-import background from "../assets/search-results-background.jpg";
+import { useState, useEffect, useContext } from "react";
+import { ThemeContext } from "../App";
+import lightBackground from "../assets/search-results-background.jpg";
+import darkBackground from "../assets/search-bg.png";
 
 function SearchResults() {
   const { query } = useParams();
+  const { isDarkMode } = useContext(ThemeContext);
   const decodedQuery = decodeURIComponent(query || "");
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const backgroundImage = isDarkMode ? darkBackground : lightBackground;
 
   useEffect(() => {
     setSearchQuery("");
@@ -26,7 +31,7 @@ function SearchResults() {
           inset: 0,
           width: "100vw",
           height: "350px",
-          backgroundImage: `url(${background})`,
+          backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -39,8 +44,9 @@ function SearchResults() {
           inset: 0,
           width: "100%",
           height: "350px",
-          background:
-            "linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255,255,255,1) 100%)",
+          background: isDarkMode 
+            ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0,0,0,0.9) 100%)"
+            : "linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255,255,255,1) 100%)",
           pointerEvents: "none",
         }}
       />

@@ -68,9 +68,40 @@
 .dark input,
 .dark select,
 .dark textarea {
-  color: var(--color-text);
+  color: #ffffff;
   border-color: var(--color-border);
   background: transparent;
+}
+
+/* dark mode searchbar */
+
+.dark .searchbar-input {
+  color: #ffffff !important;
+}
+
+.dark .navsearchbar-input {
+  color: #000000 !important;
+}
+
+.dark .searchbar-input::placeholder,
+.dark .navsearchbar-input::placeholder {
+  color: #a0a0a0 !important;
+}
+
+.dark .results-section {
+  background: #263A26 !important;
+  color: #ffffff !important;
+}
+
+.dark .results-title,
+.dark .result-snippet,
+.dark .result-snippet-text,
+.dark .results-item {
+  color: #ffffff !important;
+}
+
+.dark .results-item {
+  border-bottom: 1px solid #333 !important;
 }
 
 /* Base elements */

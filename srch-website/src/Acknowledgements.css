@@ -66,10 +66,26 @@
   padding-left: 13vw;
   padding-right: 13vw;
   margin-top: 40px;
+  transition: background-image 0.3s ease;
   /* navbar offset */
 }
 
+/* Light mode hover */
 .ack-hero:hover {
+  background-image: url("../src/assets/Property 1=Variant2.png");
+}
+
+/* Dark mode */
+.dark .ack-hero {
+  background-image: url("../src/assets/dark-mode-sub-bg.png");
+}
+
+/* Dark mode hover */
+.dark .ack-hero:hover {
+  background-image: url("../src/assets/dark-mode-sub-bg-hover.png") !important;
+}
+
+:root:not(.dark) .ack-hero:hover {
   background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
