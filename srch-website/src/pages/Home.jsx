@@ -2,7 +2,6 @@ import "../LandingPage.css";
 import "../ContentPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import NavBar from "../components/NavBar";
 import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
@@ -12,6 +11,8 @@ import peopleIcon from "../assets/peopleIcon.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
+import instaLogo from "../assets/instagram-logo.svg";
+import cntrLogo from "../assets/cntr-logo.png";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
 
@@ -25,7 +26,6 @@ function Home() {
 
   return (
     <div className="layout">
-      <NavBar />
       <div className="body">
         <div className="upper-content">
           <div className="upper-text-section">
@@ -231,6 +231,54 @@ function Home() {
                   height={24}
                 />
               </button>
+            </div>
+          </div>
+
+          <div className="line-divider"></div>
+
+          <div className="content-section">
+            <div className="content-header">
+              <h2 className="search-title">Connect with Us</h2>
+              <p className="search-subtitle">
+                Follow us to receive CNTR news and updates!
+              </p>
+            </div>
+            <div className="cntr-link-area">
+              <div className="connect-cont">
+                <img src={cntrLogo} alt="CNTR logo" width={56} height={67} />
+                <p className="connect-text">
+                  CNTR Website:
+                  <br />
+                  <a
+                    className="connect-link"
+                    href="https://cntr.brown.edu/"
+                    target="blank"
+                  >
+                    cntr.brown.edu
+                  </a>
+                </p>
+              </div>
+              <div
+                className="connect-cont"
+              >
+                <img
+                  src={instaLogo}
+                  alt="instagram logo"
+                  width={56}
+                  height={56}
+                />
+                <p className="connect-text">
+                  CNTR Instagram:
+                  <br />
+                  <a
+                    className="connect-link"
+                    href="https://www.instagram.com/brown_cntr/"
+                    target="blank"
+                  >
+                    @brown_cntr
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
 

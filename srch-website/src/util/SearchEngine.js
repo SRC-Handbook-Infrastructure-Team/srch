@@ -103,7 +103,6 @@ function extractHeadingBlocks(
           pushDrawerBlock(currentAnchorLocal, anchorLines);
         }
       } else {
-        console.log(sectionId);
         if (sectionId == "about") {
           sectionTitle = "About";
           subsectionTitle = "About";
@@ -168,9 +167,6 @@ export async function initializeIndex() {
     const subsections = await getSubsections(section.id);
 
     for (const subsection of subsections) {
-      console.log(section.id, section.title);
-      console.log(subsection.id, subsection.title);
-      console.log();
       contentArray.push(
         ...extractHeadingBlocks(
           subsection.content,

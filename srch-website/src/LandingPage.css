@@ -676,6 +676,23 @@ html {
   color: #9d0013;
 }
 
+.cntr-link-area {
+  display: flex;
+  gap: 56px;
+  align-items: center;
+}
+.connect-cont {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  padding: 12px 24px;
+  align-items: center;
+}
+.connect-link {
+  font-weight: 600;
+  color: #9D0013;
+}
+
 /* Feedback Contact */
 .feedback-contact {
   color: var(--color-text);

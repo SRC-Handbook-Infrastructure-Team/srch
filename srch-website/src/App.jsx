@@ -3,7 +3,8 @@ import "./App.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme";
-import AppRoutes from "./AppRoutes"
+import { useEffect } from "react";
+import AppRoutes from "./AppRoutes";
 
 /**
  * Main App Component
@@ -12,6 +13,11 @@ import AppRoutes from "./AppRoutes"
  * remain active on every route (including /search pages).
  */
 function App() {
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
   return (
     <ChakraProvider theme={theme}>
       <AppRoutes />
