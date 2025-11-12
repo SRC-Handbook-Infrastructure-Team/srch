@@ -87,13 +87,10 @@ export default function SidebarLayout({ children }) {
     setRightContent(null);
   }, []);
 
-  const openRightDrawer = useCallback(
-    (content) => {
-      setRightContent(content);
-      setIsRightOpen(true);
-    },
-    []
-  );
+  const openRightDrawer = useCallback((content) => {
+    setRightContent(content);
+    setIsRightOpen(true);
+  }, []);
 
   /** Sync drawer width to CSS var (single effect — avoids redundancy) */
   useEffect(() => {
@@ -274,6 +271,7 @@ export default function SidebarLayout({ children }) {
           <div className="main-shift" ref={innerRef}>
             {children}
           </div>
+          
         </main>
 
         <aside
@@ -282,8 +280,6 @@ export default function SidebarLayout({ children }) {
         >
           {isRightOpen && (
             <>
-              
-
               <div className="drawer-content scrollable-drawer">
                 {rightContent}
               </div>
