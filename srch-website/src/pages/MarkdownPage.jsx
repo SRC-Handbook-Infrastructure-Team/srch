@@ -248,30 +248,11 @@ function MarkdownPage() {
 
     // 2) Load sidebar entry
     const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-      return;
-    }
-
-    // 3) Load MD file if exists
-    let drawerFile = null;
-    try {
-      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) {}
 
     const contentToShow =
-      drawerFile?.content ||
       (typeof sidebarEntry === "string"
         ? sidebarEntry
-        : sidebarEntry.content) ||
-      "";
+        : sidebarEntry.content) || "";
 
     const heading =
       (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
@@ -472,15 +453,19 @@ function MarkdownPage() {
       return;
     }
 
-    if (!sidebar || Object.keys(sidebar).length === 0) {
-      return;
-    }
+    if (!sidebar || Object.keys(sidebar).length === 0) return;
 
     const key = String(urlTerm).toLowerCase();
-
-    //  Only open if not already active
-    openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-  }, [urlTerm, sidebar, closeRightDrawer, openGlobalDrawerForTerm]);
+    if (drawerActiveKey !== key) {
+      openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
+    }
+  }, [
+    urlTerm,
+    sidebar,
+    drawerActiveKey,
+    closeRightDrawer,
+    openGlobalDrawerForTerm,
+  ]);
 
   const checkAndNavigate = useCallback(
     async (path) => {

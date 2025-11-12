@@ -9,7 +9,6 @@
  * ============================================================================
  */
 
-import React from "react";
 import "../About.css";
 import NavBar from "../components/NavBar";
 
