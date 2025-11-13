@@ -1463,13 +1463,13 @@ html.right-open .right-sidebar {
 .srch-drawer-link {
   margin: 0 !important;
   padding: 3.5px 7.5px !important;       /* More interior padding → more pill */
-  border-radius: 50px !important;    /* Perfect pill shape */
+  border-radius: 15px !important;    /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 2px !important;                /* More breathing room between text + icon */
+  gap: 6px !important;                /* More breathing room between text + icon */
 }
 
 
