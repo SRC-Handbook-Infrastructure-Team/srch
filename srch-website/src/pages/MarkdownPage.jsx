@@ -225,72 +225,37 @@ function MarkdownPage() {
   }
 
   async function openGlobalDrawerForTerm(term, opts = {}) {
-    const { noToggle = false, noNavigate = false } = opts;
-    if (!term) return;
+  const { noToggle = false, noNavigate = false, silent = false } = opts;
 
-    const key = String(term).toLowerCase();
+  if (!term) return;
+  const key = String(term).toLowerCase();
 
-    // If switching to a different term, just replace content without closing drawer
-    openDrawerContent(key);
+  if (!noToggle && drawerActiveKey === key) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
 
-    function openDrawerContent(keyToOpen) {
-      const sidebarEntry = getSidebarContent(keyToOpen);
-      const contentToShow =
-        (typeof sidebarEntry === "string"
-          ? sidebarEntry
-          : sidebarEntry?.content) || "";
-
-      const heading =
-        (typeof sidebarEntry === "object" && sidebarEntry?.heading) ||
-        String(term).replace(/-/g, " ");
-
-      const node = (
-        <>
-          <div className="drawer-meta-label">Familiar Case Studies</div>
-          <div className="drawer-meta-divider" />
-          <h2 className="drawer-section-title">
-            {highlightText(heading, highlight)}
-          </h2>
-          <MarkdownRenderer
-            content={contentToShow}
-            onDrawerOpen={handleDrawerOpen}
-            onNavigation={handleNavigation}
-            highlight={highlight}
-          />
-        </>
-      );
-
-      // Update the active key and swap the content directly
-      setDrawerActiveKey(keyToOpen);
-      openRightDrawer(node);
-
-      if (!noNavigate) {
-        navigate(`/${sectionId}/${subsectionId}/${term}`);
-      }
+    if (!noNavigate) {
+      navigate(`/${sectionId}/${subsectionId}`);
     }
 
     return;
   }
 
-  // 2) Load sidebar entry
   const sidebarEntry = getSidebarContent(key);
   if (!sidebarEntry) {
     if (!silent) {
       toast({
-      title: "Sidebar Entry Not Found",
-      description: `The sidebar entry "${term}" could not be found in this subsection.`,
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom-right",
-
-    });
-    
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
     }
     return;
   }
 
-  // 3) Load MD file if exists
   let drawerFile = null;
   try {
     drawerFile = await getDrawerFile(sectionId, subsectionId, key);
@@ -307,9 +272,6 @@ function MarkdownPage() {
     (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
     String(term).replace(/-/g, " ");
 
-  //
-  // 4) Build node
-  //
   const node = (
     <>
       <div className="drawer-meta-label">Familiar Case Studies</div>
@@ -328,16 +290,15 @@ function MarkdownPage() {
     </>
   );
 
-  // 5) Commit state
   setDrawerActiveKey(key);
   openRightDrawer(node);
 
-  //
-  // 6) Clicks should change URL — URL-triggered calls should NOT.
-  //
   if (!noNavigate) {
     navigate(`/${sectionId}/${subsectionId}/${term}`);
   }
+}
+
+    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
@@ -495,42 +456,35 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-    if (!urlTerm) {
-      closeRightDrawer();
-      setDrawerActiveKey(null);
-      return;
-    }
+  // No term → close drawer and clear active state
+  if (!urlTerm) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+    return;
+  }
+
+  const key = String(urlTerm).toLowerCase();
 
   // Wait until sidebar is actually loaded before trying to open the drawer
   if (!sidebar || Object.keys(sidebar).length === 0) {
-    return;
+    return; // sidebar not ready yet → we'll re-run when sidebar updates
   }
 
   // Optionally guard: only auto-open if the entry really exists
   const sidebarEntry = getSidebarContent(key);
   if (!sidebarEntry) {
+    // You can choose to silently ignore here, or log/track if you want
     return;
   }
 
-  //  Only open if not already active
-  openGlobalDrawerForTerm(key,
-     { noToggle: true,
-       noNavigate: true,
-       silent: true
-       });
-}, [urlTerm, sidebar]);
+  // URL-driven open: don't toggle off, don't navigate again, no toast
+  openGlobalDrawerForTerm(key, {
+    noToggle: true,
+    noNavigate: true,
+    silent: true,
+  });
+}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
 
-    const key = String(urlTerm).toLowerCase();
-    if (drawerActiveKey !== key) {
-      openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-    }
-  }, [
-    urlTerm,
-    sidebar,
-    drawerActiveKey,
-    closeRightDrawer,
-    openGlobalDrawerForTerm,
-  ]);
 
   const checkAndNavigate = useCallback(
     async (path) => {
