@@ -128,10 +128,10 @@ export const ResultsWindow = React.memo(
                   );
                 })
               ) : (
-                <div className={"results-none"}>No results found</div>
+                <div className={"results-view-all"}>No results found</div>
               )}
             </div>
-            {maxResults != null && (
+            {maxResults != null && searchResults.length > 0 && (
               <div className={"results-view-all"}>
                 <div className={"results-count"}>
                   {`Showing ${searchResults.length} result${
