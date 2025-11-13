@@ -19,7 +19,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
     <Box ref={containerRef} className={"searchbar-container"}>
       <IconButton
         aria-label="Toggle search bar"
-        icon={<SearchIcon fontSize={"lg"} />}
+        icon={<SearchIcon fontSize={"md"} />}
         className="searchbar-toggle-button toggle-button"
         onClick={() => navigate(`/search/${encodeURIComponent(searchQuery)}`)}
       />

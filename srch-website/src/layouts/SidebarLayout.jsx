@@ -103,13 +103,10 @@ export default function SidebarLayout({ children }) {
     setRightContent(null);
   }, []);
 
-  const openRightDrawer = useCallback(
-    (content) => {
-      setRightContent(content);
-      setIsRightOpen(true);
-    },
-    []
-  );
+  const openRightDrawer = useCallback((content) => {
+    setRightContent(content);
+    setIsRightOpen(true);
+  }, []);
 
   /** Sync drawer width to CSS var (single effect — avoids redundancy) */
   useEffect(() => {
