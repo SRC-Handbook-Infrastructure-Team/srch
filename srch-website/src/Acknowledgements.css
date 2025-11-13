@@ -1,24 +1,4 @@
 /* ============================================================================
-   Acknowledgements.css  —  FINAL PRODUCTION VERSION
-   ----------------------------------------------------------------------------
-   Handles all styling for the Acknowledgements page.
-
-   This version matches the Figma **exactly** with:
-     • Card width = 290px
-     • Photo = 290 × 302 px (hard crop via mask + object-fit: cover)
-     • Grid gaps: 10px row gap, 10px column gap
-     • Desktop: 4 columns
-     • Tablet: 2 columns
-     • Mobile: 1 column
-
-   Nothing stretches, nothing shifts, nothing resizes.
-   This is Netflix-grade grid consistency.
-
-   ============================================================================
-*/
-
-
-/* ============================================================================
    0. DESIGN TOKENS
    ----------------------------------------------------------------------------
    Centralized variables ensure pixel consistency across all breakpoints.
@@ -64,7 +44,7 @@
   height: var(--ack-upper-height);
   z-index: 0;
 
-  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-image: url("../src/assets/Property 1=Default.png");
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
@@ -76,7 +56,7 @@
 }
 
 .ack-hero:hover {
-  background-image: url("../src/assets/blurred-background.png");
+  background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
 .upper-text-section {
@@ -90,11 +70,20 @@
 
 .website-title {
   font-family: "Funnel Sans", sans-serif;
-  font-weight: 900;
+  font-weight: 700;
   font-size: 84px;
   line-height: 100px;
   color: var(--ack-text);
+  
 }
+
+/* Only on the Acknowledgements hero */
+.ack-hero .website-title {
+  position: relative;   /* keeps its original layout space */
+  left: -300px;          /* shift LEFT */
+  top: 70px;            /* shift DOWN */
+}
+
 
 .info-section {
   font-family: "Be Vietnam Pro", sans-serif;
