@@ -245,14 +245,18 @@ function getFastCachedSubsections(sectionId) {
   // 2) Load sidebar entry
   const sidebarEntry = getSidebarContent(key);
   if (!sidebarEntry) {
-    toast({
+    if (!silent) {
+      toast({
       title: "Sidebar Entry Not Found",
       description: `The sidebar entry "${term}" could not be found in this subsection.`,
       status: "error",
       duration: 5000,
       isClosable: true,
       position: "bottom-right",
+
     });
+    
+    }
     return;
   }
 
@@ -470,9 +474,24 @@ function getFastCachedSubsections(sectionId) {
 
   const key = String(urlTerm).toLowerCase();
 
+  // Wait until sidebar is actually loaded before trying to open the drawer
+  if (!sidebar || Object.keys(sidebar).length === 0) {
+    return;
+  }
+
+  // Optionally guard: only auto-open if the entry really exists
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    return;
+  }
+
   //  Only open if not already active
-  openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-}, [urlTerm]);
+  openGlobalDrawerForTerm(key,
+     { noToggle: true,
+       noNavigate: true,
+       silent: true
+       });
+}, [urlTerm, sidebar]);
 
 
   const checkAndNavigate = useCallback(
