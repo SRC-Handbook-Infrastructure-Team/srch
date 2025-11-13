@@ -22,10 +22,10 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Layout metrics */
-  --navbar-height: 80px; /* unified */
   --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
-  --left-sidebar-width: 0px; /* JS updates these */
   --right-sidebar-width: 0px; /* JS updates these */
+  --navbar-height: 80px; /* unified baseline */
+  --left-sidebar-width: var(--left-sidebar-width, 250px);
 
   /* Colors / theme */
   --color-text: #1a1a1a;
@@ -46,6 +46,9 @@
   --cs-bg: rgba(251, 251, 250, 1);
   --cs-active: #e6e2dd;
   --cs-divider: #c7beb5;
+
+  /* Motion */
+  --cs-ease: 180ms ease;
 }
 
 /* ------ general styles ------- */
@@ -272,13 +275,18 @@ h4 {
   left: 0;
   width: 100vw;
   margin: 0;
-  height: min-content;
-  align-content: center;
+
+  /* Let it grow with content, but don’t be smaller than 80px */
+  height: auto;
+  min-height: 80px;
+
+  display: block; /* your layout inside (header-hstack etc.) handles flex */
   border-bottom: 1px solid #e2e8f0;
   background-color: white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 20;
 }
+
 
 .top-navbar a:hover,
 .top-navbar a:button,
@@ -642,10 +650,11 @@ h4 {
    ========================================================================== */
 
   .results-autofill {
-  z-index: 999999999999999999;
-  background-color: transparent;
+  z-index: 2147483000;
+  /* background-color: transparent;  <-- comment/remove this */
   color: black !important;
 }
+
 
 .results-white-background {
   background: white;
@@ -779,6 +788,31 @@ h4 {
   padding: 0 1.25rem 0 1.25rem;
 }
 
+/* Base (non-floating) results window – used in NavSearchBar */
+.results-window {
+  margin-top: 8px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  padding: 0.75rem 1rem;
+}
+
+.navsearchbar-container {
+  position: relative;
+  align-items: center;
+  overflow: visible;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+
+/* list styles */
+.results-list {
+  overflow-y: auto;
+  padding: 0 0.5rem 0 0.5rem;
+  z-index: 999999999999999999;
+}
+
 .results-list-floating {
   overflow-y: auto;
   
@@ -794,11 +828,55 @@ html {
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  margin-right: var(--right-sidebar-width) !important;
   margin-top: var(--navbar-height) !important;
   min-height: 100vh;
-  transition: margin 160ms ease;
+
+  /* FIX: combine left & right margin transitions */
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+  overflow: clip;
 }
+
+
+/* When the drawer is open, make room for it */
+html.right-open body .main-content {
+  margin-right: var(--right-sidebar-width) !important;
+}
+
+/* When closed, take up full width */
+html:not(.right-open) body .main-content {
+  margin-right: 0 !important;
+}
+
+
+
+/* Let content inside the right drawer wrap and never overflow */
+.right-sidebar .drawer-content {
+  overflow-wrap: anywhere;   /* modern, preferred */
+  word-break: break-word;    /* fallback */
+  min-width: 0;              /* fix flex shrink edge cases */
+}
+
+/* Chip: allow multi-line wrapping + don’t overflow the drawer */
+.srch-drawer-link {
+  display: inline-flex;
+  flex-wrap: wrap;           /* allow wrapping to 2+ lines */
+  max-width: 100%;
+  white-space: normal !important;  /* was nowrap; this is the fix */
+  line-height: 1.2;
+}
+
+/* Keep the label from forcing a single long line */
+.srch-drawer-link > span,
+.srch-drawer-link .chakra-text {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
+
 
 .page-header-row {
   display: flex;
@@ -834,7 +912,7 @@ html body .main-content {
   position: fixed;
   top: calc(var(--navbar-height) + 19px);
   right: 0;
-  z-index: 150;
+  z-index: 10;
   left: 12px;
 
   display: inline-flex;
@@ -1079,36 +1157,39 @@ p > .srch-drawer-link:first-child {
   right: 0 !important;
   height: calc(100vh - var(--navbar-height)) !important;
   width: var(--right-sidebar-width) !important;
+  overflow: hidden auto;
 
-  /* match left */
   background: var(--cs-bg) !important;
   border-left: 1px solid var(--cs-divider) !important;
 
+  /* Closed by default: off-screen to the right, but full width */
   transform: translateX(100%);
   opacity: 0;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
-
-  will-change: transform;
-  overflow: hidden auto !important;
-  backface-visibility: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
   contain: layout paint style;
+  will-change: transform;
+  backface-visibility: hidden;
+  z-index: 15;
 }
 
-.right-sidebar.open {
+/* When open, slide into view */
+html.right-open .right-sidebar {
   transform: translateX(0);
   opacity: 1;
 }
+
 .right-sidebar.closing {
   transform: translateX(100%) !important;
   opacity: 0 !important;
 }
 
+
 /* Resizer (left edge of right drawer) — identical thickness/behavior as left */
 .right-resizer {
   position: absolute !important;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  top: 0; right: 0; bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
@@ -1117,6 +1198,8 @@ p > .srch-drawer-link:first-child {
 .right-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
+
+
 
 .right-sidebar .drawer-content .callout,
 .right-sidebar .drawer-content [class*="box"],
@@ -1156,3 +1239,238 @@ p > .srch-drawer-link:first-child {
   padding-top: 15px;
   padding-bottom: 10px;
 }
+
+.right-drawer-close-btn {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px !important;
+  cursor: pointer !important;
+  color: var(--srch-brown) !important;
+}
+/* Disable transitions while dragging (optional polish) */
+.left-sidebar.resizing,
+.right-sidebar.resizing {
+  transition: none !important;
+}
+
+/* External hitbox that sits just left of the drawer */
+.right-resize-hitbox {
+  position: fixed !important;
+  top: var(--navbar-height) !important;
+  bottom: 0 !important;
+  right: var(--right-sidebar-width) !important; /* follows drawer edge */
+  width: 10px !important;
+  transform: translateX(-6px); /* overlap seam for easier grab */
+  cursor: col-resize !important;
+  pointer-events: auto;
+  background: transparent !important;
+  z-index: 35;
+}
+.right-resize-hitbox.is-resizing {
+  background: rgba(83, 28, 0, 0.06) !important;
+}
+
+/* Hide/disable when drawer is closed */
+.right-sidebar.close ~ .right-resize-hitbox {
+  pointer-events: none !important;
+  display: none !important;
+}
+
+/* =============================================================================
+   SHELL
+   ========================================================================== */
+.left-sidebar {
+  position: fixed !important;
+  top: var(--navbar-height) !important;
+  left: 0 !important;
+  height: calc(100vh - var(--navbar-height)) !important;
+  width: var(--left-sidebar-width) !important;
+
+  background: var(--cs-bg) !important;
+  border-right: 1px solid var(--cs-divider) !important; /* thin vertical divider */
+
+  overflow-y: auto !important;
+  opacity: 0;
+  transform: translateX(-100%);
+  
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
+
+  /* perf */
+  contain: layout paint style;
+  will-change: transform;
+  z-index: 15;
+  backface-visibility: hidden;
+  transform: translateX(-100%);
+}
+.left-sidebar.open { transform: translateX(0); opacity: 1; }
+
+.left-sidebar.closing {
+  transform: translateX(-100%) !important;
+  opacity: 0 !important;
+}
+
+
+
+/* Resize handle */
+.left-resizer {
+  position: absolute !important;
+  top: 0; right: 0; bottom: 0;
+  width: 6px !important;
+  cursor: col-resize !important;
+  background: transparent !important;
+}
+.left-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
+/* =============================================================================
+   HEADER CONTROLS (Expand/Collapse all)
+   ========================================================================== */
+.sidebar-header-controls {
+  display: flex;
+  justify-content: right;
+  padding: 12px 16px 6px; /* extra top room like Figma */
+}
+
+.sidebar-toggle {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--cs-text);                 /* #4F3629 */
+  
+
+}
+.sidebar-toggle:hover { opacity: 0.9; }
+.sidebar-toggle:focus-visible { outline: 2px solid #9d0013; outline-offset: 2px; }
+
+.icon-double-chevron {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 0;
+}
+.icon-double-chevron svg {
+  width: 12px; height: 6px; display: block; fill: currentColor;
+}
+
+/* =============================================================================
+   SECTION ROWS
+   - Title row navigates.
+   - Chevron toggles expand/collapse (JS stops propagation).
+   - Active section row ALWAYS uses warm grey background.
+   ========================================================================== */
+.sidebar-section { margin-bottom: 6px; } /* subtle breathing room between sections */
+
+/* SECTION ROWS */
+.sidebar-section-header {
+  /* edge-to-edge highlight inside a padded container (NavContent wrapper uses 16px) */
+  margin-left: -16px;
+  margin-right: -16px;
+  padding: 8px 16px;              /* move padding here so the bg spans full width */
+  border-radius: 0 !important;
+  transition: background-color var(--cs-ease), border-color var(--cs-ease);
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+
+.sidebar-section-header:hover:not(.is-active) {
+  background: rgba(0,0,0,0.04); /* gentle hover only for non-active */
+}
+
+/* Active section row (route-aware via .is-active from JSX) */
+.sidebar-section-header.is-active {
+  background: var(--cs-active) !important; /* #e6e2dd */
+  border-color: var(--cs-active) !important;
+  border-radius: 0 !important;
+
+}
+
+/* Title text in section row — default REGULAR, only active is BOLD */
+.sidebar-section-title {
+  font: "Be Vietnam Pro";
+  font-weight: 400 !important;             /* default regular */
+  font-size: 16px !important;
+  color: var(--cs-text) !important;        /* #4F3629 */
+}
+
+/* Bold only when the section is the active route */
+.sidebar-section-header.is-active .sidebar-section-title {
+  font-weight: 700 !important;
+}
+
+/* =============================================================================
+   SUBSECTIONS
+   - Active pill is brown with white text.
+   - Inactive text uses cs-text.
+   - Add vertical rhythm when a section is open.
+   ========================================================================== */
+.sidebar-subsection-container {
+  padding-left: 22px;     /* indent subsections */
+  margin-top: 8px;        /* space under the section row when opened */
+}
+
+.sidebar-sub-row {
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: background-color var(--cs-ease), color var(--cs-ease);
+  background: transparent;
+}
+.sidebar-sub-row:hover { background: rgba(83,28,0,0.06); } /* subtle hover */
+.sidebar-sub-row.is-active {
+  background: var(--cs-brown);           /* #531C00 */
+}
+
+/* Subsection text */
+.sidebar-subsection {
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  color: var(--cs-text) !important;      /* default #4F3629 */
+}
+.sidebar-sub-row.is-active .sidebar-subsection {
+  color: #FFFFFF !important;             /* white when active pill */
+  font-weight: 600 !important;           /* bold only for active subsection */
+}
+
+/* =============================================================================
+   BADGE
+   ========================================================================== */
+.beta-tag {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #EFEFEF; color: #333;
+  font-weight: 700; font-size: 0.75rem;
+  padding: 2px 8px; margin-left: 8px; border-radius: 6px;
+}
+
+/* =============================================================================
+   SMALL POLISH
+   ========================================================================== */
+.sidebar-btn:hover {
+     opacity: 0.8;
+     }
+
+
+.srch-drawer-link {
+  margin: 0 !important;
+  padding: 6px 12px !important;       /* More interior padding → more pill */
+  border-radius: 999px !important;    /* Perfect pill shape */
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;                /* More breathing room between text + icon */
+}
+
+
+

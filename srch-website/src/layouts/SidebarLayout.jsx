@@ -48,6 +48,7 @@ export default function SidebarLayout({ children }) {
 
     setTimeout(() => {
       main.classList.remove("release");
+      inner.classList.remove("release");
       document.documentElement.style.removeProperty("--main-freeze-width");
     }, 220);
   }, []);
@@ -66,6 +67,7 @@ export default function SidebarLayout({ children }) {
   });
 
   /** ---------------- RIGHT SIDEBAR CONFIG ---------------- */
+
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
     defaultWidth: 400,
@@ -75,6 +77,20 @@ export default function SidebarLayout({ children }) {
     cssVarName: "--right-sidebar-width",
     onStartResize: freezeMainContent,
     onStopResize: releaseMainContent,
+
+    getDynamicBounds: () => {
+      const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
+
+      const availableForRight = Math.max(
+        vw - MIN_MAIN_WIDTH - (leftSidebar?.width || 0),
+        0
+      );
+      return {
+        min: rightSidebar?.minWidth ?? 375,
+        max: Math.min(availableForRight, rightSidebar?.maxWidth ?? 700),
+
+      };
+    },
   });
 
   /** ---------------- RIGHT DRAWER STATE ---------------- */
@@ -94,11 +110,16 @@ export default function SidebarLayout({ children }) {
 
   /** Sync drawer width to CSS var (single effect — avoids redundancy) */
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--right-sidebar-width",
-      isRightOpen ? `${rightSidebar.width}px` : "0px"
-    );
-  }, [isRightOpen, rightSidebar.width]);
+  const target = document.documentElement;
+  const value = isRightOpen ? `${rightSidebar.width}px` : "0px";
+
+  // One layout frame sync — ensures margin/flex vars update atomically
+  requestAnimationFrame(() => {
+    target.style.setProperty("--right-sidebar-width", value);
+    target.classList.toggle("right-open", isRightOpen);
+  });
+}, [isRightOpen, rightSidebar.width]);
+
 
   /** ---------------- AUTO-CLOSE DRAWER ON *PAGE* CHANGE ---------------- */
   const location = useLocation();
@@ -151,40 +172,12 @@ export default function SidebarLayout({ children }) {
 
   /** ---------------- NAVBAR HEIGHT SYNC ---------------- */
   useEffect(() => {
-    const navbar = document.querySelector(".top-navbar");
-    const toolbar = document.querySelector(".content-toolbar");
-    if (!navbar) return;
+  // Force a constant navbar height of 80px (Netflix-level consistency)
+  const fixedHeight = "80px";
+  document.documentElement.style.setProperty("--navbar-height", fixedHeight);
+  document.documentElement.style.setProperty("--nav-bar-height", fixedHeight);
+}, []);
 
-    const setHeightVars = () => {
-      const navH = `${navbar.offsetHeight || 0}px`;
-      const toolH =
-        toolbar?.offsetHeight != null
-          ? `${toolbar.offsetHeight}px`
-          : getComputedStyle(document.documentElement).getPropertyValue(
-              "--toolbar-height"
-            ) || "0px";
-
-      document.documentElement.style.setProperty("--navbar-height", navH);
-      document.documentElement.style.setProperty("--nav-bar-height", navH);
-      document.documentElement.style.setProperty("--toolbar-height", toolH);
-    };
-
-    setHeightVars();
-
-    if (typeof ResizeObserver !== "undefined") {
-      const observers = [];
-      const navObs = new ResizeObserver(setHeightVars);
-      navObs.observe(navbar);
-      observers.push(navObs);
-
-      if (toolbar) {
-        const toolObs = new ResizeObserver(setHeightVars);
-        toolObs.observe(toolbar);
-        observers.push(toolObs);
-      }
-      return () => observers.forEach((o) => o.disconnect());
-    }
-  }, []);
 
   /** ---------------- VIEWPORT WIDTH TRACKER ---------------- */
   useEffect(() => {
@@ -251,58 +244,82 @@ export default function SidebarLayout({ children }) {
 
   /** ---------------- RENDER ---------------- */
   return (
-    <LayoutContext.Provider value={layoutValue}>
-      <div className="sidebar-layout">
-        <NavBar />
+  <LayoutContext.Provider value={layoutValue}>
+    <div className="sidebar-layout">
+      <NavBar />
 
-        {!window.location.pathname.startsWith("/search") && (
-          <ContentsSidebar
-            className={!leftSidebar.collapsed ? "open" : ""}
-            width={leftSidebar.width}
-            collapsed={!!leftSidebar.collapsed}
-            isResizing={leftSidebar.isResizing}
-            onToggleSidebar={leftSidebar.toggleCollapsed}
-            onStartResize={leftSidebar.startResize}
-            onHandleKeyDown={leftSidebar.handleKeyDown}
-          />
+      {/* FLEX SHELL: reserved (authoritative rail below NavBar if needed later) */}
+      <div className="layout-rail" role="presentation" />
+
+      {/* LEFT: Contents sidebar (hidden on /search) */}
+      {!window.location.pathname.startsWith("/search") && (
+        <ContentsSidebar
+          className={!leftSidebar.collapsed ? "open" : ""}
+          width={leftSidebar.width}
+          collapsed={!!leftSidebar.collapsed}
+          isResizing={leftSidebar.isResizing}
+          onToggleSidebar={leftSidebar.toggleCollapsed}
+          onStartResize={leftSidebar.startResize}
+          onHandleKeyDown={leftSidebar.handleKeyDown}
+        />
+      )}
+
+      {/* MAIN CONTENT */}
+      <main id="main" className="main-content" ref={mainRef}>
+        <div className="main-shift" ref={innerRef}>
+          {children}
+        </div>
+      </main>
+
+      {/* RIGHT: Drawer (content only) */}
+      <aside
+        className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
+        aria-label="Right sidebar drawer"
+      >
+        {isRightOpen && (
+          <>
+            <button
+              onClick={closeRightDrawer}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  closeRightDrawer();
+                }
+              }}
+              className="right-drawer-close-btn"
+              aria-label="Close right sidebar"
+              tabIndex={0}
+              title="Close sidebar"
+            >
+              ✕
+            </button>
+
+            <div className="drawer-content scrollable-drawer">
+              {rightContent}
+            </div>
+          </>
         )}
+      </aside>
 
-        <main id="main" className="main-content" ref={mainRef}>
-          <div className="main-shift" ref={innerRef}>
-            {children}
-          </div>
-          
-        </main>
-
-        <aside
-          className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
-          aria-label="Right sidebar drawer"
-        >
-          {isRightOpen && (
-            <>
-              <div className="drawer-content scrollable-drawer">
-                {rightContent}
-              </div>
-
-              <div
-                className={`right-resizer ${
-                  rightSidebar.isResizing ? "is-resizing" : ""
-                }`}
-                onMouseDown={rightSidebar.startResize}
-                onTouchStart={rightSidebar.startResize}
-                onKeyDown={rightSidebar.handleKeyDown}
-                role="separator"
-                tabIndex={0}
-                aria-orientation="vertical"
-                aria-label="Resize right sidebar"
-                aria-valuenow={rightSidebar.width}
-                aria-valuemin={rightSidebar.minWidth}
-                aria-valuemax={rightSidebar.maxWidth}
-              />
-            </>
-          )}
-        </aside>
-      </div>
-    </LayoutContext.Provider>
-  );
+      {/* RIGHT: External resize hitbox (sits just left of the drawer edge) */}
+      {isRightOpen && (
+        <div
+          className={`right-resize-hitbox ${
+            rightSidebar.isResizing ? "is-resizing" : ""
+          }`}
+          onMouseDown={rightSidebar.startResize}
+          onTouchStart={rightSidebar.startResize}
+          onKeyDown={rightSidebar.handleKeyDown}
+          role="separator"
+          tabIndex={0}
+          aria-orientation="vertical"
+          aria-label="Resize right sidebar"
+          aria-valuenow={rightSidebar.width}
+          aria-valuemin={rightSidebar.minWidth}
+          aria-valuemax={rightSidebar.maxWidth}
+        />
+      )}
+    </div>
+  </LayoutContext.Provider>
+);
 }
