@@ -545,11 +545,13 @@ h4 {
   display: flex;
   align-items: center;
   overflow: visible;
-  background: transparent;
-  width: 75vw;
+  background: white;
   border-radius: 9999999999px;
-
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  min-width: 400px;
 }
 
 .searchbar-border {
@@ -662,14 +664,20 @@ h4 {
   font-size: 0.875rem;
 }
 
-.results-item {
-  margin-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.result-row {
   border-bottom: 1px solid #e2e8f0;
+padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.results-item :hover {
-  background-color: #d8d7d7;
+.results-item {
+  padding: 15px;
+border-radius: 9px;
+}
+
+.results-item:hover {
+  background-color: #d8d7d741;
+  transition: background-color 0.5s ease;
 }
 
 .results-header {
@@ -703,7 +711,6 @@ h4 {
   font-size: 0.875rem;
   color: black;
   padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .result-snippet-text {
@@ -741,7 +748,7 @@ h4 {
 }
 
 .results-view-all {
-  padding: 0.5rem 0;
+  padding: 0.75rem 0.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -770,7 +777,6 @@ h4 {
   left: 0;
   right: 0;
   margin-top: 20px;
-  /* transform: translateY(-40px); */
   background: white;
   border-radius: 20px;
   display: flex;
@@ -781,7 +787,7 @@ h4 {
 
 .results-list-floating {
   overflow-y: auto;
-  
+    padding-top: 0.5rem;
 }
 
 .drawer-content {
@@ -875,7 +881,6 @@ html body .main-content {
   height: 2px;
   background: var(--srch-brown, #531c00);
   border: 0;
-  margin: 12px 0 24px;
 
   /* Full-bleed within .main-content: cancel the .markdown-page padding */
   margin-left: calc(-1 * var(--page-pad));
@@ -887,6 +892,12 @@ html body .main-content {
   transform: none !important;
   width: calc(100% + (var(--page-pad) * 2)) !important;
   margin-left: calc(-1 * var(--page-pad)) !important;
+}
+
+
+/* Neutralize any legacy "fullbleed" rules that used vw/transform */
+.page-divider-margin {
+  margin: 12px 0 12px;
 }
 
 /* 4) Make sure the header row can contain absolutely-positioned children */

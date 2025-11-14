@@ -1,13 +1,33 @@
 import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
 import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
 import "../ContentPage.css";
 
 function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const containerRef = useRef(null);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
+  const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleInputFocus = () => setShowResults(true);
+  const handleContainerClick = () => setShowResults(true);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -16,7 +36,12 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   };
 
   return (
-    <Box ref={containerRef} className={"searchbar-container"}>
+    <Box
+      ref={containerRef}
+      className={"searchbar-container"}
+      onClick={handleContainerClick}
+
+    >
       <IconButton
         aria-label="Toggle search bar"
         icon={<SearchIcon fontSize={"md"} />}
@@ -25,19 +50,22 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
       />
       <Box className="searchbar-input-container">
         <Input
-          style={{ padding: 0 }}
+          ref={inputRef}
           className={"searchbar-input"}
           type="text"
           placeholder={"Search for topics, case studies, terms..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
         />
-        <ResultsWindow
-          searchQuery={searchQuery}
-          maxResults={maxResults}
-          floating={true}
-        />
+        <Collapse in={showResults} animateOpacity>
+          <ResultsWindow
+            searchQuery={searchQuery}
+            maxResults={maxResults}
+            floating={true}
+          />
+         </Collapse>
       </Box>
       <Collapse in={searchQuery} animateOpacity>
         <IconButton

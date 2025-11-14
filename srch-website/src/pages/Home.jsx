@@ -13,6 +13,8 @@ import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
+import Footer from "../components/Footer"
+
 
 function Home() {
   const navigate = useNavigate();
@@ -147,12 +149,14 @@ function Home() {
                 Find specific topics, case studies, and resources quickly
               </p>
             </div>
+            <div className="landing-search-container">
             <SearchBar
               className="results-autofill"
               setSearchQuery={setSearchQuery}
               searchQuery={searchQuery}
               maxResults={2}
             />
+            </div>
           </div>
 
           <div className="line-divider"></div>
@@ -233,119 +237,10 @@ function Home() {
             </button>
           </div>
 
-          <div className="line-divider"></div>
-
-          <div className="link-section">
-            <div className="logo-area">
-              <img
-                src={logoImage}
-                alt="SRC Handbook Logo"
-                width={100}
-                height={91}
-              />
-            </div>
-
-            <div className="modules">
-              <div className="modules-heading">Modules</div>
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={privacyIcon}
-                    alt="Privacy Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(privacySlug)}
-                  className="module-link"
-                >
-                  Privacy
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={accessibilityIcon}
-                    alt="Accessibility Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(accessibilitySlug)}
-                  className="module-link"
-                >
-                  Accessibility
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={automatedIcon}
-                    alt="Automated Decision Making Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(decisionSlug)}
-                  className="module-link"
-                >
-                  Automated Decision Making
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={aiIcon}
-                    alt="Generative AI Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(aiSlug)}
-                  className="module-link"
-                >
-                  Generative AI
-                </button>
-              </div>
-            </div>
-
-            <div className="modules">
-              <div className="module-heading">Quick Links</div>
-              <div className="module-links">
-                <button
-                  onClick={() => navigate("/about")}
-                  className="module-link"
-                >
-                  About
-                </button>
-                <button
-                  onClick={() => navigate("/acknowledgements")}
-                  className="module-link"
-                >
-                  Acknowledgements
-                </button>
-              </div>
-            </div>
-
-            <div className="modules">
-              <div className="module-heading">Have Feedback?</div>
-              <p className="feedback-contact">
-                Contact:{" "}
-                <a href="mailto:src_handbook@brown.edu">
-                  src_handbook@brown.edu
-                </a>
-              </p>
-            </div>
-          </div>
         </div>
       </div>
+          <Footer/>
+
     </div>
   );
 }

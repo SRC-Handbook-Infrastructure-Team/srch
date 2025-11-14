@@ -404,43 +404,9 @@ html {
   line-height: 28px;
   word-wrap: break-word;
 }
-
-.search-bar {
-  width: 100%;
-  max-width: 878px;
-  height: 56px;
-  padding: 10px 24px;
-  background: white;
-  outline: 1px #5d3210 solid;
-  border-radius: 24px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 16px;
-  display: flex;
+.landing-search-container {
+  width: 60%;
 }
-
-.search-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-.search-placeholder {
-  flex: 1;
-  color: #656565;
-  font-size: 18px;
-  font-family: var(--content-font);
-  font-weight: var(--sub-weight);
-  line-height: 28px;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-.search-placeholder::placeholder {
-  color: #656565;
-}
-
 .section-title {
   align-self: stretch;
   text-align: center;
@@ -668,13 +634,25 @@ html {
   color: #7a000f;
 }
 /* Primer Link Section - Footer Container */
+
+.footer-container {
+  position: relative;
+  z-index: 1;
+  background: white;
+}
+
 .link-section-primer-footer {
   justify-self: center;
   justify-items: center;
   width: 100%;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+
 }
 
 .modules-section-primer-footer {
@@ -683,7 +661,6 @@ html {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px 30px;
-  padding: 10px 0;
 }
 
 .modules-quick-links-primer-footer {
@@ -700,8 +677,8 @@ html {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 10px;
   display: flex;
+  padding-bottom: 10px;
 }
 
 .footer-logo-primer-footer {

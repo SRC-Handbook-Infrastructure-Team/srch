@@ -6,18 +6,20 @@ import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
 import background from "../assets/landing-page-background-gradient.png";
+import Footer from "../components/Footer"
+
 
 function SearchResults() {
   const { query } = useParams();
   const decodedQuery = decodeURIComponent(query || "");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(decodedQuery);
 
   useEffect(() => {
     setSearchQuery(decodedQuery);
   }, [decodedQuery]);
 
   return (
-    <div className="markdown-page" style={{ minHeight: "100vh" }}>
+    <div className="markdown-page" >
       <div
         style={{
           position: "absolute",
@@ -48,8 +50,9 @@ function SearchResults() {
         style={{
           position: "relative",
           zIndex: 2,
-          padding: "20px",
+          padding: "20px 40px",
           marginTop: "80px",
+         minHeight: "100vh",
         }}
       >
         <Heading as="h1" size="2xl" mb={3} sx={{ color: "#581000 !important" }}>
@@ -62,8 +65,10 @@ function SearchResults() {
           maxResults={0}
         />
         <br></br>
-        <ResultsWindow searchQuery={decodedQuery} floating={false} />
+        <ResultsWindow searchQuery={searchQuery} floating={false} />
       </div>
+          <Footer/>
+
     </div>
   );
 }

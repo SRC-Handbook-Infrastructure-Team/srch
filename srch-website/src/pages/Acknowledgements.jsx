@@ -59,6 +59,7 @@ import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer"
 
 // Footer assets (shared with Home)
 import logoImage from "../assets/logo.png";
@@ -288,85 +289,9 @@ export default function Acknowledgements() {
           title="Additional Contributors — Faculty Advisors"
           teamName="additional_faculty"
         />
+         </div>
+                    <Footer />
 
-        {/* Visual divider before footer */}
-        <div className="line-divider"></div>
-
-        {/* 3) Footer (structurally mirrors Home’s link-section block) */}
-        <div className="link-section">
-          {/* Logo column */}
-          <div className="logo-area">
-            <img
-              src={logoImage}
-              alt="SRC Handbook Logo"
-              className="footer-logo"
-            />
-          </div>
-
-          {/* Modules column */}
-          <div className="modules">
-            <div className="modules-heading">Modules</div>
-
-            <div className="primer-link">
-              <div className="primer-link-photo">
-                <img src={privacyIcon} alt="Privacy Icon" />
-              </div>
-              <button onClick={() => navigate(privacySlug)} className="module-link">
-                Privacy
-              </button>
-            </div>
-
-            <div className="primer-link">
-              <div className="primer-link-photo">
-                <img src={accessibilityIcon} alt="Accessibility Icon" />
-              </div>
-              <button onClick={() => navigate(accessibilitySlug)} className="module-link">
-                Accessibility
-              </button>
-            </div>
-
-            <div className="primer-link">
-              <div className="primer-link-photo">
-                <img src={automatedIcon} alt="Automated Decision Making Icon" />
-              </div>
-              <button onClick={() => navigate(decisionSlug)} className="module-link">
-                Automated Decision Making
-              </button>
-            </div>
-
-            <div className="primer-link">
-              <div className="primer-link-photo">
-                <img src={aiIcon} alt="Generative AI Icon" />
-              </div>
-              <button onClick={() => navigate(aiSlug)} className="module-link">
-                Generative AI
-              </button>
-            </div>
-          </div>
-
-          {/* Quick links column */}
-          <div className="modules">
-            <div className="module-heading">Quick Links</div>
-            <div className="module-links">
-              <button onClick={() => navigate("/about")} className="module-link">
-                About
-              </button>
-              <button onClick={() => navigate("/acknowledgements")} className="module-link">
-                Acknowledgements
-              </button>
-            </div>
-          </div>
-
-          {/* Feedback column */}
-          <div className="modules">
-            <div className="module-heading">Have Feedback?</div>
-            <p className="feedback-contact">
-              Contact:{" "}
-              <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
-            </p>
-          </div>
-        </div>
-      </div>
     </>
   );
 }
