@@ -17,9 +17,10 @@ export default function useResizableSidebar({
   side = "left", // 'left' | 'right'
   saveOnEnd = true,
   cssVarName,
-  // NEW: freeze/release callbacks provided by the layout (no-op by default)
   onStartResize = () => {},
   onStopResize = () => {},
+  getDynamicBounds, 
+
 } = {}) {
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
@@ -66,9 +67,11 @@ export default function useResizableSidebar({
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       ref.current.startX = clientX;
       ref.current.startWidth = width;
+      ref.current.edge = null; // reserved for future use
 
       if (isBrowser()) {
         document.body.style.cursor = "ew-resize";
+        document.body.style.userSelect = "none";
         // Add performance class to the *correct* sidebar while dragging
         const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
         const sidebarEl = document.querySelector(selector);
@@ -85,6 +88,7 @@ export default function useResizableSidebar({
 
     if (isBrowser()) {
       document.body.style.cursor = "";
+      document.body.style.userSelect = "";
       // Remove performance class when drag ends
       const selector = side === "right" ? ".right-sidebar" : ".left-sidebar";
       const sidebarEl = document.querySelector(selector);
@@ -115,20 +119,35 @@ export default function useResizableSidebar({
 
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
-      /** 
-       * Sensitivity multiplier makes dragging feel faster — 
-       * small mouse movements result in larger sidebar width changes.
-       */
-      const sensitivity = 1.5;
-      const delta = (clientX - ref.current.startX) * sensitivity;
+      const delta = (clientX - ref.current.startX); // 1:1 precise drag
 
       const rawNext =
         side === "left"
           ? ref.current.startWidth + delta
           : ref.current.startWidth - delta;
 
-      // Immediately clamp to prevent dragging past limits
-      const clampedNext = clamp(rawNext, minWidth, maxWidth);
+      let dynMin = minWidth, dynMax = maxWidth;
+      if (typeof getDynamicBounds === "function") {
+        const b = getDynamicBounds();
+        if (b && Number.isFinite(b.min)) dynMin = b.min;
+        if (b && Number.isFinite(b.max)) dynMax = b.max;
+      }
+
+      
+      // Clamp ASAP
+      const clampedNext = clamp(rawNext, dynMin, dynMax);
+      const atMin = clampedNext === dynMin;
+      const atMax = clampedNext === dynMax;
+
+      // Edge-lock - if we're pinned and still pushing into the edge, don't update
+      if (ref.current.edge === "min" && atMin && rawNext <= dynMin) return;
+      if (ref.current.edge === "max" && atMax && rawNext >= dynMax) return;
+
+      // Update edge state
+      ref.current.edge = atMin ? "min" : atMax ? "max" : null;
+
+
+      
       pendingWidth.current = clampedNext;
 
       cancelAnimationFrame(rafRef.current);
@@ -152,8 +171,8 @@ export default function useResizableSidebar({
     const onUp = () => stopResize();
 
     if (isResizing) {
-      window.addEventListener("mousemove", onMove);
-      window.addEventListener("mouseup", onUp);
+      window.addEventListener("mousemove", onMove, { passive: false });
+      window.addEventListener("mouseup", onUp, { passive: true });
       window.addEventListener("touchmove", onMove, { passive: false });
       window.addEventListener("touchend", onUp);
     }
@@ -164,7 +183,10 @@ export default function useResizableSidebar({
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onUp);
       cancelAnimationFrame(rafRef.current);
-      if (isBrowser()) document.body.style.cursor = "";
+      if (isBrowser()) {
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      }
     };
   }, [isResizing, setWidth, side, minWidth, maxWidth, cssVarName, stopResize]);
 

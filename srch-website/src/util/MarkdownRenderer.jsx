@@ -12,6 +12,8 @@ import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import { remarkSidebarRef } from "./remarkSidebarRef";
+import { remarkHighlight } from "./remarkHighlight";
 import {
   Text,
   Heading,
@@ -347,9 +349,9 @@ function MarkdownRenderer({
     let processed =
       typeof content === "string" ? content : content.content || "";
     if (typeof processed === "string") {
-      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
-        return `<sidebar-ref term="${term}"></sidebar-ref>`;
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {        return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
+      
     }
     return processed;
   }, [content]);
@@ -459,6 +461,24 @@ function MarkdownRenderer({
     });
   }
 
+  function tightenAroundSidebarRefs(children) {
+  const arr = React.Children.toArray(children);
+  for (let i = 0; i < arr.length; i++) {
+    const cur = arr[i];
+    const isChip =
+      React.isValidElement(cur) &&
+      (cur.type === 'sidebar-ref' || cur.props?.className?.includes('srch-drawer-link'));
+    if (!isChip) continue;
+
+    const prev = arr[i - 1];
+    const next = arr[i + 1];
+    if (typeof prev === 'string') arr[i - 1] = prev.replace(/\s+$/, ''); // trim end
+    if (typeof next === 'string') arr[i + 1] = next.replace(/^\s+/, ''); // trim start
+  }
+  return arr;
+}
+
+
   const components = useMemo(
     () => ({
       h1: (props) => (
@@ -492,11 +512,10 @@ function MarkdownRenderer({
           </Heading>
         );
       },
-      p: (props) => {
-        const cleaned = cleanParagraphChildren(props.children);
+      p: ({children}) => {
         return (
           <Text mb={3} lineHeight="1.6" color={BLACK}>
-            {highlightText(cleaned, highlight)}
+            {highlightText(children, highlight)}
           </Text>
         );
       },
@@ -681,7 +700,6 @@ function MarkdownRenderer({
             term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
           : `⚠️ Missing: ${term}`;
 
-        const isMissing = !value;
 
         return (
           <Box
@@ -689,7 +707,7 @@ function MarkdownRenderer({
             to={`/${sectionId}/${subsectionId}/${term}`}
             onClick={(e) => {
               e.preventDefault();
-              if (!isMissing) {
+              if (value) {
                 setActiveDrawerLink(e.currentTarget);
                 onDrawerOpen && onDrawerOpen(term);
               }
@@ -700,29 +718,33 @@ function MarkdownRenderer({
             data-term={term}
             display="inline-flex"
             verticalAlign="baseline"
-            m="0"
-            mx="0"
-            my="0"
             alignItems="center"
+                      
             gap="6px"
-            h="32px"
             px="10px"
-            borderRadius="17px"
+            py="4px"
+            mx="0"
+            my="2px"
+            
+            borderRadius="999px"
             color={RED}
             textDecoration="none"
             border="1px solid transparent"
-            cursor={isMissing ? "default" : "pointer"}
-            whiteSpace="nowrap"
+            whiteSpace="normal"
+            flexShrink={1}
+            maxW="100%"               // don’t exceed container
+            minW={0}                  // allow shrink in tight columns
           >
             <Text
               as="span"
-              fontWeight="medium"
+              fontWeight="700"
               fontSize="inherit"
-              lineHeight="1.2"
+              lineHeight="inherit"
+              sx={{ overflowWrap: "anywhere", wordBreak: "break-word", minWidth: 0}}
             >
               {highlightText(toShow, highlight)}
             </Text>
-            <Icon as={InfoIcon} boxSize="0.9em" />
+            <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
           </Box>
         );
       },
@@ -763,8 +785,12 @@ function MarkdownRenderer({
     <div>
       <ReactMarkdown
         components={components}
+        remarkPlugins={[
+          remarkGfm,
+          [remarkHighlight, highlight],
+          remarkSidebarRef
+        ]}
         rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
       >
         {processedContent}
       </ReactMarkdown>
@@ -772,42 +798,5 @@ function MarkdownRenderer({
   );
 }
 
-/**
- * Loads a Markdown file from the "drawer" subfolder.
- * Used for right-hand side drawer panels.
- *
- * @param {string} sectionId - The section slug (e.g. "privacy")
- * @param {string} subsectionId - The subsection slug (e.g. "what-is-privacy")
- * @param {string} term - The sidebar reference key (e.g. "case-study-1")
- * @returns {Promise<{content: string, frontmatter: object} | null>}
- */
-export const getDrawerFile = async (sectionId, subsectionId, term) => {
-  try {
-    const expectedPath = `../markdown/${sectionId}/${subsectionId}/drawer/${term}.md`;
-
-    for (const filePath in allMarkdownFiles) {
-      if (filePath.endsWith(expectedPath.slice(2))) {
-        const content = await allMarkdownFiles[filePath]();
-        const { content: cleanContent, frontmatter } =
-          parseFrontmatter(content);
-        return { content: cleanContent, frontmatter };
-      }
-    }
-
-    console.warn(
-      `Drawer file not found for ${sectionId}/${subsectionId}/${term}`
-    );
-    return null;
-  } catch (error) {
-    console.error(
-      "Error loading drawer file:",
-      sectionId,
-      subsectionId,
-      term,
-      error
-    );
-    return null;
-  }
-};
 
 export default MarkdownRenderer;

@@ -8,7 +8,7 @@
  *   over the hero as the user scrolls—mirroring the Home page feel.
  *
  * What’s in this file
- *   • Fixed hero banner (same “overlay” behavior as Home)
+ *   • Hero banner
  *   • Team member grids for:
  *        - Leadership
  *        - AI
@@ -19,24 +19,8 @@
  *        - Additional Contributors (Faculty Advisors)
  *   • Footer at the bottom (logo + modules + quick links + feedback)
  *
- * Card behavior (Option 2 - Final)
- *   • If a member has a `photo` (string), we render an <Image>.
- *   • If photo is missing/empty, we render a DIV rectangle placeholder that
- *     matches the card spec (290×302, masked by ../src/assets/Photo.png).
- *     The name, pronouns, and sub-info are displayed below—never overlapping
- *     the placeholder.
- *   • Icons (email, LinkedIn, website) only render if the corresponding field
- *     is present. Each icon appears in a 31×30 circular framed button.
  *
- * Data contract with team.json
- *   • The `team` field determines which section a person appears in:
- *        - "leadership" | "ai" | "privacy" | "accessibility" | "product"
- *        - "additional" (Additional Contributors - User Studies)
- *        - "additional_faculty" (Additional Contributors - Faculty Advisors)
- *   • The `active` field controls whether someone is listed under “Active”
- *     or “Past Members” within a section (true/false as string).
- *   • Fields used: name, pronouns, position, degree, gradYear, email,
- *     linkedin, website, photo, team, active.
+
  *
  * Styling
  *   • All visual styling comes from Acknowledgements.css.
@@ -45,11 +29,6 @@
  *     .ack-card-icons, .ack-icon-btn, .ack-hero, .ack-lower-content, .line-divider,
  *     .link-section, .logo-area, .footer-logo, .modules (…and its variants).
  *
- * Notes
- *   • This file deliberately keeps presentational logic minimal and relies on
- *     CSS for consistent sizing/spacing to match Figma.
- *   • Grid is a semantic <div class="ack-grid"> (1–4 columns via CSS).
- *   • Footer section is an exact structural match to Home so both pages align.
  * ============================================================================
  */
 
@@ -93,10 +72,6 @@ function getMemberPhotoSrc(member) {
  *     4) Action icons (email/linkedin/website) if present
  * - All spacing, font sizes, and icon dims are handled via CSS classes.
  *
- * Netflix-quality notes:
- * - No extra wrappers; image is the element being masked, so there’s no drift.
- * - The masked geometry guarantees identical visual boxes across cards.
- * - Icons sit close to text (not pinned to bottom) to match the Figma density.
  * ===========================================================================*/
 function TeamGrid({ filteredTeam }) {
   const sortedTeam = [...filteredTeam].sort((a, b) =>
@@ -232,7 +207,7 @@ function TeamSection({ title, teamName }) {
  * -----------------------------------------------------------------------------
  * Assembles the page:
  *   1) NavBar
- *   2) Hero overlay (fixed background gradient with headline)
+ *   2) Hero overlay
  *   3) Lower content that scrolls over hero:
  *        - All team sections (as card grids)
  *        - Two "Additional Contributors" sections as cards:
@@ -257,14 +232,14 @@ export default function Acknowledgements() {
       {/* Global site navigation */}
       <NavBar />
 
-      {/* 1) Fixed hero (visual overlay). Behavior matches Home’s upper-content.
+      {/* Behavior matches Home’s upper-content.
           The actual size/scroll handoff is controlled in Acknowledgements.css:
           - .ack-hero (position: fixed; background image)
           - .ack-lower-content (margin-top: Nvh to start after the hero)
       */}
       <div className="ack-hero">
         <div className="upper-text-section">
-          <div className="website-title">Meet our Team</div>
+          <div className="website-title">Meet our Team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
           <div className="info-section"></div>
         </div>

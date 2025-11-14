@@ -17,8 +17,7 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { getSections, getSubsections, getContent } from "../util/MarkdownRenderer";
-// "../ContentPage.css";
-import "../ContentsSidebar.css";
+import "../ContentPage.css";
 
 
 /* =============================================================================

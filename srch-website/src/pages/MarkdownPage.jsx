@@ -1,3 +1,5 @@
+import "../LandingPage.css";
+import "../ContentPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToast, Box } from "@chakra-ui/react";
@@ -6,9 +8,13 @@ import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
-  getDrawerFile,
   highlightText,
 } from "../util/MarkdownRenderer";
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -44,12 +50,11 @@ function MarkdownPage() {
 
   // ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
   const SECTION_NUMBER_MAP = {
-  privacy: "1",
-  accessibility: "2",
-  automateddecisionmaking: "3",
-  generativeai: "4",
-};
-
+    privacy: "1",
+    accessibility: "2",
+    automateddecisionmaking: "3",
+    generativeai: "4",
+  };
 
   // convert 0 -> 'a', 1 -> 'b', etc.
   function indexToLetter(index) {
@@ -64,87 +69,88 @@ function MarkdownPage() {
 
   // prettify "what-is-privacy" → "What Is Privacy"
   function prettifySlug(slug = "") {
-  return String(slug)
-    // Insert space between lowercase -> uppercase ("generativeAI" → "generative AI")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    return (
+      String(slug)
+        // Insert space between lowercase -> uppercase ("generativeAI" → "generative AI")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
 
-    // Insert space between acronym + word ("AIethics" → "AI ethics")
-    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+        // Insert space between acronym + word ("AIethics" → "AI ethics")
+        .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
 
-    // Replace hyphens and underscores with spaces
-    .replace(/[-_]+/g, " ")
+        // Replace hyphens and underscores with spaces
+        .replace(/[-_]+/g, " ")
 
-    // Collapse any double spaces
-    .replace(/\s+/g, " ")
+        // Collapse any double spaces
+        .replace(/\s+/g, " ")
 
-    // Capitalize each word
-    .replace(/\b\w/g, (m) => m.toUpperCase())
+        // Capitalize each word
+        .replace(/\b\w/g, (m) => m.toUpperCase())
 
-    .trim();
-}
-
-
-  // normalize 'automated-decision-making' -> 'automateddecisionmaking' (map key)
-function normalizeSectionKey(id) {
-  return String(id || "").replace(/[^a-z]/gi, "").toLowerCase();
-}
-
-function getFastCachedSubsections(sectionId) {
-  return window.__SRCH_SUBSECTIONS_CACHE__?.[sectionId] || null;
-}
-
-
-  function getFormattedTitle(
-  sectionId,
-  subsectionId,
-  pageTitle,
-  subsectionsArr = []
-) {
-  // Normalize incoming section id to match our map keys
-  const sectionKey = normalizeSectionKey(sectionId);
-  const sectionNum = SECTION_NUMBER_MAP[sectionKey] || ""; // empty if unknown (no '?')
-
-  // Find letter for subsection, if any
-  let letter = "";
-  if (
-    subsectionId &&
-    Array.isArray(subsectionsArr) &&
-    subsectionsArr.length > 0
-  ) {
-    const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
-    if (idx >= 0) letter = indexToLetter(idx);
+        .trim()
+    );
   }
 
-  // Prefer frontmatter title when present
-  const titleText =
-    pageTitle && pageTitle.trim()
-      ? pageTitle.trim()
-      : prettifySlug(subsectionId || sectionId || "");
+  // normalize 'automated-decision-making' -> 'automateddecisionmaking' (map key)
+  function normalizeSectionKey(id) {
+    return String(id || "")
+      .replace(/[^a-z]/gi, "")
+      .toLowerCase();
+  }
 
-  // Build the numeric prefix (e.g. "1.a.") only if we have a section number
-  const numberedPrefix =
-    sectionNum ? sectionNum + (letter ? `.${letter}.` : "") : "";
+  function getFastCachedSubsections(sectionId) {
+    return window.__SRCH_SUBSECTIONS_CACHE__?.[sectionId] || null;
+  }
 
-  // If there is a prefix, add " - " after it; otherwise just the title
-  return numberedPrefix ? `${numberedPrefix} - ${titleText}` : titleText;
-}
+  function getFormattedTitle(
+    sectionId,
+    subsectionId,
+    pageTitle,
+    subsectionsArr = []
+  ) {
+    // Normalize incoming section id to match our map keys
+    const sectionKey = normalizeSectionKey(sectionId);
+    const sectionNum = SECTION_NUMBER_MAP[sectionKey] || ""; // empty if unknown (no '?')
 
+    // Find letter for subsection, if any
+    let letter = "";
+    if (
+      subsectionId &&
+      Array.isArray(subsectionsArr) &&
+      subsectionsArr.length > 0
+    ) {
+      const idx = subsectionsArr.findIndex((s) => s && s.id === subsectionId);
+      if (idx >= 0) letter = indexToLetter(idx);
+    }
+
+    // Prefer frontmatter title when present
+    const titleText =
+      pageTitle && pageTitle.trim()
+        ? pageTitle.trim()
+        : prettifySlug(subsectionId || sectionId || "");
+
+    // Build the numeric prefix (e.g. "1.a.") only if we have a section number
+    const numberedPrefix = sectionNum
+      ? sectionNum + (letter ? `.${letter}.` : "")
+      : "";
+
+    // If there is a prefix, add " - " after it; otherwise just the title
+    return numberedPrefix ? `${numberedPrefix} - ${titleText}` : titleText;
+  }
 
   function formatDate(dateString) {
-  if (!dateString) return "";
-  try {
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    }
-  } catch (e) {}
-  return dateString; // fallback: show raw
-}
-
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+    } catch (e) {}
+    return dateString; // fallback: show raw
+  }
 
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
@@ -168,7 +174,6 @@ function getFastCachedSubsections(sectionId) {
   const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
-
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
@@ -177,21 +182,19 @@ function getFastCachedSubsections(sectionId) {
   const [subsections, setSubsections] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("");
 
-
   const contentRef = useRef(null);
 
   const formattedTitle = useMemo(() => {
-  //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
-  const fastSubs = getFastCachedSubsections(sectionId);
+    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
+    const fastSubs = getFastCachedSubsections(sectionId);
 
-  return getFormattedTitle(
-    sectionId,
-    subsectionId,
-    pageTitle,
-    fastSubs || subsections
-  );
-}, [sectionId, subsectionId, pageTitle, subsections]);
-
+    return getFormattedTitle(
+      sectionId,
+      subsectionId,
+      pageTitle,
+      fastSubs || subsections
+    );
+  }, [sectionId, subsectionId, pageTitle, subsections]);
 
   function getCacheKey(section, subsection = null) {
     return subsection ? `${section}/${subsection}` : section;
@@ -222,15 +225,11 @@ function getFastCachedSubsections(sectionId) {
   }
 
   async function openGlobalDrawerForTerm(term, opts = {}) {
-  // opts used only by URL watcher
-  const { noToggle = false, noNavigate = false } = opts;
+  const { noToggle = false, noNavigate = false, silent = false } = opts;
 
   if (!term) return;
   const key = String(term).toLowerCase();
 
-  //
-  // 1) Prevent URL-triggered calls from toggling the drawer off
-  //
   if (!noToggle && drawerActiveKey === key) {
     closeRightDrawer();
     setDrawerActiveKey(null);
@@ -242,21 +241,21 @@ function getFastCachedSubsections(sectionId) {
     return;
   }
 
-  // 2) Load sidebar entry
   const sidebarEntry = getSidebarContent(key);
   if (!sidebarEntry) {
-    toast({
-      title: "Sidebar Entry Not Found",
-      description: `The sidebar entry "${term}" could not be found in this subsection.`,
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom-right",
-    });
+    if (!silent) {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
     return;
   }
 
-  // 3) Load MD file if exists
   let drawerFile = null;
   try {
     drawerFile = await getDrawerFile(sectionId, subsectionId, key);
@@ -273,9 +272,6 @@ function getFastCachedSubsections(sectionId) {
     (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
     String(term).replace(/-/g, " ");
 
-  //
-  // 4) Build node
-  //
   const node = (
     <>
       <div className="drawer-meta-label">Familiar Case Studies</div>
@@ -294,18 +290,15 @@ function getFastCachedSubsections(sectionId) {
     </>
   );
 
-  // 5) Commit state
   setDrawerActiveKey(key);
   openRightDrawer(node);
 
-  //
-  // 6) Clicks should change URL — URL-triggered calls should NOT.
-  //
   if (!noNavigate) {
     navigate(`/${sectionId}/${subsectionId}/${term}`);
   }
 }
 
+    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
@@ -325,38 +318,37 @@ function getFastCachedSubsections(sectionId) {
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
         if (result) {
-  const raw = result.content || "";
-  const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
-  setMainContent(cleaned);
-  setSidebar(result.sidebar || {});
-  setContentFinal(result.frontmatter?.final);
-  setPageTitle(result.frontmatter?.title || "");
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+          setMainContent(cleaned);
+          setSidebar(result.sidebar || {});
+          setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
 
-  //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
-  let lu = result.frontmatter?.lastUpdated || "";
+          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
+          let lu = result.frontmatter?.lastUpdated || "";
 
-  if (!lu) {
-    try {
-      const parent = await getContent(sectionId);
-      lu = parent?.frontmatter?.lastUpdated || "";
-    } catch (e) {
-      // ignore — fallback will simply remain empty
-    }
-  }
+          if (!lu) {
+            try {
+              const parent = await getContent(sectionId);
+              lu = parent?.frontmatter?.lastUpdated || "";
+            } catch (e) {
+              // ignore — fallback will simply remain empty
+            }
+          }
 
-  setLastUpdated(lu);
-
-} else {
-  toast({
-    title: "Subsection Not Found",
-    description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
-    status: "error",
-    duration: 5000,
-    isClosable: true,
-    position: "bottom-right",
-  });
-  navigate(previousPath, { replace: true });
-}
+          setLastUpdated(lu);
+        } else {
+          toast({
+            title: "Subsection Not Found",
+            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          navigate(previousPath, { replace: true });
+        }
 
         setIsLoading(false);
         return;
@@ -373,7 +365,9 @@ function getFastCachedSubsections(sectionId) {
         if (Array.isArray(subs)) {
           const validSubs = subs
             .filter((s) => s && s.id && typeof s.id === "string")
-            .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+            .filter(
+              (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+            )
             .map((s) => ({
               ...s,
               title:
@@ -391,39 +385,37 @@ function getFastCachedSubsections(sectionId) {
         }
 
         if (result) {
-  const raw = result.content || "";
-  const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
-  setMainContent(cleaned);
-  setSidebar(result.sidebar || {});
-  setContentFinal(result.frontmatter?.final);
-  setPageTitle(result.frontmatter?.title || "");
+          const raw = result.content || "";
+          const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
+          setMainContent(cleaned);
+          setSidebar(result.sidebar || {});
+          setContentFinal(result.frontmatter?.final);
+          setPageTitle(result.frontmatter?.title || "");
 
-  //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
-  let lu = result.frontmatter?.lastUpdated || "";
+          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
+          let lu = result.frontmatter?.lastUpdated || "";
 
-  if (!lu) {
-    try {
-      const parent = await getContent(sectionId);
-      lu = parent?.frontmatter?.lastUpdated || "";
-    } catch (e) {
-      // ignore — fallback will simply remain empty
-    }
-  }
+          if (!lu) {
+            try {
+              const parent = await getContent(sectionId);
+              lu = parent?.frontmatter?.lastUpdated || "";
+            } catch (e) {
+              // ignore — fallback will simply remain empty
+            }
+          }
 
-  setLastUpdated(lu);
-
-} else {
-  toast({
-    title: "Subsection Not Found",
-    description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
-    status: "error",
-    duration: 5000,
-    isClosable: true,
-    position: "bottom-right",
-  });
-  navigate(previousPath, { replace: true });
-}
-
+          setLastUpdated(lu);
+        } else {
+          toast({
+            title: "Subsection Not Found",
+            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          navigate(previousPath, { replace: true });
+        }
       }
       setIsLoading(false);
     }
@@ -439,7 +431,9 @@ function getFastCachedSubsections(sectionId) {
         if (!active) return;
         const validSubs = (data || [])
           .filter((s) => s && s.id && typeof s.id === "string")
-          .filter((s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer")
+          .filter(
+            (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
+          )
           .map((s) => ({
             ...s,
             title:
@@ -462,6 +456,7 @@ function getFastCachedSubsections(sectionId) {
   }, [sectionId]);
 
   useEffect(() => {
+  // No term → close drawer and clear active state
   if (!urlTerm) {
     closeRightDrawer();
     setDrawerActiveKey(null);
@@ -470,9 +465,25 @@ function getFastCachedSubsections(sectionId) {
 
   const key = String(urlTerm).toLowerCase();
 
-  //  Only open if not already active
-  openGlobalDrawerForTerm(key, { noToggle: true, noNavigate: true });
-}, [urlTerm]);
+  // Wait until sidebar is actually loaded before trying to open the drawer
+  if (!sidebar || Object.keys(sidebar).length === 0) {
+    return; // sidebar not ready yet → we'll re-run when sidebar updates
+  }
+
+  // Optionally guard: only auto-open if the entry really exists
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    // You can choose to silently ignore here, or log/track if you want
+    return;
+  }
+
+  // URL-driven open: don't toggle off, don't navigate again, no toast
+  openGlobalDrawerForTerm(key, {
+    noToggle: true,
+    noNavigate: true,
+    silent: true,
+  });
+}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
 
 
   const checkAndNavigate = useCallback(
@@ -495,7 +506,9 @@ function getFastCachedSubsections(sectionId) {
         if (contentExists) navigate(`/${path}`);
         else {
           toast({
-            title: targetSubsectionId ? "Subsection Not Found" : "Section Not Found",
+            title: targetSubsectionId
+              ? "Subsection Not Found"
+              : "Section Not Found",
             description: targetSubsectionId
               ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
               : `The section "${targetSectionId}" could not be found.`,
@@ -560,25 +573,28 @@ function getFastCachedSubsections(sectionId) {
           </p>
 
           {/* Title + last updated + sidebar toggle in one flex row */}
-<div className="page-header-row">
-  <h1 className="page-title">{formattedTitle}</h1>
+          <div className="page-header-row">
+            <h1 className="page-title">{formattedTitle}</h1>
 
-  {lastUpdated && (
-    <div className="page-last-updated">
-      Last updated on {formatDate(lastUpdated)}
+            {lastUpdated && (
+              <div className="page-last-updated">
+                Last updated on {formatDate(lastUpdated)}
+              </div>
+            )}
 
-    </div>
-  )}
-
-  <button
-    className="header-toggle"
-    onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
-    aria-label={leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-    title={leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"}
-  >
-    {leftSidebar?.collapsed ? ">" : "<"}
-  </button>
-</div>
+            <button
+              className="header-toggle"
+              onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
+              aria-label={
+                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+              title={
+                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+            >
+              {leftSidebar?.collapsed ? ">" : "<"}
+            </button>
+          </div>
 
           {/* Full-bleed divider that spans the whole viewport, Figma-style */}
           <div className="page-divider page-divider--fullbleed" />
@@ -598,6 +614,118 @@ function getFastCachedSubsections(sectionId) {
             />
           </Box>
         )}
+        <div className="page-divider page-divider--fullbleed" />
+        <div className="link-section-primer-footer">
+          <div className="logo-area-primer-footer">
+            <img
+              src={logoImage}
+              alt="SRC Handbook Logo"
+              width={100}
+              height={91}
+            />
+          </div>
+          <div className="modules-section-primer-footer">
+            <div className="modules-primer-footer">
+              <div className="modules-heading-primer-footer">Modules</div>
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    src={privacyIcon}
+                    alt="Privacy Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(privacySlug)}
+                  className="module-link-primer-footer"
+                >
+                  Privacy
+                </button>
+              </div>
+
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    src={accessibilityIcon}
+                    alt="Accessibility Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(accessibilitySlug)}
+                  className="module-link-primer-footer"
+                >
+                  Accessibility
+                </button>
+              </div>
+
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    src={automatedIcon}
+                    alt="Automated Decision Making Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(decisionSlug)}
+                  className="module-link-primer-footer"
+                >
+                  Automated Decision Making
+                </button>
+              </div>
+
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    src={aiIcon}
+                    alt="Generative AI Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(aiSlug)}
+                  className="module-link-primer-footer"
+                >
+                  Generative AI
+                </button>
+              </div>
+            </div>
+            <div className="modules-primer-footer">
+              <div className="module-heading-primer-footer">Quick Links</div>
+              <div className="module-links-primer-footer">
+                <button
+                  onClick={() => navigate("/about")}
+                  className="module-link-primer-footer"
+                >
+                  About
+                </button>
+                <button
+                  onClick={() => navigate("/acknowledgements")}
+                  className="module-link-primer-footer"
+                >
+                  Acknowledgements
+                </button>
+              </div>
+            </div>
+            <div className="modules-primer-footer">
+              <div className="module-heading-primer-footer">Have Feedback?</div>
+              <p className="feedback-contact-primer-footer">
+                Contact:{" "}
+                <a href="mailto:src_handbook@brown.edu">
+                  src_handbook@brown.edu
+                </a>
+              </p>
+            </div>
+          </div>
+          <p className="feedback-contact-primer-footer">
+            © 2025 Brown University. All rights reserved.
+          </p>
+        </div>
       </Box>
     </div>
   );
