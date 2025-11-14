@@ -19,7 +19,8 @@ import "../LandingPage.css"
 function Footer() {
     return (
     <Box className="footer-container">
-      <div className="page-divider page-divider--fullbleed" />
+                <div className="line-divider"></div>
+
         <div className="link-section-primer-footer">
           <div className="modules-section-primer-footer">
             <div className="modules-primer-footer">
