@@ -264,8 +264,8 @@ export default function Acknowledgements() {
           title="Additional Contributors — Faculty Advisors"
           teamName="additional_faculty"
         />
-         </div>
-                    <Footer />
+      </div>
+      <Footer />
 
     </>
   );

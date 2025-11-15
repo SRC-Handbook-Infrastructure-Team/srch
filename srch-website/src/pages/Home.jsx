@@ -150,12 +150,12 @@ function Home() {
               </p>
             </div>
             <div className="landing-search-container">
-            <SearchBar
-              className="results-autofill"
-              setSearchQuery={setSearchQuery}
-              searchQuery={searchQuery}
-              maxResults={2}
-            />
+              <SearchBar
+                className="results-autofill"
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                maxResults={2}
+              />
             </div>
           </div>
 
@@ -288,7 +288,7 @@ function Home() {
 
         </div>
       </div>
-          <Footer/>
+      <Footer />
 
     </div>
   );

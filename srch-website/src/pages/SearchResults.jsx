@@ -5,7 +5,8 @@ import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
-import background from "../assets/landing-page-background-gradient.png";
+import backgroundLight from "../assets/landing-page-background-gradient.png";
+import backgroundDark from "../assets/landing-page-background-dark.png";
 import Footer from "../components/Footer"
 
 
@@ -13,9 +14,32 @@ function SearchResults() {
   const { query } = useParams();
   const decodedQuery = decodeURIComponent(query || "");
   const [searchQuery, setSearchQuery] = useState(decodedQuery);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     setSearchQuery(decodedQuery);
+    
+    // Check for dark mode
+    const checkDarkMode = () => {
+      const isDark = document.body.classList.contains('chakra-ui-dark') || 
+                    document.documentElement.getAttribute('data-theme') === 'dark';
+      setIsDarkMode(isDark);
+    };
+    
+    checkDarkMode();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+    
+    return () => observer.disconnect();
   }, [decodedQuery]);
 
   return (
@@ -28,7 +52,7 @@ function SearchResults() {
           top: "0px",
           width: "100vw",
           height: "350px",
-          backgroundImage: `url(${background})`,
+          backgroundImage: `url(${isDarkMode ? backgroundDark : backgroundLight})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -42,7 +66,9 @@ function SearchResults() {
           top: "250px",
           width: "100%",
           height: "100px",
-          background:"linear-gradient(to bottom,rgba(255, 255, 255, 0) 0%,rgba(255, 255, 255, 0.5) 50%,rgba(255, 255, 255, 1) 100%)",
+          background: isDarkMode 
+            ? "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 1) 100%)"
+            : "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1) 100%)",
           pointerEvents: "none",
         }}
       />

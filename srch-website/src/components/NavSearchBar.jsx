@@ -43,7 +43,7 @@ function NavSearchBar({
       <Box className={`navsearchbar-input-container`}>
         <IconButton
           aria-label="Toggle nav search bar"
-          icon={<SearchIcon fontSize={"lg"} />}
+          icon={<SearchIcon fontSize={"lg"} color="var(--color-text)" />}
           className="searchbar-toggle-button toggle-button"
           onClick={search}
         />

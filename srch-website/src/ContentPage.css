@@ -22,19 +22,41 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Layout metrics */
-  --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
-  --right-sidebar-width: 0px; /* JS updates these */
-  --navbar-height: 80px; /* unified baseline */
+  --toolbar-height: 0px;
+  /* set >0 only if a toolbar is rendered */
+  --right-sidebar-width: 0px;
+  /* JS updates these */
+  --navbar-height: 80px;
+  /* unified baseline */
   --left-sidebar-width: var(--left-sidebar-width, 250px);
+
+  /* Search icon colors */
+  --search-icon-color: #ffffff;
+  --search-icon-hover: #A5D8AE;
+
+  /* Mark element colors */
+  --mark-bg: var(--color-accent-light);
+  --mark-color: rgba(165, 216, 174, 0.47);
+  /* A5D8AE with 47% opacity */
 
   /* Colors / theme */
   --color-text: #1a1a1a;
+  --header-text-color: #531c00;
+  --sub-header-text-color: #7b4b24;
+  --sidebar-phrase-color: #ffffff;
+  --sidebar-link-color: #9D0039;
+  --navbar-link-hover: #9D0039;
+  --results-bg: #9D0039;
+
+  --sidebar-phrase-clicked: #531c00;
   --color-text-muted: #555;
   --color-bg: #ffffff;
   --color-bg-alt: #f8f9fa;
   --color-border: #e0d7ce;
+  --color-main: #531c00;
   --color-accent: #7b4b24;
   --color-accent-light: #f3ece6;
+  --color-accent-hover: #531c00;
 
   --space-lg: 400px;
   --srch-brown: #531c00;
@@ -47,8 +69,60 @@
   --cs-active: #e6e2dd;
   --cs-divider: #c7beb5;
 
+  /* light mode specific variables */
+  --navbar-bg: var(--color-bg);
+  --navbar-border: var(--color-border);
+  --navbar-shadow: rgba(0, 0, 0, 0.1);
+  --dropdown-bg: var(--color-bg-alt);
+  --icon-color: var(--color-text);
+  --search-bg: var(--color-bg-alt);
+  --search-result-hover: #d8d7d741;
+
   /* Motion */
   --cs-ease: 180ms ease;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Dark mode colors with green theme */
+  --color-text: #e0e0e0;
+  --header-text-color: #e0e0e0;
+  --sub-header-text-color: #e0e0e0;
+  --sidebar-phrase-color: #A5D8AE;
+  --sidebar-phrase-clicked: #263A26;
+  --sidebar-link-color: #A5D8AE;
+  --navbar-link-hover: #A5D8AE;
+  --results-bg: #263A26;
+
+
+  --color-text-muted: #b0b0b0;
+  --color-bg: #1a1a1a;
+  --color-bg-alt: #252525;
+  --color-border: #404040;
+  --color-accent: #263A26;
+  --color-accent-light: #1a251a;
+  --color-accent-hover: #A5D8AE;
+
+  --srch-brown: #263A26;
+  --sidebar-bg: #1e1e1e;
+
+  --cs-brown: #263A26;
+  --cs-text: #e0e0e0;
+  --cs-bg: #1e1e1e;
+  --cs-active: #2a3a2a;
+  --cs-divider: #404040;
+
+  --navbar-bg: #252525;
+  --navbar-border: #404040;
+  --navbar-shadow: rgba(0, 0, 0, 0.3);
+  --dropdown-bg: #2d2d2d;
+  --icon-color: #e0e0e0;
+  --search-bg: #2d2d2d;
+  --search-result-hover: rgba(165, 216, 174, 0.1);
+
+  --color-red-accent: #A5D8AE;
 }
 
 /* ------ general styles ------- */
@@ -57,6 +131,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -81,10 +156,11 @@ a {
   color: var(--color-accent);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--color-accent);
   text-decoration: underline;
-  background-color: #fff;
+  background-color: var(--navbar-bg);
 }
 
 button {
@@ -99,17 +175,19 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
 mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
+  background-color: var(--mark-bg);
+  color: var(--mark-color);
   font-weight: 600;
   border-radius: 3px;
   padding: 2px 2px;
@@ -129,13 +207,15 @@ mark {
   left: 0;
   right: 0;
   height: var(--toolbar-height);
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  z-index: 19; /* below NavBar (20), above content */
+  z-index: 19;
+  /* below NavBar (20), above content */
+  color: var(--color-text);
 }
 
 /* ========================================================================== 
@@ -151,17 +231,18 @@ mark {
 /*  Route-aware highlight (via .is-active class from JSX) */
 .sidebar-section-header.is-active {
   border-color: #c9c9c9 !important;
-  background-color: #c9c9c9 !important;
+  background-color: var(--color-bg-alt) !important;
 }
 
 /*  Optional subtle hover, but DO NOT override active state */
 .sidebar-section-header:hover:not(.is-active) {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--search-result-hover);
 }
 
 /* Ensures the entire row feels clickable and avoids visual jitter */
 .sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
+  pointer-events: none;
+  /* interaction handled by container */
 }
 
 /* ==========================================================================
@@ -173,8 +254,8 @@ mark {
 }
 
 mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
+  background-color: var(--mark-bg);
+  color: var(--mark-color);
   font-weight: 600;
   border-radius: 3px;
   padding: 2px 2px;
@@ -188,6 +269,7 @@ mark {
   color: var(--color-accent) !important;
   font-weight: 600;
 }
+
 .sidebar-link:hover {
   color: var(--color-accent);
 }
@@ -197,9 +279,12 @@ mark {
    ========================================================================== */
 h1,
 h2,
-h3,
 h4 {
   color: var(--color-accent);
+}
+
+h3 {
+  color: var(--sub-header-text-color);
 }
 
 /* ==========================================================================
@@ -234,6 +319,7 @@ h4 {
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .nav-section:hover {
   background-color: var(--nav-hover-bg);
 }
@@ -242,17 +328,21 @@ h4 {
   display: flex;
   align-items: center;
 }
+
 .nav-section-text {
   font-weight: 500;
 }
+
 .nav-subsection {
   display: flex;
   align-items: center;
 }
+
 .nav-subsection-text {
   font-size: 0.875rem;
   padding: 4px;
 }
+
 .nav-subsection-active {
   font-weight: 700;
 }
@@ -280,19 +370,28 @@ h4 {
   height: auto;
   min-height: 80px;
 
-  display: block; /* your layout inside (header-hstack etc.) handles flex */
-  border-bottom: 1px solid #e2e8f0;
-  background-color: white;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  display: block;
+  /* your layout inside (header-hstack etc.) handles flex */
+  border-bottom: 1px solid var(--navbar-border);
+  background-color: var(--navbar-bg);
+  box-shadow: 2px 2px 5px var(--navbar-shadow);
   z-index: 20;
 }
 
+.top-navbar a,
+.top-navbar .nav-link,
+.top-navbar .nav-button,
+.top-navbar .chakra-text {
+  color: var(--color-text);
+  transition: color 0.2s ease;
+}
 
 .top-navbar a:hover,
 .top-navbar a:button,
 .top-navbar .nav-link:hover,
-.top-navbar .nav-button:hover {
-  color: #9d0013;
+.top-navbar .nav-button:hover,
+.top-navbar .chakra-text:hover {
+  color: var(--navbar-link-hover);
 }
 
 .navbar-padding {
@@ -346,14 +445,15 @@ h4 {
   transition: color 0.2s;
 }
 
-.nav-dropdown-title:hover {
-  color: #9d0013;
+.nav-dropdown-title:hover,
+.nav-dropdown-title:hover .nav-dropdown-title-text {
+  color: var(--color-accent-hover) !important;
 }
 
 .nav-dropdown-title-text {
   pointer-events: auto;
   user-select: none;
-  color: inherit;
+  color: var(--color-text);
   cursor: pointer;
   margin-right: 0.25rem;
   font-weight: 500;
@@ -371,7 +471,7 @@ h4 {
   top: 100%;
   left: 0;
   padding-top: 0.25rem;
-  background-color: white;
+  background-color: var(--color-bg-alt);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.375rem;
   z-index: 10;
@@ -391,7 +491,7 @@ h4 {
 }
 
 .nav-dropdown-item:hover {
-  color: #9d0013;
+  color: var(--color-main, #9d0013);
 }
 
 /* Text boxes for simple nav links */
@@ -405,14 +505,15 @@ h4 {
   white-space: nowrap;
 }
 
-.nav-link-box:hover {
-  color: #9d0013;
+.nav-link-box:hover,
+.nav-link-box:hover .chakra-text {
+  color: var(--navbar-link-hover, #9d0013) !important;
 }
 
 .mobile-menu-vstack {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--color-bg-alt);
   padding-top: 1rem;
   padding-bottom: 0.25rem;
   width: 100%;
@@ -436,7 +537,7 @@ h4 {
 }
 
 .mobile-modules-toggle:hover {
-  color: #9d0013;
+  color: var(--color-main, #9d0013);
 }
 
 .mobile-modules-chevron {
@@ -463,7 +564,7 @@ h4 {
 }
 
 .mobile-module-item:hover {
-  color: #9d0013;
+  color: var(--color-main, #9d0013);
 }
 
 .icon-button {
@@ -480,6 +581,7 @@ h4 {
   .hide-md {
     display: none !important;
   }
+
   .show-md {
     display: flex !important;
   }
@@ -489,6 +591,7 @@ h4 {
   .hide-base {
     display: none !important;
   }
+
   .show-base {
     display: inline-flex !important;
   }
@@ -518,6 +621,13 @@ h4 {
   opacity: 1;
 }
 
+/* Dark mode placeholder text */
+[data-theme="dark"] .navsearchbar-input::placeholder,
+.chakra-ui-dark .navsearchbar-input::placeholder {
+  color: var(--color-text) !important;
+  opacity: 1;
+}
+
 .navsearchbar-input {
   font-size: 1rem;
   padding-left: 2.5rem;
@@ -536,12 +646,42 @@ h4 {
   border-color: inherit;
 }
 
+/* Dark mode styles for search input */
+[data-theme="dark"] .navsearchbar-input,
+.chakra-ui-dark .navsearchbar-input {
+  color: var(--color-text) !important;
+}
+
+/* Dark mode styles for Chakra input class */
+[data-theme="dark"] .css-e94xtf,
+.chakra-ui-dark .css-e94xtf {
+  color: var(--color-text) !important;
+}
+
 .navsearchbar-button {
-  color: black;
+  color: var(--search-icon-color);
 }
 
 .navsearchbar-button:hover {
-  color: #9d0013;
+  color: var(--search-icon-hover);
+}
+
+/* Chakra icon wrapper styling */
+.css-vhrm8d {
+  color: var(--search-icon-color);
+}
+
+/* Dark mode Chakra icon wrapper */
+[data-theme="dark"] .css-vhrm8d,
+.chakra-ui-dark .css-vhrm8d {
+  color: var(--search-icon-color) !important;
+}
+
+/* Hover effects for Chakra icon wrapper */
+.navsearchbar-button:hover .css-vhrm8d,
+[data-theme="dark"] .navsearchbar-button:hover .css-vhrm8d,
+.chakra-ui-dark .navsearchbar-button:hover .css-vhrm8d {
+  color: var(--search-icon-hover) !important;
 }
 
 /* ========================================================================== 
@@ -553,7 +693,7 @@ h4 {
   display: flex;
   align-items: center;
   overflow: visible;
-  background: white;
+  background: var(--navbar-bg);
   border-radius: 9999999999px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding-top: 5px;
@@ -644,14 +784,13 @@ h4 {
   border: none !important;
   background: transparent !important;
 }
+
 */
-
-
-  /* ==========================================================================
+/* ==========================================================================
    Search Results Window
    ========================================================================== */
 
-  .results-autofill {
+.results-autofill {
   z-index: 2147483000;
   /* background-color: transparent;  <-- comment/remove this */
   color: black !important;
@@ -659,7 +798,7 @@ h4 {
 
 
 .results-white-background {
-  background: white;
+  background: var(--navbar-bg);
 }
 
 .results-list {
@@ -669,19 +808,19 @@ h4 {
 }
 
 .results-count {
-  color: #718096;
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
 .result-row {
-  border-bottom: 1px solid #e2e8f0;
-padding-top: 0.5rem;
+  border-bottom: 1px solid var(--navbar-border);
+  padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
 
 .results-item {
   padding: 15px;
-border-radius: 9px;
+  border-radius: 9px;
 }
 
 .results-item:hover {
@@ -695,14 +834,32 @@ border-radius: 9px;
   margin-bottom: 0.25rem;
 }
 
+/* Base styles for results section */
 .results-section {
-  background: #9d0013;
+  background-color: #9D0039;
+  color: #ffffff !important;
   display: block;
-  color: white;
-  padding: 0rem 1rem;
+  padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-size: 0.875rem;
   margin-right: 0.75rem;
+  width: fit-content;
+}
+
+/* Dark mode styles - using both selectors for maximum compatibility */
+[data-theme="dark"] .results-section,
+.chakra-ui-dark .results-section {
+  background-color: #263A26;
+  color: #ffffff !important;
+}
+
+/* Ensure dark mode styles take precedence */
+[data-theme="dark"] .results-section,
+.chakra-ui-dark .results-section,
+[data-theme="dark"] .results-window .results-section,
+.chakra-ui-dark .results-window .results-section {
+  background-color: #263A26 !important;
+  color: #ffffff !important;
 }
 
 .results-title {
@@ -710,7 +867,7 @@ border-radius: 9px;
   align-items: center;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--color-text-muted);
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -728,6 +885,13 @@ border-radius: 9px;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--color-text, #1a1a1a);
+}
+
+/* Dark mode text color for search snippets */
+[data-theme="dark"] .result-snippet-text,
+.chakra-ui-dark .result-snippet-text {
+  color: #ffffff !important;
 }
 
 .result-snippet-text.clamped {
@@ -761,20 +925,20 @@ border-radius: 9px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #718096;
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
 .view-all-link {
   cursor: pointer;
-  color: #3182ce;
+  color: var(--color-accent);
   text-decoration: underline;
   font-size: 0.875rem;
   outline: none;
 }
 
 .view-all-link:hover {
-  color: #2b6cb0;
+  color: var(--color-accent-hover);
 }
 
 /* ========================================================================== 
@@ -786,7 +950,7 @@ border-radius: 9px;
   left: 0;
   right: 0;
   margin-top: 20px;
-  background: white;
+  background: var(--navbar-bg);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -797,7 +961,7 @@ border-radius: 9px;
 /* Base (non-floating) results window – used in NavSearchBar */
 .results-window {
   margin-top: 8px;
-  background-color: #ffffff;
+  background-color: var(--color-bg-alt);
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   padding: 0.75rem 1rem;
@@ -821,7 +985,7 @@ border-radius: 9px;
 
 .results-list-floating {
   overflow-y: auto;
-    padding-top: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .drawer-content {
@@ -860,26 +1024,32 @@ html:not(.right-open) body .main-content {
 
 /* Let content inside the right drawer wrap and never overflow */
 .right-sidebar .drawer-content {
-  overflow-wrap: anywhere;   /* modern, preferred */
-  word-break: break-word;    /* fallback */
-  min-width: 0;              /* fix flex shrink edge cases */
+  overflow-wrap: anywhere;
+  /* modern, preferred */
+  word-break: break-word;
+  /* fallback */
+  min-width: 0;
+  /* fix flex shrink edge cases */
 }
 
 /* Chip: allow multi-line wrapping + don’t overflow the drawer */
 .srch-drawer-link {
   display: inline-flex;
-  flex-wrap: wrap;           /* allow wrapping to 2+ lines */
+  flex-wrap: wrap;
+  /* allow wrapping to 2+ lines */
   max-width: 100%;
-  white-space: normal !important;  /* was nowrap; this is the fix */
+  white-space: normal !important;
+  /* was nowrap; this is the fix */
   line-height: 1.2;
 }
 
 /* Keep the label from forcing a single long line */
-.srch-drawer-link > span,
+.srch-drawer-link>span,
 .srch-drawer-link .chakra-text {
   overflow-wrap: anywhere;
   word-break: break-word;
   min-width: 0;
+  color: var(--sidebar-phrase-color);
 }
 
 
@@ -896,7 +1066,7 @@ html:not(.right-open) body .main-content {
   font-weight: 600;
   font-size: 35px;
   line-height: 40px;
-  color: var(--srch-brown);
+  color: var(--header-text-color);
   margin: 0;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -909,7 +1079,7 @@ html:not(.right-open) body .main-content {
   font-size: 16px !important;
   color: var(--srch-brown) !important;
   padding: 10px 12px !important;
-  background: #fff !important;
+  background: var(--navbar-bg) !important;
   border-bottom: 1px solid var(--border-1) !important;
 }
 
@@ -928,15 +1098,17 @@ html:not(.right-open) body .main-content {
   height: 11.565px;
   transform: scale(1.2);
 
-  color: var(--srch-brown, #531c00);
+  color: var(--header-text-color);
   cursor: pointer;
   transition: transform 0.06s ease;
 }
 
 .header-toggle:focus-visible {
-  outline: 2px solid #9d0013; /* your brand color */
+  outline: 2px solid #9d0013;
+  /* your brand color */
   outline-offset: 2px;
 }
+
 .header-toggle:hover {
   transform: scale(1.25);
 }
@@ -947,7 +1119,8 @@ html:not(.right-open) body .main-content {
 
 /* 1) Make markdown page padding a token we can cancel for the divider */
 .markdown-page {
-  --page-pad: 100px; /* matches your current 100px */
+  --page-pad: 100px;
+  /* matches your current 100px */
   padding-left: var(--page-pad);
   padding-right: var(--page-pad);
 }
@@ -980,7 +1153,8 @@ html:not(.right-open) body .main-content {
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
-  position: relative; /* anchor for the toggle button */
+  position: relative;
+  /* anchor for the toggle button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -999,7 +1173,7 @@ html:not(.right-open) body .main-content {
   font: "Be Vietnam Pro";
   font-size: 12px;
   font-weight: 500;
-  color: #4f3629;
+  color: var(--cs-text);
 
   /* layout/behavior */
   display: inline-flex;
@@ -1017,7 +1191,8 @@ html:not(.right-open) body .main-content {
   font-size: 11px;
   line-height: 1;
   position: relative;
-  top: 1px; /* small visual nudge */
+  top: 1px;
+  /* small visual nudge */
 }
 
 /* center the control in the header strip */
@@ -1026,6 +1201,7 @@ html:not(.right-open) body .main-content {
   justify-content: right;
   padding: 8px 0;
 }
+
 /* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
 .sidebar-toggle {
   /* nuke default button look */
@@ -1038,12 +1214,12 @@ html:not(.right-open) body .main-content {
   font-size: 12px;
   line-height: 1;
   font-weight: 500;
-  color: #4f3629;
+  color: var(--cs-text);
   cursor: pointer;
 }
 
 .sidebar-toggle:focus-visible {
-  outline: 2px solid #9d0013;
+  outline: 2px solid var(--color-red-accent, #9d0013);
   outline-offset: 2px;
 }
 
@@ -1058,6 +1234,7 @@ html:not(.right-open) body .main-content {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -1074,11 +1251,15 @@ html:not(.right-open) body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400; /* tweak if you want lighter */
-  letter-spacing: 0.02em; /* optional, matches figma-ish */
-  color: var(--srch-brown);
-  margin: 0 0 4px 0; /* small gap above the H1 */
-  text-transform: uppercase; /* optional, matches figma */
+  font-weight: 400;
+  /* tweak if you want lighter */
+  letter-spacing: 0.02em;
+  /* optional, matches figma-ish */
+  color: var(--header-text-color);
+  margin: 0 0 4px 0;
+  /* small gap above the H1 */
+  text-transform: uppercase;
+  /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -1090,7 +1271,7 @@ html:not(.right-open) body .main-content {
   display: inline-flex;
   white-space: normal;
   max-width: 100%;
-  color: #9d0013 !important;
+  color: var(--color-main, #9d0013) !important;
   text-decoration: none !important;
   background: transparent !important;
   border: 1px solid transparent !important;
@@ -1104,33 +1285,37 @@ html:not(.right-open) body .main-content {
   font-weight: bold !important;
   font-style: bold !important;
   font-family: "Be Vietnam Pro" !important;
-  font-weight: 700 !important; /* or bold */
+  font-weight: 700 !important;
+  /* or bold */
 }
 
 /* Collapse phantom inline spacing between chips and text */
 .srch-drawer-link {
-  margin-left: -2px; /* pulls chip into collapsed inline gap */
+  margin-left: -2px;
+  /* pulls chip into collapsed inline gap */
 }
 
-.srch-drawer-link + .srch-drawer-link {
-  margin-left: 0; /* prevents chain-over-collapse for chip→chip */
+.srch-drawer-link+.srch-drawer-link {
+  margin-left: 0;
+  /* prevents chain-over-collapse for chip→chip */
 }
 
-p > .srch-drawer-link:first-child {
-  margin-left: 0; /* safety: don't pull chip into paragraph edge */
+p>.srch-drawer-link:first-child {
+  margin-left: 0;
+  /* safety: don't pull chip into paragraph edge */
 }
 
 .srch-drawer-link:hover {
   /* Same red; only border appears + slight scale */
-  color: #9d0013 !important;
+  color: var(--color-main, #9d0013) !important;
   text-decoration: none !important;
-  border-color: #9d0013 !important;
+  border-color: var(--color-main, #9d0013) !important;
   transform: scale(1.01);
   font-weight: bold !important;
 }
 
 .srch-drawer-link:focus-visible {
-  outline: 2px solid #9d0013;
+  outline: 2px solid var(--color-main, #9d0013);
   outline-offset: 2px;
   font-weight: bold !important;
 }
@@ -1138,15 +1323,45 @@ p > .srch-drawer-link:first-child {
 /* Active state: filled red pill, white text + icon */
 .srch-drawer-link.srch-drawer-link-active {
   color: #ffffff !important;
-  background: #9d0013 !important;
-  border-color: #9d0013 !important;
+  background: var(--sidebar-phrase-clicked);
+  border-color: var(--sidebar-phrase-clicked);
   text-decoration: none !important;
   font-weight: bold !important;
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
 .srch-drawer-link .chakra-icon {
-  color: currentColor;
+  color: var(--sidebar-phrase-color);
+}
+
+/* Style for case references in text */
+em,
+em a.chakra-link,
+span em,
+span em a.chakra-link {
+  color: var(--sidebar-link-color);
+  font-style: italic;
+  text-decoration-color: var(--sidebar-link-color);
+}
+
+/* Style for citation links */
+.css-puuyny {
+  color: var(--sidebar-link-color) !important;
+  text-decoration-color: var(--sidebar-link-color) !important;
+}
+
+/* Style for icons next to case references */
+.css-1p7rw8r {
+  color: var(--sidebar-link-color) !important;
+  width: 0.8em;
+  height: 0.8em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-left: var(--chakra-space-1);
 }
 
 .page-last-updated {
@@ -1154,11 +1369,12 @@ p > .srch-drawer-link:first-child {
   font-size: 13px;
   line-height: 20px;
   font-weight: 400;
-  color: var(--srch-brown);
+  color: var(--header-text-color);
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px); /* Moves the element 12px to the left */
+  transform: translateX(12px);
+  /* Moves the element 12px to the left */
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -1200,7 +1416,9 @@ html.right-open .right-sidebar {
 /* Resizer (left edge of right drawer) — identical thickness/behavior as left */
 .right-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
@@ -1225,7 +1443,7 @@ html.right-open .right-sidebar {
   line-height: 40px;
   font-weight: 600;
   margin: 8px 0 4px;
-  color: var(--srch-brown);
+  color: var(--header-text-color);
   padding-bottom: 12px;
 }
 
@@ -1245,7 +1463,7 @@ html.right-open .right-sidebar {
   font-weight: 700 !important;
   line-height: 32px;
   font-size: 25px !important;
-  color: var(--srch-brown) !important;
+  color: var(--header-text-color) !important;
   margin: 0 0 12px 0 !important;
   padding-top: 15px;
   padding-bottom: 10px;
@@ -1259,8 +1477,9 @@ html.right-open .right-sidebar {
   border: none !important;
   padding: 4px !important;
   cursor: pointer !important;
-  color: var(--srch-brown) !important;
+  color: var(--header-text-color);
 }
+
 /* Disable transitions while dragging (optional polish) */
 .left-sidebar.resizing,
 .right-sidebar.resizing {
@@ -1272,20 +1491,23 @@ html.right-open .right-sidebar {
   position: fixed !important;
   top: var(--navbar-height) !important;
   bottom: 0 !important;
-  right: var(--right-sidebar-width) !important; /* follows drawer edge */
+  right: var(--right-sidebar-width) !important;
+  /* follows drawer edge */
   width: 10px !important;
-  transform: translateX(-6px); /* overlap seam for easier grab */
+  transform: translateX(-6px);
+  /* overlap seam for easier grab */
   cursor: col-resize !important;
   pointer-events: auto;
   background: transparent !important;
   z-index: 35;
 }
+
 .right-resize-hitbox.is-resizing {
   background: rgba(83, 28, 0, 0.06) !important;
 }
 
 /* Hide/disable when drawer is closed */
-.right-sidebar.close ~ .right-resize-hitbox {
+.right-sidebar.close~.right-resize-hitbox {
   pointer-events: none !important;
   display: none !important;
 }
@@ -1301,12 +1523,13 @@ html.right-open .right-sidebar {
   width: var(--left-sidebar-width) !important;
 
   background: var(--cs-bg) !important;
-  border-right: 1px solid var(--cs-divider) !important; /* thin vertical divider */
+  border-right: 1px solid var(--cs-divider) !important;
+  /* thin vertical divider */
 
   overflow-y: auto !important;
   opacity: 0;
   transform: translateX(-100%);
-  
+
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.25s ease;
@@ -1318,7 +1541,11 @@ html.right-open .right-sidebar {
   backface-visibility: hidden;
   transform: translateX(-100%);
 }
-.left-sidebar.open { transform: translateX(0); opacity: 1; }
+
+.left-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
 
 .left-sidebar.closing {
   transform: translateX(-100%) !important;
@@ -1330,12 +1557,17 @@ html.right-open .right-sidebar {
 /* Resize handle */
 .left-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
 }
-.left-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
+.left-resizer.is-resizing {
+  background: rgba(83, 28, 0, 0.08) !important;
+}
 
 /* =============================================================================
    HEADER CONTROLS (Expand/Collapse all)
@@ -1343,7 +1575,8 @@ html.right-open .right-sidebar {
 .sidebar-header-controls {
   display: flex;
   justify-content: right;
-  padding: 12px 16px 6px; /* extra top room like Figma */
+  padding: 12px 16px 6px;
+  /* extra top room like Figma */
 }
 
 .sidebar-toggle {
@@ -1357,20 +1590,32 @@ html.right-open .right-sidebar {
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: var(--cs-text);                 /* #4F3629 */
-  
+  color: var(--cs-text);
+  /* #4F3629 */
+
 
 }
-.sidebar-toggle:hover { opacity: 0.9; }
-.sidebar-toggle:focus-visible { outline: 2px solid #9d0013; outline-offset: 2px; }
+
+.sidebar-toggle:hover {
+  opacity: 0.9;
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid var(--color-red-accent, #9d0013);
+  outline-offset: 2px;
+}
 
 .icon-double-chevron {
   display: inline-flex;
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
-  width: 12px; height: 6px; display: block; fill: currentColor;
+  width: 12px;
+  height: 6px;
+  display: block;
+  fill: currentColor;
 }
 
 /* =============================================================================
@@ -1379,14 +1624,19 @@ html.right-open .right-sidebar {
    - Chevron toggles expand/collapse (JS stops propagation).
    - Active section row ALWAYS uses warm grey background.
    ========================================================================== */
-.sidebar-section { margin-bottom: 6px; } /* subtle breathing room between sections */
+.sidebar-section {
+  margin-bottom: 6px;
+}
+
+/* subtle breathing room between sections */
 
 /* SECTION ROWS */
 .sidebar-section-header {
   /* edge-to-edge highlight inside a padded container (NavContent wrapper uses 16px) */
   margin-left: -16px;
   margin-right: -16px;
-  padding: 8px 16px;              /* move padding here so the bg spans full width */
+  padding: 8px 16px;
+  /* move padding here so the bg spans full width */
   border-radius: 0 !important;
   transition: background-color var(--cs-ease), border-color var(--cs-ease);
   border: 1px solid transparent;
@@ -1395,12 +1645,14 @@ html.right-open .right-sidebar {
 
 
 .sidebar-section-header:hover:not(.is-active) {
-  background: rgba(0,0,0,0.04); /* gentle hover only for non-active */
+  background-color: var(--search-result-hover);
+  /* gentle hover only for non-active */
 }
 
 /* Active section row (route-aware via .is-active from JSX) */
 .sidebar-section-header.is-active {
-  background: var(--cs-active) !important; /* #e6e2dd */
+  background: var(--cs-active) !important;
+  /* #e6e2dd */
   border-color: var(--cs-active) !important;
   border-radius: 0 !important;
 
@@ -1409,9 +1661,11 @@ html.right-open .right-sidebar {
 /* Title text in section row — default REGULAR, only active is BOLD */
 .sidebar-section-title {
   font: "Be Vietnam Pro";
-  font-weight: 400 !important;             /* default regular */
+  font-weight: 400 !important;
+  /* default regular */
   font-size: 16px !important;
-  color: var(--cs-text) !important;        /* #4F3629 */
+  color: var(--cs-text) !important;
+  /* #4F3629 */
 }
 
 /* Bold only when the section is the active route */
@@ -1426,8 +1680,10 @@ html.right-open .right-sidebar {
    - Add vertical rhythm when a section is open.
    ========================================================================== */
 .sidebar-subsection-container {
-  padding-left: 22px;     /* indent subsections */
-  margin-top: 8px;        /* space under the section row when opened */
+  padding-left: 22px;
+  /* indent subsections */
+  margin-top: 8px;
+  /* space under the section row when opened */
 }
 
 .sidebar-sub-row {
@@ -1436,9 +1692,15 @@ html.right-open .right-sidebar {
   transition: background-color var(--cs-ease), color var(--cs-ease);
   background: transparent;
 }
-.sidebar-sub-row:hover { background: rgba(83,28,0,0.06); } /* subtle hover */
+
+.sidebar-sub-row:hover {
+  background: rgba(83, 28, 0, 0.06);
+}
+
+/* subtle hover */
 .sidebar-sub-row.is-active {
-  background: var(--cs-brown);           /* #531C00 */
+  background: var(--cs-brown);
+  /* #531C00 */
 }
 
 /* Subsection text */
@@ -1446,42 +1708,52 @@ html.right-open .right-sidebar {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 400 !important;
   font-size: 14px !important;
-  color: var(--cs-text) !important;      /* default #4F3629 */
+  color: var(--cs-text) !important;
+  /* default #4F3629 */
 }
+
 .sidebar-sub-row.is-active .sidebar-subsection {
-  color: #FFFFFF !important;             /* white when active pill */
-  font-weight: 600 !important;           /* bold only for active subsection */
+  color: #FFFFFF !important;
+  /* white when active pill */
+  font-weight: 600 !important;
+  /* bold only for active subsection */
 }
 
 /* =============================================================================
    BADGE
    ========================================================================== */
 .beta-tag {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #EFEFEF; color: #333;
-  font-weight: 700; font-size: 0.75rem;
-  padding: 2px 8px; margin-left: 8px; border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #EFEFEF;
+  color: #333;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 6px;
 }
 
 /* =============================================================================
    SMALL POLISH
    ========================================================================== */
 .sidebar-btn:hover {
-     opacity: 0.8;
-     }
+  opacity: 0.8;
+}
 
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 3.5px 7.5px !important;       /* More interior padding → more pill */
-  border-radius: 15px !important;    /* Perfect pill shape */
+  padding: 3.5px 7.5px !important;
+  /* More interior padding → more pill */
+  border-radius: 15px !important;
+  /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;                /* More breathing room between text + icon */
+  gap: 6px !important;
+  /* More breathing room between text + icon */
 }
-
-
-

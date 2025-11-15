@@ -8,6 +8,9 @@ import {
   Text,
   Icon,
   Collapse,
+  useColorMode,
+  useColorModeValue,
+  IconButton,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -19,7 +22,6 @@ import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
 import "../ContentPage.css";
-import { color } from "framer-motion";
 
 function NavBar({ className = "" }) {
   const location = useLocation();
@@ -29,6 +31,7 @@ function NavBar({ className = "" }) {
   const pathParts = currentPath.split("/").filter(Boolean);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
@@ -38,6 +41,12 @@ function NavBar({ className = "" }) {
   const [searchQuery, setSearchQuery] = useState("");
   const hasLoadedData = useRef(false);
   const [openSection, setOpenSection] = useState(null);
+
+  // dark mode handling with Chakra UI
+  const { colorMode, toggleColorMode } = useColorMode();
+  const textColor = useColorModeValue("#1a1a1a", "#e0e0e0");
+
+  /* -------------------------------------------------------------- */
 
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
@@ -190,7 +199,7 @@ function NavBar({ className = "" }) {
                 >
                   <Text
                     className="nav-dropdown-title-text"
-                    color={openSection === "modules" ? "#9D0013" : "inherit"}
+                    color={openSection === "modules" ? "accent" : textColor}
                   >
                     Modules
                   </Text>
@@ -237,6 +246,7 @@ function NavBar({ className = "" }) {
                 </Collapse>
               </Box>
             </Box>
+
             <Box
               className="nav-link-box hide-base show-md"
               onClick={() => {
@@ -251,18 +261,24 @@ function NavBar({ className = "" }) {
             >
               <Text>About</Text>
             </Box>
+
             <Box
               className="nav-link-box hide-base show-md"
               onClick={() => navigate("/acknowledgements")}
             >
               <Text>Acknowledgements</Text>
             </Box>
-            <Box className="icon-button">
-              <MoonIcon
-                className="navsearchbar-button"
-                fontSize={"lg"}
-              ></MoonIcon>
+
+            <Box
+              className="icon-button"
+              onClick={toggleColorMode}
+              _hover={{ color: 'var(--navbar-link-hover)' }}
+              cursor="pointer"
+              p={2}
+            >
+              <MoonIcon boxSize={5} />
             </Box>
+
             <Box
               className="icon-button"
               onClick={() => {
@@ -276,8 +292,10 @@ function NavBar({ className = "" }) {
               <SearchIcon
                 className="navsearchbar-button"
                 fontSize={"lg"}
-              ></SearchIcon>
+                _hover={{ color: 'var(--navbar-link-hover)' }}
+              />
             </Box>
+
             <Box
               className="icon-button show-base hide-md"
               onClick={() => {
@@ -313,6 +331,7 @@ function NavBar({ className = "" }) {
             >
               About
             </Box>
+
             <Box
               className="nav-link-box"
               onClick={() => {
@@ -322,6 +341,7 @@ function NavBar({ className = "" }) {
             >
               Acknowledgements
             </Box>
+
             <Box
               className="mobile-modules-container"
               onMouseEnter={() => setIsModulesExpanded(true)}
@@ -378,6 +398,7 @@ function NavBar({ className = "" }) {
             </Box>
           </VStack>
         </Collapse>
+
         <Collapse in={isSearchOpen} animateOpacity>
           <NavSearchBar
             searchQuery={searchQuery}

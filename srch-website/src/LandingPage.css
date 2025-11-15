@@ -30,9 +30,22 @@
   --color-bg: #ffffff;
   --sidebar-bg: #ffffff;
   --color-bg-alt: #f8f9fa;
-  --color-border: #e0d7ce; /* from new theme */
-  --color-accent: #7b4b24; /* new accent color */
+  --color-border: #e0d7ce;
+  /* from new theme */
+  --color-accent: #7b4b24;
+  /* new accent color */
   --color-accent-light: #f3ece6;
+  --results-bg: var(--color-bg-alt);
+
+
+  --topic-color-bg: #ffffff;
+  --topic-color-outline: #755543;
+  --button-outline: #531C00;
+  --topic-card-hover: #C90000;
+  --connect-link: #9D0013;
+  --connect-link-hover: #7a000f;
+  --learn-more-hover-bg: rgba(83, 28, 0, 0.05);
+  --learn-more-hover-outline: rgba(83, 28, 0, 0.4);
 
   /* ------------------------------------------------------------------------
     Design Tokens — Text Sizes and Weights
@@ -61,6 +74,52 @@
   --upper-content-height: 75vh;
 
   --content-width: 627px;
+}
+
+
+/* Dark mode colors */
+.chakra-ui-dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --learn-more-hover-bg: rgba(40, 76, 40, 0.25);
+  --learn-more-hover-outline: #284C28;
+
+  /* Dark mode colors with green theme */
+  --color-text: #e0e0e0;
+  --color-text-muted: #b0b0b0;
+  --color-bg: #0E0E0E;
+  --color-bg-alt: #252525;
+  --color-border: #404040;
+  --color-accent: #263A26;
+  --color-accent-light: #1a251a;
+  --color-accent-hover: #A5D8AE;
+  --connect-link: #A5D8AE;
+  --connect-link-hover: #284C28;
+  --results-bg: #263A26;
+
+
+  --srch-brown: #263A26;
+  --sidebar-bg: #1e1e1e;
+
+  --cs-brown: #263A26;
+  --cs-text: #e0e0e0;
+  --cs-bg: #1e1e1e;
+  --cs-active: #2a3a2a;
+  --cs-divider: #404040;
+  --topic-color-bg: #181818;
+  --topic-color-outline: #005721;
+  --topic-card-hover: #439B4C;
+
+
+  --navbar-bg: #181818;
+  --navbar-border: #404040;
+  --navbar-shadow: rgba(0, 0, 0, 0.3);
+  --dropdown-bg: #2d2d2d;
+  --icon-color: #e0e0e0;
+  --search-bg: #2d2d2d;
+  --search-result-hover: rgba(165, 216, 174, 0.1);
+  --button-outline: #284C28;
+
 }
 
 body,
@@ -120,28 +179,40 @@ html {
   transition: background-image 0.3s ease-in-out;
 }
 
-/* overlay image */
-.upper-content::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("../src/assets/blurred-background.png");
-  background-size: cover;
-  background-position: left center;
-  background-repeat: no-repeat;
-  opacity: 0;                 /* initially hidden */
-  transition: opacity 0.5s ease-in-out;
-  z-index: -1;                /* behind content */
+.chakra-ui-dark .upper-content,
+[data-theme="dark"] .upper-content {
+  background-image: url("../src/assets/landing-page-background-dark.png");
 }
 
-.upper-content:hover::before {
-  opacity: 1;                 /* fade in on hover */ 
+/* Make all icons white in dark mode */
+.chakra-ui-dark .topic-card img,
+[data-theme="dark"] .topic-card img,
+.chakra-ui-dark .learn-more-button img,
+[data-theme="dark"] .learn-more-button img,
+.chakra-ui-dark img[src*="Icon.png"],
+[data-theme="dark"] img[src*="Icon.png"],
+.chakra-ui-dark img[alt*="instagram"],
+[data-theme="dark"] img[alt*="instagram"],
+.chakra-ui-dark img[src*="instagram"],
+[data-theme="dark"] img[src*="instagram"],
+.chakra-ui-dark img[alt*="Privacy"],
+[data-theme="dark"] img[alt*="Privacy"],
+.chakra-ui-dark img[alt*="privacy"],
+[data-theme="dark"] img[alt*="privacy"],
+/* Target all images in the footer */
+.chakra-ui-dark .footer-container img,
+[data-theme="dark"] .footer-container img {
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
 }
 
-.upper-content:hover {
-  background-image: url("../src/assets/blurred-background.png");
-  transition: background-image 0.3s ease-in-out;
+/* Logo styling in dark mode - replace with dark version */
+.chakra-ui-dark img[alt="Socially Responsible Computing Handbook"],
+[data-theme="dark"] img[alt="Socially Responsible Computing Handbook"] {
+  filter: brightness(0) invert(1) sepia(1) saturate(1.5) hue-rotate(75deg) brightness(1.1);
+  transition: filter 0.3s ease;
 }
+
 
 .upper-text-section {
   width: 100%;
@@ -231,7 +302,7 @@ html {
   align-items: center;
   padding-top: 20px;
   align-self: stretch;
-  background: #fff;
+  background: var(--color-bg);
   position: relative;
   z-index: 1;
 }
@@ -294,21 +365,20 @@ html {
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: var(--color-bg);
+  background: var(--topic-color-bg);
   border-radius: 16px;
   border: none;
-  outline: 1px solid #755543;
+  outline: 1px solid var(--topic-color-outline);
   outline-offset: -1px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0, 08);
   overflow: hidden;
   cursor: pointer;
   text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  background: white;
 }
 
 .topic-card:hover {
-  background: linear-gradient(225deg, #fff 70.18%, #c90000 130.5%);
+  background: linear-gradient(225deg, var(--color-bg) 40.18%, var(--topic-card-hover) 160.5%);
   box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.12);
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
@@ -321,6 +391,7 @@ html {
   width: auto;
   height: auto;
   max-width: none;
+  transition: filter 0.3s ease;
   max-height: none;
 }
 
@@ -331,12 +402,14 @@ html {
   width: 80vw;
   margin: 0 auto;
 }
+
 @media (max-width: 900px) {
   .card-grid {
     grid-template-columns: 1fr;
     width: calc(100% - 13.22vw);
     justify-content: center;
   }
+
   .intro-text {
     text-align: center;
   }
@@ -390,13 +463,20 @@ html {
   word-wrap: break-word;
 }
 
+/* Line divider - visible in light mode */
 .line-divider {
   position: relative;
   width: 70vw;
   height: 2px;
   background: rgba(90, 45, 0, 0.5);
-  margin: 0 auto;
-  z-index: -1;
+  margin: 24px auto;
+  z-index: 1;
+}
+
+/* Dark mode override */
+.chakra-ui-dark .line-divider,
+[data-theme="dark"] .line-divider {
+  background: #4E7455;
 }
 
 .content-section {
@@ -430,9 +510,11 @@ html {
   line-height: 28px;
   word-wrap: break-word;
 }
+
 .landing-search-container {
   width: 60%;
 }
+
 .section-title {
   align-self: stretch;
   text-align: center;
@@ -494,7 +576,7 @@ html {
 /* Learn More Button*/
 .learn-more-container {
   display: flex;
-   width: 80vw;
+  width: 80vw;
   justify-content: flex-end;
   align-items: flex-end;
   gap: 10px;
@@ -505,7 +587,7 @@ html {
 .learn-more-button {
   padding: 10px 20px;
   border-radius: 16px;
-  outline: 2px solid rgba(83, 28, 0, 0.25);
+  outline: 2px solid var(--button-outline);
   outline-offset: -2px;
   justify-content: right;
   align-items: right;
@@ -518,8 +600,22 @@ html {
 }
 
 .learn-more-button:hover {
-  background: rgba(83, 28, 0, 0.05);
-  outline-color: rgba(83, 28, 0, 0.4);
+  background: var(--learn-more-hover-bg);
+  outline-color: var(--learn-more-hover-outline);
+}
+
+/* Dark mode hover styles */
+.chakra-ui-dark .learn-more-button:hover,
+[data-theme="dark"] .learn-more-button:hover {
+  background: #284C28;
+  /* Dark green background in dark mode */
+  outline-color: #284C28;
+}
+
+/* Make sure the arrow stays white on hover in dark mode */
+.chakra-ui-dark .learn-more-button:hover img,
+[data-theme="dark"] .learn-more-button:hover img {
+  filter: brightness(0) invert(1);
 }
 
 .learn-more-text {
@@ -565,7 +661,7 @@ html {
   align-self: center;
   justify-content: center;
   text-align: left;
-  color: black;
+  color: var(--color-text);
   font-size: 20px;
   font-family: var(--content-font);
   font-weight: 400;
@@ -573,6 +669,7 @@ html {
   padding-bottom: 24px;
   word-wrap: break-word;
 }
+
 /* Modules Section */
 .modules {
   flex-direction: column;
@@ -580,7 +677,8 @@ html {
   align-items: flex-start;
   gap: 18px;
   display: flex;
-  flex: 1; /* This allows equal spacing */
+  flex: 1;
+  /* This allows equal spacing */
 }
 
 .modules-heading,
@@ -647,6 +745,7 @@ html {
   gap: 56px;
   align-items: center;
 }
+
 .connect-cont {
   display: flex;
   flex-direction: row;
@@ -654,9 +753,10 @@ html {
   padding: 12px 24px;
   align-items: center;
 }
+
 .connect-link {
   font-weight: 600;
-  color: #9D0013;
+  color: var(--connect-link);
 }
 
 /* Feedback Contact */
@@ -678,12 +778,13 @@ html {
 .feedback-contact a:hover {
   color: #7a000f;
 }
+
 /* Primer Link Section - Footer Container */
 
 .footer-container {
   position: relative;
   z-index: 1;
-  background: white;
+  background: var(--color-bg);
 }
 
 .link-section-primer-footer {
@@ -811,7 +912,7 @@ html {
 }
 
 .module-link-primer-footer:hover {
-  color: #9d0013;
+  color: var(--navbar-link-hover, #9d0013);
 }
 
 /* Feedback Contact */
@@ -824,13 +925,13 @@ html {
 }
 
 .feedback-contact-primer-footer a {
-  color: #9d0013;
+  color: var(--connect-link);
   text-decoration: underline;
   transition: color 0.2s;
 }
 
 .feedback-contact-primer-footer a:hover {
-  color: #7a000f;
+  color: var(--connect-link-hover);
 }
 
 /* Responsive Design */
@@ -862,5 +963,5 @@ html {
   .upper-content {
     left: -75px;
   }
-  
+
 }

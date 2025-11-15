@@ -44,7 +44,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
     >
       <IconButton
         aria-label="Toggle search bar"
-        icon={<SearchIcon fontSize={"md"} />}
+        icon={<SearchIcon fontSize={"md"} color="var(--color-text)" />}
         className="searchbar-toggle-button toggle-button"
         onClick={() => navigate(`/search/${encodeURIComponent(searchQuery)}`)}
       />
@@ -58,6 +58,15 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
+          color="var(--color-text)"
+          _placeholder={{ color: 'var(--color-text)' }}
+          _hover={{
+            borderColor: 'transparent'
+          }}
+          _focus={{
+            borderColor: 'transparent',
+            boxShadow: 'none'
+          }}
         />
         <Collapse in={showResults} animateOpacity>
           <ResultsWindow

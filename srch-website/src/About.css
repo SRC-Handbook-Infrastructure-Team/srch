@@ -9,9 +9,31 @@
    • Typography + section layout
    ============================================================================ */
 
+:root {
+  --color-text: #1a1a1a;
+  --bg-color: #fff;
+  --section-bg: #fff;
+  --divider-color: rgba(90, 45, 0, 0.5);
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-text: #e0e0e0;
+  --bg-color: #0E0E0E;
+  --section-bg: #0E0E0E;
+  --divider-color: rgba(200, 200, 200, 0.2);
+}
+
 /* ============================================================================
    1. HERO BANNER (full-screen, fixed)
    ============================================================================ */
+
+/* Dark mode background */
+.chakra-ui-dark .about-hero,
+[data-theme="dark"] .about-hero {
+  background-image: url("../src/assets/Property 1=Default-dark.png");
+}
 
 .about-hero {
   position: fixed;
@@ -27,6 +49,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  transition: background-image 0.3s ease-in-out;
 
   display: flex;
   align-items: flex-start;
@@ -35,9 +58,6 @@
   border-top: 1px solid white; /* parity with Home */
 }
 
-.about-hero:hover {
-  background-image: url("../src/assets/Property 1=Variant2.png");
-}
 
 /* Position text block inside hero */
 .about-upper-text {
@@ -54,13 +74,13 @@
   font-weight: 900;
   font-size: 72px;
   line-height: 1.05;
-  color: #1a1a1a;
+  color: var(--color-text);
 }
 
 .about-sub {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 18px;
-  color: #1a1a1a;
+  color: var(--color-text);
   line-height: 28px;
   max-width: 600px;
 }
@@ -74,7 +94,7 @@
   position: relative;
   z-index: 1;
 
-  background: white;
+  background: var(--section-bg);
   padding: 72px 200px;
 }
 
@@ -92,12 +112,12 @@
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
-  color: rgba(0, 0, 0, 1);
+  color: var(--color-text);
 }
 
 .about-section p {
   font-family: "Be Vietnam Pro", sans-serif;
-  color: rgba(0, 0, 0, 1);
+  color: var(--color-text);
   font-size: 20px;
   line-height: 1.6;
   max-width: 650px;
@@ -111,7 +131,7 @@
 
 .about-section li {
   font-family: "Be Vietnam Pro", sans-serif;
-  color: rgba(0, 0, 0, 1);
+  color: var(--color-text);
   font-size: 20px;
   line-height: 1.6;
   margin-bottom: 8px;
@@ -122,7 +142,7 @@
   width: 90%;
   max-width: 900px;
   height: 2px;
-  background: rgba(90, 45, 0, 0.5);
+  background: var(--divider-color);
   margin: 64px auto;
   position: relative;
   left: 0;

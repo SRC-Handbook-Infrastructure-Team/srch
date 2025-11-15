@@ -5,16 +5,23 @@
    ============================================================================ */
 
 :root {
+
+  --color-text: #1a1a1a;
   /* Card + grid geometry */
-  --ack-card-width: 290px;      /* EXACT card width from Figma */
-  --ack-photo-width: 290px;     /* EXACT photo width */
-  --ack-photo-height: 302px;    /* EXACT photo height */
-  --ack-grid-col-gap: 10px;     /* column gap */
-  --ack-grid-row-gap: 10px;     /* row gap */
+  --ack-card-width: 290px;
+  /* EXACT card width from Figma */
+  --ack-photo-width: 290px;
+  /* EXACT photo width */
+  --ack-photo-height: 302px;
+  /* EXACT photo height */
+  --ack-grid-col-gap: 10px;
+  /* column gap */
+  --ack-grid-row-gap: 10px;
+  /* row gap */
   --ack-radius: 6px;
 
   /* Typography + colors */
-  --ack-brand-brown: #531C00;
+  --ack-brand-header: #531C00;
   --ack-text: #1a1a1a;
   --ack-muted: #00000085;
   --ack-divider: rgba(96, 70, 58, 1);
@@ -22,12 +29,37 @@
   /* Icon buttons */
   --ack-icon-size: 32px;
   --ack-icon-ring: #5a2d0c;
+  --ack-email-hover-bg: var(--ack-icon-ring);
+  --ack-email-hover-color: #fff;
 
   /* Hero */
   --ack-upper-height: 75vh;
   --ack-hero-paddingX: 13.22vw;
+
+  --bg-color: #fff;
 }
 
+
+/* Dark mode colors */
+.chakra-ui-dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Dark mode colors with green theme */
+  --color-text: #e0e0e0;
+  --header-text-color: #e0e0e0;
+  --sub-header-text-color: #e0e0e0;
+  --ack-email-hover-bg: rgba(40, 76, 40, 0.25);
+  --ack-email-hover-color: var(--ack-brand-header);
+  --sidebar-phrase-color: #A5D8AE;
+  --sidebar-phrase-clicked: #263A26;
+  --sidebar-link-color: #A5D8AE;
+
+  --bg-color: #0E0E0E;
+  --ack-text: #e0e0e0;
+  --ack-brand-header: #A5D8AE;
+
+}
 
 /* ============================================================================
    1. HERO BANNER
@@ -35,6 +67,12 @@
    Same overlay behavior as Home page.
    Lower content slides upward over this.
    ============================================================================ */
+
+/* Dark mode background */
+.chakra-ui-dark .ack-hero,
+[data-theme="dark"] .ack-hero {
+  background-image: url("../src/assets/Property 1=Default-dark.png");
+}
 
 .ack-hero {
   position: fixed;
@@ -48,6 +86,7 @@
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
+  transition: background-image 0.3s ease-in-out;
 
   display: flex;
   align-items: flex-start;
@@ -55,9 +94,6 @@
   border-top: 1px solid white;
 }
 
-.ack-hero:hover {
-  background-image: url("../src/assets/Property 1=Variant2.png");
-}
 
 .upper-text-section {
   width: 33vw;
@@ -74,14 +110,17 @@
   font-size: 84px;
   line-height: 100px;
   color: var(--ack-text);
-  
+
 }
 
 /* Only on the Acknowledgements hero */
 .ack-hero .website-title {
-  position: relative;   /* keeps its original layout space */
-  left: -300px;          /* shift LEFT */
-  top: 70px;            /* shift DOWN */
+  position: relative;
+  /* keeps its original layout space */
+  left: -300px;
+  /* shift LEFT */
+  top: 70px;
+  /* shift DOWN */
 }
 
 
@@ -101,7 +140,7 @@
   margin-top: calc(var(--ack-upper-height) - 5vh);
   position: relative;
   z-index: 1;
-  background: #fff;
+  background: var(--bg-color);
   padding: 72px 200px;
 }
 
@@ -123,7 +162,8 @@
   grid-template-columns: repeat(4, var(--ack-card-width));
   column-gap: var(--ack-grid-col-gap);
   row-gap: var(--ack-grid-row-gap);
-  justify-content: space-between;   /* full width, even gutters */
+  justify-content: space-between;
+  /* full width, even gutters */
 }
 
 @media (max-width: 1199px) {
@@ -212,13 +252,14 @@
   align-items: baseline;
   gap: 6px;
   margin-top: 8px;
-  word-break: break-word; /* long names wrap cleanly */
+  word-break: break-word;
+  /* long names wrap cleanly */
 }
 
 .ack-card-fullname {
   font-size: 18px;
   font-weight: 600;
-  color: var(--ack-brand-brown);
+  color: var(--ack-brand-header);
   line-height: 22px;
 }
 
@@ -231,7 +272,7 @@
   font-size: 15px;
   line-height: 20px;
   margin-top: 2px;
-  color: #000;
+  color: var(--color-text);
 }
 
 
@@ -249,13 +290,11 @@
   width: var(--ack-icon-size);
   height: var(--ack-icon-size);
   border-radius: 50%;
-  border: 1px solid var(--ack-icon-ring);
-
+  border: 1px solid var(--ack-brand-header);
   display: flex;
   align-items: center;
   justify-content: center;
-
-  color: var(--ack-icon-ring);
+  color: var(--ack-brand-header);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -264,8 +303,15 @@
 }
 
 .ack-icon-btn:hover {
-  background-color: var(--ack-icon-ring);
-  color: #fff;
+  background-color: var(--ack-email-hover-bg, var(--ack-icon-ring));
+  color: var(--ack-email-hover-color, #fff);
+}
+
+/* Dark mode hover - match light mode behavior but with green background and black icon */
+.chakra-ui-dark .ack-icon-btn:hover,
+[data-theme="dark"] .ack-icon-btn:hover {
+  background-color: var(--ack-brand-header);
+  color: #000000;
 }
 
 .ack-icon-btn:active {
@@ -371,18 +417,35 @@
    ============================================================================ */
 
 @media (max-width: 1200px) {
-  .ack-lower-content { padding: 72px 120px; }
+  .ack-lower-content {
+    padding: 72px 120px;
+  }
 }
 
 @media (max-width: 1024px) {
-  .ack-lower-content { padding: 72px 80px; }
-  .link-section { flex-wrap: wrap; gap: 30px; }
+  .ack-lower-content {
+    padding: 72px 80px;
+  }
+
+  .link-section {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
 }
 
 @media (max-width: 768px) {
-  .ack-lower-content { padding: 48px 24px; }
-  .link-section { flex-direction: column; gap: 40px; }
-  .modules { width: 100%; }
+  .ack-lower-content {
+    padding: 48px 24px;
+  }
+
+  .link-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .modules {
+    width: 100%;
+  }
 }
 
 
@@ -390,10 +453,13 @@
    10. HOUSEKEEPING + ACCESSIBILITY
    ============================================================================ */
 
-.ack-card *, .ack-grid * {
+.ack-card *,
+.ack-grid * {
   box-sizing: border-box;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ack-icon-btn { transition: none; }
+  .ack-icon-btn {
+    transition: none;
+  }
 }

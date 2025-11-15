@@ -1,7 +1,6 @@
 // src/App.jsx
 import "./App.css";
-
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import theme from "./theme";
 import { useEffect } from "react";
 import AppRoutes from "./AppRoutes";
@@ -18,8 +17,10 @@ function App() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
+  
   return (
     <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <AppRoutes />
     </ChakraProvider>
   );

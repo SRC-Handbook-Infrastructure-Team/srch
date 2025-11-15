@@ -514,7 +514,7 @@ function MarkdownRenderer({
       },
       p: ({children}) => {
         return (
-          <Text mb={3} lineHeight="1.6" color={BLACK}>
+          <Text mb={3} lineHeight="1.6" color="var(--color-text)">
             {highlightText(children, highlight)}
           </Text>
         );
