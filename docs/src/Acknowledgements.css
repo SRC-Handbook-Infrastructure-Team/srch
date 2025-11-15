@@ -1,0 +1,399 @@
+/* ============================================================================
+   0. DESIGN TOKENS
+   ----------------------------------------------------------------------------
+   Centralized variables ensure pixel consistency across all breakpoints.
+   ============================================================================ */
+
+:root {
+  /* Card + grid geometry */
+  --ack-card-width: 290px;      /* EXACT card width from Figma */
+  --ack-photo-width: 290px;     /* EXACT photo width */
+  --ack-photo-height: 302px;    /* EXACT photo height */
+  --ack-grid-col-gap: 10px;     /* column gap */
+  --ack-grid-row-gap: 10px;     /* row gap */
+  --ack-radius: 6px;
+
+  /* Typography + colors */
+  --ack-brand-brown: #531C00;
+  --ack-text: #1a1a1a;
+  --ack-muted: #00000085;
+  --ack-divider: rgba(96, 70, 58, 1);
+
+  /* Icon buttons */
+  --ack-icon-size: 32px;
+  --ack-icon-ring: #5a2d0c;
+
+  /* Hero */
+  --ack-upper-height: 75vh;
+  --ack-hero-paddingX: 13.22vw;
+}
+
+
+/* ============================================================================
+   1. HERO BANNER
+   ----------------------------------------------------------------------------
+   Same overlay behavior as Home page.
+   Lower content slides upward over this.
+   ============================================================================ */
+
+.ack-hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--ack-upper-height);
+  z-index: 0;
+
+  background-image: url("../src/assets/Property 1=Default.png");
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: flex-start;
+  padding: 0 var(--ack-hero-paddingX);
+  border-top: 1px solid white;
+}
+
+.ack-hero:hover {
+  background-image: url("../src/assets/Property 1=Variant2.png");
+}
+
+.upper-text-section {
+  width: 33vw;
+  margin-top: 20vh;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  z-index: 1;
+}
+
+.website-title {
+  font-family: "Funnel Sans", sans-serif;
+  font-weight: 700;
+  font-size: 84px;
+  line-height: 100px;
+  color: var(--ack-text);
+  
+}
+
+/* Only on the Acknowledgements hero */
+.ack-hero .website-title {
+  position: relative;   /* keeps its original layout space */
+  left: -300px;          /* shift LEFT */
+  top: 70px;            /* shift DOWN */
+}
+
+
+.info-section {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--ack-text);
+}
+
+
+/* ============================================================================
+   2. LOWER CONTENT (scrolls over hero)
+   ============================================================================ */
+
+.ack-lower-content {
+  margin-top: calc(var(--ack-upper-height) - 5vh);
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  padding: 72px 200px;
+}
+
+.line-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--ack-divider);
+  transform: scaleX(1.35);
+  transform-origin: center;
+}
+
+
+/* ============================================================================
+   3. GRID LAYOUT (4 columns desktop, 2 tablet, 1 phone)
+   ============================================================================ */
+
+.ack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, var(--ack-card-width));
+  column-gap: var(--ack-grid-col-gap);
+  row-gap: var(--ack-grid-row-gap);
+  justify-content: space-between;   /* full width, even gutters */
+}
+
+@media (max-width: 1199px) {
+  .ack-grid {
+    grid-template-columns: repeat(2, var(--ack-card-width));
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .ack-grid {
+    grid-template-columns: repeat(1, var(--ack-card-width));
+    justify-content: center;
+  }
+}
+
+
+/* ============================================================================
+   4. CARD CONTAINER
+   ============================================================================ */
+
+.ack-card {
+  width: var(--ack-card-width);
+  display: flex;
+  flex-direction: column;
+  font-family: "Be Vietnam Pro", sans-serif;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================================
+   5. PHOTO REGION — **Figma exact geometry** + **mask**
+   ----------------------------------------------------------------------------
+   We clip both the real photo and the fallback block with the same mask
+   to guarantee uniform geometry (no layout jitter).
+   ============================================================================ */
+
+.ack-card-photo {
+  width: var(--ack-photo-width);
+  height: var(--ack-photo-height);
+  border-radius: var(--ack-radius);
+
+  /* The image inside this box is hard-cropped, centered */
+  object-fit: cover;
+  object-position: center;
+
+  /* Neutral base (visible under transparent areas of the mask) */
+  background-color: #d9d9d9;
+  display: block;
+
+  /* 🔒 The mask: this is the Figma template frame */
+  -webkit-mask-image: url("../src/assets/Photo.png");
+  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.ack-photo-fallback {
+  /* Same geometry + mask as the real photo, so rows never jump */
+  width: var(--ack-photo-width);
+  height: var(--ack-photo-height);
+  background: #d9d9d9;
+  border-radius: var(--ack-radius);
+
+  -webkit-mask-image: url("../src/assets/Photo.png");
+  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+
+/* ============================================================================
+   6. CARD TYPOGRAPHY (Name, Pronouns, Sub-info)
+   ============================================================================ */
+
+.ack-card-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 8px;
+  word-break: break-word; /* long names wrap cleanly */
+}
+
+.ack-card-fullname {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ack-brand-brown);
+  line-height: 22px;
+}
+
+.ack-card-pronouns {
+  font-size: 15px;
+  color: var(--ack-muted);
+}
+
+.ack-card-subinfo {
+  font-size: 15px;
+  line-height: 20px;
+  margin-top: 2px;
+  color: #000;
+}
+
+
+/* ============================================================================
+   7. CARD ICON ROW (mail, linkedin, website)
+   ============================================================================ */
+
+.ack-card-icons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.ack-icon-btn {
+  width: var(--ack-icon-size);
+  height: var(--ack-icon-size);
+  border-radius: 50%;
+  border: 1px solid var(--ack-icon-ring);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--ack-icon-ring);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.08s ease;
+}
+
+.ack-icon-btn:hover {
+  background-color: var(--ack-icon-ring);
+  color: #fff;
+}
+
+.ack-icon-btn:active {
+  transform: translateY(0.5px);
+}
+
+.ack-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(90, 45, 12, 0.35);
+}
+
+
+/* ============================================================================
+   8. FOOTER (same structure as Home)
+   ============================================================================ */
+
+.link-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px 0;
+}
+
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-logo {
+  width: 100px;
+  height: 91px;
+  object-fit: contain;
+  display: block;
+}
+
+.modules {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+.modules-heading,
+.module-heading {
+  font-size: 20px;
+  font-family: var(--content-font);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.primer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.primer-link-photo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.module-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.module-link {
+  font-size: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: color 0.2s ease;
+}
+
+.module-link:hover {
+  color: #9d0013;
+}
+
+.feedback-contact {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.feedback-contact a {
+  color: #9d0013;
+  text-decoration: underline;
+}
+
+.feedback-contact a:hover {
+  color: #7a000f;
+}
+
+
+/* ============================================================================
+   9. RESPONSIVE FOOTER + CONTENT
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .ack-lower-content { padding: 72px 120px; }
+}
+
+@media (max-width: 1024px) {
+  .ack-lower-content { padding: 72px 80px; }
+  .link-section { flex-wrap: wrap; gap: 30px; }
+}
+
+@media (max-width: 768px) {
+  .ack-lower-content { padding: 48px 24px; }
+  .link-section { flex-direction: column; gap: 40px; }
+  .modules { width: 100%; }
+}
+
+
+/* ============================================================================
+   10. HOUSEKEEPING + ACCESSIBILITY
+   ============================================================================ */
+
+.ack-card *, .ack-grid * {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ack-icon-btn { transition: none; }
+}
