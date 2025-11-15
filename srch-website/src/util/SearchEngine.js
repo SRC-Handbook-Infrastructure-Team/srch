@@ -4,9 +4,7 @@ import {
   getSubsections,
   createIdFromHeading,
 } from "./MarkdownRenderer.jsx";
-import fs from "fs";
 
-// Create the FlexSearch Document index
 const index = new FlexSearch.Document({
   document: {
     id: "id",
@@ -15,13 +13,13 @@ const index = new FlexSearch.Document({
         field: "title",
         tokenize: "full",
         threshold: 0,
-        storeLocations: true, // track match positions for title
+        storeLocations: true,
       },
       {
         field: "content",
         tokenize: "full",
         threshold: 0,
-        storeLocations: true, // track match positions for content
+        storeLocations: true,
       },
     ],
     store: [
@@ -33,7 +31,7 @@ const index = new FlexSearch.Document({
       "content",
       "anchor",
       "isDrawer",
-    ], // store full content for snippet extraction
+    ],
   },
   preset: "match",
   encode: false,
@@ -43,7 +41,6 @@ const index = new FlexSearch.Document({
 
 let indexInitialized = false;
 
-// Extract h2 blocks from markdown with anchors
 function extractHeadingBlocks(
   markdown,
   sectionId,
@@ -87,7 +84,7 @@ function extractHeadingBlocks(
 
   const pushBlock = () => {
     if (currentTitle !== null) {
-      if (currentTitle === "All Sidebar Content Below") {
+      if (currentTitle === "Sidebar") {
         let currentAnchorLocal = null;
         let anchorLines = [];
         currentLines.forEach((line) => {
@@ -106,7 +103,6 @@ function extractHeadingBlocks(
           pushDrawerBlock(currentAnchorLocal, anchorLines);
         }
       } else {
-        console.log(sectionId);
         if (sectionId == "about") {
           sectionTitle = "About";
           subsectionTitle = "About";
@@ -171,9 +167,6 @@ export async function initializeIndex() {
     const subsections = await getSubsections(section.id);
 
     for (const subsection of subsections) {
-      console.log(section.id, section.title);
-      console.log(subsection.id, subsection.title);
-      console.log();
       contentArray.push(
         ...extractHeadingBlocks(
           subsection.content,
@@ -189,8 +182,49 @@ export async function initializeIndex() {
   contentArray.forEach((item) => {
     index.add(item);
   });
-  // exportIndexFrontend();
   indexInitialized = true;
+}
+
+function truncateSnippet(snippet, searchQuery) {
+  if (!snippet) return "";
+
+  const lowerSnippet = snippet.toLowerCase();
+  const lowerQuery = searchQuery.toLowerCase();
+
+  const idx = lowerSnippet.indexOf(lowerQuery);
+
+  if (idx !== -1) {
+    const beforeQuery = snippet.slice(0, idx);
+
+    const lastSpaceIdx = beforeQuery.lastIndexOf(" ");
+    const wordStartIdx = lastSpaceIdx + 1;
+
+    let snippetStartIndex = lastSpaceIdx !== -1 ? wordStartIdx : 0;
+
+    let charBeforeIdx = snippetStartIndex - 1;
+    while (
+      charBeforeIdx >= 0 &&
+      (snippet[charBeforeIdx] === " " ||
+        snippet[charBeforeIdx] === "\n" ||
+        snippet[charBeforeIdx] === "\r")
+    ) {
+      charBeforeIdx--;
+    }
+
+    const sentenceEndPunctuations = [".", "!", "?"];
+    const charBefore = charBeforeIdx >= 0 ? snippet[charBeforeIdx] : null;
+
+    const addEllipses =
+      charBeforeIdx >= 0 && !sentenceEndPunctuations.includes(charBefore);
+
+    let resultSnippet = snippet.slice(snippetStartIndex);
+    if (addEllipses) {
+      resultSnippet = "..." + resultSnippet;
+    }
+    return resultSnippet;
+  }
+
+  return snippet;
 }
 
 function getPlaintextFromMarkdown(content) {
@@ -219,6 +253,9 @@ function getPlaintextFromMarkdown(content) {
 
   // Remove footnotes
   content = content.replace(/\[\^([^\]]+)\]/g, "");
+
+  // Remove Markdown table rows (lines starting and ending with |)
+  content = content.replace(/^\s*\|[-:\s|]+\|\s*$/gm, "");
 
   // Normalize spaces (but keep newlines)
   content = content.replace(/[ \t]{2,}/g, " ");
@@ -254,8 +291,7 @@ function createSnippet(content, query) {
 
   return snippet.trim();
 }
-
-export async function search(query) {
+export async function search(query, truncateSnippetFlag = true) {
   if (!query) return [];
   const results = index.search(query, {
     enrich: true,
@@ -287,7 +323,6 @@ export async function search(query) {
           .toLowerCase()
           .includes(query.toLowerCase());
 
-      // Add title match as a result
       if (titleMatches) {
         const titleKey = `${res.id}-title`;
         if (!seenKeys.has(titleKey)) {
@@ -301,12 +336,17 @@ export async function search(query) {
         }
       }
 
-      // Add content match as a separate result
       if (contentHasMatch) {
         const contentKey = `${res.id}-content`;
         if (!seenKeys.has(contentKey)) {
           const plainText = getPlaintextFromMarkdown(doc.content);
-          const contentSnippet = createSnippet(plainText, query);
+          const baseSnippet = truncateSnippetFlag
+            ? createSnippet(plainText, query)
+            : plainText.replace(regex, "<mark>$1</mark>");
+
+          const contentSnippet = truncateSnippetFlag
+            ? truncateSnippet(baseSnippet, query)
+            : baseSnippet;
 
           if (contentSnippet.includes("<mark>")) {
             seenKeys.add(contentKey);

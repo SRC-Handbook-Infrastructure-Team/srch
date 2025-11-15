@@ -1,26 +1,22 @@
+import "../LandingPage.css";
+import "../ContentPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  useToast,
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerOverlay,
-  Divider,
-  Text,
-} from "@chakra-ui/react";
+import { useToast, Box } from "@chakra-ui/react";
 import { useLayout } from "../layouts/LayoutContext";
 import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
-  getDrawerFile,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { BsSignIntersectionSideFill } from "react-icons/bs";
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
+import Footer from "../components/Footer"
+
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -58,8 +54,8 @@ function MarkdownPage() {
   const SECTION_NUMBER_MAP = {
     privacy: "1",
     accessibility: "2",
-    "automated-decision-making": "3",
-    "generative-ai": "4",
+    automateddecisionmaking: "3",
+    generativeai: "4",
   };
 
   // convert 0 -> 'a', 1 -> 'b', etc.
@@ -75,30 +71,49 @@ function MarkdownPage() {
 
   // prettify "what-is-privacy" → "What Is Privacy"
   function prettifySlug(slug = "") {
-    return String(slug)
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (m) => m.toUpperCase())
-      .trim();
+    return (
+      String(slug)
+        // Insert space between lowercase -> uppercase ("generativeAI" → "generative AI")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+
+        // Insert space between acronym + word ("AIethics" → "AI ethics")
+        .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+
+        // Replace hyphens and underscores with spaces
+        .replace(/[-_]+/g, " ")
+
+        // Collapse any double spaces
+        .replace(/\s+/g, " ")
+
+        // Capitalize each word
+        .replace(/\b\w/g, (m) => m.toUpperCase())
+
+        .trim()
+    );
   }
 
-  /**
-   * Build a formatted header string using the loaded subsections array.
-   * Accepts subsections so the letter is computed from actual ordering (no hardcoded map).
-   *
-   * @param {string} sectionId
-   * @param {string} subsectionId
-   * @param {string} pageTitle
-   * @param {Array} subsectionsArr  // array of { id, title, order, ... }
-   * @returns {string}
-   */
+  // normalize 'automated-decision-making' -> 'automateddecisionmaking' (map key)
+  function normalizeSectionKey(id) {
+    return String(id || "")
+      .replace(/[^a-z]/gi, "")
+      .toLowerCase();
+  }
+
+  function getFastCachedSubsections(sectionId) {
+    return window.__SRCH_SUBSECTIONS_CACHE__?.[sectionId] || null;
+  }
+
   function getFormattedTitle(
     sectionId,
     subsectionId,
     pageTitle,
     subsectionsArr = []
   ) {
-    const sectionNum = SECTION_NUMBER_MAP[sectionId] || "?";
+    // Normalize incoming section id to match our map keys
+    const sectionKey = normalizeSectionKey(sectionId);
+    const sectionNum = SECTION_NUMBER_MAP[sectionKey] || ""; // empty if unknown (no '?')
 
+    // Find letter for subsection, if any
     let letter = "";
     if (
       subsectionId &&
@@ -109,12 +124,34 @@ function MarkdownPage() {
       if (idx >= 0) letter = indexToLetter(idx);
     }
 
+    // Prefer frontmatter title when present
     const titleText =
       pageTitle && pageTitle.trim()
         ? pageTitle.trim()
         : prettifySlug(subsectionId || sectionId || "");
 
-    return `${sectionNum}${letter ? `.${letter}` : ""} - ${titleText}`;
+    // Build the numeric prefix (e.g. "1.a.") only if we have a section number
+    const numberedPrefix = sectionNum
+      ? sectionNum + (letter ? `.${letter}.` : "")
+      : "";
+
+    // If there is a prefix, add " - " after it; otherwise just the title
+    return numberedPrefix ? `${numberedPrefix} - ${titleText}` : titleText;
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+    } catch (e) {}
+    return dateString; // fallback: show raw
   }
 
   const { sectionId, subsectionId, term: urlTerm } = useParams();
@@ -123,11 +160,9 @@ function MarkdownPage() {
   const toast = useToast();
   const cachedContent = useRef({});
 
-  //  Guard against undefined context (edge cases/tests)
   const layout = useLayout() || {};
-  const { openRightDrawer, closeRightDrawer } = layout;
+  const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
 
-  // 🧩 Highlight from URL state
   const highlight = useMemo(() => {
     let hl = location.state?.highlight;
     if (!hl) {
@@ -137,57 +172,41 @@ function MarkdownPage() {
     return hl;
   }, [location.state, location.search]);
 
-  // 🧩 Drawer & sidebar states
   const [sidebar, setSidebar] = useState({});
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerTerm, setDrawerTerm] = useState("");
+  const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
-  const [drawerContent, setDrawerContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [contentFinal, setContentFinal] = useState(undefined);
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState("");
 
-  const [drawerWidth, setDrawerWidth] = useState(() => {
-    try {
-      const savedWidth = localStorage.getItem("drawerWidth");
-      return savedWidth ? parseInt(savedWidth) : 400;
-    } catch {
-      return 400;
-    }
-  });
-
-  const [isResizing, setIsResizing] = useState(false);
-  const resizeRef = useRef(null);
   const contentRef = useRef(null);
 
-  // compute header once subsections are available to avoid '?' and race conditions
-  const formattedTitle = useMemo(
-    () => getFormattedTitle(sectionId, subsectionId, pageTitle, subsections),
-    [sectionId, subsectionId, pageTitle, subsections]
-  );
+  const formattedTitle = useMemo(() => {
+    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
+    const fastSubs = getFastCachedSubsections(sectionId);
 
-  // Helper function to generate cache key based on the section and subsection
+    return getFormattedTitle(
+      sectionId,
+      subsectionId,
+      pageTitle,
+      fastSubs || subsections
+    );
+  }, [sectionId, subsectionId, pageTitle, subsections]);
+
   function getCacheKey(section, subsection = null) {
     return subsection ? `${section}/${subsection}` : section;
   }
 
   async function getCachedContent(section, subsection = null) {
     const cacheKey = getCacheKey(section, subsection);
-
-    // if the content is already cached, then we just want to retrieve it
-    if (cachedContent.current[cacheKey]) {
-      return cachedContent.current[cacheKey];
-    }
-
-    // if the content has not been cached, cache it
+    if (cachedContent.current[cacheKey]) return cachedContent.current[cacheKey];
     const result = await getContent(section, subsection);
-    if (result) {
-      cachedContent.current[cacheKey] = result;
-    }
-
+    if (result) cachedContent.current[cacheKey] = result;
     return result;
   }
 
@@ -196,27 +215,97 @@ function MarkdownPage() {
     targetSectionId = sectionId,
     targetSubsectionId = subsectionId
   ) {
-    if (sidebar && sidebar[term]) {
-      return sidebar[term];
-    }
-
+    const key = (term || "").toString().toLowerCase();
+    if (sidebar && sidebar[key]) return sidebar[key];
     const cacheKey = getCacheKey(targetSectionId, targetSubsectionId);
     const storedContent = cachedContent.current[cacheKey];
-
-    if (storedContent && storedContent.sidebar && storedContent.sidebar[term]) {
-      return storedContent.sidebar[term];
+    if (storedContent && storedContent.sidebar) {
+      const maybe = storedContent.sidebar[key];
+      if (maybe) return maybe;
     }
-
     return null;
   }
 
-  // Store the current valid path whenever content loads successfully
-  // --- Store valid previous path ---
+  async function openGlobalDrawerForTerm(term, opts = {}) {
+  const { noToggle = false, noNavigate = false, silent = false } = opts;
+
+  if (!term) return;
+  const key = String(term).toLowerCase();
+
+  if (!noToggle && drawerActiveKey === key) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+
+    if (!noNavigate) {
+      navigate(`/${sectionId}/${subsectionId}`);
+    }
+
+    return;
+  }
+
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    if (!silent) {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+    return;
+  }
+
+  let drawerFile = null;
+  try {
+    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+  } catch (_) {}
+
+  const contentToShow =
+    drawerFile?.content ||
+    (typeof sidebarEntry === "string"
+      ? sidebarEntry
+      : sidebarEntry.content) ||
+    "";
+
+  const heading =
+    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+    String(term).replace(/-/g, " ");
+
+  const node = (
+    <>
+      <div className="drawer-meta-label">Familiar Case Studies</div>
+      <div className="drawer-meta-divider" />
+
+      <h2 className="drawer-section-title">
+        {highlightText(heading, highlight)}
+      </h2>
+
+      <MarkdownRenderer
+        content={contentToShow}
+        onDrawerOpen={handleDrawerOpen}
+        onNavigation={handleNavigation}
+        highlight={highlight}
+      />
+    </>
+  );
+
+  setDrawerActiveKey(key);
+  openRightDrawer(node);
+
+  if (!noNavigate) {
+    navigate(`/${sectionId}/${subsectionId}/${term}`);
+  }
+}
+
+    
+
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  /** Fetches and loads main markdown content based on current route params. */
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
@@ -228,12 +317,9 @@ function MarkdownPage() {
         return;
       }
 
-      // Load top-level section
       if (sectionId && !subsectionId) {
         const result = await getContent(sectionId);
-
         if (result) {
-          // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
@@ -241,11 +327,45 @@ function MarkdownPage() {
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
 
-          //  renamed local variable to avoid shadowing
-          const subs = await getSubsections(sectionId);
+          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
+          let lu = result.frontmatter?.lastUpdated || "";
 
-          //  sanitize subsections to remove falsy/drawer entries
-          const validSubs = (subs || [])
+          if (!lu) {
+            try {
+              const parent = await getContent(sectionId);
+              lu = parent?.frontmatter?.lastUpdated || "";
+            } catch (e) {
+              // ignore — fallback will simply remain empty
+            }
+          }
+
+          setLastUpdated(lu);
+        } else {
+          toast({
+            title: "Subsection Not Found",
+            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          navigate(previousPath, { replace: true });
+        }
+
+        setIsLoading(false);
+        return;
+      }
+
+      if (sectionId && subsectionId) {
+        //  Performance: fetch content + subsections in parallel to make the H1
+        // numbering (letter) available ASAP on direct subsection loads.
+        const [result, subs] = await Promise.all([
+          getContent(sectionId, subsectionId),
+          getSubsections(sectionId).catch(() => []),
+        ]);
+
+        if (Array.isArray(subs)) {
+          const validSubs = subs
             .filter((s) => s && s.id && typeof s.id === "string")
             .filter(
               (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer"
@@ -263,41 +383,30 @@ function MarkdownPage() {
                 (Number.isFinite(a.order) ? a.order : 999) -
                 (Number.isFinite(b.order) ? b.order : 999)
             );
-
           setSubsections(validSubs);
-
-          if (!result.content.trim() || result.content.trim().length < 50) {
-            if (validSubs.length > 0)
-              navigate(`/${sectionId}/${validSubs[0].id}`);
-          }
-        } else {
-          toast({
-            title: "Section Not Found",
-            description: `The section "${sectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-
-          // Naviga5te back to the previous valid path instead of changing the URL
-          navigate(previousPath, { replace: true });
         }
-        setIsLoading(false);
-        return;
-      }
 
-      // Load subsection
-      if (sectionId && subsectionId) {
-        const result = await getContent(sectionId, subsectionId);
         if (result) {
-          // Strip leading H1 and blank lines to avoid duplicate title below divider
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
+
+          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
+          let lu = result.frontmatter?.lastUpdated || "";
+
+          if (!lu) {
+            try {
+              const parent = await getContent(sectionId);
+              lu = parent?.frontmatter?.lastUpdated || "";
+            } catch (e) {
+              // ignore — fallback will simply remain empty
+            }
+          }
+
+          setLastUpdated(lu);
         } else {
           toast({
             title: "Subsection Not Found",
@@ -316,7 +425,6 @@ function MarkdownPage() {
     loadContent();
   }, [sectionId, subsectionId, navigate, toast, previousPath]);
 
-  /** Loads and stores the ordered list of subsections for the current section. */
   useEffect(() => {
     if (!sectionId) return;
     let active = true;
@@ -349,26 +457,37 @@ function MarkdownPage() {
     };
   }, [sectionId]);
 
-  /** Reacts when a URL drawer term is provided. */
   useEffect(() => {
-    if (!urlTerm) return;
+  // No term → close drawer and clear active state
+  if (!urlTerm) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+    return;
+  }
 
-    const sidebarEntry = getSidebarContent(urlTerm);
+  const key = String(urlTerm).toLowerCase();
 
-    if (sidebarEntry) {
-      if (urlTerm && sidebar && sidebar[urlTerm]) {
-        setDrawerTerm(urlTerm);
-        setDrawerContent(
-          typeof sidebarEntry === "string"
-            ? sidebarEntry
-            : sidebarEntry.content || " "
-        );
-        setIsDrawerOpen(true);
-      }
-    }
-  }, [urlTerm, sidebar]);
+  // Wait until sidebar is actually loaded before trying to open the drawer
+  if (!sidebar || Object.keys(sidebar).length === 0) {
+    return; // sidebar not ready yet → we'll re-run when sidebar updates
+  }
 
-  // --- Utility navigation check ---
+  // Optionally guard: only auto-open if the entry really exists
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    // You can choose to silently ignore here, or log/track if you want
+    return;
+  }
+
+  // URL-driven open: don't toggle off, don't navigate again, no toast
+  openGlobalDrawerForTerm(key, {
+    noToggle: true,
+    noNavigate: true,
+    silent: true,
+  });
+}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
+
+
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
@@ -379,23 +498,13 @@ function MarkdownPage() {
 
       try {
         let contentExists = false;
-
-        if (targetSubsectionId && targetTerm) {
-          const result = await getContent(targetSectionId, targetSubsectionId);
-          if (result && result.sidebar && result.sidebar[targetTerm]) {
-            contentExists = true;
-            handleDrawerOpen(targetTerm);
-          }
-        } else if (targetSubsectionId) {
-          // Check if the section and subsection exist
+        if (targetSubsectionId) {
           const result = await getContent(targetSectionId, targetSubsectionId);
           contentExists = result !== null;
         } else {
-          // Check if just the section exists
           const result = await getContent(targetSectionId);
           contentExists = result !== null;
         }
-
         if (contentExists) navigate(`/${path}`);
         else {
           toast({
@@ -426,34 +535,8 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  // Handle clicking drawer links
   function handleDrawerOpen(term) {
-    // Load drawer content for the current section/subsection
-
-    setDrawerTerm(term);
-
-    if (!sidebar) {
-      console.warn("Sidebar not loaded yet");
-      return;
-    }
-
-    const sidebarContent = sidebar[term];
-    if (sidebarContent) {
-      setDrawerTerm(urlTerm);
-      setDrawerContent(sidebarContent);
-      setIsDrawerOpen(true);
-
-      navigate(`/${sectionId}/${subsectionId}/${term}`);
-    } else {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
+    openGlobalDrawerForTerm(term);
   }
 
   function handleNavigation(targetId) {
@@ -469,7 +552,6 @@ function MarkdownPage() {
     }
   }
 
-  /** Auto scrolls to anchors or top on content load. */
   useEffect(() => {
     if (!mainContent) return;
     const timer = setTimeout(() => {
@@ -484,18 +566,43 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]);
 
-  /** Main render */
   return (
     <div className="markdown-page">
-      {mainContent && (
-        <Box mb={10}>
-          <Box mb={6}>
-            <Text fontSize="2xl" fontWeight="semibold" color="#4F3629" mb={2}>
-              {formattedTitle}
-            </Text>
-            <Divider borderColor="#4F3629" borderWidth="1.5px" mb={8} />
-          </Box>
+      <Box mb={10}>
+        <div className="page-header">
+          <p className="page-section-label">
+            {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
+          </p>
 
+          {/* Title + last updated + sidebar toggle in one flex row */}
+          <div className="page-header-row">
+            <h1 className="page-title">{formattedTitle}</h1>
+
+            {lastUpdated && (
+              <div className="page-last-updated">
+                Last updated on {formatDate(lastUpdated)}
+              </div>
+            )}
+
+            <button
+              className="header-toggle"
+              onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
+              aria-label={
+                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+              title={
+                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+            >
+              {leftSidebar?.collapsed ? ">" : "<"}
+            </button>
+          </div>
+
+          {/* Full-bleed divider that spans the whole viewport, Figma-style */}
+          <div className="page-divider page-divider--fullbleed page-divider-margin" />
+        </div>
+
+        {mainContent && (
           <Box ref={contentRef}>
             <MarkdownRenderer
               content={mainContent}
@@ -508,48 +615,9 @@ function MarkdownPage() {
               highlight={highlight}
             />
           </Box>
-        </Box>
-      )}
-
-      {/* Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        placement="right"
-        onClose={() => {
-          setIsDrawerOpen(false);
-          navigate(`/${sectionId}/${subsectionId}`, { replace: true });
-        }}
-        blockScrollOnMount={false}
-        trapFocus={false}
-      >
-        {/* Added overlay for accessibility / UX */}
-        <DrawerOverlay />
-        <DrawerContent
-          sx={{ width: `${drawerWidth}px !important` }}
-          maxWidth="80vw"
-          position="relative"
-        >
-          <DrawerCloseButton />
-          <DrawerHeader
-            borderBottomWidth="2px"
-            color="var(--color-accent)"
-            borderColor="var(--color-accent)"
-          >
-            {highlightText(
-              sidebar[drawerTerm]?.heading || drawerTerm,
-              highlight
-            )}
-          </DrawerHeader>
-          <DrawerBody>
-            <MarkdownRenderer
-              content={drawerContent}
-              onDrawerOpen={handleDrawerOpen}
-              onNavigation={handleNavigation}
-              highlight={highlight}
-            />
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+        )}
+        <Footer/>
+      </Box>
     </div>
   );
 }

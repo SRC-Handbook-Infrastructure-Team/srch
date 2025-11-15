@@ -7,11 +7,13 @@
  */
 
 import React from "react";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import { remarkSidebarRef } from "./remarkSidebarRef";
+import { remarkHighlight } from "./remarkHighlight";
 import {
   Text,
   Heading,
@@ -208,8 +210,8 @@ export const getContent = async (sectionId, subsectionId) => {
 
     /**
      * This code looks into all of the filepath and does the following:
-     * looks for the ## All Sidebar Content Below divider
-     * creates the sidebar dictionary to pull from later
+     * looks for the ## All Sidebar Content Below divider (or "## Sidebar")
+     * creates the sidebar dictionary to pull from later (keys stored lowercase)
      * extracts the Key (identical to the clickable term)
      * extracts the Value (the paragraphical content)
      * extracts the Heading (if provided used as the title heading for the sidbar)
@@ -220,59 +222,82 @@ export const getContent = async (sectionId, subsectionId) => {
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
 
-        const [mainRaw, sidebarRaw] = cleanContent.split(
-          "## All Sidebar Content Below"
-        );
-        // Optional Sidebar Parsing
-        const mainContent = mainRaw?.trim() || "";
+        // allow either of these headings as the sidebar divider
+        const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
+        const dividerMatch = dividerRegex.exec(cleanContent);
+
+        let mainContent = cleanContent;
+        let sidebarRaw = null;
+
+        if (dividerMatch) {
+          // split at the divider line; keep everything after it as sidebar raw
+          const splitIndex = dividerMatch.index;
+          mainContent = cleanContent.slice(0, splitIndex).trim();
+          // the remainder after the matched divider heading line
+          const afterDivider = cleanContent.slice(
+            dividerMatch.index + dividerMatch[0].length
+          );
+          sidebarRaw = afterDivider.trim();
+        }
 
         const sidebar = {};
         if (sidebarRaw) {
-          const lines = sidebarRaw.trim().split("\n");
+          const lines = sidebarRaw.split("\n");
           let currentKey = null;
           let currentHeading = null;
           let currentValue = [];
 
           lines.forEach((line) => {
-            const match = line.match(/^([A-Za-z0-9-_]+):\s*$/); // looks for the {clickable-term} in the sidebar content
-            if (match) {
+            const keyMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+            if (keyMatch) {
               if (currentKey) {
-                // if a key has already been found, set the heading and content
-                sidebar[currentKey] = {
+                // store with lowercase key for case-insensitive lookup
+                sidebar[currentKey.toLowerCase()] = {
                   heading: currentHeading || currentKey.replace(/-/g, " "),
                   content: currentValue.join("\n").trim(),
                 };
               }
 
-              // if not assign the key and create placeholders for the heading and value
-              currentKey = match[1].trim();
+              currentKey = keyMatch[1].trim();
               currentHeading = null;
               currentValue = [];
-
-              // if the line starts with heading set the following words as the current heading
             } else if (line.startsWith("Heading:")) {
-              // finds and sets the heading if applicable
               currentHeading = line.replace("Heading:", "").trim();
             } else if (currentKey) {
               currentValue.push(line);
             }
           });
 
-          // after looping through each line,
           if (currentKey) {
-            sidebar[currentKey] = {
+            sidebar[currentKey.toLowerCase()] = {
               heading: currentHeading || currentKey.replace(/-/g, " "),
               content: currentValue.join("\n").trim(),
             };
           }
-          console.log("Sidebar:", sidebar);
         }
 
         const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
         });
 
-        return { content: parsedContent, sidebar, frontmatter };
+        // Extract lastUpdated from frontmatter if available
+        let lastUpdated = null;
+
+        // fontMatter lastUpdated takes precedence
+        if (frontmatter.lastUpdated) {
+          lastUpdated = frontmatter.lastUpdated;
+        } else {
+          // Fallback: look for a line like "_Last updated Month Day Year._" at the end
+          const footerMatch = mainContent.match(/_Last updated\s+(.+?)\._/i);
+          if (footerMatch) {
+            lastUpdated = footerMatch[1].trim();
+          }
+        }
+        return {
+          content: parsedContent,
+          sidebar,
+          frontmatter: { ...frontmatter, lastUpdated },
+        };
       }
     }
 
@@ -324,12 +349,80 @@ function MarkdownRenderer({
     let processed =
       typeof content === "string" ? content : content.content || "";
     if (typeof processed === "string") {
-      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
-        return `<sidebar-ref term="${term}"></sidebar-ref>`;
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {        return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
+      
     }
     return processed;
   }, [content]);
+
+  /* ------------------------------------------------------------------------
+   * Styling tokens used inside the components map
+   * --------------------------------------------------------------------- */
+  const RED = "#9D0013";
+  const RED_DARK = "#7a000f"; // hover shade (kept for compatibility; not used on chips)
+  const BLACK = "#000000";
+
+  /* ------------------------------------------------------------------------
+   * Active drawer link state handling (no external integration required)
+   *
+   *  - We add 'srch-drawer-link-active' to the clicked <sidebar-ref>.
+   *  - A MutationObserver watches '.right-sidebar' for '.open'.
+   *    When it closes, we remove the active class from all sidebar-ref pills.
+   * --------------------------------------------------------------------- */
+  const observerRef = useRef(null);
+  const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
+
+  useEffect(() => {
+    const drawer = document.querySelector(".right-sidebar");
+    if (!drawer) return;
+
+    const cleanupAllActive = () => {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
+    };
+
+    const obs = new MutationObserver(() => {
+      const isOpen = drawer.classList.contains("open");
+      if (!isOpen) {
+        cleanupAllActive();
+      }
+    });
+
+    obs.observe(drawer, { attributes: true, attributeFilter: ["class"] });
+    observerRef.current = obs;
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      // Safety cleanup on unmount
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
+    };
+  }, []);
+
+  const setActiveDrawerLink = (el) => {
+    try {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((n) => n.classList.remove("srch-drawer-link-active"));
+      if (el) {
+        el.classList.add("srch-drawer-link-active");
+        const term = el.dataset?.term || el.getAttribute?.("data-term") || null;
+        setActiveDrawerLinkState(term);
+      } else {
+        setActiveDrawerLinkState(null);
+      }
+    } catch (e) {
+      /* no-op */
+    }
+  };
 
   const BetaTag = () => (
     <Box
@@ -349,6 +442,42 @@ function MarkdownRenderer({
       BETA
     </Box>
   );
+
+  /**
+   * Safely removes ONLY whitespace-only text nodes inside <p> tags.
+   * This avoids ReactMarkdown inserting empty "" or " " nodes
+   * that create visual gaps between text + <sidebar-ref> chips.
+   *
+   * Critically:
+   * - Does NOT remove spaces inside real text ("a dog" stays intact)
+   * - Only affects direct children of <p>
+   */
+  function cleanParagraphChildren(children) {
+    return React.Children.toArray(children).filter((child) => {
+      if (typeof child === "string") {
+        return child.trim() !== ""; // keep text that has ANY non-space chars
+      }
+      return child; // keep React elements unchanged
+    });
+  }
+
+  function tightenAroundSidebarRefs(children) {
+  const arr = React.Children.toArray(children);
+  for (let i = 0; i < arr.length; i++) {
+    const cur = arr[i];
+    const isChip =
+      React.isValidElement(cur) &&
+      (cur.type === 'sidebar-ref' || cur.props?.className?.includes('srch-drawer-link'));
+    if (!isChip) continue;
+
+    const prev = arr[i - 1];
+    const next = arr[i + 1];
+    if (typeof prev === 'string') arr[i - 1] = prev.replace(/\s+$/, ''); // trim end
+    if (typeof next === 'string') arr[i + 1] = next.replace(/^\s+/, ''); // trim start
+  }
+  return arr;
+}
+
 
   const components = useMemo(
     () => ({
@@ -383,25 +512,35 @@ function MarkdownRenderer({
           </Heading>
         );
       },
-      p: (props) => (
-        <Text mb={3} lineHeight="1.6" {...props}>
-          {highlightText(props.children, highlight)}
-        </Text>
-      ),
+      p: ({children}) => {
+        return (
+          <Text mb={3} lineHeight="1.6" color={BLACK}>
+            {highlightText(children, highlight)}
+          </Text>
+        );
+      },
+
+      /* ------------------------------------------------------------------
+       * Standard Markdown links (NOT sidebar-ref chips)
+       * ---------------------------------------------------------------- */
       a: (props) => {
+        if ("data-footnote-backref" in props) return null;
+
+        const isFootnoteRef = "data-footnote-ref" in props;
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
         const childrenArray = Array.isArray(props.children)
           ? props.children
           : [props.children];
+
         return (
           <Link
-            textColor="#9D0013"
+            color={RED}
             fontWeight="500"
-            textDecoration="underline"
+            textDecoration={isFootnoteRef ? "none" : "underline"}
             _hover={{
-              textDecoration: "underline",
-              color: "whiteAlpha.200",
+              color: RED_DARK,
+              textDecoration: isFootnoteRef ? "none" : "underline",
             }}
             href={props.href}
             isExternal={isExternal}
@@ -422,15 +561,75 @@ function MarkdownRenderer({
         );
       },
       li: (props) => {
-        const childrenArray = Array.isArray(props.children)
-          ? props.children
-          : [props.children];
+        const { id, children, ...rest } = props;
+        const childrenArray = Array.isArray(children) ? children : [children];
+
+        let number = null;
+        if (id && id.startsWith("user-content-fn-")) {
+          const match = id.match(/\d+/);
+          if (match) number = match[0];
+        }
+
         return (
-          <ListItem {...props}>
+          <ListItem
+            color={BLACK}
+            id={id}
+            {...rest}
+            style={{
+              listStyle: "none",
+              paddingLeft: "1.5em",
+              position: "relative",
+            }}
+          >
+            {number && (
+              <Link
+                href={`#user-content-fnref-${number}`}
+                as="a"
+                position="absolute"
+                left={0}
+                top="50%"
+                transform="translateY(-50%)"
+                color={RED}
+                fontWeight="bold"
+                textDecoration="none"
+                aria-label={`Back to reference ${number}`}
+              >
+                {number}.
+              </Link>
+            )}
             {highlightText(childrenArray, highlight)}
           </ListItem>
         );
       },
+      sup: (props) => {
+        const child = props.children;
+        const number =
+          typeof child === "string"
+            ? child
+            : Array.isArray(child) && typeof child[0] === "string"
+            ? child[0]
+            : null;
+
+        if (number && /^\d+$/.test(number)) {
+          return (
+            <sup>
+              <Link
+                as="a"
+                href={`#user-content-fnref-${number}`}
+                color="#9D0013"
+                fontWeight="bold"
+                textDecoration="none"
+                aria-label={`Back to reference ${number}`}
+              >
+                {number}
+              </Link>
+            </sup>
+          );
+        }
+
+        return <sup {...props}>{props.children}</sup>;
+      },
+
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
       ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
       code: ({ inline, ...props }) =>
@@ -472,55 +671,87 @@ function MarkdownRenderer({
           display="block"
         />
       ),
+
+      /**
+       * sidebar-ref chip (inserted by {term} syntax in Markdown)
+       * Visual spec:
+       * - Base: red text (#9D0013), NO underline, transparent bg
+       * - Hover: red 1px border appears + scale up slightly; color stays #9D0013
+       * - Active: white text on filled red pill, red border; Info icon inherits white
+       * - Shape: radius 17px, height 32px, variable width
+       */
       "sidebar-ref": ({ node }) => {
-        const term = node.properties?.["term"];
-        const value = sidebar?.[term];
-        // Choose text to highlight (term, or `Missing: ${term}` if falsy)
+        let raw = node.properties?.["term"] || "";
+        let term = raw;
+        let label = null;
+
+        //  Support alias syntax {term|Custom Label}
+        if (raw.includes("|")) {
+          const [keyPart, labelPart] = raw.split("|");
+          term = keyPart.trim();
+          label = labelPart.trim();
+        }
+
+        const termKey = term.toLowerCase();
+        const value = sidebar?.[termKey];
+
         const toShow = value
-          ? term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-          : `Missing: ${term}`;
+          ? label ||
+            term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+          : `⚠️ Missing: ${term}`;
+
+
         return (
           <Box
             as={RouterLink}
             to={`/${sectionId}/${subsectionId}/${term}`}
             onClick={(e) => {
               e.preventDefault();
-              onDrawerOpen(term);
+              if (value) {
+                setActiveDrawerLink(e.currentTarget);
+                onDrawerOpen && onDrawerOpen(term);
+              }
             }}
+            className={`srch-drawer-link ${
+              activeDrawerLink === term ? "srch-drawer-link-active" : ""
+            }`}
+            data-term={term}
             display="inline-flex"
+            verticalAlign="baseline"
             alignItems="center"
-            px="0.3em"
-            py="0.15em"
-            mx="0.1em"
-            borderRadius="md"
-            textColor={"#9D0013"}
-            textDecoration={"underline"}
-            color="white"
-            _hover={{
-              bg: "#633c1d",
-              color: "white",
-              textDecoration: "none",
-            }}
-            cursor="pointer"
-            whiteSpace="nowrap"
-            transition="background-color 0.2s ease"
+                      
+            gap="6px"
+            px="10px"
+            py="4px"
+            mx="0"
+            my="2px"
+            
+            borderRadius="999px"
+            color={RED}
+            textDecoration="none"
+            border="1px solid transparent"
+            whiteSpace="normal"
+            flexShrink={1}
+            maxW="100%"               // don’t exceed container
+            minW={0}                  // allow shrink in tight columns
           >
             <Text
               as="span"
-              fontWeight="medium"
+              fontWeight="700"
               fontSize="inherit"
-              lineHeight="1.4"
+              lineHeight="inherit"
+              sx={{ overflowWrap: "anywhere", wordBreak: "break-word", minWidth: 0}}
             >
               {highlightText(toShow, highlight)}
             </Text>
-            <Icon as={InfoIcon} boxSize="0.8em" ml={1} />
+            <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
           </Box>
         );
       },
+
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
-        // highlightText can handle plain string or array input
         return (
           <HStack
             as="button"
@@ -531,7 +762,7 @@ function MarkdownRenderer({
             onClick={() => onNavigation && onNavigation(target)}
             color="blue.400"
             cursor="pointer"
-            _hover={{ color: "purple.500", textDecoration: "underline" }}
+            _hover={{ color: "purple.500", textDecoration: "none" }}
           >
             <Link>{highlightText(text, highlight)}</Link>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />
@@ -554,8 +785,12 @@ function MarkdownRenderer({
     <div>
       <ReactMarkdown
         components={components}
+        remarkPlugins={[
+          remarkGfm,
+          [remarkHighlight, highlight],
+          remarkSidebarRef
+        ]}
         rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGfm]}
       >
         {processedContent}
       </ReactMarkdown>
@@ -563,42 +798,5 @@ function MarkdownRenderer({
   );
 }
 
-/**
- * Loads a Markdown file from the "drawer" subfolder.
- * Used for right-hand side drawer panels.
- *
- * @param {string} sectionId - The section slug (e.g. "privacy")
- * @param {string} subsectionId - The subsection slug (e.g. "what-is-privacy")
- * @param {string} term - The sidebar reference key (e.g. "case-study-1")
- * @returns {Promise<{content: string, frontmatter: object} | null>}
- */
-export const getDrawerFile = async (sectionId, subsectionId, term) => {
-  try {
-    const expectedPath = `../markdown/${sectionId}/${subsectionId}/drawer/${term}.md`;
-
-    for (const filePath in allMarkdownFiles) {
-      if (filePath.endsWith(expectedPath.slice(2))) {
-        const content = await allMarkdownFiles[filePath]();
-        const { content: cleanContent, frontmatter } =
-          parseFrontmatter(content);
-        return { content: cleanContent, frontmatter };
-      }
-    }
-
-    console.warn(
-      `Drawer file not found for ${sectionId}/${subsectionId}/${term}`
-    );
-    return null;
-  } catch (error) {
-    console.error(
-      "Error loading drawer file:",
-      sectionId,
-      subsectionId,
-      term,
-      error
-    );
-    return null;
-  }
-};
 
 export default MarkdownRenderer;

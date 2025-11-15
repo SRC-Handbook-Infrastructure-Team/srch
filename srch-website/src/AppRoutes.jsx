@@ -2,63 +2,67 @@ import "./App.css";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import ContentsSidebar from "./components/ContentsSideBar";
+import ContentsSidebar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import { Team, AdditionalContributors } from "./pages/Acknowledgements";
+import Acknowledgements from "./pages/Acknowledgements"; //  now ONE page
 import { SearchResults } from "./pages/SearchResults";
+import SidebarLayout from "./layouts/SidebarLayout";
+import About from "./pages/About";
 
 function AppRoutes() {
   const location = useLocation();
   const isSearchPage = location.pathname.startsWith("/search");
   const isAcknowledgementsPage =
     location.pathname.startsWith("/acknowledgements");
+  const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
+
+  //  Markdown layout logic
+  const isMarkdownPage =
+    !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
 
   return (
     <>
-      {!isSearchPage && !isHomePage && !isAcknowledgementsPage && (
-        <ContentsSidebar />
+      {isMarkdownPage ? (
+        <SidebarLayout>
+          <Routes>
+            <Route path="/:sectionId" element={<MarkdownPage />} />
+            <Route
+              path="/:sectionId/:subsectionId"
+              element={<MarkdownPage />}
+            />
+            <Route
+              path="/:sectionId/:subsectionId/:term"
+              element={<MarkdownPage />}
+            />
+          </Routes>
+        </SidebarLayout>
+      ) : (
+        <>
+          {/*  Sidebar on every non-home, non-search, non-acknowledgements, non-about page */}
+          {!isSearchPage &&
+            !isHomePage &&
+            !isAcknowledgementsPage &&
+            !isAboutPage && <ContentsSidebar />}
+
+          <NavBar />
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+
+            {/*  ONE SINGLE ACKNOWLEDGEMENTS PAGE */}
+            <Route path="/acknowledgements" element={<Acknowledgements />} />
+            <Route path="/about" element={<About />} />
+
+            {/*  Search */}
+            <Route path="/search/:query" element={<SearchResults />} />
+            <Route path="/search" element={<SearchResults />} />
+          </Routes>
+
+          <NavBar />
+        </>
       )}
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/:sectionId" element={<MarkdownPage />} />
-        <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
-        <Route
-          path="/:sectionId/:subsectionId/:term"
-          element={<MarkdownPage />}
-        />
-        {/* Acknowledgements paths */}
-        <Route
-          path="/acknowledgements"
-          element={<Team teamName="leadership" />}
-        />
-        <Route
-          path="/acknowledgements/leadership"
-          element={<Team teamName="leadership" />}
-        />
-        <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
-        <Route
-          path="/acknowledgements/privacy"
-          element={<Team teamName="privacy" />}
-        />
-        <Route
-          path="/acknowledgements/accessibility"
-          element={<Team teamName="accessibility" />}
-        />
-        <Route
-          path="/acknowledgements/product"
-          element={<Team teamName="product" />}
-        />
-        <Route
-          path="/acknowledgements/additional"
-          element={<AdditionalContributors />}
-        />
-        <Route path="/search/:query" element={<SearchResults />} />
-        <Route path="/search" element={<SearchResults />} />
-      </Routes>
-      <NavBar />
     </>
   );
 }

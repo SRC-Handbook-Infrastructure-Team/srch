@@ -141,4 +141,3 @@ Black Girls Code is an organization that promotes the education of Black girls a
 [^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
 [^9]: Neal Broverman, “Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That’s Unacceptable,” _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
 
-

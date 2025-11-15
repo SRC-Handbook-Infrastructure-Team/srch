@@ -1,127 +1,35 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
-import { Button } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import { search, initializeIndex } from "../util/SearchEngine";
-import "../index.css";
+import React, { useState, useEffect } from "react";
+import { Collapse } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { initializeIndex, search } from "../util/SearchEngine";
 
-const MAX_CLAMP_LENGTH = 100;
+const classSuffix = (className, floating) =>
+  floating ? `${className}-floating` : className;
 
-const ResultSnippet = React.memo(
-  ({
-    snippet,
-    searchQuery,
-    pathname,
-    hash,
-    maxResults,
-    canExpand,
-    setIsExpanded,
-  }) => {
-    const [expanded, setExpanded] = useState(false);
-    const [isClamped, setIsClamped] = useState(true);
+const ResultSnippet = React.memo(({ snippet, maxResults }) => {
+  if (!snippet) return null;
 
-    const clampedSnippet = useMemo(() => {
-      if (!snippet) return "";
-      const markIndex = snippet.toLowerCase().indexOf("<mark");
-      if (markIndex === -1 || snippet.length <= MAX_CLAMP_LENGTH) {
-        return snippet;
-      }
-      const beforeMark = snippet.slice(0, markIndex);
-      const spaces = [];
-      for (let i = 0; i < beforeMark.length; i++) {
-        if (beforeMark[i] === " ") spaces.push(i);
-      }
-      let startIndex;
-      if (spaces.length >= 2) {
-        startIndex = spaces[spaces.length - 2];
-      } else if (spaces.length === 1) {
-        startIndex = spaces[0];
-      } else {
-        startIndex = 0;
-      }
-      const clampStart = Math.max(0, startIndex);
-      let clamped = snippet.slice(clampStart);
-      if (clampStart > 0) {
-        if (clamped.startsWith(" ")) {
-          clamped = "..." + clamped.slice(1);
-        } else {
-          clamped = "..." + clamped;
-        }
-      }
-      return clamped;
-    }, [snippet]);
-
-    function handleClick() {
-      if (canExpand) {
-        setIsExpanded(false);
-      }
-    }
-
-    return (
-      <div className="result-snippet">
-        <Link
-          state={{ highlight: searchQuery }}
-          to={{ pathname, hash }}
-          className="result-snippet-link"
-          aria-label={`Open result for ${searchQuery}`}
-          onClick={handleClick}
-        >
-          {!expanded ? (
-            <span
-              className={`result-snippet-text${!expanded ? " clamped" : ""}`}
-              dangerouslySetInnerHTML={{ __html: clampedSnippet }}
-            />
-          ) : (
-            <span
-              className="result-snippet-text"
-              dangerouslySetInnerHTML={{ __html: snippet }}
-            />
-          )}
-        </Link>
-        {!expanded && isClamped && maxResults == null && (
-          <div
-            className="result-snippet-readmore"
-            onMouseEnter={(e) => e.stopPropagation()}
-          >
-            <Button
-              size="xs"
-              variant="link"
-              className="read-more-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setExpanded(true);
-              }}
-              aria-label="Expand result snippet"
-            >
-              Read more
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div className={"result-snippet"}>
+      <span
+        className={`result-snippet-text${maxResults == null ? " clamped" : ""}`}
+        dangerouslySetInnerHTML={{ __html: snippet }}
+      />
+    </div>
+  );
+});
 
 export const ResultsWindow = React.memo(
-  ({ searchQuery, maxResults = null, canExpand, setIsExpanded }) => {
-    const [searchResults, setSearchResults] = useState([]);
+  ({
+    floating = true,
+    searchQuery,
+    maxResults = null,
+    setIsSearchOpen,
+    truncateSnippet = true,
+  }) => {
+    const [searchResults, setSearchResults] = useState(null);
     const [isIndexInitialized, setIndexInitialized] = useState(false);
     const navigate = useNavigate();
-
-    const limitedResults = useMemo(
-      () =>
-        maxResults && searchResults.length > maxResults
-          ? searchResults.slice(0, maxResults)
-          : searchResults,
-      [searchResults, maxResults]
-    );
-
     useEffect(() => {
       const init = async () => {
         await initializeIndex();
@@ -129,110 +37,120 @@ export const ResultsWindow = React.memo(
       };
       init();
     }, []);
-
     useEffect(() => {
       const doSearch = async () => {
         if (searchQuery.length && isIndexInitialized) {
-          const results = await search(searchQuery);
+          const results = await search(searchQuery, truncateSnippet);
           setSearchResults(results);
-        } else {
-          setSearchResults([]);
         }
       };
       const debounceTimer = setTimeout(doSearch, 0);
       return () => clearTimeout(debounceTimer);
-    }, [searchQuery, isIndexInitialized]);
+    }, [searchQuery, isIndexInitialized, truncateSnippet]);
 
-    const handleClick = useCallback(() => {
-      return () => {
-        navigate(`/search/${encodeURIComponent(searchQuery)}`);
-        unexpand();
-      };
-    }, [searchQuery, navigate]);
-
-    const unexpand = useCallback(() => {
-      if (canExpand) {
-        setIsExpanded(false);
-      }
-    }, [canExpand, setIsExpanded]);
+    function handleClick() {
+      navigate(`/search/${encodeURIComponent(searchQuery)}`);
+      if (setIsSearchOpen != null) setIsSearchOpen(false);
+    }
 
     return (
-      <div>
-        <div className={`results-list${maxResults != null ? " short" : ""}`}>
-          {maxResults == null && (
-            <div className="results-count">
-              {`Showing ${searchResults.length} result${
-                searchResults.length === 1 ? "" : "s"
-              } for "${searchQuery}"`}
-            </div>
-          )}
-          {Array.isArray(limitedResults) && limitedResults.length > 0 ? (
-            limitedResults.map((item, idx) => {
-              const doc = item.doc || {};
-              const key =
-                item.id ??
-                `${doc.sectionTitle || ""}-${doc.subsectionTitle || ""}-${
-                  doc.title || ""
-                }-${idx}`;
-              return (
-                <div className="results-item" key={key}>
-                  <div className="results-header">
-                    <div className="results-section">
-                      {doc.sectionTitle || doc.section || "Unnamed Section"}
-                    </div>
-                    <div className="results-subsection">
-                      {doc.subsectionTitle ||
-                        doc.section ||
-                        "Unnamed Subsection"}
-                    </div>
-                  </div>
-                  <div className="results-title">
-                    {doc.title || "Unnamed Header"}
-                  </div>
-                  <ResultSnippet
-                    snippet={item.snippet}
-                    pathname={
-                      doc.isDrawer
-                        ? `/${doc.section}/${doc.subsection || ""}/${
-                            doc.anchor
-                          }`
-                        : `/${doc.section}/${doc.subsection || ""}`
-                    }
-                    hash={doc.isDrawer ? undefined : `#${doc.anchor}`}
-                    searchQuery={searchQuery}
-                    maxResults={maxResults}
-                    canExpand={canExpand}
-                    setIsExpanded={setIsExpanded}
-                  />
+      <div className={classSuffix("results-window", floating)}>
+        {searchResults != null && (maxResults != 0 && (
+          <Collapse in={searchQuery} animateOpacity>
+            <div
+              className={classSuffix("results-list", floating)}
+              style={
+                maxResults != null
+                  ? { maxHeight: `${109 * maxResults}px`, overflowY: "auto" }
+                  : { overflowY: "auto" }
+              }
+            >
+              {maxResults == null && (
+                <div className={"results-count"}>
+                  {`Showing ${searchResults.length} result${
+                    searchResults.length === 1 ? "" : "s"
+                  } for "${searchQuery}"`}
                 </div>
-              );
-            })
-          ) : (
-            <div className="results-none">No results found</div>
-          )}
-        </div>
-        {maxResults != null && (
-          <div className="results-view-all">
-            <div className="results-count">
-              {`Showing ${
-                searchResults.length >= maxResults
-                  ? maxResults
-                  : searchResults.length
-              } of ${searchResults.length} result${
-                searchResults.length === 1 ? "" : "s"
-              }`}
+              )}
+              {Array.isArray(searchResults) && searchResults.length > 0 ? (
+                searchResults.map((item, idx) => {
+                  const doc = item.doc || {};
+                  const key =
+                    item.id ??
+                    `${doc.sectionTitle || ""}-${doc.subsectionTitle || ""}-${
+                      doc.title || ""
+                    }-${idx}`;
+                  const snippetToRender = item.snippet;
+                  return (
+                    <div className={"result-row"}>
+                    <div
+                      className={"results-item"}
+                      key={key}
+                      role="link"
+                      tabIndex={0}
+                      onClick={() => {
+                        navigate(
+                          `/${doc.section}/${doc.subsection || ""}${
+                            doc.isDrawer ? `/${doc.anchor}` : `#${doc.anchor}`
+                          }`,
+                          { state: { highlight: searchQuery } }
+                        );
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          navigate(
+                            `/${doc.section}/${doc.subsection || ""}${
+                              doc.isDrawer ? `/${doc.anchor}` : `#${doc.anchor}`
+                            }`
+                          );
+                          if (canExpand) setIsExpanded(false);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className={"results-header"}>
+                        <div className={"results-section"}>
+                          {doc.sectionTitle || doc.section || "Unnamed Section"}
+                        </div>
+                        <div className={"results-title"}>
+                          {doc.title === snippetToRender.replace(/<[^>]*>/g, "")
+                            ? "Section Header"
+                            : doc.title || "Unnamed Header"}
+                        </div>
+                      </div>
+                      <ResultSnippet
+                        snippet={snippetToRender}
+                        maxResults={maxResults}
+                      />
+                    </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className={"results-view-all"}>No results found</div>
+              )}
             </div>
-            <div>
-              <a
-                className="view-all-link"
-                onClick={handleClick()}
-                aria-label={`View all search results`}
-              >
-                {`See full result${searchResults.length === 1 ? "" : "s"}`}
-              </a>
-            </div>
-          </div>
-        )}
+            {maxResults != null && searchResults.length > 0 && (
+              <div className={"results-view-all"}>
+                <div className={"results-count"}>
+                  {`Showing ${searchResults.length} result${
+                    searchResults.length === 1 ? "" : "s"
+                  }`}
+                </div>
+                <div>
+                  <a
+                    className={"view-all-link"}
+                    onClick={() => handleClick()}
+                    aria-label={`View all search results`}
+                  >
+                    {`See full result${searchResults.length === 1 ? "" : "s"}`}
+                  </a>
+                </div>
+              </div>
+            )}
+          </Collapse>
+        ))}
       </div>
     );
   }

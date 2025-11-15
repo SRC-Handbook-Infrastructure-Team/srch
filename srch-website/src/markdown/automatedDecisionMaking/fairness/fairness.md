@@ -45,7 +45,7 @@ A notable insight is that the data distributions capture _different beliefs_ abo
 
 While the selection of fairness criteria involves inevitable trade-offs, the ultimate decision is not purely mathematical but also political, since it decides who benefits and who suffers.
 
-In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[nav:justice in automated decision-making](automatedDecisionMaking/justice)**.
+In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[justice in automated decision-making](/srch-s25/automatedDecisionMaking/justice)**.
 
 ## References
 

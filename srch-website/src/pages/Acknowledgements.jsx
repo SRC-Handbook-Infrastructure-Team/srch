@@ -1,165 +1,272 @@
+/**
+ * ============================================================================
+ * Acknowledgements.jsx (hero-as-overlay version, unified card layout)
+ * ----------------------------------------------------------------------------
+ * Purpose
+ *   Renders the complete Acknowledgements page as a single-page layout with a
+ *   hero section (fixed overlay) and a lower content container that slides
+ *   over the hero as the user scrolls—mirroring the Home page feel.
+ *
+ * What’s in this file
+ *   • Hero banner
+ *   • Team member grids for:
+ *        - Leadership
+ *        - AI
+ *        - Privacy
+ *        - Accessibility
+ *        - Product
+ *        - Additional Contributors (User Studies)
+ *        - Additional Contributors (Faculty Advisors)
+ *   • Footer at the bottom (logo + modules + quick links + feedback)
+ *
+ *
+
+ *
+ * Styling
+ *   • All visual styling comes from Acknowledgements.css.
+ *   • Critical classes: .ack-card, .ack-card-photo, .ack-photo-fallback,
+ *     .ack-card-name, .ack-card-fullname, .ack-card-pronouns, .ack-card-subinfo,
+ *     .ack-card-icons, .ack-icon-btn, .ack-hero, .ack-lower-content, .line-divider,
+ *     .link-section, .logo-area, .footer-logo, .modules (…and its variants).
+ *
+ * ============================================================================
+ */
+
+import "../Acknowledgements.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
-import {
-  Text,
-  Heading,
-  SimpleGrid,
-  Link,
-  Flex,
-  Box,
-  Image,
-  Divider,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Heading, Divider } from "@chakra-ui/react";
+import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer"
+
+// Footer assets (shared with Home)
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
+
+// Data
 import team from "../team.json";
 
+/* =============================================================================
+ * Utilities
+ * -----------------------------------------------------------------------------
+ * Centralize how we compute an image src so it’s easy to swap storage paths.
+ * ===========================================================================*/
+function getMemberPhotoSrc(member) {
+  // Current convention: files in public/srch-s25/assets/member-photos
+  // Example: "suresh.jpg" -> "/srch-s25/assets/member-photos/suresh.jpg"
+  return `/srch-s25/assets/member-photos/${member.photo}`;
+}
+
+/* =============================================================================
+ * TeamGrid
+ * -----------------------------------------------------------------------------
+ * Renders a grid of team member cards with consistent formatting.
+ * - Sorting is alphabetical by name for stability
+ * - Each card:
+ *     1) Photo (masked by ../src/assets/Photo.png) or masked gray placeholder
+ *     2) Name + Pronouns
+ *     3) Position | Degree, GradYear
+ *     4) Action icons (email/linkedin/website) if present
+ * - All spacing, font sizes, and icon dims are handled via CSS classes.
+ *
+ * ===========================================================================*/
 function TeamGrid({ filteredTeam }) {
-  // Sort alphabetically
   const sortedTeam = [...filteredTeam].sort((a, b) =>
     a.name.localeCompare(b.name)
   );
-  return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-      {/* Map through photo cards */}
-      {sortedTeam.map((member) => (
-        <Box
-          key={member.id}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          textAlign="center"
-          p={2}
-        >
-          <Image
-            src={
-              member.photo
-                ? `/srch-s25/assets/member-photos/${member.photo}`
-                : `/srch-s25/assets/member-photos/temp-photo.jpg`
-            }
-            alt={member.photo || "Default photo"}
-            boxSize="250px" // Sets a fixed size for the image
-            objectFit="cover" // Ensures the image is cropped proportionally
-            borderRadius="lg"
-            mb={4}
-          />
-          <Flex align="center" gap={2} mb={2}>
-            <Text fontWeight="bold">{member.name}</Text>
-            <Link href={`mailto:${member.email}`} isExternal>
-              <MdEmail />
-            </Link>
-            {member.linkedin && (
-              <Link href={member.linkedin} isExternal>
-                <FaLinkedin />
-              </Link>
-            )}
-            {member.website && (
-              <Link href={member.website} isExternal>
-                <FaExternalLinkAlt />
-              </Link>
-            )}
-          </Flex>
-          <Text fontSize="sm">
-            {member.position} | {member.pronouns}
-          </Text>
-          <Text fontSize="sm">
-            {member.degree && `${member.degree}, `}
-            {member.gradYear}
-          </Text>
-        </Box>
-      ))}
-    </SimpleGrid>
-  );
-}
 
-function Acknowledgements() {
-  const onlyLeaders = team.filter((member) => member.team == "N/A");
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
-        Acknowledgements
-      </Heading>
+    <div className="ack-grid">
+      {sortedTeam.map((member, idx) => {
+        const hasPhoto =
+          typeof member.photo === "string" && member.photo.trim().length > 0;
+        const photoSrc = hasPhoto ? getMemberPhotoSrc(member) : null;
+
+        return (
+          <div key={`${member.name}-${idx}`} className="ack-card">
+            {/* --- Photo (masked to 290×302 using ../src/assets/Photo.png) --- */}
+            {photoSrc ? (
+              <img
+                className="ack-card-photo"
+                src={photoSrc}
+                alt={member.name}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div className="ack-card-photo ack-photo-fallback" aria-hidden="true" />
+            )}
+
+            {/* --- Name + Pronouns row --- */}
+            <div className="ack-card-name">
+              <span className="ack-card-fullname">{member.name}</span>
+              {member.pronouns && member.pronouns.trim() !== "" && (
+                <span className="ack-card-pronouns">{member.pronouns}</span>
+              )}
+            </div>
+
+            {/* --- Role | Degree, GradYear --- */}
+            <div className="ack-card-subinfo">
+              {member.position}
+              {member.degree && member.degree.trim() !== "" && ` | ${member.degree}`}
+              {member.gradYear && member.gradYear.trim() !== "" && `, ${member.gradYear}`}
+            </div>
+
+            {/* --- Icon row (conditionally renders each icon) --- */}
+            <div className="ack-card-icons">
+              {member.email && member.email.trim() !== "" && (
+                <a
+                  href={`mailto:${member.email}`}
+                  className="ack-icon-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Email ${member.name}`}
+                  title={`Email ${member.name}`}
+                >
+                  <MdEmail size={16} />
+                </a>
+              )}
+
+              {member.linkedin && member.linkedin.trim() !== "" && (
+                <a
+                  href={member.linkedin}
+                  className="ack-icon-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${member.name} on LinkedIn`}
+                  title="LinkedIn"
+                >
+                  <FaLinkedin size={16} />
+                </a>
+              )}
+
+              {member.website && member.website.trim() !== "" && (
+                <a
+                  href={member.website}
+                  className="ack-icon-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${member.name}'s website`}
+                  title="Website"
+                >
+                  <FaExternalLinkAlt size={16} />
+                </a>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function Team({ teamName }) {
-  console.log(team);
-  const filteredTeam = team.filter((member) => member.team === teamName);
-  const isActive = filteredTeam.filter((member) => member.active == "true");
-  const notActive = filteredTeam.filter((member) => member.active == "false");
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+/* =============================================================================
+ * TeamSection
+ * -----------------------------------------------------------------------------
+ * Wraps a single team into a titled block. Supports “Active” vs “Past Members”
+ * using the string flags "true"/"false" in `active`.
+ * - If the team has no members, returns null (no section header).
+ * - The divider at the end visually separates sections.
+ * ===========================================================================*/
+function TeamSection({ title, teamName }) {
+  const members = team.filter((m) => m.team === teamName);
+  if (members.length === 0) return null;
 
-  const nameToTitleMap = {
-    leadership: "Leadership",
-    ai: "AI",
-    privacy: "Privacy",
-    accessibility: "Accessibility",
-    product: "Product",
-  };
+  const active = members.filter((m) => String(m.active).toLowerCase() === "true");
+  const inactive = members.filter((m) => String(m.active).toLowerCase() === "false");
+
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
-        {nameToTitleMap[teamName]} Team
+    <>
+      <Heading as="h2" size="xl" mt={14} mb={6}>
+        {title}
       </Heading>
-      <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal">
-        Current Team Members
-      </Heading>
-      <TeamGrid filteredTeam={isActive} />
-      {notActive.length > 0 && (
+
+      {/* Active members */}
+      <TeamGrid filteredTeam={active.length > 0 ? active : members} />
+
+      {/* Past members (only if present and distinct) */}
+      {inactive.length > 0 && (
         <>
-          <Heading as="h2" size="lg" fontWeight="normal">
-            Past Team Members
+          <Heading as="h3" size="lg" mt={10} mb={4}>
+            Past Members
           </Heading>
-          <TeamGrid filteredTeam={notActive} />
+          <TeamGrid filteredTeam={inactive} />
         </>
       )}
-    </div>
+
+      <Divider my={12} />
+    </>
   );
 }
 
-function AdditionalContributors() {
-  const contributors = team
-    .filter((member) => member.team == "additional")
-    .sort((a, b) => a.name.localeCompare(b.name));
-  const facultyContributors = team
-    .filter((member) => member.team == "additional_faculty")
-    .sort((a, b) => a.name.localeCompare(b.name));
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+/* =============================================================================
+ * Acknowledgements (Default Export)
+ * -----------------------------------------------------------------------------
+ * Assembles the page:
+ *   1) NavBar
+ *   2) Hero overlay
+ *   3) Lower content that scrolls over hero:
+ *        - All team sections (as card grids)
+ *        - Two "Additional Contributors" sections as cards:
+ *            • User Studies  (team === "additional")
+ *            • Faculty Advisors (team === "additional_faculty")
+ *        - Footer (logo + modules + quick links + feedback)
+ *
+ * This implementation ensures “Additional” entries render as full cards using
+ * the same styling and placeholder behavior as core teams.
+ * ===========================================================================*/
+export default function Acknowledgements() {
+  const navigate = useNavigate();
+
+  // Slugs borrowed from Home to keep navigation consistent
+  const privacySlug = "/privacy/whatIsPrivacy";
+  const accessibilitySlug = "/accessibility/whatIsAccessibility";
+  const decisionSlug = "/automatedDecisionMaking/fairness";
+  const aiSlug = "/generativeAI/copyright";
+
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
-      <Heading as="h1" size="xl" mt={10} mb={3}>
-        Additional Contributors
-      </Heading>
-      <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        User Studies
-      </Heading>
-      <Text my={4}>
-        Thank you to everyone who participated in our user studies! Your
-        feedback has been immensely valuable as we work towards improving our
-        content and design!
-      </Text>
-      {contributors.map((member) => (
-        <Text key={member.id}>
-          {member.name}, <i>{member.position}</i>
-        </Text>
-      ))}
-      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        Advisors
-      </Heading>
-      <Text my={4}>
-        Thank you to everyone who advised our research teams! Your feedback has
-        been immensely valuable as we develop and refine our primers! ...
-      </Text>
-      {facultyContributors.map((member) => (
-        <Text key={member.id}>
-          {member.name}, <i>{member.position}</i>
-        </Text>
-      ))}
-    </div>
+    <>
+      {/* Global site navigation */}
+      <NavBar />
+
+      {/* Behavior matches Home’s upper-content.
+          The actual size/scroll handoff is controlled in Acknowledgements.css:
+          - .ack-hero (position: fixed; background image)
+          - .ack-lower-content (margin-top: Nvh to start after the hero)
+      */}
+      <div className="ack-hero">
+        <div className="upper-text-section">
+          <div className="website-title">Meet our Team!</div>
+          {/* Optional supporting copy under the heading (kept empty for now) */}
+          <div className="info-section"></div>
+        </div>
+      </div>
+
+      {/* 2) Lower content that “slides” over the hero */}
+      <div className="ack-lower-content">
+        {/* Core teams */}
+        <TeamSection title="Leadership" teamName="leadership" />
+        <TeamSection title="AI Team" teamName="ai" />
+        <TeamSection title="Privacy Team" teamName="privacy" />
+        <TeamSection title="Accessibility Team" teamName="accessibility" />
+        <TeamSection title="Product Team" teamName="product" />
+
+        {/* Additional Contributors — now as full cards (no longer plain text) */}
+        <TeamSection
+          title="Additional Contributors — User Studies"
+          teamName="additional"
+        />
+        <TeamSection
+          title="Additional Contributors — Faculty Advisors"
+          teamName="additional_faculty"
+        />
+         </div>
+                    <Footer />
+
+    </>
   );
 }
-
-export { Acknowledgements, Team, AdditionalContributors };

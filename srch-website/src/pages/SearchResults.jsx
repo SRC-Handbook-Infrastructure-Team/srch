@@ -1,26 +1,31 @@
+import "../LandingPage.css";
+import "../ContentPage.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
 import { ResultsWindow } from "../components/ResultsWindow";
 import { useState, useEffect } from "react";
-import background from "../assets/search-results-background.jpg";
+import background from "../assets/landing-page-background-gradient.png";
+import Footer from "../components/Footer"
+
 
 function SearchResults() {
   const { query } = useParams();
   const decodedQuery = decodeURIComponent(query || "");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(decodedQuery);
 
   useEffect(() => {
-    setSearchQuery("");
+    setSearchQuery(decodedQuery);
   }, [decodedQuery]);
 
   return (
-    <div style={{ minHeight: "100vh", overflow: "hidden" }}>
+    <div className="markdown-page" >
       <div
         style={{
           position: "absolute",
           zIndex: 0,
           inset: 0,
+          top: "0px",
           width: "100vw",
           height: "350px",
           backgroundImage: `url(${background})`,
@@ -34,10 +39,10 @@ function SearchResults() {
           position: "absolute",
           zIndex: 1,
           inset: 0,
+          top: "250px",
           width: "100%",
-          height: "350px",
-          background:
-            "linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255,255,255,1) 100%)",
+          height: "100px",
+          background:"linear-gradient(to bottom,rgba(255, 255, 255, 0) 0%,rgba(255, 255, 255, 0.5) 50%,rgba(255, 255, 255, 1) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -45,8 +50,9 @@ function SearchResults() {
         style={{
           position: "relative",
           zIndex: 2,
-          padding: "20px",
+          padding: "20px 40px",
           marginTop: "80px",
+         minHeight: "100vh",
         }}
       >
         <Heading as="h1" size="2xl" mb={3} sx={{ color: "#581000 !important" }}>
@@ -56,11 +62,13 @@ function SearchResults() {
           className="results-autofill"
           setSearchQuery={setSearchQuery}
           searchQuery={searchQuery}
-          canExpand={false}
-          maxResults={4}
+          maxResults={0}
         />
-        <ResultsWindow searchQuery={decodedQuery} />
+        <br></br>
+        <ResultsWindow searchQuery={searchQuery} floating={false} />
       </div>
+          <Footer/>
+
     </div>
   );
 }

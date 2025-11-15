@@ -1,36 +1,59 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
-import NavBar from "../components/NavBar"; // ← Top navigation (from teammate)
-import ContentsSidebar from "../components/ContentsSidebar"; // ← Left-hand contents sidebar
-import SidebarToggleButton from "../components/SidebarToggleButton"; // ← Floating hamburger toggle
+import NavBar from "../components/NavBar";
+import ContentsSidebar from "../components/ContentsSidebar";
+import { useLocation } from "react-router-dom";
 
 /**
  * SidebarLayout
  * -----------------------------------------------------------------------------
- * This component defines the overall two-sidebar layout for the application.
- * It manages:
- *   • The left navigation sidebar (ContentsSidebar)
- *   • The right contextual drawer (Additional Information panel)
- *   • The main content region between them
+ * Two sidebars + top NavBar + main content.
  *
- * Responsibilities:
- *   - Integrate the resizable sidebar hook for both sides (persisting width)
- *   - Ensure smooth, performant resizing via CSS variables + rAF throttling
- *   - Coordinate open/close and animation state for both panels
- *   - Provide layout context globally via React Context
+ * Performance principles applied:
+ * 1) Move resize work off React's render path (done in useResizableSidebar).
+ * 2) Pass explicit props for the left sidebar (width, handlers) to avoid
+ *    context churn during drag. Context remains for non-hot-path consumers
+ *    (e.g., header buttons elsewhere).
+ * 3) Sync CSS vars for widths in the hook + here for the right drawer open/close.
+ * 4) Avoid unnecessary effects; rely on ResizeObserver + rAF inside the hook.
  * -----------------------------------------------------------------------------
  */
 export default function SidebarLayout({ children }) {
-  /**
-   * LEFT SIDEBAR CONFIGURATION
-   * --------------------------------------------------------------
-   * Uses the custom hook `useResizableSidebar` to manage:
-   *   - Persisted width via localStorage
-   *   - Resizing logic (drag and keyboard)
-   *   - Collapsing / expanding state
-   *   - Sync with CSS variable (--left-sidebar-width)
-   */
+  /** ---------------- REFS FOR DOM ELEMENTS (performance) ---------------- */
+  const mainRef = useRef(null);
+  const innerRef = useRef(null);
+
+  /** ---------------- FREEZE / RELEASE MAIN CONTENT ---------------- */
+  const freezeMainContent = useCallback(() => {
+    const main = mainRef.current;
+    const inner = innerRef.current;
+    if (!main || !inner) return;
+
+    const w = `${inner.offsetWidth}px`;
+    document.documentElement.style.setProperty("--main-freeze-width", w);
+
+    main.classList.add("main-frozen");
+    inner.classList.add("frozen");
+    inner.classList.remove("release");
+  }, []);
+
+  const releaseMainContent = useCallback(() => {
+    const main = mainRef.current;
+    const inner = innerRef.current;
+    if (!main || !inner) return;
+
+    inner.classList.remove("frozen");
+    inner.classList.add("release");
+
+    setTimeout(() => {
+      main.classList.remove("release");
+      inner.classList.remove("release");
+      document.documentElement.style.removeProperty("--main-freeze-width");
+    }, 220);
+  }, []);
+
+  /** ---------------- LEFT SIDEBAR CONFIG ---------------- */
   const leftSidebar = useResizableSidebar({
     storageKey: "leftSidebarWidth",
     defaultWidth: 250,
@@ -39,13 +62,12 @@ export default function SidebarLayout({ children }) {
     collapsedWidth: 0,
     side: "left",
     cssVarName: "--left-sidebar-width",
+    onStartResize: freezeMainContent,
+    onStopResize: releaseMainContent,
   });
 
-  /**
-   * RIGHT SIDEBAR CONFIGURATION
-   * --------------------------------------------------------------
-   * Similarly handles a resizable right drawer used for additional content.
-   */
+  /** ---------------- RIGHT SIDEBAR CONFIG ---------------- */
+
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
     defaultWidth: 400,
@@ -53,57 +75,90 @@ export default function SidebarLayout({ children }) {
     maxWidth: 700,
     side: "right",
     cssVarName: "--right-sidebar-width",
+    onStartResize: freezeMainContent,
+    onStopResize: releaseMainContent,
+
+    getDynamicBounds: () => {
+      const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
+
+      const availableForRight = Math.max(
+        vw - MIN_MAIN_WIDTH - (leftSidebar?.width || 0),
+        0
+      );
+      return {
+        min: rightSidebar?.minWidth ?? 375,
+        max: Math.min(availableForRight, rightSidebar?.maxWidth ?? 700),
+
+      };
+    },
   });
 
-  /**
-   * RIGHT DRAWER VISIBILITY + CONTENT STATE
-   * --------------------------------------------------------------
-   * Stores the React node rendered inside the right drawer and
-   * controls whether the drawer is open.
-   */
+  /** ---------------- RIGHT DRAWER STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
-  /** Opens the right drawer and sets its inner content */
-  const openRightDrawer = (content) => {
-    setIsRightOpen(true);
-    setRightContent(content);
-  };
-
-  /** Closes the right drawer and clears content */
-  const closeRightDrawer = () => {
+  /** Memoized drawer functions (performance) */
+  const closeRightDrawer = useCallback(() => {
     setIsRightOpen(false);
     setRightContent(null);
+  }, []);
+
+  const openRightDrawer = useCallback((content) => {
+    setRightContent(content);
+    setIsRightOpen(true);
+  }, []);
+
+  /** Sync drawer width to CSS var (single effect — avoids redundancy) */
+  useEffect(() => {
+  const target = document.documentElement;
+  const value = isRightOpen ? `${rightSidebar.width}px` : "0px";
+
+  // One layout frame sync — ensures margin/flex vars update atomically
+  requestAnimationFrame(() => {
+    target.style.setProperty("--right-sidebar-width", value);
+    target.classList.toggle("right-open", isRightOpen);
+  });
+}, [isRightOpen, rightSidebar.width]);
+
+
+  /** ---------------- AUTO-CLOSE DRAWER ON *PAGE* CHANGE ---------------- */
+  const location = useLocation();
+
+  const getBasePath = (path = "") => {
+    const parts = path.split("/").filter(Boolean);
+    return `/${parts.slice(0, 2).join("/") || ""}`;
   };
 
-  /**
-   * RESPONSIVE WIDTH SAFEGUARD
-   * --------------------------------------------------------------
-   * Ensures that combined sidebar widths never exceed viewport
-   * space minus a minimum main content width (700px).
-   */
+  const prevBasePathRef = useRef(getBasePath(location.pathname));
+
+  useEffect(() => {
+    const nextBase = getBasePath(location.pathname);
+    const prevBase = prevBasePathRef.current;
+
+    if (nextBase !== prevBase && isRightOpen) {
+      closeRightDrawer();
+    }
+
+    prevBasePathRef.current = nextBase;
+  }, [location.pathname, isRightOpen, closeRightDrawer]);
+
+  /** ---------------- RESPONSIVE SAFEGUARD ---------------- */
   const MIN_MAIN_WIDTH = 700;
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
 
   useEffect(() => {
-    const availableForSidebars = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
+    const available = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
 
-    if (leftSidebar.width + rightSidebar.width > availableForSidebars) {
+    if (leftSidebar.width + rightSidebar.width > available) {
       if (leftSidebar.width > rightSidebar.width) {
         leftSidebar.setWidth(
-          Math.max(
-            availableForSidebars - rightSidebar.width,
-            leftSidebar.minWidth || 180
-          )
+          Math.max(available - rightSidebar.width, leftSidebar.minWidth)
         );
       } else {
         rightSidebar.setWidth(
-          Math.max(
-            availableForSidebars - leftSidebar.width,
-            rightSidebar.minWidth || 300
-          )
+          Math.max(available - leftSidebar.width, rightSidebar.minWidth)
         );
       }
     }
@@ -113,149 +168,158 @@ export default function SidebarLayout({ children }) {
     rightSidebar.width,
     leftSidebar.minWidth,
     rightSidebar.minWidth,
-    leftSidebar.setWidth,
-    rightSidebar.setWidth,
   ]);
 
-  /** Track and update viewport width on browser resize */
+  /** ---------------- NAVBAR HEIGHT SYNC ---------------- */
+  useEffect(() => {
+  // Force a constant navbar height of 80px (Netflix-level consistency)
+  const fixedHeight = "80px";
+  document.documentElement.style.setProperty("--navbar-height", fixedHeight);
+  document.documentElement.style.setProperty("--nav-bar-height", fixedHeight);
+}, []);
+
+
+  /** ---------------- VIEWPORT WIDTH TRACKER ---------------- */
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  /**
-   * CSS VARIABLE SYNCHRONIZATION
-   * --------------------------------------------------------------
-   * Writes live sidebar widths to CSS variables so layout styles
-   * can react instantly without re-rendering React components.
-   * (This preserves smooth drag performance.)
-   */
+  /** ---------------- KEYBOARD RESIZE SUPPORT ---------------- */
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--left-sidebar-width",
-      `${leftSidebar.collapsed ? leftSidebar.collapsedWidth : leftSidebar.width}px`
-    );
-    document.documentElement.style.setProperty(
-      "--right-sidebar-width",
-      `${isRightOpen ? rightSidebar.width : 0}px`
-    );
-  }, [leftSidebar.width, leftSidebar.collapsed, rightSidebar.width, isRightOpen]);
+    const handleKeyResize = (e) => {
+      if (e.altKey || e.metaKey || e.ctrlKey) return;
+
+      if (e.key === "[" && !leftSidebar.collapsed) {
+        e.preventDefault();
+        leftSidebar.setWidth(
+          Math.max(leftSidebar.width - 10, leftSidebar.minWidth)
+        );
+      } else if (e.key === "]" && !leftSidebar.collapsed) {
+        e.preventDefault();
+        leftSidebar.setWidth(
+          Math.min(leftSidebar.width + 10, leftSidebar.maxWidth)
+        );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyResize);
+    return () => window.removeEventListener("keydown", handleKeyResize);
+  }, [leftSidebar]);
 
   /**
-   * MEMOIZED LAYOUT CONTEXT VALUE
-   * --------------------------------------------------------------
-   * Prevents unnecessary React re-renders across the app by
-   * memoizing all sidebar-related state and handlers.
+   * ---------------- CONTEXT (non-hot-path only) ----------------
    */
   const layoutValue = useMemo(
     () => ({
-      leftSidebar,
       rightSidebar,
       rightContent,
       isRightOpen,
       openRightDrawer,
       closeRightDrawer,
+
+      leftSidebar: {
+        width: leftSidebar.width,
+        collapsed: leftSidebar.collapsed,
+        minWidth: leftSidebar.minWidth,
+        maxWidth: leftSidebar.maxWidth,
+        collapsedWidth: leftSidebar.collapsedWidth,
+        toggle: leftSidebar.toggleCollapsed,
+      },
     }),
     [
-      leftSidebar,
       rightSidebar,
       rightContent,
       isRightOpen,
       openRightDrawer,
       closeRightDrawer,
+      leftSidebar.width,
+      leftSidebar.collapsed,
+      leftSidebar.minWidth,
+      leftSidebar.maxWidth,
+      leftSidebar.collapsedWidth,
     ]
   );
 
-  /**
-   * RENDER STRUCTURE
-   * --------------------------------------------------------------
-   * - Provides layout context to all child components
-   * - Renders top NavBar (teammate’s component)
-   * - Renders left ContentsSidebar (your component)
-   * - Displays toggle button
-   * - Wraps main content region
-   * - Renders right drawer
-   */
+  /** ---------------- RENDER ---------------- */
   return (
-    <LayoutContext.Provider value={layoutValue}>
-      <div className="sidebar-layout">
-        {/* TOP NAVBAR (global navigation/search bar) */}
-        <NavBar />
+  <LayoutContext.Provider value={layoutValue}>
+    <div className="sidebar-layout">
+      <NavBar />
 
-        {/* LEFT SIDEBAR NAVIGATION (ContentsSidebar)
-        Conditionally shown (can hide on /search if needed later) */}
-        {!window.location.pathname.startsWith("/search") && (
-          <ContentsSidebar className={!leftSidebar.collapsed ? "open" : ""} />
-        )}
+      {/* FLEX SHELL: reserved (authoritative rail below NavBar if needed later) */}
+      <div className="layout-rail" role="presentation" />
 
+      {/* LEFT: Contents sidebar (hidden on /search) */}
+      {!window.location.pathname.startsWith("/search") && (
+        <ContentsSidebar
+          className={!leftSidebar.collapsed ? "open" : ""}
+          width={leftSidebar.width}
+          collapsed={!!leftSidebar.collapsed}
+          isResizing={leftSidebar.isResizing}
+          onToggleSidebar={leftSidebar.toggleCollapsed}
+          onStartResize={leftSidebar.startResize}
+          onHandleKeyDown={leftSidebar.handleKeyDown}
+        />
+      )}
 
-        {/* Floating Hamburger (always visible top-left, above NavBar) */}
-        <div style={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 2000 }}>
-          <SidebarToggleButton />
-        </div>
-
-
-        {/* MAIN CONTENT AREA */}
-        <main id="main" className="main-content">
+      {/* MAIN CONTENT */}
+      <main id="main" className="main-content" ref={mainRef}>
+        <div className="main-shift" ref={innerRef}>
           {children}
-        </main>
+        </div>
+      </main>
 
-        {/* RIGHT DRAWER PANEL
-            Add "open" class when visible to trigger CSS slide-in animation */}
-        <aside
-          className={`right-sidebar ${isRightOpen ? "open" : ""}`}
-          aria-label="Right sidebar drawer"
-          onTransitionEnd={(e) => {
-            if (e.propertyName === "width") {
-              e.currentTarget.classList.remove("opening");
-              e.currentTarget.classList.add("opened");
-            }
-          }}
-        >
-          {isRightOpen && (
-            <>
-              {/* Header with Close Button */}
-              <div className="drawer-header">
-                <span>Additional Information</span>
-                <button
-                  onClick={closeRightDrawer}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      closeRightDrawer();
-                    }
-                  }}
-                  className="drawer-close-btn"
-                  tabIndex={0}
-                  aria-label="Close right sidebar"
-                  title="Close sidebar"
-                >
-                  ✕
-                </button>
-              </div>
+      {/* RIGHT: Drawer (content only) */}
+      <aside
+        className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
+        aria-label="Right sidebar drawer"
+      >
+        {isRightOpen && (
+          <>
+            <button
+              onClick={closeRightDrawer}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  closeRightDrawer();
+                }
+              }}
+              className="right-drawer-close-btn"
+              aria-label="Close right sidebar"
+              tabIndex={0}
+              title="Close sidebar"
+            >
+              ✕
+            </button>
 
-              {/* Scrollable Drawer Content Area */}
-              <div className="drawer-content scrollable-drawer">{rightContent}</div>
+            <div className="drawer-content scrollable-drawer">
+              {rightContent}
+            </div>
+          </>
+        )}
+      </aside>
 
-              {/* Right Resize Handle */}
-              <div
-                className={`resize-handle ${rightSidebar.isResizing ? "resizing" : ""}`}
-                onMouseDown={rightSidebar.startResize}
-                onTouchStart={rightSidebar.startResize}
-                onKeyDown={rightSidebar.handleKeyDown}
-                role="separator"
-                tabIndex={0}
-                aria-orientation="vertical"
-                aria-label="Resize right sidebar"
-                aria-valuenow={rightSidebar.width}
-                aria-valuemin={rightSidebar.minWidth}
-                aria-valuemax={rightSidebar.maxWidth}
-              />
-            </>
-          )}
-        </aside>
-      </div>
-    </LayoutContext.Provider>
-  );
+      {/* RIGHT: External resize hitbox (sits just left of the drawer edge) */}
+      {isRightOpen && (
+        <div
+          className={`right-resize-hitbox ${
+            rightSidebar.isResizing ? "is-resizing" : ""
+          }`}
+          onMouseDown={rightSidebar.startResize}
+          onTouchStart={rightSidebar.startResize}
+          onKeyDown={rightSidebar.handleKeyDown}
+          role="separator"
+          tabIndex={0}
+          aria-orientation="vertical"
+          aria-label="Resize right sidebar"
+          aria-valuenow={rightSidebar.width}
+          aria-valuemin={rightSidebar.minWidth}
+          aria-valuemax={rightSidebar.maxWidth}
+        />
+      )}
+    </div>
+  </LayoutContext.Provider>
+);
 }

@@ -4,24 +4,23 @@ import {
   Box,
   HStack,
   VStack,
-  IconButton,
   Image,
   Text,
   Icon,
+  Collapse,
 } from "@chakra-ui/react";
-import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  HamburgerIcon,
+  ChevronDownIcon,
+  MoonIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
-import { SearchBar } from "./SearchBar";
+import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
+import "../ContentPage.css";
+import { color } from "framer-motion";
 
-/**
- * NavBar
- * -----------------------------------------------------------------------------
- * The global top navigation bar of the site.
- * Handles navigation across sections and modules,
- * as well as the site search input and static navigation links.
- * -----------------------------------------------------------------------------
- */
 function NavBar({ className = "" }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,12 +30,9 @@ function NavBar({ className = "" }) {
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
 
-  /**
-   * Data for sections + subsections.
-   * expandedSections is a map of sectionId -> boolean (expanded or not).
-   */
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,8 +44,22 @@ function NavBar({ className = "" }) {
     setOpenSection((prev) => (prev === sectionKey ? null : sectionKey));
   };
 
+  function forceSearchOpen() {
+    setIsMenuOpen(false);
+    setIsSearchOpen(true);
+  }
+
+  function forceMenuOpen() {
+    setIsSearchOpen(false);
+    setIsMenuOpen(true);
+  }
+
   useEffect(() => {
-    if (hasLoadedData.current) return; // prevent multiple fetches
+    setIsSearchOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (hasLoadedData.current) return;
 
     async function loadAllData() {
       try {
@@ -60,7 +70,6 @@ function NavBar({ className = "" }) {
         setSections(sortedSections);
 
         const subsectionsMap = {};
-        // Fix: expandStateMap was missing declaration before use
         const expandStateMap = {};
 
         for (const section of sortedSections) {
@@ -91,11 +100,9 @@ function NavBar({ className = "" }) {
         console.error("Error loading navigation data:", error);
       }
     }
-
     loadAllData();
   }, []);
 
-  // Redirect from main section to first subsection
   useEffect(() => {
     if (
       currentSectionId &&
@@ -116,58 +123,28 @@ function NavBar({ className = "" }) {
       onToggle(e);
     };
     return (
-      <Box position="relative" cursor="pointer" pointerEvents="auto">
-        <Box
-          p={2}
-          borderRadius="md"
-          cursor="pointer"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          textAlign="center"
-          onClick={handleClick}
-          _hover={{ color: "#9D0013" }}
-        >
+      <Box className="nav-dropdown">
+        <Box className="nav-dropdown-title" onClick={handleClick}>
           <Text
-            cursor="pointer"
-            pointerEvents="auto"
+            className="nav-dropdown-title-text"
             color={isExpanded ? "#9D0013" : "inherit"}
           >
             {title}
           </Text>
           <Icon
             as={ChevronDownIcon}
-            transform={isExpanded ? "rotate(180deg)" : undefined}
-            transition="transform 0.2s"
-            w={5}
-            h={5}
+            className="nav-dropdown-chevron"
+            style={{ transform: isExpanded ? "rotate(180deg)" : undefined }}
           />
         </Box>
-
-        {isExpanded && (
-          <Box
-            position="absolute"
-            top="100%"
-            left={0}
-            mt={1}
-            bg="white"
-            shadow="md"
-            borderRadius="md"
-            zIndex={10}
-            justifyContent="center"
-            width="max-content"
-          >
+        <Collapse in={isExpanded} animateOpacity>
+          <Box className="nav-dropdown-menu">
             <VStack align="stretch" spacing={0}>
               {items.map((item) => (
                 <Box
                   key={item.id}
-                  paddingLeft={2}
-                  paddingRight={2}
-                  paddingTop={1}
-                  paddingBottom={1}
-                  cursor="pointer"
+                  className="nav-dropdown-item"
                   onClick={item.onClick}
-                  _hover={{ color: "#9D0013" }}
                 >
                   <Text fontWeight="medium" whiteSpace="nowrap">
                     {item.title}
@@ -176,7 +153,7 @@ function NavBar({ className = "" }) {
               ))}
             </VStack>
           </Box>
-        )}
+        </Collapse>
       </Box>
     );
   };
@@ -185,219 +162,233 @@ function NavBar({ className = "" }) {
     <Box
       as="header"
       className={`top-navbar ${className}`.trim()}
-      position="fixed"
-      top={0}
-      left={0}
-      width="100vw"
-      margin={0}
-      borderBottom="1px solid"
-      borderColor="gray.200"
-      bg="white"
-      boxShadow="2px 2px 5px rgba(0, 0, 0, 0.1)"
-      zIndex={20}
-      sx={{
-        "& a:hover": { color: "#9D0013" },
-        "& a:button": { color: "#9D0013" },
-      }}
+      onMouseLeave={() => setIsSearchOpen(false)}
     >
-      <HStack
-        align="center"
-        justify="space-between"
-        spacing={2}
-        overflow="visible"
-        width="100%"
-        px={4}
-        height={"min-content"}
-      >
-        <Box
-          cursor="pointer"
-          onClick={() => navigate("/")}
-          whiteSpace="nowrap"
-          flexShrink={0}
-        >
-          <HStack alignItems={"center"}>
-            <Image
-              src={logo}
-              alt="Logo"
-              boxSize="75px"
-              objectFit="contain"
-              paddingTop={2}
-              paddingBottom={2}
-            />
-            <Text fontSize={"xx-large"} fontWeight={"bold"}>
-              SRC Handbook
-            </Text>
-          </HStack>
-        </Box>
+      <Box className="navbar-padding">
+        <HStack className="header-hstack">
+          <Box className="navbar-logo-container" onClick={() => navigate("/")}>
+            <HStack alignItems={"center"}>
+              <Image
+                src={logo}
+                alt="Socially Responsible Computing Handbook"
+                height={"30px"}
+                objectFit="contain"
+              />
+            </HStack>
+          </Box>
 
-        <HStack spacing={4} ml="auto" display={{ base: "none", xl: "flex" }}>
-          <NavDropdown
-            title="Modules"
-            items={sections.slice(1).map((section) => ({
-              id: section.id,
-              title: section.title,
-              onClick: (e) => {
-                const sectionSubsections = subsections[section.id];
+          <HStack className="right-hstack" spacing={"1rem"}>
+            <Box
+              className="hide-base show-md"
+              onMouseLeave={() => setOpenSection(null)}
+            >
+              <Box className="nav-dropdown">
+                <Box
+                  className="nav-dropdown-title"
+                  onMouseEnter={() => setOpenSection("modules")}
+                  onClick={(e) => toggleSection("modules", e)}
+                >
+                  <Text
+                    className="nav-dropdown-title-text"
+                    color={openSection === "modules" ? "#9D0013" : "inherit"}
+                  >
+                    Modules
+                  </Text>
+                  <Icon
+                    as={ChevronDownIcon}
+                    className="nav-dropdown-chevron"
+                    style={{
+                      transform:
+                        openSection === "modules"
+                          ? "rotate(180deg)"
+                          : undefined,
+                    }}
+                  />
+                </Box>
+                <Collapse in={openSection === "modules"} animateOpacity>
+                  <Box className="nav-dropdown-menu">
+                    <VStack align="stretch" spacing={0}>
+                      {sections.slice(1).map((section) => (
+                        <Box
+                          key={section.id}
+                          className="nav-dropdown-item"
+                          onClick={(e) => {
+                            const sectionSubsections = subsections[section.id];
+                            if (
+                              sectionSubsections &&
+                              sectionSubsections.length > 0
+                            ) {
+                              navigate(
+                                `/${section.id}/${sectionSubsections[0].id}`
+                              );
+                            } else {
+                              navigate(`/${section.id}`);
+                            }
+                            toggleSection(section.id, e);
+                          }}
+                        >
+                          <Text fontWeight="medium" whiteSpace="nowrap">
+                            {section.title}
+                          </Text>
+                        </Box>
+                      ))}
+                    </VStack>
+                  </Box>
+                </Collapse>
+              </Box>
+            </Box>
+            <Box
+              className="nav-link-box hide-base show-md"
+              onClick={() => {
+                const firstSection = sections[0];
+                const sectionSubsections = subsections[firstSection.id];
                 if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                  navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
                 } else {
-                  navigate(`/${section.id}`);
+                  navigate(`/${firstSection.id}`);
                 }
-                toggleSection(section.id, e);
-              },
-            }))}
-            isExpanded={openSection === "modules"}
-            onToggle={(e) => toggleSection("modules", e)}
-          />
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="center"
-            onClick={() => {
-              const firstSection = sections[0];
-              const sectionSubsections = subsections[firstSection.id];
-              if (sectionSubsections && sectionSubsections.length > 0) {
-                navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-              } else {
-                navigate(`/${firstSection.id}`);
-              }
-            }}
-            _hover={{ color: "#9D0013" }}
-          >
-            <Text>{"About"}</Text>
-          </Box>
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="center"
-            onClick={() => navigate("/acknowledgements/leadership")}
-            _hover={{ color: "#9D0013" }}
-          >
-            <Text>{"Acknowledgements"}</Text>
-          </Box>
-
-          <SearchBar
-            className="nav-search"
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            canExpand={true}
-            maxResults={3}
-          />
+              }}
+            >
+              <Text>About</Text>
+            </Box>
+            <Box
+              className="nav-link-box hide-base show-md"
+              onClick={() => navigate("/acknowledgements")}
+            >
+              <Text>Acknowledgements</Text>
+            </Box>
+            <Box className="icon-button">
+              <MoonIcon
+                className="navsearchbar-button"
+                fontSize={"lg"}
+              ></MoonIcon>
+            </Box>
+            <Box
+              className="icon-button"
+              onClick={() => {
+                if (!isSearchOpen) {
+                  forceSearchOpen();
+                } else {
+                  setIsSearchOpen(false);
+                }
+              }}
+            >
+              <SearchIcon
+                className="navsearchbar-button"
+                fontSize={"lg"}
+              ></SearchIcon>
+            </Box>
+            <Box
+              className="icon-button show-base hide-md"
+              onClick={() => {
+                if (!isMenuOpen) {
+                  forceMenuOpen();
+                } else {
+                  setIsMenuOpen(false);
+                }
+              }}
+            >
+              <HamburgerIcon color="black" fontSize={"x-large"}></HamburgerIcon>
+            </Box>
+          </HStack>
         </HStack>
 
-        <IconButton
-          icon={<HamburgerIcon color="black" fontSize={"4xl"} />}
-          aria-label="Open menu"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          variant="unstyled"
-          fontSize="2xl"
-          display={{ base: "inline-flex", xl: "none" }}
-        />
-      </HStack>
-
-      {isMenuOpen && (
-        <VStack
-          display={{ base: "flex", xl: "none" }}
-          px={4}
-          pt={2}
-          pb={4}
-          borderTop="1px solid"
-          borderColor="gray.200"
-          backgroundColor="white"
-          spacing={3}
-          align="stretch"
-        >
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="left"
-            onClick={() => {
-              setIsMenuOpen(false);
-              const sectionSubsections = subsections[sections[0].id];
-              if (sectionSubsections && sectionSubsections.length > 0) {
-                navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
-              } else {
-                navigate(`/${sections[0].id}`);
-              }
-            }}
-            _hover={{ color: "#9D0013" }}
+        <Collapse in={isMenuOpen} animateOpacity>
+          <VStack
+            align={"start"}
+            className="mobile-menu-vstack show-base hide-md"
+            onMouseLeave={() => setIsMenuOpen(false)}
           >
-            About
-          </Box>
-
-          <Box>
             <Box
-              px={2}
-              pb={2}
-              borderRadius="md"
-              cursor="pointer"
-              textAlign="left"
-              onClick={() => setIsModulesExpanded(!isModulesExpanded)}
-              _hover={{ color: "#9D0013" }}
+              className="nav-link-box"
+              onClick={() => {
+                setIsMenuOpen(false);
+                const sectionSubsections = subsections[sections[0].id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${sections[0].id}`);
+                }
+              }}
             >
-              Modules
-              <Icon
-                as={ChevronDownIcon}
-                transform={isModulesExpanded ? "rotate(180deg)" : undefined}
-                transition="transform 0.2s"
-                w={5}
-                h={5}
-              />
+              About
             </Box>
-
-            {isModulesExpanded && (
-              <VStack pl={6} align="stretch" spacing={2}>
-                {sections.slice(1).map((section) => (
-                  <Box
-                    key={section.id}
-                    cursor="pointer"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      const sectionSubsections = subsections[section.id];
-                      if (sectionSubsections && sectionSubsections.length > 0) {
-                        navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                      } else {
-                        navigate(`/${section.id}`);
-                      }
-                      toggleSection(section.id, null);
-                    }}
-                    _hover={{ color: "#9D0013" }}
-                  >
-                    {section.title}
-                  </Box>
-                ))}
-              </VStack>
-            )}
-          </Box>
-
-          <Box
-            p={2}
-            borderRadius="md"
-            cursor="pointer"
-            textAlign="left"
-            onClick={() => {
-              setIsMenuOpen(false);
-              navigate("/acknowledgements/leadership");
-            }}
-            _hover={{ color: "#9D0013" }}
-          >
-            Acknowledgements
-          </Box>
-
-          <SearchBar
-            className="nav-search"
+            <Box
+              className="nav-link-box"
+              onClick={() => {
+                setIsMenuOpen(false);
+                navigate("/acknowledgements");
+              }}
+            >
+              Acknowledgements
+            </Box>
+            <Box
+              className="mobile-modules-container"
+              onMouseEnter={() => setIsModulesExpanded(true)}
+              onMouseLeave={() => setIsModulesExpanded(false)}
+            >
+              <Box
+                className="mobile-modules-toggle"
+                onClick={() => setIsModulesExpanded(!isModulesExpanded)}
+              >
+                Modules
+                <Icon
+                  as={ChevronDownIcon}
+                  className="mobile-modules-chevron"
+                  style={{
+                    transform: isModulesExpanded
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                  }}
+                />
+              </Box>
+              <Collapse
+                in={isModulesExpanded}
+                animateOpacity={true}
+                style={{ overflow: "visible", width: "min-content" }}
+                duration={0.3}
+                className="mobile-modules-collapse"
+              >
+                <VStack align="stretch" spacing={1}>
+                  {sections.slice(1).map((section) => (
+                    <Box
+                      key={section.id}
+                      className="mobile-module-item"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        const sectionSubsections = subsections[section.id];
+                        if (
+                          sectionSubsections &&
+                          sectionSubsections.length > 0
+                        ) {
+                          navigate(
+                            `/${section.id}/${sectionSubsections[0].id}`
+                          );
+                        } else {
+                          navigate(`/${section.id}`);
+                        }
+                        toggleSection(section.id, null);
+                      }}
+                    >
+                      {section.title}
+                    </Box>
+                  ))}
+                </VStack>
+              </Collapse>
+            </Box>
+          </VStack>
+        </Collapse>
+        <Collapse in={isSearchOpen} animateOpacity>
+          <NavSearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            canExpand={false}
-            maxResults={1}
+            setIsSearchOpen={setIsSearchOpen}
+            isSearchOpen={isSearchOpen}
+            maxResults={2}
+            align="stretch"
           />
-        </VStack>
-      )}
+        </Collapse>
+      </Box>
     </Box>
   );
 }

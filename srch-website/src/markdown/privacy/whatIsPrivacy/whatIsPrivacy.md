@@ -14,7 +14,8 @@ Most people colloquially understand privacy as the condition of restricted acces
 
 ### Access as a gateway
 
-Through this lens, privacy functions as {gate-we-can-open-close-to-others}. Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
+Through this lens, privacy functions {gate-we-can-open-close-to-others|as a gate we can open or close to others}.
+Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
 
 ### Anti-informational definitions of privacy
 
@@ -83,7 +84,7 @@ Privacy is relational and must be understood with respect to a certain person or
 
 "Consider the case of a couple having a quiet conversation in their home. While neither spouse has privacy with respect to the other and with regard to their feelings (assuming they are being honest), the couple have privacy with respect to the passersby who cannot hear or see them." (Véliz 2024, 83)
 
-The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
+The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](/srch-s25/privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
 ## References
 
@@ -166,7 +167,7 @@ Wheeler, Evan. _Security Risk Management: Building an Information Security Risk 
 ## Sidebar
 
 gate-we-can-open-close-to-others:
-Heading:Case
+Heading:Case Study:
 The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [_Van Buren v. United States_](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
 
 man-in-the-middle-attack:
