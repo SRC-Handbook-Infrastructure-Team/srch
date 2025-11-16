@@ -634,9 +634,7 @@ h4 {
   border: none !important;
   background: transparent !important;
 }
-*/
-
-.drawer-content {
+*/ .drawer-content {
   padding: 12px !important;
 }
 
@@ -671,6 +669,8 @@ html:not(.right-open) body .main-content {
 .right-sidebar .drawer-content {
   overflow-wrap: anywhere; /* modern, preferred */
   word-break: break-word; /* fallback */
+  padding-left: 10px;
+  padding-right: 10px;
   min-width: 0; /* fix flex shrink edge cases */
 }
 
