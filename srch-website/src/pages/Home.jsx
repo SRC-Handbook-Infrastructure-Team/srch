@@ -124,7 +124,7 @@ function Home() {
                 <div className="outline-tip">
                   <img
                     src={aiIcon}
-                    alt="Generative AI Icon"
+                    alt="Generative AI module - explores copyright and ethical use of AI"
                     width={75}
                     height={92}
                   />
@@ -249,7 +249,7 @@ function Home() {
             </div>
             <div className="cntr-link-area">
               <div className="connect-cont">
-                <img src={cntrLogo} alt="CNTR logo" width={56} height={67} />
+                <img src={cntrLogo} alt="CNTR - Center for Responsible Computing logo" width={56} height={67} />
                 <p className="connect-text">
                   CNTR Website:
                   <br />
@@ -267,7 +267,7 @@ function Home() {
               >
                 <img
                   src={instaLogo}
-                  alt="instagram logo"
+                  alt="Instagram - follow CNTR on social media"
                   width={56}
                   height={56}
                 />

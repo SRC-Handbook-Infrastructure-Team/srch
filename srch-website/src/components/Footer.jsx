@@ -27,7 +27,7 @@ function Footer() {
             <div className="logo-area-primer-footer">
               <img
                 src={logoImage}
-                alt="SRC Handbook Logo"
+                alt="Socially Responsible Computing Handbook - main logo"
                 width={100}
                 height={91}
               />

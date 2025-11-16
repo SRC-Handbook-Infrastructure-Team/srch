@@ -17,7 +17,7 @@ function App() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
-  
+
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

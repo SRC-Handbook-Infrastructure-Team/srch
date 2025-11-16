@@ -18,16 +18,16 @@ function SearchResults() {
 
   useEffect(() => {
     setSearchQuery(decodedQuery);
-    
+
     // Check for dark mode
     const checkDarkMode = () => {
-      const isDark = document.body.classList.contains('chakra-ui-dark') || 
-                    document.documentElement.getAttribute('data-theme') === 'dark';
+      const isDark = document.body.classList.contains('chakra-ui-dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark';
       setIsDarkMode(isDark);
     };
-    
+
     checkDarkMode();
-    
+
     // Listen for theme changes
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.body, {
@@ -38,7 +38,7 @@ function SearchResults() {
       attributes: true,
       attributeFilter: ['data-theme']
     });
-    
+
     return () => observer.disconnect();
   }, [decodedQuery]);
 
@@ -66,7 +66,7 @@ function SearchResults() {
           top: "250px",
           width: "100%",
           height: "100px",
-          background: isDarkMode 
+          background: isDarkMode
             ? "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 1) 100%)"
             : "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1) 100%)",
           pointerEvents: "none",
@@ -78,7 +78,7 @@ function SearchResults() {
           zIndex: 2,
           padding: "20px 40px",
           marginTop: "80px",
-         minHeight: "100vh",
+          minHeight: "100vh",
         }}
       >
         <Heading as="h1" size="2xl" mb={3} sx={{ color: "#581000 !important" }}>
@@ -93,7 +93,7 @@ function SearchResults() {
         <br></br>
         <ResultsWindow searchQuery={searchQuery} floating={false} />
       </div>
-          <Footer/>
+      <Footer />
 
     </div>
   );

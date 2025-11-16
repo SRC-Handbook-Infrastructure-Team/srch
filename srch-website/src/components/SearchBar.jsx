@@ -57,6 +57,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={handleInputFocus}
+          aria-label="Search for topics, case studies, terms..."
           onKeyDown={handleKeyDown}
           color="var(--color-text)"
           _placeholder={{ color: 'var(--color-text)' }}

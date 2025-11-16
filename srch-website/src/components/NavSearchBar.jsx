@@ -57,6 +57,7 @@ function NavSearchBar({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
+          aria-label="Search for topics, case studies, terms..."
           _focus={{
             boxShadow: "none",
             outline: "none",
