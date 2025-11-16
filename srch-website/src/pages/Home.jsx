@@ -11,8 +11,12 @@ import peopleIcon from "../assets/peopleIcon.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
+import instaLogo from "../assets/instagram-logo.svg";
+import cntrLogo from "../assets/cntr-logo.png";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
+import Footer from "../components/Footer"
+
 
 function Home() {
   const navigate = useNavigate();
@@ -140,33 +144,35 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title">
-                Search for Content
-              </h2>
+              <h2 className="search-title">Search for Content</h2>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
             </div>
+            <div className="landing-search-container">
             <SearchBar
               className="results-autofill"
               setSearchQuery={setSearchQuery}
               searchQuery={searchQuery}
               maxResults={2}
             />
+            </div>
           </div>
 
           <div className="line-divider"></div>
 
           <div className="content-section">
-            <h2 className="section-title" 
-            style={{overflowWrap: "break-word"}}>
+            <h2
+              className="section-title"
+              style={{ overflowWrap: "break-word" }}
+            >
               How to use the Handbook
             </h2>
             <div className="how-to-section">
               <p className="intro-text">
                 Each section contains a series of primers that are loosely
-                aligned with learning objectives in the SRC curriculum. <br></br> Use them
-                to:
+                aligned with learning objectives in the SRC curriculum.{" "}
+                <br></br> Use them to:
               </p>
 
               <div className="info-list">
@@ -216,136 +222,74 @@ function Home() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="learn-more-container">
-            <button
-              className="learn-more-button"
-              onClick={() => navigate("/about")}
-            >
-              <span className="learn-more-text">Learn more</span>
-              <img
-                src={buttonArrow}
-                alt="Arrow for the Learn More Button"
-                width={24}
-                height={24}
-              />
-            </button>
+            <div className="learn-more-container">
+              <button
+                className="learn-more-button"
+                onClick={() => navigate("/about")}
+              >
+                <span className="learn-more-text">Learn more</span>
+                <img
+                  src={buttonArrow}
+                  alt="Arrow for the Learn More Button"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
           </div>
 
           <div className="line-divider"></div>
 
-          <div className="link-section">
-            <div className="logo-area">
-              <img
-                src={logoImage}
-                alt="SRC Handbook Logo"
-                width={100}
-                height={91}
-              />
-            </div>
-
-            <div className="modules">
-              <div className="modules-heading">Modules</div>
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={privacyIcon}
-                    alt="Privacy Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(privacySlug)}
-                  className="module-link"
-                >
-                  Privacy
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={accessibilityIcon}
-                    alt="Accessibility Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(accessibilitySlug)}
-                  className="module-link"
-                >
-                  Accessibility
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={automatedIcon}
-                    alt="Automated Decision Making Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(decisionSlug)}
-                  className="module-link"
-                >
-                  Automated Decision Making
-                </button>
-              </div>
-
-              <div className="primer-link">
-                <div className="primer-link-photo">
-                  <img
-                    src={aiIcon}
-                    alt="Generative AI Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(aiSlug)}
-                  className="module-link"
-                >
-                  Generative AI
-                </button>
-              </div>
-            </div>
-
-            <div className="modules">
-              <div className="module-heading">Quick Links</div>
-              <div className="module-links">
-                <button
-                  onClick={() => navigate("/about")}
-                  className="module-link"
-                >
-                  About
-                </button>
-                <button
-                  onClick={() => navigate("/acknowledgements")}
-                  className="module-link"
-                >
-                  Acknowledgements
-                </button>
-              </div>
-            </div>
-
-            <div className="modules">
-              <div className="module-heading">Have Feedback?</div>
-              <p className="feedback-contact">
-                Contact:{" "}
-                <a href="mailto:src_handbook@brown.edu">
-                  src_handbook@brown.edu
-                </a>
+          <div className="content-section">
+            <div className="content-header">
+              <h2 className="search-title">Connect with Us</h2>
+              <p className="search-subtitle">
+                Follow us to receive CNTR news and updates!
               </p>
             </div>
+            <div className="cntr-link-area">
+              <div className="connect-cont">
+                <img src={cntrLogo} alt="CNTR logo" width={56} height={67} />
+                <p className="connect-text">
+                  CNTR Website:
+                  <br />
+                  <a
+                    className="connect-link"
+                    href="https://cntr.brown.edu/"
+                    target="blank"
+                  >
+                    cntr.brown.edu
+                  </a>
+                </p>
+              </div>
+              <div
+                className="connect-cont"
+              >
+                <img
+                  src={instaLogo}
+                  alt="instagram logo"
+                  width={56}
+                  height={56}
+                />
+                <p className="connect-text">
+                  CNTR Instagram:
+                  <br />
+                  <a
+                    className="connect-link"
+                    href="https://www.instagram.com/brown_cntr/"
+                    target="blank"
+                  >
+                    @brown_cntr
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
+          <Footer/>
+
     </div>
   );
 }

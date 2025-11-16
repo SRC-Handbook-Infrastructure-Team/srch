@@ -27,7 +27,7 @@ export const ResultsWindow = React.memo(
     setIsSearchOpen,
     truncateSnippet = true,
   }) => {
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState(null);
     const [isIndexInitialized, setIndexInitialized] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
@@ -42,8 +42,6 @@ export const ResultsWindow = React.memo(
         if (searchQuery.length && isIndexInitialized) {
           const results = await search(searchQuery, truncateSnippet);
           setSearchResults(results);
-        } else {
-          setSearchResults([]);
         }
       };
       const debounceTimer = setTimeout(doSearch, 0);
@@ -57,13 +55,13 @@ export const ResultsWindow = React.memo(
 
     return (
       <div className={classSuffix("results-window", floating)}>
-        {maxResults != 0 && (
+        {searchResults != null && (maxResults != 0 && (
           <Collapse in={searchQuery} animateOpacity>
             <div
               className={classSuffix("results-list", floating)}
               style={
                 maxResults != null
-                  ? { maxHeight: `${95 * maxResults}px`, overflowY: "auto" }
+                  ? { maxHeight: `${109 * maxResults}px`, overflowY: "auto" }
                   : { overflowY: "auto" }
               }
             >
@@ -84,6 +82,7 @@ export const ResultsWindow = React.memo(
                     }-${idx}`;
                   const snippetToRender = item.snippet;
                   return (
+                    <div className={"result-row"}>
                     <div
                       className={"results-item"}
                       key={key}
@@ -125,6 +124,7 @@ export const ResultsWindow = React.memo(
                         maxResults={maxResults}
                       />
                     </div>
+                    </div>
                   );
                 })
               ) : (
@@ -150,7 +150,7 @@ export const ResultsWindow = React.memo(
               </div>
             )}
           </Collapse>
-        )}
+        ))}
       </div>
     );
   }
