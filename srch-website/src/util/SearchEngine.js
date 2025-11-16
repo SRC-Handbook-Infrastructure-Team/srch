@@ -29,6 +29,7 @@ const index = new FlexSearch.Document({
       "subsectionTitle",
       "subsection",
       "content",
+      "sidebarAnchor",
       "anchor",
       "isDrawer",
     ],
@@ -40,7 +41,6 @@ const index = new FlexSearch.Document({
 });
 
 let indexInitialized = false;
-
 function extractHeadingBlocks(
   markdown,
   sectionId,
@@ -54,7 +54,9 @@ function extractHeadingBlocks(
 
   let currentTitle = null;
   let currentAnchor = null;
+  let currentSidebarAnchor = null;
   let currentLines = [];
+  let sidebarReached = false;
 
   function pushDrawerBlock(anchor, lines) {
     blocks.push({
@@ -85,13 +87,14 @@ function extractHeadingBlocks(
   const pushBlock = () => {
     if (currentTitle !== null) {
       if (currentTitle === "Sidebar") {
+        sidebarReached = true;
         let currentAnchorLocal = null;
         let anchorLines = [];
         currentLines.forEach((line) => {
           const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
           if (match) {
             if (currentAnchorLocal !== null) {
-              pushDrawerBlock(currentAnchorLocal, anchorLines);
+              pushDrawerBlock(currentSidebarAnchor, anchorLines);
             }
             currentAnchorLocal = match[1].trim();
             anchorLines = [];
@@ -100,7 +103,7 @@ function extractHeadingBlocks(
           }
         });
         if (currentAnchorLocal !== null) {
-          pushDrawerBlock(currentAnchorLocal, anchorLines);
+          pushDrawerBlock(currentSidebarAnchor, anchorLines);
         }
       } else {
         if (sectionId == "about") {
@@ -115,10 +118,10 @@ function extractHeadingBlocks(
           sectionTitle: sectionTitle,
           subsection: subsectionId,
           subsectionTitle: subsectionTitle,
-          anchor: currentAnchor,
+          anchor: sidebarReached ? currentSidebarAnchor : currentAnchor,
           title: currentTitle,
           content: currentLines.join("\n").trim(),
-          isDrawer: false,
+          isDrawer: sidebarReached,
         });
       }
     } else if (currentLines.length) {
@@ -141,6 +144,11 @@ function extractHeadingBlocks(
   };
 
   lines.forEach((line) => {
+    const match = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+    if (match) {
+      currentSidebarAnchor = match[1].trim();
+      console.log(currentSidebarAnchor);
+    }
     if (line.startsWith("## ")) {
       pushBlock();
       currentTitle = line.replace("## ", "").trim();
@@ -262,6 +270,9 @@ function getPlaintextFromMarkdown(content) {
 
   // Preserve paragraph breaks by replacing multiple newlines with exactly two newlines
   content = content.replace(/\n{2,}/g, "\n\n").trim();
+
+  // Remove any remaining text inside square brackets including the brackets
+  content = content.replace(/\[[^\]]*\]/g, "");
 
   return content;
 }

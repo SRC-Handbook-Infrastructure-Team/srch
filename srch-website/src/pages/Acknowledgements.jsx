@@ -38,7 +38,7 @@ import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 
 // Footer assets (shared with Home)
 import logoImage from "../assets/logo.png";
@@ -98,7 +98,10 @@ function TeamGrid({ filteredTeam }) {
                 decoding="async"
               />
             ) : (
-              <div className="ack-card-photo ack-photo-fallback" aria-hidden="true" />
+              <div
+                className="ack-card-photo ack-photo-fallback"
+                aria-hidden="true"
+              />
             )}
 
             {/* --- Name + Pronouns row --- */}
@@ -112,8 +115,12 @@ function TeamGrid({ filteredTeam }) {
             {/* --- Role | Degree, GradYear --- */}
             <div className="ack-card-subinfo">
               {member.position}
-              {member.degree && member.degree.trim() !== "" && ` | ${member.degree}`}
-              {member.gradYear && member.gradYear.trim() !== "" && `, ${member.gradYear}`}
+              {member.degree &&
+                member.degree.trim() !== "" &&
+                ` | ${member.degree}`}
+              {member.gradYear &&
+                member.gradYear.trim() !== "" &&
+                `, ${member.gradYear}`}
             </div>
 
             {/* --- Icon row (conditionally renders each icon) --- */}
@@ -176,8 +183,12 @@ function TeamSection({ title, teamName }) {
   const members = team.filter((m) => m.team === teamName);
   if (members.length === 0) return null;
 
-  const active = members.filter((m) => String(m.active).toLowerCase() === "true");
-  const inactive = members.filter((m) => String(m.active).toLowerCase() === "false");
+  const active = members.filter(
+    (m) => String(m.active).toLowerCase() === "true"
+  );
+  const inactive = members.filter(
+    (m) => String(m.active).toLowerCase() === "false"
+  );
 
   return (
     <>
@@ -264,9 +275,7 @@ export default function Acknowledgements() {
           title="Additional Contributors — Faculty Advisors"
           teamName="additional_faculty"
         />
-         </div>
-                    <Footer />
-
+      </div>
     </>
   );
 }

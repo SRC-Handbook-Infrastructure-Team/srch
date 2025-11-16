@@ -1,11 +1,13 @@
 import "./App.css";
 
 import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 import ContentsSidebar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import Acknowledgements from "./pages/Acknowledgements"; //  now ONE page
+import Acknowledgements from "./pages/Acknowledgements";
 import { SearchResults } from "./pages/SearchResults";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
@@ -17,10 +19,22 @@ function AppRoutes() {
     location.pathname.startsWith("/acknowledgements");
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
-
-  //  Markdown layout logic
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
+
+  // Scroll to top or hash element on location change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (location.hash) {
+        const id = location.hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [location]);
 
   return (
     <>
@@ -40,29 +54,22 @@ function AppRoutes() {
         </SidebarLayout>
       ) : (
         <>
-          {/*  Sidebar on every non-home, non-search, non-acknowledgements, non-about page */}
           {!isSearchPage &&
             !isHomePage &&
             !isAcknowledgementsPage &&
             !isAboutPage && <ContentsSidebar />}
 
-          <NavBar />
-
           <Routes>
             <Route path="/" element={<Home />} />
-
-            {/*  ONE SINGLE ACKNOWLEDGEMENTS PAGE */}
             <Route path="/acknowledgements" element={<Acknowledgements />} />
             <Route path="/about" element={<About />} />
-
-            {/*  Search */}
             <Route path="/search/:query" element={<SearchResults />} />
             <Route path="/search" element={<SearchResults />} />
           </Routes>
-
-          <NavBar />
         </>
       )}
+      <NavBar />
+      <Footer />
     </>
   );
 }
