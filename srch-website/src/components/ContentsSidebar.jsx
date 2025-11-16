@@ -74,18 +74,7 @@ function indexToLetter(index) {
   return s;
 }
 
-// WHY: Roman numerals if needed in the future (kept for parity with original file).
-function indexToRoman(index) {
-  const n = index + 1;
-  const romans = [
-    ["M", 1000], ["CM", 900], ["D", 500], ["CD", 400],
-    ["C", 100], ["XC", 90], ["L", 50], ["XL", 40],
-    ["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1],
-  ];
-  let num = n, res = "";
-  for (const [r, val] of romans) while (num >= val) { res += r; num -= val; }
-  return res.toLowerCase();
-}
+
 
 // WHY: Stable in-app slug generation for headings.
 function slugify(text = "") {

@@ -32,7 +32,7 @@
  * ============================================================================
  */
 
-import "../Acknowledgements.css";
+import "../LandingPage.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
@@ -238,7 +238,7 @@ export default function Acknowledgements() {
           - .ack-lower-content (margin-top: Nvh to start after the hero)
       */}
       <div className="ack-hero">
-        <div className="upper-text-section">
+        <div className="ack-upper-text-section">
           <div className="website-title">Meet our Team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
           <div className="info-section"></div>

@@ -9,7 +9,7 @@
  * ============================================================================
  */
 
-import "../About.css";
+import "../LandingPage.css";
 import NavBar from "../components/NavBar";
 import logoImage from "../assets/logo.png";
 import privacyIcon from "../assets/privacy-icon.svg";

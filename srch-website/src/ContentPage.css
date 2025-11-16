@@ -1462,15 +1462,163 @@ html.right-open .right-sidebar {
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 3.5px 7.5px !important;       /* More interior padding → more pill */
-  border-radius: 15px !important;    /* Perfect pill shape */
+  padding: 4px 2.5px !important;       /* More interior padding → more pill */
+  border-radius: 6px !important;    /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;                /* More breathing room between text + icon */
+  gap: 4px !important;                /* More breathing room between text + icon */
 }
 
+
+/* ----------------------------------------
+   Layout container + modes
+   ---------------------------------------- */
+.sidebar-layout {
+  display: block;
+  /* NEW: let this act as a container for layout decisions */
+  container-type: inline-size;
+  container-name: layout;
+}
+
+/* Overlay / split-screen behavior:
+   When the layout container is narrower than 1280px but above mobile,
+   we let CSS “flip” main-content to overlay-friendly margins.
+*/
+@container layout (max-width: 1279px) and (min-width: 769px) {
+  html body .main-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+html[data-layout-mode="overlay"].right-open body .main-content {
+  margin-right: 0 !important;
+}
+
+
+
+
+/* Default: no scrim */
+.sidebar-layout::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ----------------------------------------
+   Dev layout mode badge
+   ---------------------------------------- */
+.layout-mode-badge {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 50;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 11px;
+  font-family: "Be Vietnam Pro", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .left-sidebar,
+  .right-sidebar,
+  .main-content,
+  .right-resize-hitbox {
+    transition: none !important;
+  }
+}
+
+/* Ensure mobile drawers re-use overlay’s sidebar styles */
+.drawer-content .sidepanel {
+  width: var(--right-sidebar-width);
+  max-width: 100vw;
+  height: 100%;
+  box-shadow: none;
+  top: 0;
+  bottom: 0;
+  position: relative;
+  background: var(--sidebar-bg, #fff);
+}
+
+/* ============================================================================
+   MOBILE = OVERLAY (UNIFIED VISUAL SYSTEM)
+   ----------------------------------------------------------------------------
+   This block ensures mobile behaves EXACTLY like overlay mode:
+   - sidebars float over content
+   - no main-content shifting
+   - scrim works identically
+   - no resize handles active
+============================================================================ */
+
+/* 1. Main content NEVER shifts in mobile */
+html[data-layout-mode="mobile"] body .main-content {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 2. When a panel is open, still do NOT shift */
+html[data-layout-mode="mobile"].right-open body .main-content {
+  margin-right: 0 !important;
+}
+
+/* 3. Scrim identical to overlay mode */
+.sidebar-layout.has-panel-open[data-layout-mode="mobile"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 14; /* same depth layering as overlay */
+}
+
+/* 4. Left sidebar overlay behavior in mobile */
+html[data-layout-mode="mobile"] .left-sidebar {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+html[data-layout-mode="mobile"] .left-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* 5. Right sidebar overlay behavior in mobile */
+html[data-layout-mode="mobile"] .right-sidebar {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+html[data-layout-mode="mobile"].right-open .right-sidebar,
+html[data-layout-mode="mobile"] .right-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* 6. Disable resize UI on mobile (no confusing drag areas) */
+html[data-layout-mode="mobile"] .left-resizer,
+html[data-layout-mode="mobile"] .right-resizer,
+html[data-layout-mode="mobile"] .right-resize-hitbox {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* 7. Ensure no accidental layout push via custom container queries */
+@container layout (max-width: 768px) {
+  html body .main-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
 
 

@@ -61,6 +61,28 @@
   --upper-content-height: 75vh;
 
   --content-width: 627px;
+
+  /* Card + grid geometry */
+  --ack-card-width: 290px;      /* EXACT card width from Figma */
+  --ack-photo-width: 290px;     /* EXACT photo width */
+  --ack-photo-height: 302px;    /* EXACT photo height */
+  --ack-grid-col-gap: 10px;     /* column gap */
+  --ack-grid-row-gap: 10px;     /* row gap */
+  --ack-radius: 6px;
+
+  /* Typography + colors */
+  --ack-brand-brown: #531C00;
+  --ack-text: #1a1a1a;
+  --ack-muted: #00000085;
+  --ack-divider: rgba(96, 70, 58, 1);
+
+  /* Icon buttons */
+  --ack-icon-size: 32px;
+  --ack-icon-ring: #5a2d0c;
+
+  /* Hero */
+  --ack-upper-height: 75vh;
+  --ack-hero-paddingX: 13.22vw;
 }
 
 body,
@@ -102,24 +124,30 @@ html {
 
 .upper-content {
   width: 100vw;
-  min-height: var(--upper-content-height);
-  padding-bottom: clamp(16px, 4vh, 48px);
+  height: var(--ack-upper-height); /* exactly 75vh, no extra internal space */
   position: fixed;
   top: 0;
-  border-top: 1px white solid;
+  left: 0;
+  z-index: 0;
+
+  border-top: 1px solid white;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: var(--medium-gap);
-  z-index: 0;
+
   background-image: url("../src/assets/landing-page-background-gradient.png");
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
-  transition: background-image 0.3s ease, background-position 0.4s ease,
-    padding 0.4s ease, align-items 0.4s ease, justify-content 0.4s ease;
+
+  /* Remove artificial stretching */
+  padding: 0 var(--ack-hero-paddingX);
+
+  transition: background-image 0.3s ease;
 }
+
 
 .upper-content:hover {
   background-image: url("../src/assets/blurred-background.png");
@@ -130,12 +158,13 @@ html {
   margin-top: 18vh;
   flex-direction: column;
   justify-content: flex-start;
-  padding-left: calc((450 / 1512) * 100vw);
-  align-items: center;
+  align-items: flex-start;
   gap: var(--small-gap);
+  padding-left: 5vw;
   display: flex;
   z-index: 1;
   transition: width 0.4s ease, align-items 0.4s ease, margin-top 0.4s ease;
+  transform: translateX(-100px);
 }
 
 .upper-content,
@@ -835,5 +864,449 @@ html {
 
   .modules {
     width: 100%;
+  }
+}
+
+
+/* ==========================================================================
+   PAGE: Acknowledgements
+   ========================================================================== */
+
+   /* ============================================================================  
+   ACKNOWLEDGEMENTS — MERGED + SAFE VERSION  
+   (No :root and No Footer Overrides)  
+   ============================================================================ */
+
+
+/* ============================================================================  
+   1. HERO BANNER  
+   ============================================================================ */
+
+.ack-hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--ack-upper-height);
+  z-index: 0;
+
+  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: flex-start;
+  padding: 0 var(--ack-hero-paddingX);
+  border-top: 1px solid white;
+}
+
+.ack-hero:hover {
+  background-image: url("../src/assets/blurred-background.png");
+
+}
+
+.ack-upper-text-section {
+
+  width: 33vw;
+  margin-top: 20vh;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  z-index: 1;
+}
+
+/* Acknowledgements page–specific title offset */
+.ack-hero .website-title {
+  position: relative;
+  left: -100px;
+  top: 70px;
+  font-size: 84px;
+  line-height: 100px;
+}
+
+.ack-hero .info-section {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--ack-text);
+}
+
+
+/* ============================================================================  
+   2. LOWER CONTENT (slides upward over hero)  
+   ============================================================================ */
+
+.ack-lower-content {
+  margin-top: calc(var(--ack-upper-height) - 5vh);
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  padding: 72px 200px;
+}
+
+/* Safely namespaced to avoid conflict with .line-divider in LandingPage */
+.ack-line-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--ack-divider);
+  transform: scaleX(1.35);
+  transform-origin: center;
+}
+
+
+/* ============================================================================  
+   3. GRID LAYOUT  
+   ============================================================================ */
+
+.ack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, var(--ack-card-width));
+  column-gap: var(--ack-grid-col-gap);
+  row-gap: var(--ack-grid-row-gap);
+  justify-content: space-between;
+}
+
+@media (max-width: 1199px) {
+  .ack-grid {
+    grid-template-columns: repeat(2, var(--ack-card-width));
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .ack-grid {
+    grid-template-columns: repeat(1, var(--ack-card-width));
+    justify-content: center;
+  }
+}
+
+
+/* ============================================================================  
+   4. CARD CONTAINER  
+   ============================================================================ */
+
+.ack-card {
+  width: var(--ack-card-width);
+  display: flex;
+  flex-direction: column;
+  font-family: "Be Vietnam Pro", sans-serif;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================================  
+   5. PHOTO REGION WITH FIGMA MASK  
+   ============================================================================ */
+
+.ack-card-photo {
+  width: var(--ack-photo-width);
+  height: var(--ack-photo-height);
+  border-radius: var(--ack-radius);
+  object-fit: cover;
+  object-position: center;
+  background-color: #d9d9d9;
+  display: block;
+
+  -webkit-mask-image: url("../src/assets/Photo.png");
+  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.ack-photo-fallback {
+  width: var(--ack-photo-width);
+  height: var(--ack-photo-height);
+  background: #d9d9d9;
+  border-radius: var(--ack-radius);
+
+  -webkit-mask-image: url("../src/assets/Photo.png");
+  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+
+/* ============================================================================  
+   6. CARD TYPOGRAPHY  
+   ============================================================================ */
+
+.ack-card-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 8px;
+  word-break: break-word;
+}
+
+.ack-card-fullname {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ack-brand-brown);
+  line-height: 22px;
+}
+
+.ack-card-pronouns {
+  font-size: 15px;
+  color: var(--ack-muted);
+}
+
+.ack-card-subinfo {
+  font-size: 15px;
+  line-height: 20px;
+  margin-top: 2px;
+  color: #000;
+}
+
+
+/* ============================================================================  
+   7. ICON ROW  
+   ============================================================================ */
+
+.ack-card-icons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.ack-icon-btn {
+  width: var(--ack-icon-size);
+  height: var(--ack-icon-size);
+  border-radius: 50%;
+  border: 1px solid var(--ack-icon-ring);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--ack-icon-ring);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.08s ease;
+}
+
+.ack-icon-btn:hover {
+  background-color: var(--ack-icon-ring);
+  color: #fff;
+}
+
+.ack-icon-btn:active {
+  transform: translateY(0.5px);
+}
+
+.ack-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(90, 45, 12, 0.35);
+}
+
+
+/* ============================================================================  
+   8. RESPONSIVENESS  
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .ack-lower-content {
+    padding: 72px 120px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ack-lower-content {
+    padding: 72px 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ack-lower-content {
+    padding: 48px 24px;
+  }
+}
+
+
+/* ============================================================================  
+   9. HOUSEKEEPING  
+   ============================================================================ */
+
+.ack-card *, 
+.ack-grid * {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ack-icon-btn {
+    transition: none;
+  }
+}
+
+
+
+
+
+/* ==========================================================================
+   PAGE: About
+   ========================================================================== */
+
+   /* ============================================================================
+   About.css
+   ----------------------------------------------------------------------------
+   Mirrors the hero + lower-content architecture used on Acknowledgements.
+   Includes:
+   • Full-viewport fixed hero using SRC gradient image assets
+   • Hover variant
+   • Slide-up lower content
+   • Typography + section layout
+   ============================================================================ */
+
+/* ============================================================================
+   1. HERO BANNER (full-screen, fixed)
+   ============================================================================ */
+
+.about-hero {
+   position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--ack-upper-height);
+  z-index: 0;
+
+  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: flex-start;
+  padding: 0 var(--ack-hero-paddingX);
+  border-top: 1px solid white;
+}
+
+.about-hero:hover {
+  background-image: url("../src/assets/blurred-background.png");
+
+}
+
+/* Position text block inside hero */
+.about-upper-text {
+  width: 33vw;
+  margin-top: 20vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 1;
+}
+
+.about-title {
+  font-family: "Funnel Sans", sans-serif;
+  font-weight: 900;
+  font-size: 72px;
+  line-height: 1.05;
+  color: #1a1a1a;
+}
+
+.about-sub {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 18px;
+  color: #1a1a1a;
+  line-height: 28px;
+  max-width: 600px;
+}
+
+/* ============================================================================
+   2. LOWER CONTENT (slides upward over hero)
+   ============================================================================ */
+
+.about-lower-content {
+  margin-top: 70vh;
+  position: relative;
+  z-index: 1;
+
+  background: white;
+  padding: 72px 200px;
+}
+
+/* Constrained text section — matches Figma + screenshot */
+.about-section {
+  max-width: 720px;
+  margin: 0 auto 48px auto;
+  text-align: left;
+  padding: 0 24px;
+}
+
+.about-section h2 {
+  font-family: "Funnel Sans", sans-serif;
+  font-weight: 900;
+  font-size: 48px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 1);
+}
+
+.about-section p {
+  font-family: "Be Vietnam Pro", sans-serif;
+  color: rgba(0, 0, 0, 1);
+  font-size: 20px;
+  line-height: 1.6;
+  max-width: 650px;
+  margin-bottom: 20px;
+}
+
+.about-section ul {
+  padding-left: 22px;
+  margin-top: 8px;
+}
+
+.about-section li {
+  font-family: "Be Vietnam Pro", sans-serif;
+  color: rgba(0, 0, 0, 1);
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* Divider matching new width + style */
+.about-divider {
+  width: 90%;
+  max-width: 900px;
+  height: 2px;
+  background: rgba(90, 45, 0, 0.5);
+  margin: 64px auto;
+  position: relative;
+  left: 0;
+  transform: none;
+}
+
+/* ============================================================================
+   3. RESPONSIVENESS
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  .about-lower-content {
+    padding: 72px 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 48px;
+  }
+  .about-upper-text {
+    width: 80vw;
+    margin-top: 16vh;
+  }
+  .about-lower-content {
+    padding: 48px 24px;
+  }
+  .about-section {
+    padding: 0 12px;
   }
 }
