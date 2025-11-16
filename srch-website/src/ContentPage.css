@@ -43,7 +43,7 @@
   --color-text: #1a1a1a;
   --header-text-color: #531c00;
   --sub-header-text-color: #7b4b24;
-  --sidebar-phrase-color: #ffffff;
+  --sidebar-phrase-color: #531c00;
   --sidebar-link-color: #9D0039;
   --navbar-link-hover: #9D0039;
   --results-bg: #9D0039;
@@ -956,6 +956,7 @@ h3 {
   flex-direction: column;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 0 1.25rem 0 1.25rem;
+  z-index: 9999;
 }
 
 /* Base (non-floating) results window – used in NavSearchBar */

@@ -470,7 +470,7 @@ html {
   height: 2px;
   background: rgba(90, 45, 0, 0.5);
   margin: 24px auto;
-  z-index: 1;
+  z-index: 0;
 }
 
 /* Dark mode override */
