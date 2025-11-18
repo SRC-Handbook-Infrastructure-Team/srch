@@ -15,8 +15,7 @@ import instaLogo from "../assets/instagram-logo.svg";
 import cntrLogo from "../assets/cntr-logo.png";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
-import Footer from "../components/Footer"
-
+import Footer from "../components/Footer";
 
 function Home() {
   const navigate = useNavigate();
@@ -150,12 +149,12 @@ function Home() {
               </p>
             </div>
             <div className="landing-search-container">
-            <SearchBar
-              className="results-autofill"
-              setSearchQuery={setSearchQuery}
-              searchQuery={searchQuery}
-              maxResults={2}
-            />
+              <SearchBar
+                className="results-autofill"
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                maxResults={2}
+              />
             </div>
           </div>
 
@@ -262,9 +261,7 @@ function Home() {
                   </a>
                 </p>
               </div>
-              <div
-                className="connect-cont"
-              >
+              <div className="connect-cont">
                 <img
                   src={instaLogo}
                   alt="instagram logo"
@@ -285,11 +282,8 @@ function Home() {
               </div>
             </div>
           </div>
-
         </div>
       </div>
-          <Footer/>
-
     </div>
   );
 }

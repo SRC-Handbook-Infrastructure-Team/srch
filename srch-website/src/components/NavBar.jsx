@@ -19,7 +19,6 @@ import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
 import "../ContentPage.css";
-import { color } from "framer-motion";
 
 function NavBar({ className = "" }) {
   const location = useLocation();
@@ -117,46 +116,6 @@ function NavBar({ className = "" }) {
       }
     }
   }, [subsections, navigate]);
-
-  const NavDropdown = ({ title, items, isExpanded, onToggle }) => {
-    const handleClick = (e) => {
-      onToggle(e);
-    };
-    return (
-      <Box className="nav-dropdown">
-        <Box className="nav-dropdown-title" onClick={handleClick}>
-          <Text
-            className="nav-dropdown-title-text"
-            color={isExpanded ? "#9D0013" : "inherit"}
-          >
-            {title}
-          </Text>
-          <Icon
-            as={ChevronDownIcon}
-            className="nav-dropdown-chevron"
-            style={{ transform: isExpanded ? "rotate(180deg)" : undefined }}
-          />
-        </Box>
-        <Collapse in={isExpanded} animateOpacity>
-          <Box className="nav-dropdown-menu">
-            <VStack align="stretch" spacing={0}>
-              {items.map((item) => (
-                <Box
-                  key={item.id}
-                  className="nav-dropdown-item"
-                  onClick={item.onClick}
-                >
-                  <Text fontWeight="medium" whiteSpace="nowrap">
-                    {item.title}
-                  </Text>
-                </Box>
-              ))}
-            </VStack>
-          </Box>
-        </Collapse>
-      </Box>
-    );
-  };
 
   return (
     <Box

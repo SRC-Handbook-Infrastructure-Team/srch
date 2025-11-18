@@ -10,14 +10,11 @@
  */
 
 import "../About.css";
-import "../LandingPage.css"
-import Footer from "../components/Footer"
-import NavBar from "../components/NavBar";
+import "../LandingPage.css";
 
 export default function About() {
   return (
     <>
-      <NavBar />
       {/* 1. FIXED HERO (same structure as Acknowledgements) */}
       <div className="about-hero">
         <div className="about-upper-text">
@@ -63,7 +60,6 @@ export default function About() {
           </ul>
         </section>
       </div>
-           <Footer />
     </>
   );
 }

@@ -4,7 +4,7 @@ const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 const isBrowser = () =>
   typeof window !== "undefined" && typeof document !== "undefined";
 
-/** 
+/**
  * Custom hook for creating a resizable sidebar with persistence, accessibility,
  * and performance optimizations using requestAnimationFrame + throttled updates.
  */
@@ -19,8 +19,7 @@ export default function useResizableSidebar({
   cssVarName,
   onStartResize = () => {},
   onStopResize = () => {},
-  getDynamicBounds, 
-
+  getDynamicBounds,
 } = {}) {
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
@@ -43,7 +42,11 @@ export default function useResizableSidebar({
     }
   });
 
-  const ref = useRef({ startX: 0, startWidth: defaultWidth, previousWidth: null });
+  const ref = useRef({
+    startX: 0,
+    startWidth: defaultWidth,
+    previousWidth: null,
+  });
   const rafRef = useRef(null);
   const lastCommitTime = useRef(0);
   const pendingWidth = useRef(width);
@@ -119,21 +122,21 @@ export default function useResizableSidebar({
 
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
-      const delta = (clientX - ref.current.startX); // 1:1 precise drag
+      const delta = clientX - ref.current.startX; // 1:1 precise drag
 
       const rawNext =
         side === "left"
           ? ref.current.startWidth + delta
           : ref.current.startWidth - delta;
 
-      let dynMin = minWidth, dynMax = maxWidth;
+      let dynMin = minWidth,
+        dynMax = maxWidth;
       if (typeof getDynamicBounds === "function") {
         const b = getDynamicBounds();
         if (b && Number.isFinite(b.min)) dynMin = b.min;
         if (b && Number.isFinite(b.max)) dynMax = b.max;
       }
 
-      
       // Clamp ASAP
       const clampedNext = clamp(rawNext, dynMin, dynMax);
       const atMin = clampedNext === dynMin;
@@ -146,8 +149,6 @@ export default function useResizableSidebar({
       // Update edge state
       ref.current.edge = atMin ? "min" : atMax ? "max" : null;
 
-
-      
       pendingWidth.current = clampedNext;
 
       cancelAnimationFrame(rafRef.current);
@@ -238,8 +239,6 @@ export default function useResizableSidebar({
         // Instead of forcing width=0 immediately, let the CSS transition handle it
 
         setTimeout(() => setWidthState(collapsedWidth), 350);
-        
-
 
         if (isBrowser()) {
           try {

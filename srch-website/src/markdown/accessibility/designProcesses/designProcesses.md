@@ -35,7 +35,7 @@ _“When creating products I recommend you always ask: Who else? Who else should
 - **Co-Design**: A participatory approach to designing solutions in which community members are treated as equal collaborators in the design process. Involve users in the design process to reduce biases.
 - **Parallel Low Fidelity Prototyping**: A design process where multiple basic (low-fidelity) prototypes are created simultaneously, allowing designers to explore a wide range of design ideas concurrently before settling on a single direction. Typically using quick and simple methods like paper sketches on basic wireframes to rapidly test and iterate on different concepts.
 
-## All Sidebar Content Below
+## Sidebar
 
 Curb-Cut-Effect:
 Heading: Curb Cut Effect

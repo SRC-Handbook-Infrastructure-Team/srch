@@ -15,8 +15,7 @@ import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-import Footer from "../components/Footer"
-
+import Footer from "../components/Footer";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -227,80 +226,78 @@ function MarkdownPage() {
   }
 
   async function openGlobalDrawerForTerm(term, opts = {}) {
-  const { noToggle = false, noNavigate = false, silent = false } = opts;
+    const { noToggle = false, noNavigate = false, silent = false } = opts;
 
-  if (!term) return;
-  const key = String(term).toLowerCase();
+    if (!term) return;
+    const key = String(term).toLowerCase();
 
-  if (!noToggle && drawerActiveKey === key) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
+    if (!noToggle && drawerActiveKey === key) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+
+      if (!noNavigate) {
+        navigate(`/${sectionId}/${subsectionId}`);
+      }
+
+      return;
+    }
+
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      if (!silent) {
+        toast({
+          title: "Sidebar Entry Not Found",
+          description: `The sidebar entry "${term}" could not be found in this subsection.`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      }
+      return;
+    }
+
+    let drawerFile = null;
+    try {
+      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+    } catch (_) {}
+
+    const contentToShow =
+      drawerFile?.content ||
+      (typeof sidebarEntry === "string"
+        ? sidebarEntry
+        : sidebarEntry.content) ||
+      "";
+
+    const heading =
+      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+      String(term).replace(/-/g, " ");
+
+    const node = (
+      <>
+        <div className="drawer-meta-label">Familiar Case Studies</div>
+        <div className="drawer-meta-divider" />
+
+        <h2 className="drawer-section-title">
+          {highlightText(heading, highlight)}
+        </h2>
+
+        <MarkdownRenderer
+          content={contentToShow}
+          onDrawerOpen={handleDrawerOpen}
+          onNavigation={handleNavigation}
+          highlight={highlight}
+        />
+      </>
+    );
+
+    setDrawerActiveKey(key);
+    openRightDrawer(node);
 
     if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}`);
+      navigate(`/${sectionId}/${subsectionId}/${term}`);
     }
-
-    return;
   }
-
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    if (!silent) {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-    return;
-  }
-
-  let drawerFile = null;
-  try {
-    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-  } catch (_) {}
-
-  const contentToShow =
-    drawerFile?.content ||
-    (typeof sidebarEntry === "string"
-      ? sidebarEntry
-      : sidebarEntry.content) ||
-    "";
-
-  const heading =
-    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-    String(term).replace(/-/g, " ");
-
-  const node = (
-    <>
-      <div className="drawer-meta-label">Familiar Case Studies</div>
-      <div className="drawer-meta-divider" />
-
-      <h2 className="drawer-section-title">
-        {highlightText(heading, highlight)}
-      </h2>
-
-      <MarkdownRenderer
-        content={contentToShow}
-        onDrawerOpen={handleDrawerOpen}
-        onNavigation={handleNavigation}
-        highlight={highlight}
-      />
-    </>
-  );
-
-  setDrawerActiveKey(key);
-  openRightDrawer(node);
-
-  if (!noNavigate) {
-    navigate(`/${sectionId}/${subsectionId}/${term}`);
-  }
-}
-
-    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
@@ -458,35 +455,34 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-  // No term → close drawer and clear active state
-  if (!urlTerm) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-    return;
-  }
+    // No term → close drawer and clear active state
+    if (!urlTerm) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+      return;
+    }
 
-  const key = String(urlTerm).toLowerCase();
+    const key = String(urlTerm).toLowerCase();
 
-  // Wait until sidebar is actually loaded before trying to open the drawer
-  if (!sidebar || Object.keys(sidebar).length === 0) {
-    return; // sidebar not ready yet → we'll re-run when sidebar updates
-  }
+    // Wait until sidebar is actually loaded before trying to open the drawer
+    if (!sidebar || Object.keys(sidebar).length === 0) {
+      return; // sidebar not ready yet → we'll re-run when sidebar updates
+    }
 
-  // Optionally guard: only auto-open if the entry really exists
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    // You can choose to silently ignore here, or log/track if you want
-    return;
-  }
+    // Optionally guard: only auto-open if the entry really exists
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      // You can choose to silently ignore here, or log/track if you want
+      return;
+    }
 
-  // URL-driven open: don't toggle off, don't navigate again, no toast
-  openGlobalDrawerForTerm(key, {
-    noToggle: true,
-    noNavigate: true,
-    silent: true,
-  });
-}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
-
+    // URL-driven open: don't toggle off, don't navigate again, no toast
+    openGlobalDrawerForTerm(key, {
+      noToggle: true,
+      noNavigate: true,
+      silent: true,
+    });
+  }, [urlTerm, sidebar]); // <— important: depend on sidebar too
 
   const checkAndNavigate = useCallback(
     async (path) => {
@@ -616,7 +612,6 @@ function MarkdownPage() {
             />
           </Box>
         )}
-        <Footer/>
       </Box>
     </div>
   );
