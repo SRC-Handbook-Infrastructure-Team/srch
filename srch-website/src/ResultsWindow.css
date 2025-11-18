@@ -144,6 +144,7 @@
 
 .pages-row {
   justify-content: center;
+  align-content: center;
 }
 
 /* ========================================================================== 
@@ -164,9 +165,6 @@
 }
 
 .results-window {
-  /* background-color: white; */
-  /* border-radius: 12px; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   padding: 0 1.25rem 0 1.25rem;
 }
 
@@ -269,20 +267,36 @@
   justify-content: flex-start;
 }
 
+.pages-and-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .pages-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 15px;
+  padding: 5px 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.pages-row:hover {
+  background: rgba(83, 28, 0, 0.05);
 }
 
 .page-number {
   cursor: pointer;
   color: #5d3210;
-  text-decoration: underline;
   user-select: none;
   outline: none;
+  font-size: 1rem;
   width: 10px;
   text-align: center;
+  align-self: center;
+  align-content: center;
 }
 
 .page-number.selected {
@@ -292,9 +306,20 @@
 .page-nav {
   cursor: pointer;
   color: #5d3210;
+  height: 34px;
+  text-align: center;
+  font-size: 1rem;
   user-select: none;
-  padding: 0 10px;
   outline: none;
+  padding: 5px 15px;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: right;
+  align-items: center;
+  display: flex;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .page-nav[aria-disabled="true"] {
@@ -305,4 +330,11 @@
 
 .page-nav:hover {
   text-decoration: none;
+  background-color: rgba(83, 28, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.page-nav.invisible {
+  visibility: hidden;
+  transition: visibility 0.2s ease;
 }

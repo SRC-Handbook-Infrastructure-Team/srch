@@ -30,8 +30,10 @@
   --color-bg: #ffffff;
   --sidebar-bg: #ffffff;
   --color-bg-alt: #f8f9fa;
-  --color-border: #e0d7ce; /* from new theme */
-  --color-accent: #7b4b24; /* new accent color */
+  --color-border: #e0d7ce;
+  /* from new theme */
+  --color-accent: #7b4b24;
+  /* new accent color */
   --color-accent-light: #f3ece6;
 
   /* ------------------------------------------------------------------------
@@ -129,13 +131,16 @@ html {
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
-  opacity: 0; /* initially hidden */
+  opacity: 0;
+  /* initially hidden */
   transition: opacity 0.5s ease-in-out;
-  z-index: -1; /* behind content */
+  z-index: -1;
+  /* behind content */
 }
 
 .upper-content:hover::before {
-  opacity: 1; /* fade in on hover */
+  opacity: 1;
+  /* fade in on hover */
 }
 
 .upper-content:hover {
@@ -198,7 +203,7 @@ html {
 }
 
 .website-title {
-  font-size: clamp(2rem, 6vw, 80px);
+  font-size: clamp(2rem, 6vw, 70px);
   width: 455px;
   height: 200px;
   justify-content: center;
@@ -341,12 +346,14 @@ html {
   width: 80vw;
   margin: 0 auto;
 }
+
 @media (max-width: 900px) {
   .card-grid {
     grid-template-columns: 1fr;
     width: calc(100% - 13.22vw);
     justify-content: center;
   }
+
   .intro-text {
     text-align: center;
   }
@@ -440,9 +447,11 @@ html {
   line-height: 28px;
   word-wrap: break-word;
 }
+
 .landing-search-container {
   width: 60%;
 }
+
 .section-title {
   align-self: stretch;
   text-align: center;
@@ -583,6 +592,7 @@ html {
   padding-bottom: 24px;
   word-wrap: break-word;
 }
+
 /* Modules Section */
 .modules {
   flex-direction: column;
@@ -590,7 +600,8 @@ html {
   align-items: flex-start;
   gap: 18px;
   display: flex;
-  flex: 1; /* This allows equal spacing */
+  flex: 1;
+  /* This allows equal spacing */
 }
 
 .modules-heading,
@@ -657,6 +668,7 @@ html {
   gap: 56px;
   align-items: center;
 }
+
 .connect-cont {
   display: flex;
   flex-direction: row;
@@ -664,6 +676,7 @@ html {
   padding: 12px 24px;
   align-items: center;
 }
+
 .connect-link {
   font-weight: 600;
   color: #9d0013;
@@ -688,6 +701,7 @@ html {
 .feedback-contact a:hover {
   color: #7a000f;
 }
+
 /* Primer Link Section - Footer Container */
 
 .footer-container {

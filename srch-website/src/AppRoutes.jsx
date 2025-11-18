@@ -22,7 +22,6 @@ function AppRoutes() {
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
 
-  // Scroll to top or hash element on location change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (location.hash) {

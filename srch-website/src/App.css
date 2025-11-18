@@ -7,6 +7,233 @@ html {
   padding: 2rem;
 }
 
+
+/* ========================================================================== 
+   Navigation Bar
+   ========================================================================== */
+
+.top-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  margin: 0;
+
+  height: auto;
+  min-height: 70px;
+
+  display: block;
+  background-color: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 999999999999;
+}
+
+.top-navbar a:hover,
+.top-navbar a:button,
+.top-navbar .nav-link:hover,
+.top-navbar .nav-button:hover {
+  color: #9d0013;
+}
+
+.navbar-padding {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.navbar-logo-container {
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.header-hstack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  overflow: visible;
+  width: 100%;
+  height: min-content;
+}
+
+.right-hstack {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nav-dropdown {
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.nav-dropdown-title {
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.nav-dropdown-title:hover {
+  color: #9d0013;
+}
+
+.nav-dropdown-title-text {
+  pointer-events: auto;
+  user-select: none;
+  color: inherit;
+  cursor: pointer;
+  margin-right: 0.25rem;
+  font-weight: 500;
+}
+
+.nav-dropdown-chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+  user-select: none;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 0.25rem;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+  justify-content: center;
+}
+
+.nav-dropdown-item {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-dropdown-item:hover {
+  color: #9d0013;
+}
+
+/* Text boxes for simple nav links */
+.nav-link-box {
+  height: min-content;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.nav-link-box:hover {
+  color: #9d0013;
+}
+
+.mobile-menu-vstack {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+  width: 100%;
+}
+
+.mobile-modules-container {
+  position: relative;
+}
+
+.mobile-modules-toggle {
+  border-radius: 0.375rem;
+  cursor: pointer;
+  text-align: left;
+  width: min-content;
+  white-space: nowrap;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.3s;
+}
+
+.mobile-modules-toggle:hover {
+  color: #9d0013;
+}
+
+.mobile-modules-chevron {
+  transition: transform 0.3s;
+  width: 20px;
+  height: 20px;
+}
+
+.mobile-modules-collapse {
+  overflow: visible;
+  width: min-content;
+  padding-top: 0.5rem;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-module-item {
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.mobile-module-item:hover {
+  color: #9d0013;
+}
+
+.icon-button {
+  padding: 0rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 48em) {
+  .hide-md {
+    display: none !important;
+  }
+  .show-md {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 47.99em) {
+  .hide-base {
+    display: none !important;
+  }
+  .show-base {
+    display: inline-flex !important;
+  }
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   #root {

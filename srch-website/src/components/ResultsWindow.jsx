@@ -62,6 +62,10 @@ export const ResultsWindow = React.memo(
       return stored ? Number(stored) : 20;
     };
 
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
+
     const [resultsPerPage, setResultsPerPage] = useState(
       getStoredResultsPerPage
     );
@@ -116,214 +120,208 @@ export const ResultsWindow = React.memo(
       <Box>
         {((maxResults == null && searchQuery.length > 0) ||
           maxResults != null) && (
-          <div className={classSuffix("results-window", floating)}>
-            {searchResults != null && maxResults !== 0 && (
-              <Collapse in={searchQuery} animateOpacity>
-                <div
-                  className={classSuffix("results-list", floating)}
-                  style={
-                    maxResults != null
-                      ? {
+            <div className={classSuffix("results-window", floating)}>
+              {searchResults != null && maxResults !== 0 && (
+                <Collapse in={searchQuery} animateOpacity>
+                  <div
+                    className={classSuffix("results-list", floating)}
+                    style={
+                      maxResults != null
+                        ? {
                           maxHeight: `${123 * maxResults}px`,
                           overflowY: "auto",
                         }
-                      : { overflowY: "auto" }
-                  }
-                >
-                  {maxResults == null && (
-                    <div className="results-top-row">
-                      <div className="results-found-count">
-                        {searchResults.length > 0
-                          ? `${(currentPage - 1) * resultsPerPage + 1} - ${Math.min(
+                        : { overflowY: "auto" }
+                    }
+                  >
+                    {maxResults == null && (
+                      <div className="results-top-row">
+                        <div className="results-found-count">
+                          {searchResults.length > 0
+                            ? `${(currentPage - 1) * resultsPerPage + 1} - ${Math.min(
                               currentPage * resultsPerPage,
                               searchResults.length
                             )} of ${searchResults.length} documents found for "${searchQuery}"`
-                          : `No documents found for ${searchQuery}`}
+                            : `No documents found for ${searchQuery}`}
+                        </div>
+                        <div className="results-per-page-selector">
+                          <span>
+                            Showing{" "}
+                            {[20, 50, 100].map((num) => (
+                              <span
+                                key={num}
+                                className={`per-page-number ${num === resultsPerPage ? "selected" : ""}`}
+                                onClick={() => handleResultNumberClick(num)}
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    handleResultNumberClick(num);
+                                  }
+                                }}
+                                role="button"
+                                aria-pressed={num === resultsPerPage}
+                              >
+                                {num}
+                              </span>
+                            ))}{" "}
+                            results per page
+                          </span>
+                        </div>
                       </div>
-                      <div className="results-per-page-selector">
-                        <span>
-                          Showing{" "}
-                          {[20, 50, 100].map((num) => (
-                            <span
-                              key={num}
-                              className={`per-page-number ${num === resultsPerPage ? "selected" : ""}`}
-                              onClick={() => handleResultNumberClick(num)}
+                    )}
+                    {Array.isArray(paginated) && paginated.length > 0 ? (
+                      paginated.map((item, idx) => {
+                        const doc = item.doc || {};
+                        const key =
+                          item.id ??
+                          `${doc.sectionTitle || ""}-${doc.subsectionTitle || ""}-${doc.title || ""
+                          }-${idx}`;
+                        const snippetToRender = item.snippet;
+                        return (
+                          <div className="result-row" key={key}>
+                            <div
+                              className="results-item"
+                              role="link"
                               tabIndex={0}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  e.preventDefault();
-                                  handleResultNumberClick(num);
-                                }
-                              }}
-                              role="button"
-                              aria-pressed={num === resultsPerPage}
-                            >
-                              {num}
-                            </span>
-                          ))}{" "}
-                          results per page
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  {Array.isArray(paginated) && paginated.length > 0 ? (
-                    paginated.map((item, idx) => {
-                      const doc = item.doc || {};
-                      const key =
-                        item.id ??
-                        `${doc.sectionTitle || ""}-${doc.subsectionTitle || ""}-${
-                          doc.title || ""
-                        }-${idx}`;
-                      const snippetToRender = item.snippet;
-                      return (
-                        <div className="result-row" key={key}>
-                          <div
-                            className="results-item"
-                            role="link"
-                            tabIndex={0}
-                            onClick={() => {
-                              navigate(
-                                `/${doc.section}/${doc.subsection || ""}${
-                                  doc.isDrawer
+                              onClick={() => {
+                                navigate(
+                                  `/${doc.section}/${doc.subsection || ""}${doc.isDrawer
                                     ? `/${doc.anchor}`
                                     : `#${doc.anchor}`
-                                }`,
-                                { state: { highlight: searchQuery } }
-                              );
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                navigate(
-                                  `/${doc.section}/${doc.subsection || ""}${
-                                    doc.isDrawer
+                                  }`,
+                                  { state: { highlight: searchQuery } }
+                                );
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  navigate(
+                                    `/${doc.section}/${doc.subsection || ""}${doc.isDrawer
                                       ? `/${doc.anchor}`
                                       : `#${doc.anchor}`
-                                  }`
-                                );
-                              }
-                            }}
-                          >
-                            <div className="results-header">
-                              <div className="results-section">
-                                {doc.sectionTitle ||
-                                  doc.section ||
-                                  "Unnamed Section"}
-                              </div>
-                              <div className="results-title">
-                                {doc.title ===
-                                snippetToRender.replace(/<[^>]*>/g, "")
-                                  ? "Section Header"
-                                  : doc.title || "Unnamed Header"}
-                              </div>
-                            </div>
-                            <ResultSnippet
-                              snippet={snippetToRender}
-                              maxResults={maxResults}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="results-view-all">No results found</div>
-                  )}
-                </div>
-                {maxResults != null && searchResults.length > 0 && (
-                  <div className="results-view-all">
-                    <div className="results-count">
-                      {`Showing ${searchResults.length} result${
-                        searchResults.length === 1 ? "" : "s"
-                      }`}
-                    </div>
-                    <div>
-                      <a
-                        className="view-all-link"
-                        onClick={() => handleViewAllClick()}
-                        aria-label={`View all search results`}
-                        role="button"
-                      >
-                        {`See full result${searchResults.length === 1 ? "" : "s"}`}
-                      </a>
-                    </div>
-                  </div>
-                )}
-                {!floating &&
-                  maxResults == null &&
-                  Array.isArray(searchResults) &&
-                  searchResults.length > 0 && (
-                    <WrapAwarePaginationRow>
-                      <div className="pages-row">
-                        <div className="pages-row">
-                          {currentPage !== 1 && (
-                            <a
-                              className="page-nav"
-                              aria-disabled={currentPage === 1}
-                              onClick={() =>
-                                setCurrentPage((p) => Math.max(1, p - 1))
-                              }
-                              tabIndex={0}
-                              role="button"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  e.preventDefault();
-                                  setCurrentPage((p) => Math.max(1, p - 1));
-                                }
-                              }}
-                            >
-                              {"<"}
-                            </a>
-                          )}
-                          {[...Array(totalPages)].map((_, i) => (
-                            <span
-                              key={i + 1}
-                              className={`page-number ${
-                                currentPage === i + 1 ? "selected" : ""
-                              }`}
-                              onClick={() => setCurrentPage(i + 1)}
-                              tabIndex={0}
-                              role="button"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  e.preventDefault();
-                                  setCurrentPage(i + 1);
-                                }
-                              }}
-                            >
-                              {i + 1}
-                            </span>
-                          ))}
-                          {currentPage !== totalPages && (
-                            <a
-                              className="page-nav"
-                              onClick={() =>
-                                setCurrentPage((p) =>
-                                  Math.min(totalPages, p + 1)
-                                )
-                              }
-                              tabIndex={0}
-                              role="button"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  e.preventDefault();
-                                  setCurrentPage((p) =>
-                                    Math.min(totalPages, p + 1)
+                                    }`
                                   );
                                 }
                               }}
                             >
-                              {">"}
-                            </a>
-                          )}
-                        </div>
+                              <div className="results-header">
+                                <div className="results-section">
+                                  {doc.sectionTitle ||
+                                    doc.section ||
+                                    "Unnamed Section"}
+                                </div>
+                                <div className="results-title">
+                                  {doc.title ===
+                                    snippetToRender.replace(/<[^>]*>/g, "")
+                                    ? "Section Header"
+                                    : doc.title || "Unnamed Header"}
+                                </div>
+                              </div>
+                              <ResultSnippet
+                                snippet={snippetToRender}
+                                maxResults={maxResults}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="results-view-all">No results found</div>
+                    )}
+                  </div>
+                  {maxResults != null && searchResults.length > 0 && (
+                    <div className="results-view-all">
+                      <div className="results-count">
+                        {`Showing ${searchResults.length} result${searchResults.length === 1 ? "" : "s"
+                          }`}
                       </div>
-                    </WrapAwarePaginationRow>
+                      <div>
+                        <a
+                          className="view-all-link"
+                          onClick={() => handleViewAllClick()}
+                          aria-label={`View all search results`}
+                          role="button"
+                        >
+                          {`See full result${searchResults.length === 1 ? "" : "s"}`}
+                        </a>
+                      </div>
+                    </div>
                   )}
-              </Collapse>
-            )}
-          </div>
-        )}
-      </Box>
+                  {!floating &&
+                    maxResults == null &&
+                    Array.isArray(searchResults) &&
+                    searchResults.length > 0 &&
+                    searchResults.length > resultsPerPage && (
+                      <WrapAwarePaginationRow>
+                        <div className="pages-and-buttons-row">
+                          <a
+                            className={`page-nav${currentPage === 1 ? " invisible" : ""}`}
+                            aria-disabled={currentPage === 1}
+                            onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); scrollToTop(); }}
+                            tabIndex={0}
+                            role="button"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                scrollToTop();
+                                setCurrentPage((p) => Math.max(1, p - 1));
+                              }
+                            }}
+                          >
+                            {"Previous"}
+                          </a>
+                          <div className="pages-row">
+                            {[...Array(totalPages)].map((_, i) => (
+                              <span
+                                key={i + 1}
+                                className={`page-number ${currentPage === i + 1 ? "selected" : ""}`}
+                                onClick={() => { setCurrentPage(i + 1); scrollToTop(); }}
+                                tabIndex={0}
+                                role="button"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    scrollToTop();
+                                    setCurrentPage(i + 1);
+                                  }
+                                }}
+                              >
+                                {i + 1}
+                              </span>
+                            ))}
+                          </div>
+                          <a
+                            className={`page-nav${currentPage === totalPages ? " invisible" : ""}`}
+                            onClick={() => {
+                              setCurrentPage((p) =>
+                                Math.min(totalPages, p + 1)
+                              ); scrollToTop();
+                            }
+                            }
+                            tabIndex={0}
+                            role="button"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                scrollToTop();
+                                setCurrentPage((p) =>
+                                  Math.min(totalPages, p + 1)
+                                );
+                              }
+                            }}
+                          >
+                            {"Next"}
+                          </a>
+                        </div>
+                      </WrapAwarePaginationRow>
+                    )}
+                </Collapse>
+              )}
+            </div>
+          )
+        }
+      </Box >
     );
   }
 );
