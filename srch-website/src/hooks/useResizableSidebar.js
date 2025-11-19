@@ -136,18 +136,6 @@ export default function useResizableSidebar({
       
       // Clamp ASAP
       const clampedNext = clamp(rawNext, dynMin, dynMax);
-      const atMin = clampedNext === dynMin;
-      const atMax = clampedNext === dynMax;
-
-      // Edge-lock - if we're pinned and still pushing into the edge, don't update
-      if (ref.current.edge === "min" && atMin && rawNext <= dynMin) return;
-      if (ref.current.edge === "max" && atMax && rawNext >= dynMax) return;
-
-      // Update edge state
-      ref.current.edge = atMin ? "min" : atMax ? "max" : null;
-
-
-      
       pendingWidth.current = clampedNext;
 
       cancelAnimationFrame(rafRef.current);
@@ -159,13 +147,6 @@ export default function useResizableSidebar({
           );
         }
       });
-
-      // Throttle React updates for performance
-      const now = Date.now();
-      if (now - lastCommitTime.current > 120) {
-        setWidth(pendingWidth.current);
-        lastCommitTime.current = now;
-      }
     };
 
     const onUp = () => stopResize();
