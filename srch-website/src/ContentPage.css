@@ -159,10 +159,7 @@ mark {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-/* Ensures the entire row feels clickable and avoids visual jitter */
-.sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
-}
+
 
 /* ==========================================================================
    Markdown & Content
@@ -839,8 +836,8 @@ html body .main-content {
 
   /* FIX: combine left & right margin transitions */
   transition:
-    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7);
 
   overflow: clip;
 }

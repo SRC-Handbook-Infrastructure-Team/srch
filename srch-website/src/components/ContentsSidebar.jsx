@@ -321,15 +321,16 @@ useEffect(() => {
     }
   }, [subsections]);
 
-  /* =========================================================================
-     Expand/Collapse: pure UI behaviors (no navigation side effects)
-     -------------------------------------------------------------------------
-     - Chevron click toggles expansion.
-     - Expand one → collapse others (clean mental model).
-     - Collapse the same section → collapse all.
-     - Expand All → all open.
-     - Collapse All → keep ONLY the active section open (route-based).
-     ========================================================================= */
+ /* =========================================================================
+   Expand/Collapse: pure UI behaviors (no navigation side effects)
+   -------------------------------------------------------------------------
+   - Chevron click toggles expansion.
+   - Expanding a section leaves other sections as-is (multi-open allowed).
+   - Collapsing a section closes only that section.
+   - Expand All → open every section.
+   - Collapse All → close all except the active route-based section.
+   ========================================================================= */
+
   const toggleSection = useCallback((sectionId) => {
     setExpandedSections((prev) => {
       const nextOpen = !prev[sectionId];
@@ -378,30 +379,50 @@ useEffect(() => {
     if (allAreExpanded !== allExpanded) setAllExpanded(allAreExpanded);
   }, [sections, expandedSections, allExpanded]);
 
-  /* =========================================================================
-     Derived/Computed Helpers for Rendering
-     ========================================================================= */
+  /**
+ * Navigate to a section and (optionally) its first subsection.
+ * 
+ * IMPORTANT:
+ * - This function is *purely* about navigation.
+ * - It does NOT expand UI state anymore.
+ * - UI state is synced from the URL instead (see useEffect below).
+ */
+const navigateToSection = useCallback(
+  (sectionId, sectionSubs) => {
+    if (sectionSubs?.length > 0) {
+      navigate(`/${sectionId}/${sectionSubs[0].id}`);
+    } else {
+      navigate(`/${sectionId}`);
+    }
+  },
+  [navigate]
+);
 
-  // WHY: A stable navigate helper so we don’t inline repetitive route logic.
-  // REVISION: Navigating to a section title now ALSO expands that section
-  // without collapsing others.
-  const navigateToSection = useCallback(
-    (sectionId, sectionSubs) => {
-      setExpandedSections((prev) => {
-        if (prev[sectionId]) return prev; // already open
-        // Expand this section but keep others as-is
-        fetchHeadingsForSection(sectionId);
-        return { ...prev, [sectionId]: true };
-      });
+/**
+ * Sync UI-expanded section state to match the current URL.
+ *
+ * Rules:
+ * - When the current route specifies a sectionId,
+ *   ensure that section is expanded.
+ * - If it's already expanded, do nothing.
+ * - This guarantees UI always reflects the route,
+ *   even if navigation occurred elsewhere.
+ */
+useEffect(() => {
+  if (!currentSectionId) return;
 
-      if (sectionSubs && sectionSubs.length > 0) {
-        navigate(`/${sectionId}/${sectionSubs[0].id}`);
-      } else {
-        navigate(`/${sectionId}`);
-      }
-    },
-    [navigate, fetchHeadingsForSection]
-  );
+  setExpandedSections((prev) => {
+    if (prev[currentSectionId]) return prev;
+
+    // Expand section lazily when reached via navigation
+    fetchHeadingsForSection(currentSectionId);
+
+    return { ...prev, [currentSectionId]: true };
+  });
+}, [currentSectionId, fetchHeadingsForSection]);
+
+
+
 
   // WHY: Resolve display number once (prefers explicit mapping).
   const resolveDisplayNumber = useCallback((section, idx) => {
