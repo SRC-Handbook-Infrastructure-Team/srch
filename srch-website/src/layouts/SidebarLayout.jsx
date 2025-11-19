@@ -3,7 +3,7 @@ import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import NavBar from "../components/NavBar";
 import ContentsSidebar from "../components/ContentsSidebar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 /**
  * Layout constants
@@ -35,6 +35,8 @@ export default function SidebarLayout({ children }) {
   /** ---------------- DOM REFS (for optional freeze logic) ---------------- */
   const mainRef = useRef(null);
   const innerRef = useRef(null);
+  const scrollPosRef = useRef(0);
+
 
   /** ---------------- VIEWPORT WIDTH + LAYOUT MODE ---------------- */
   const [viewportWidth, setViewportWidth] = useState(
@@ -243,11 +245,42 @@ export default function SidebarLayout({ children }) {
 
   /** ---------------- AUTO-CLOSE DRAWER ON PAGE CHANGE ---------------- */
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getBasePath = (path = "") => {
     const parts = path.split("/").filter(Boolean);
     return `/${parts.slice(0, 2).join("/") || ""}`;
   };
+
+  /**
+ * Close the right drawer AND normalize the URL back to the base
+ * (/section/subsection). This keeps URL, CSS state, and drawer state in sync.
+ */
+const closeRightDrawerAndResetUrl = useCallback(() => {
+  // 1. Save scroll BEFORE drawer closes
+  scrollPosRef.current = window.scrollY;
+
+  // 2. Close the drawer
+  closeRightDrawer();
+
+  // 3. Compute base path for removal of /:term
+  const basePath = getBasePath(location.pathname);
+
+  // 4. Navigate without losing scroll
+  if (location.pathname !== basePath) {
+    navigate(basePath, { replace: true });
+    // Critical: restore next frame (router updates DOM first)
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: scrollPosRef.current,
+        behavior: "instant", // prevent smooth scroll conflict
+      });
+    });
+  }
+}, [closeRightDrawer, location.pathname, navigate]);
+
+
+
 
   const prevBasePathRef = useRef(getBasePath(location.pathname));
 
@@ -416,11 +449,11 @@ export default function SidebarLayout({ children }) {
           {isRightOpen && (
             <>
               <button
-                onClick={closeRightDrawer}
+                onClick={closeRightDrawerAndResetUrl}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    closeRightDrawer();
+                    closeRightDrawerAndResetUrl();
                   }
                 }}
                 className="right-drawer-close-btn"

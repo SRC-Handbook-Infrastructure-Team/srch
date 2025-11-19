@@ -159,6 +159,7 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
+  const windowScrollRef = useRef(0);
 
   const layout = useLayout() || {};
   const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
@@ -185,6 +186,8 @@ function MarkdownPage() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   const contentRef = useRef(null);
+  // store the scroll position to prevent jumps when drawer opens/closes
+const scrollPosRef = useRef(0);
 
   const formattedTitle = useMemo(() => {
     //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
@@ -226,22 +229,15 @@ function MarkdownPage() {
     return null;
   }
 
-  async function openGlobalDrawerForTerm(term, opts = {}) {
-  const { noToggle = false, noNavigate = false, silent = false } = opts;
+  /**
+ * Pure UI helper: given a term key, render its content into the right drawer.
+ * No navigation. No toggling. This is invoked ONLY by the URL-driven controller.
+ */
+async function openGlobalDrawerForTerm(term, opts = {}) {
+  const { silent = false } = opts;
 
   if (!term) return;
   const key = String(term).toLowerCase();
-
-  if (!noToggle && drawerActiveKey === key) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-
-    if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}`);
-    }
-
-    return;
-  }
 
   const sidebarEntry = getSidebarContent(key);
   if (!sidebarEntry) {
@@ -285,26 +281,32 @@ function MarkdownPage() {
 
       <MarkdownRenderer
         content={contentToShow}
+        sidebar={sidebar}
+        sectionId={sectionId}
+        subsectionId={subsectionId}
         onDrawerOpen={handleDrawerOpen}
         onNavigation={handleNavigation}
         highlight={highlight}
+        urlTerm={urlTerm}
       />
     </>
   );
 
   setDrawerActiveKey(key);
   openRightDrawer(node);
-
-  if (!noNavigate) {
-    navigate(`/${sectionId}/${subsectionId}/${term}`);
-  }
 }
 
-    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
+
+  // Restore scroll after markdown re-renders (fixes jump)
+useEffect(() => {
+  if (!contentRef.current) return;
+  contentRef.current.scrollTop = scrollPosRef.current;
+}, [mainContent]);
+
 
   useEffect(() => {
     async function loadContent() {
@@ -479,13 +481,12 @@ function MarkdownPage() {
     return;
   }
 
-  // URL-driven open: don't toggle off, don't navigate again, no toast
+    // URL-driven open: pure UI call, no nav/toggle
   openGlobalDrawerForTerm(key, {
-    noToggle: true,
-    noNavigate: true,
     silent: true,
   });
-}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
+}, [urlTerm, sidebar]);
+
 
 
   const checkAndNavigate = useCallback(
@@ -535,9 +536,65 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  function handleDrawerOpen(term) {
-    openGlobalDrawerForTerm(term);
+  // Save scroll BEFORE drawer changes cause any re-renders
+function saveScrollPosition() {
+  if (contentRef.current) {
+    scrollPosRef.current = contentRef.current.scrollTop;
   }
+}
+
+
+  /**
+ * Click handler for drawer chips:
+ * - ONLY updates the URL.
+ * - UI changes are handled by the URL-driven controller effect below.
+ */
+function handleDrawerOpen(term) {
+  saveScrollPosition();
+
+  windowScrollRef.current = window.scrollY || 0;
+
+  const basePath = `/${sectionId}/${subsectionId}`;
+
+  // 🔻 Close: chip told us "I'm already active, please close"
+  if (!term) {
+    // 1) Close the drawer immediately
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+
+    // 2) Strip /:term from URL if present
+    if (location.pathname !== basePath) {
+      navigate(basePath, { replace: true });
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, windowScrollRef.current);
+      });
+      
+    }
+    return;
+  }
+
+  // 🔺 Open: chip told us which term to show
+  const key = String(term).toLowerCase();
+  const targetPath = `${basePath}/${key}`;
+
+  // Ensure URL includes the term so it’s shareable/deep-linkable
+  if (location.pathname !== targetPath) {
+    navigate(targetPath);
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, windowScrollRef.current);
+    });
+  }
+
+  // Open the drawer UI *right now* for this term
+  openGlobalDrawerForTerm(key, { silent: true });
+}
+
+
+
+
+
 
   function handleNavigation(targetId) {
     closeRightDrawer();
@@ -552,19 +609,19 @@ function MarkdownPage() {
     }
   }
 
+   // Only handle in-page anchor links like #some-heading
   useEffect(() => {
-    if (!mainContent) return;
-    const timer = setTimeout(() => {
-      if (location.hash) {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [mainContent, location.hash]);
+    if (!location.hash) return;
+
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth" });
+  }, [location.hash]);
+
+
+
 
   return (
     <div className="markdown-page">
@@ -603,7 +660,11 @@ function MarkdownPage() {
         </div>
 
         {mainContent && (
-          <Box ref={contentRef}>
+          <Box ref={contentRef}
+          sx={{
+            scrollBehavior: "smooth",        
+          }}
+          >
             <MarkdownRenderer
               content={mainContent}
               sidebar={sidebar}
@@ -613,6 +674,7 @@ function MarkdownPage() {
               onNavigation={handleNavigation}
               isFinal={contentFinal}
               highlight={highlight}
+              urlTerm={urlTerm}
             />
           </Box>
         )}

@@ -825,9 +825,6 @@ border-radius: 9px;
   padding: 12px !important;
 }
 
-html {
-  scroll-padding-top: 70px;
-}
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
@@ -839,7 +836,8 @@ html body .main-content {
     margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
     margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7);
 
-  overflow: clip;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 
@@ -1470,7 +1468,7 @@ html.right-open .right-sidebar {
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 4px 2.5px !important;       /* More interior padding → more pill */
+  padding: 4px 2.25px !important;       /* More interior padding → more pill */
   border-radius: 6px !important;    /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
