@@ -12,7 +12,6 @@ import {
   Icon,
   Collapse,
 } from "@chakra-ui/react";
-import "../About.css";
 import "../LandingPage.css"
 
 

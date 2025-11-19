@@ -5,11 +5,9 @@
  * • Full-viewport fixed hero using SRC gradient image
  * • Text block overlays the hero background
  * • Lower content slides upward after hero scroll
- * • No ContentsSidebar on this page
  * ============================================================================
  */
 
-import "../About.css";
 import "../LandingPage.css"
 import Footer from "../components/Footer"
 import NavBar from "../components/NavBar";

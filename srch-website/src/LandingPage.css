@@ -1177,11 +1177,11 @@ html {
    ============================================================================ */
 
 .about-hero {
-   position: fixed;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: var(--ack-upper-height);
+  height: var(--ack-upper-height);   /* ← FIXED */
   z-index: 0;
 
   background-image: url("../src/assets/landing-page-background-gradient.png");
@@ -1197,7 +1197,6 @@ html {
 
 .about-hero:hover {
   background-image: url("../src/assets/blurred-background.png");
-
 }
 
 /* Position text block inside hero */
@@ -1206,7 +1205,7 @@ html {
   margin-top: 20vh;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 36px;
   z-index: 1;
 }
 
@@ -1231,7 +1230,7 @@ html {
    ============================================================================ */
 
 .about-lower-content {
-  margin-top: 70vh;
+  margin-top: var(--ack-upper-height); /* = 75vh, consistent */
   position: relative;
   z-index: 1;
 
