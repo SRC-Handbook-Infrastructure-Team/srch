@@ -1,4 +1,6 @@
-import logoImage from "../assets/logo.png";
+import { useColorMode } from "@chakra-ui/react";
+import logoLight from "../assets/logo.png";
+import logoDark from "../assets/logo-dark.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
@@ -17,6 +19,8 @@ import "../LandingPage.css"
 
 
 function Footer() {
+  const { colorMode } = useColorMode();
+  const logoImage = colorMode === 'dark' ? logoDark : logoLight;
   return (
     <Box className="footer-container">
       <div className="line-divider"></div>

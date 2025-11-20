@@ -139,21 +139,21 @@ export default function ContentsSidebar({
   width = 250,
   collapsed = false,
   isResizing = false,
-  onToggleSidebar = () => {},
-  onStartResize = () => {},
-  onHandleKeyDown = () => {},
+  onToggleSidebar = () => { },
+  onStartResize = () => { },
+  onHandleKeyDown = () => { },
 }) {
 
 
   const [isAnimatingClose, setIsAnimatingClose] = useState(false);
 
-useEffect(() => {
-  if (collapsed) {
-    setIsAnimatingClose(true);
-    const t = setTimeout(() => setIsAnimatingClose(false), 350);
-    return () => clearTimeout(t);
-  }
-}, [collapsed]);
+  useEffect(() => {
+    if (collapsed) {
+      setIsAnimatingClose(true);
+      const t = setTimeout(() => setIsAnimatingClose(false), 350);
+      return () => clearTimeout(t);
+    }
+  }, [collapsed]);
 
   /* ----------------------------- Environment ------------------------------ */
   const [isMobile] = useMediaQuery("(max-width: 768px)");
@@ -357,7 +357,7 @@ useEffect(() => {
       return copy;
     });
   }, [fetchHeadingsForSection]);
-  
+
 
   const expandAllSections = useCallback(() => {
     // Expand all sections at once; lazily load headings for each.
@@ -440,7 +440,7 @@ useEffect(() => {
             <Box
               /* Title Row = NAVIGATION ONLY */
               className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
-        
+
               cursor="pointer"
               onClick={() => navigateToSection(section.id, sectionSubs)}
               display="flex"
@@ -633,6 +633,22 @@ useEffect(() => {
         aria-orientation="vertical"
         aria-label="Resize navigation pane"
         aria-hidden={collapsed}
+        sx={{
+          '&:hover': {
+            bg: 'rgba(83, 28, 0, 0.04)',
+            width: '8px'
+          },
+          '&::after': isResizing ? {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: '2px',
+            bottom: 0,
+            width: '1px',
+            bg: 'rgba(83, 28, 0, 0.2)',
+            pointerEvents: 'none'
+          } : {}
+        }}
       />
     </Box>
   );

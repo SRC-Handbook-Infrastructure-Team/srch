@@ -33,10 +33,11 @@
   /* Search icon colors */
   --search-icon-color: #ffffff;
   --search-icon-hover: #A5D8AE;
+  --sidebar-phrase-text-color: #ffffff;
 
   /* Mark element colors */
   --mark-bg: var(--color-accent-light);
-  --mark-color: rgba(165, 216, 174, 0.47);
+  --mark-color: #9D0039;
   /* A5D8AE with 47% opacity */
 
   /* Colors / theme */
@@ -49,6 +50,8 @@
   --results-bg: #9D0039;
 
   --sidebar-phrase-clicked: #531c00;
+  --sidebar-phrase-clicked-active: #9D0039;
+  --sidebar-icon-color: #9D0039;
   --color-text-muted: #555;
   --color-bg: #ffffff;
   --color-bg-alt: #f8f9fa;
@@ -91,10 +94,13 @@
   --header-text-color: #e0e0e0;
   --sub-header-text-color: #e0e0e0;
   --sidebar-phrase-color: #A5D8AE;
-  --sidebar-phrase-clicked: #263A26;
+  --sidebar-icon-color: #A5D8AE;
+  --sidebar-phrase-clicked-active: #263A26;
   --sidebar-link-color: #A5D8AE;
   --navbar-link-hover: #A5D8AE;
   --results-bg: #263A26;
+  --sidebar-phrase-text-color: #A5D8AE;
+  --mark-color: rgba(165, 216, 174, 0.47);
 
 
   --color-text-muted: #b0b0b0;
@@ -1045,15 +1051,20 @@ html:not(.right-open) body .main-content {
 }
 
 /* Keep the label from forcing a single long line */
-.srch-drawer-link>span,
-.srch-drawer-link .chakra-text {
+.srch-drawer-link>span {
   overflow-wrap: anywhere;
   word-break: break-word;
   min-width: 0;
   color: var(--sidebar-phrase-color);
 }
 
+.srch-drawer-link .chakra-text {
+  color: var(--sidebar-link-color);
+}
 
+.srch-drawer-link.srch-drawer-link-active .chakra-text {
+  color: var(--sidebar-phrase-text-color);
+}
 
 .page-header-row {
   display: flex;
@@ -1310,7 +1321,7 @@ p>.srch-drawer-link:first-child {
   /* Same red; only border appears + slight scale */
   color: var(--color-main, #9d0013) !important;
   text-decoration: none !important;
-  border-color: var(--color-main, #9d0013) !important;
+  border-color: var(--sidebar-phrase-clicked);
   transform: scale(1.01);
   font-weight: bold !important;
 }
@@ -1318,21 +1329,53 @@ p>.srch-drawer-link:first-child {
 .srch-drawer-link:focus-visible {
   outline: 2px solid var(--color-main, #9d0013);
   outline-offset: 2px;
-  font-weight: bold !important;
+  font-weight: bold;
 }
 
 /* Active state: filled red pill, white text + icon */
 .srch-drawer-link.srch-drawer-link-active {
-  color: #ffffff !important;
-  background: var(--sidebar-phrase-clicked);
+  color: var(--sidebar-phrase-text-color);
+  background: var(--sidebar-phrase-clicked-active);
   border-color: var(--sidebar-phrase-clicked);
-  text-decoration: none !important;
-  font-weight: bold !important;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Style for list items in the sidebar */
+.css-5cm1aq {
+  color: var(--color-text);
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .css-5cm1aq,
+.chakra-ui-dark .css-5cm1aq {
+  color: var(--color-text);
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
 .srch-drawer-link .chakra-icon {
-  color: var(--sidebar-phrase-color);
+  color: var(--sidebar-link-color);
+}
+
+.srch-drawer-link.srch-drawer-link-active .chakra-icon {
+  color: var(--sidebar-phrase-text-color);
+}
+
+/* Style for footnote links and numbers */
+a[href^="#user-content-fn-"],
+a[href^="#user-content-fnref-"],
+a[data-footnote-ref] {
+  color: var(--sidebar-link-color);
+  text-decoration-color: var(--sidebar-link-color);
+}
+
+/* Style for the info icon */
+svg[fill="currentColor"] {
+  color: var(--sidebar-link-color) !important;
+}
+
+.srch-drawer-link.srch-drawer-link-active .chakra-icon {
+  color: var(--sidebar-phrase-text-color);
 }
 
 /* Style for case references in text */
@@ -1395,7 +1438,8 @@ span em a.chakra-link {
   opacity: 0;
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.25s ease;
+    opacity 0.25s ease,
+    width 0.15s ease-out;
   contain: layout paint style;
   will-change: transform;
   backface-visibility: hidden;

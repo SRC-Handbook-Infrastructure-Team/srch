@@ -184,32 +184,36 @@ html {
   background-image: url("../src/assets/landing-page-background-dark.png");
 }
 
-/* Make all icons white in dark mode */
 .chakra-ui-dark .topic-card img,
 [data-theme="dark"] .topic-card img,
 .chakra-ui-dark .learn-more-button img,
 [data-theme="dark"] .learn-more-button img,
-.chakra-ui-dark img[src*="Icon.png"],
-[data-theme="dark"] img[src*="Icon.png"],
+.chakra-ui-dark img[src*="Icon.png"]:not([class*="logo"]),
+[data-theme="dark"] img[src*="Icon.png"]:not([class*="logo"]),
 .chakra-ui-dark img[alt*="instagram"],
 [data-theme="dark"] img[alt*="instagram"],
 .chakra-ui-dark img[src*="instagram"],
 [data-theme="dark"] img[src*="instagram"],
-.chakra-ui-dark img[alt*="Privacy"],
-[data-theme="dark"] img[alt*="Privacy"],
-.chakra-ui-dark img[alt*="privacy"],
-[data-theme="dark"] img[alt*="privacy"],
-/* Target all images in the footer */
-.chakra-ui-dark .footer-container img,
-[data-theme="dark"] .footer-container img {
-  filter: brightness(0) invert(1);
+.chakra-ui-dark .instagram-logo,
+[data-theme="dark"] .instagram-logo,
+.chakra-ui-dark .primer-link-photo-primer-footer img,
+[data-theme="dark"] .primer-link-photo-primer-footer img {
+  filter: brightness(0) invert(1) !important;
   transition: filter 0.3s ease;
 }
 
-/* Logo styling in dark mode - replace with dark version */
-.chakra-ui-dark img[alt="Socially Responsible Computing Handbook"],
-[data-theme="dark"] img[alt="Socially Responsible Computing Handbook"] {
-  filter: brightness(0) invert(1) sepia(1) saturate(1.5) hue-rotate(75deg) brightness(1.1);
+/* Ensure proper hover states */
+.chakra-ui-dark .primer-link-primer-footer:hover .primer-link-photo-primer-footer img,
+[data-theme="dark"] .primer-link-primer-footer:hover .primer-link-photo-primer-footer img {
+  filter: brightness(0) invert(1) opacity(0.8) !important;
+}
+
+/* Other dark mode image styles */
+.chakra-ui-dark img[alt*="Privacy"],
+[data-theme="dark"] img[alt*="Privacy"],
+.chakra-ui-dark img[alt*="privacy"],
+[data-theme="dark"] img[alt*="privacy"] {
+  filter: brightness(0) invert(1);
   transition: filter 0.3s ease;
 }
 

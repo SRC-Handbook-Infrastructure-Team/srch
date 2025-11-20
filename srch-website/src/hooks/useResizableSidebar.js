@@ -17,9 +17,9 @@ export default function useResizableSidebar({
   side = "left", // 'left' | 'right'
   saveOnEnd = true,
   cssVarName,
-  onStartResize = () => {},
-  onStopResize = () => {},
-  getDynamicBounds, 
+  onStartResize = () => { },
+  onStopResize = () => { },
+  getDynamicBounds,
 
 } = {}) {
   const initial = () => {
@@ -103,7 +103,7 @@ export default function useResizableSidebar({
     if (saveOnEnd && isBrowser()) {
       try {
         window.localStorage.setItem(storageKey, String(pendingWidth.current));
-      } catch {}
+      } catch { }
     }
 
     // Release main content after resize finishes
@@ -133,7 +133,7 @@ export default function useResizableSidebar({
         if (b && Number.isFinite(b.max)) dynMax = b.max;
       }
 
-      
+
       // Clamp ASAP
       const clampedNext = clamp(rawNext, dynMin, dynMax);
       const atMin = clampedNext === dynMin;
@@ -147,7 +147,7 @@ export default function useResizableSidebar({
       ref.current.edge = atMin ? "min" : atMax ? "max" : null;
 
 
-      
+
       pendingWidth.current = clampedNext;
 
       cancelAnimationFrame(rafRef.current);
@@ -162,7 +162,7 @@ export default function useResizableSidebar({
 
       // Throttle React updates for performance
       const now = Date.now();
-      if (now - lastCommitTime.current > 120) {
+      if (now - lastCommitTime.current > 100) {
         setWidth(pendingWidth.current);
         lastCommitTime.current = now;
       }
@@ -218,7 +218,7 @@ export default function useResizableSidebar({
         setWidth(newWidth);
         try {
           window.localStorage.setItem(storageKey, String(newWidth));
-        } catch {}
+        } catch { }
       }
     },
     [width, minWidth, maxWidth, side, setWidth, storageKey]
@@ -238,13 +238,13 @@ export default function useResizableSidebar({
         // Instead of forcing width=0 immediately, let the CSS transition handle it
 
         setTimeout(() => setWidthState(collapsedWidth), 350);
-        
+
 
 
         if (isBrowser()) {
           try {
             window.localStorage.setItem(`${storageKey}:collapsed`, "1");
-          } catch {}
+          } catch { }
         }
 
         // Allow CSS transition to complete before releasing
@@ -259,7 +259,7 @@ export default function useResizableSidebar({
         if (isBrowser()) {
           try {
             window.localStorage.removeItem(`${storageKey}:collapsed`);
-          } catch {}
+          } catch { }
         }
 
         setTimeout(() => {
@@ -285,7 +285,7 @@ export default function useResizableSidebar({
     if (!isBrowser()) return;
     try {
       window.localStorage.setItem(storageKey, String(width));
-    } catch {}
+    } catch { }
   }, [storageKey, width]);
 
   /** Syncs sidebar width to CSS custom property */

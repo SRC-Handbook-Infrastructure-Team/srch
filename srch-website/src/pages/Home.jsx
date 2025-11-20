@@ -266,6 +266,7 @@ function Home() {
                 className="connect-cont"
               >
                 <img
+                  className="social-icon instagram-logo"
                   src={instaLogo}
                   alt="Instagram - follow CNTR on social media"
                   width={56}

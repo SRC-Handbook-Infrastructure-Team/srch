@@ -20,7 +20,8 @@ import {
 } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
-import logo from "../assets/logo.png";
+import logoLight from "../assets/logo.png";
+import logoDark from "../assets/logo-dark.png";
 import "../ContentPage.css";
 
 function NavBar({ className = "" }) {
@@ -178,10 +179,11 @@ function NavBar({ className = "" }) {
           <Box className="navbar-logo-container" onClick={() => navigate("/")}>
             <HStack alignItems={"center"}>
               <Image
-                src={logo}
+                src={colorMode === 'dark' ? logoDark : logoLight}
                 alt="Socially Responsible Computing Handbook"
                 height={"30px"}
                 objectFit="contain"
+                className="logo-image"
               />
             </HStack>
           </Box>
