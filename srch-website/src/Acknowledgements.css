@@ -299,20 +299,18 @@
   background: transparent;
   cursor: pointer;
   text-decoration: none;
-
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.08s ease;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
+/* Light mode hover effect */
 .ack-icon-btn:hover {
-  background-color: var(--ack-email-hover-bg, var(--ack-icon-ring));
-  color: var(--ack-email-hover-color, #fff);
+  background-color: var(--ack-brand-header);
 }
 
-/* Dark mode hover - match light mode behavior but with green background and black icon */
-.chakra-ui-dark .ack-icon-btn:hover,
-[data-theme="dark"] .ack-icon-btn:hover {
-  background-color: var(--ack-brand-header);
-  color: #000000;
+.ack-icon-btn:hover svg {
+  color: var(--bg-color);
 }
 
 .ack-icon-btn:active {
