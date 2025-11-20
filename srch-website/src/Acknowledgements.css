@@ -31,6 +31,8 @@
   --ack-icon-ring: #5a2d0c;
   --ack-email-hover-bg: var(--ack-icon-ring);
   --ack-email-hover-color: #fff;
+  --ack-bg-hover: #9d001249;
+
 
   /* Hero */
   --ack-upper-height: 75vh;
@@ -58,6 +60,7 @@
   --bg-color: #0E0E0E;
   --ack-text: #e0e0e0;
   --ack-brand-header: #A5D8AE;
+  --ack-bg-hover: #263A26;
 
 }
 
@@ -306,7 +309,7 @@
 
 /* Light mode hover effect */
 .ack-icon-btn:hover {
-  background-color: var(--ack-brand-header);
+  background-color: var(--ack-bg-hover);
 }
 
 .ack-icon-btn:hover svg {
