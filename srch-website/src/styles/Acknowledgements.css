@@ -175,8 +175,8 @@
   display: block;
 
   /* 🔒 The mask: this is the Figma template frame */
-  -webkit-mask-image: url("../src/assets/Photo.png");
-  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-image: url("../assets/Photo.png");
+  mask-image: url("../assets/Photo.png");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -192,8 +192,8 @@
   background: #d9d9d9;
   border-radius: var(--ack-radius);
 
-  -webkit-mask-image: url("../src/assets/Photo.png");
-  mask-image: url("../src/assets/Photo.png");
+  -webkit-mask-image: url("../assets/Photo.png");
+  mask-image: url("../assets/Photo.png");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;

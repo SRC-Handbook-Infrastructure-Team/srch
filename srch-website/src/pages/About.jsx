@@ -9,9 +9,8 @@
  * ============================================================================
  */
 
-import "../About.css";
-import "../LandingPage.css"
-import Footer from "../components/Footer"
+import "../styles/LandingPage.css";
+import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 
 export default function About() {
@@ -19,17 +18,13 @@ export default function About() {
     <>
       <NavBar />
       {/* 1. FIXED HERO (same structure as Acknowledgements) */}
-      <div className="about-hero">
-        <div className="about-upper-text">
-          <div className="about-title">
-            About the SRC
-            <br />
-            Handbook
-          </div>
-          <p className="about-sub">
+      <div className="upper-content">
+        <div className="upper-text-section">
+          <div className="website-title" id="about-title">About the SRC Handbook</div>
+          <div className="info-section">
             Learn how to use this resource, how it’s structured, and the story
             behind its creation.
-          </p>
+          </div>
         </div>
       </div>
 
@@ -63,7 +58,7 @@ export default function About() {
           </ul>
         </section>
       </div>
-           <Footer />
+      <Footer />
     </>
   );
 }

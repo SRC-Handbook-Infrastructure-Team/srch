@@ -1,8 +1,7 @@
-import "../LandingPage.css";
-import "../ContentPage.css";
+import "../styles/LandingPage.css";
+import "../styles/ContentPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
 import bookIcon from "../assets/bookIcon.png";

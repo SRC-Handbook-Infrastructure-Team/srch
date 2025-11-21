@@ -1,5 +1,5 @@
-import "../LandingPage.css";
-import "../ContentPage.css";
+import "../styles/LandingPage.css";
+import "../styles/ContentPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToast, Box } from "@chakra-ui/react";
@@ -10,11 +10,6 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import logoImage from "../assets/logo.png";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
 import Footer from "../components/Footer"
 
 

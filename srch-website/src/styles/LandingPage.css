@@ -97,7 +97,7 @@ html {
 }
 
 .background-gradient {
-  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-image: url("../assets/landing-page-background-gradient.png");
 }
 
 .upper-content {
@@ -113,7 +113,7 @@ html {
   align-items: flex-start;
   gap: var(--medium-gap);
   z-index: 0;
-  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-image: url("../assets/landing-page-background-gradient.png");
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
@@ -125,30 +125,22 @@ html {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("../src/assets/blurred-background.png");
+  background-image: url("../assets/blurred-background.png");
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
-  opacity: 0;                 /* initially hidden */
+  opacity: 0; /* initially hidden */
   transition: opacity 0.5s ease-in-out;
-  z-index: -1;                /* behind content */
+  z-index: -1; /* behind content */
 }
 
-.upper-content:hover::before {
-  opacity: 1;                 /* fade in on hover */ 
-}
-
-.upper-content:hover {
-  background-image: url("../src/assets/blurred-background.png");
-  transition: background-image 0.3s ease-in-out;
-}
 
 .upper-text-section {
   width: 100%;
   margin-top: 18vh;
   flex-direction: column;
   justify-content: center;
-  padding-left: calc((450/1512)*100vw);
+  padding-left: calc((455 / 1512) * 100vw);
   align-items: center;
   gap: var(--small-gap);
   display: flex;
@@ -168,7 +160,9 @@ html {
     align-items: center;
     background-position: left center;
     padding-left: 0;
-    padding-right: 0;
+  }
+  .upper-text-section {
+      padding-left: 0;
   }
 }
 
@@ -180,6 +174,15 @@ html {
   .root {
     --upper-content-height: 85vh;
   }
+
+  .upper-text-section { 
+    padding-left: calc((455 / 1512) * 100vw);
+  }
+}
+
+.intro-text,
+.website-title {
+  transition: width 0.3s ease, margin 0.3s ease, padding 0.3s ease;
 }
 
 .upper-content {
@@ -192,7 +195,7 @@ html {
 }
 
 .website-title {
-  font-size: clamp(2rem, 6vw, 80px);
+  font-size: 48px;
   width: 455px;
   height: 200px;
   justify-content: center;
@@ -205,6 +208,10 @@ html {
   white-space: normal;
   overflow-wrap: normal;
   word-break: keep-all;
+}
+
+#about-title {
+  height: 300px;
 }
 
 .info-section {
@@ -284,7 +291,6 @@ html {
   display: inline-flex;
 }
 
-
 .topic-card {
   width: auto;
   height: auto;
@@ -303,7 +309,8 @@ html {
   overflow: hidden;
   cursor: pointer;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
   background: white;
 }
 
@@ -494,7 +501,7 @@ html {
 /* Learn More Button*/
 .learn-more-container {
   display: flex;
-   width: 80vw;
+  width: 80vw;
   justify-content: flex-end;
   align-items: flex-end;
   gap: 10px;
@@ -656,7 +663,7 @@ html {
 }
 .connect-link {
   font-weight: 600;
-  color: #9D0013;
+  color: #9d0013;
 }
 
 /* Feedback Contact */
@@ -697,7 +704,6 @@ html {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
 }
 
 .modules-section-primer-footer {
@@ -862,5 +868,4 @@ html {
   .upper-content {
     left: -75px;
   }
-  
 }

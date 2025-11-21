@@ -1,9 +1,9 @@
 import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import "../ContentPage.css";
+import "../styles/ContentPage.css";
 
 function NavSearchBar({
   searchQuery,

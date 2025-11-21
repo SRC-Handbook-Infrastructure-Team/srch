@@ -5,15 +5,9 @@ import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import {
   Box,
-  HStack,
-  VStack,
-  Image,
-  Text,
-  Icon,
-  Collapse,
 } from "@chakra-ui/react";
-import "../About.css";
-import "../LandingPage.css"
+import "../styles/About.css";
+import "../styles/LandingPage.css"
 
 
 function Footer() {

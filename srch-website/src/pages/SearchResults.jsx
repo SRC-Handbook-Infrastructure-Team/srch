@@ -1,5 +1,5 @@
-import "../LandingPage.css";
-import "../ContentPage.css";
+import "../styles/LandingPage.css";
+import "../styles/ContentPage.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";

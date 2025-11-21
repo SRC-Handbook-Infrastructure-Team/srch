@@ -18,8 +18,7 @@ import {
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
-import "../ContentPage.css";
-import { color } from "framer-motion";
+import "../styles/ContentPage.css";
 
 function NavBar({ className = "" }) {
   const location = useLocation();
