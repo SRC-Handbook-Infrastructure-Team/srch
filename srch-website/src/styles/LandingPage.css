@@ -651,13 +651,15 @@ html {
 
 .cntr-link-area {
   display: flex;
-  gap: 56px;
+  gap: 36px;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 .connect-cont {
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 16px;
   padding: 12px 24px;
   align-items: center;
 }
