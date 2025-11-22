@@ -281,8 +281,8 @@ function Home() {
                   <img
                     src={instaLogo}
                     alt="instagram logo"
-                    width={56}
-                    height={56}
+                    width={52}
+                    height={52}
                   />
                   <p className="connect-text">
                     CNTR Instagram:
