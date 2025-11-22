@@ -11,6 +11,7 @@ import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import instaLogo from "../assets/instagram-logo.svg";
+import srcLogo from "../assets/src_logo.svg";
 import cntrLogo from "../assets/cntr-logo.png";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import { SearchBar } from "../components/SearchBar";
@@ -149,12 +150,12 @@ function Home() {
               </p>
             </div>
             <div className="landing-search-container">
-            <SearchBar
-              className="results-autofill"
-              setSearchQuery={setSearchQuery}
-              searchQuery={searchQuery}
-              maxResults={2}
-            />
+              <SearchBar
+                className="results-autofill"
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                maxResults={2}
+              />
             </div>
           </div>
 
@@ -247,48 +248,90 @@ function Home() {
               </p>
             </div>
             <div className="cntr-link-area">
-              <div className="connect-cont">
-                <img src={cntrLogo} alt="CNTR logo" width={56} height={67} />
-                <p className="connect-text">
-                  CNTR Website:
-                  <br />
-                  <a
-                    className="connect-link"
-                    href="https://cntr.brown.edu/"
-                    target="blank"
-                  >
-                    cntr.brown.edu
-                  </a>
-                </p>
-              </div>
-              <div
-                className="connect-cont"
+              <a
+                className="connect-link"
+                href="https://cntr.brown.edu/"
+                target="blank"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  fontWeight: 400,
+                }}
               >
-                <img
-                  src={instaLogo}
-                  alt="instagram logo"
-                  width={56}
-                  height={56}
-                />
-                <p className="connect-text">
-                  CNTR Instagram:
-                  <br />
-                  <a
-                    className="connect-link"
-                    href="https://www.instagram.com/brown_cntr/"
-                    target="blank"
-                  >
-                    @brown_cntr
-                  </a>
-                </p>
-              </div>
+                <div className="connect-cont">
+                  <img src={cntrLogo} alt="CNTR logo" width={56} height={67} />
+                  <p className="connect-text">
+                    CNTR Website:
+                    <br />
+                    <a className="connect-link">cntr.brown.edu</a>
+                  </p>
+                </div>
+              </a>
+              <a
+                className="connect-link"
+                href="https://www.instagram.com/brown_cntr/"
+                target="blank"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  fontWeight: 400,
+                }}
+              >
+                <div className="connect-cont">
+                  <img
+                    src={instaLogo}
+                    alt="instagram logo"
+                    width={52}
+                    height={52}
+                  />
+                  <p className="connect-text">
+                    CNTR Instagram:
+                    <br />
+                    <a
+                      className="connect-link"
+                      href="https://www.instagram.com/brown_cntr/"
+                      target="blank"
+                    >
+                      @brown_cntr
+                    </a>
+                  </p>
+                </div>
+              </a>
+              <a
+                className="connect-link"
+                href="https://responsible.cs.brown.edu/"
+                target="blank"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  fontWeight: 400,
+                }}
+              >
+                <div className="connect-cont">
+                  <img
+                    src={srcLogo}
+                    alt="src@Brown logo"
+                    width={56}
+                    height={56}
+                  />
+                  <p className="connect-text">
+                    SRC@Brown Website:
+                    <br />
+                    <a
+                      className="connect-link"
+                      href="https://responsible.cs.brown.edu/"
+                      target="blank"
+                    >
+                      responsible.cs.brown.edu
+                    </a>
+                  </p>
+                </div>
+              </a>
             </div>
           </div>
-
         </div>
       </div>
-          <Footer/>
-
+      <Footer />
     </div>
   );
 }
