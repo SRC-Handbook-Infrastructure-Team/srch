@@ -10,11 +10,6 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import logoImage from "../assets/logo.png";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
 import Footer from "../components/Footer";
 
 function MarkdownPage() {
@@ -149,7 +144,7 @@ function MarkdownPage() {
           day: "numeric",
         });
       }
-    } catch (e) {}
+    } catch (e) { }
     return dateString; // fallback: show raw
   }
 
@@ -260,7 +255,7 @@ function MarkdownPage() {
     let drawerFile = null;
     try {
       drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) {}
+    } catch (_) { }
 
     const contentToShow =
       drawerFile?.content ||
@@ -564,7 +559,7 @@ function MarkdownPage() {
 
   return (
     <div className="markdown-page">
-      <Box mb={10}>
+      <Box className="markdown-content">
         <div className="page-header">
           <p className="page-section-label">
             {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
@@ -613,6 +608,7 @@ function MarkdownPage() {
           </Box>
         )}
       </Box>
+      <Footer />
     </div>
   );
 }

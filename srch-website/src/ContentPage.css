@@ -22,9 +22,12 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Layout metrics */
-  --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
-  --right-sidebar-width: 0px; /* JS updates these */
-  --navbar-height: 70px; /* unified baseline */
+  --toolbar-height: 0px;
+  /* set >0 only if a toolbar is rendered */
+  --right-sidebar-width: 0px;
+  /* JS updates these */
+  --navbar-height: 70px;
+  /* unified baseline */
   --left-sidebar-width: var(--left-sidebar-width, 250px);
 
   /* Colors / theme */
@@ -57,6 +60,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -81,6 +85,7 @@ a {
   color: var(--color-accent);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--color-accent);
   text-decoration: underline;
@@ -99,9 +104,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -127,7 +134,8 @@ button:focus-visible {
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  z-index: 19; /* below NavBar (20), above content */
+  z-index: 19;
+  /* below NavBar (20), above content */
 }
 
 /* ========================================================================== 
@@ -155,16 +163,24 @@ button:focus-visible {
 
 /* Ensures the entire row feels clickable and avoids visual jitter */
 .sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
+  pointer-events: none;
+  /* interaction handled by container */
 }
 
 /* ==========================================================================
    Markdown & Content
    ========================================================================== */
 .markdown-page {
+  background: var(--cs-bg);
+}
+
+.markdown-content {
   padding-left: 100px;
   padding-right: 100px;
+  padding-bottom: 100px;
+  background: white;
 }
+
 
 mark {
   background-color: var(--color-accent-light);
@@ -181,6 +197,7 @@ mark {
   color: var(--color-accent) !important;
   font-weight: 600;
 }
+
 .sidebar-link:hover {
   color: var(--color-accent);
 }
@@ -227,6 +244,7 @@ h4 {
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .nav-section:hover {
   background-color: var(--nav-hover-bg);
 }
@@ -235,17 +253,21 @@ h4 {
   display: flex;
   align-items: center;
 }
+
 .nav-section-text {
   font-weight: 500;
 }
+
 .nav-subsection {
   display: flex;
   align-items: center;
 }
+
 .nav-subsection-text {
   font-size: 0.875rem;
   padding: 4px;
 }
+
 .nav-subsection-active {
   font-weight: 700;
 }
@@ -258,155 +280,7 @@ h4 {
   border-radius: 6px;
 }
 
-/* ========================================================================== 
-   Nav Search Bar
-   ========================================================================== */
 
-.navsearchbar-container {
-  position: relative;
-  align-items: center;
-  overflow: visible;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.navsearchbar-input-container {
-  display: flex;
-  align-items: center;
-  overflow: visible;
-}
-
-.navsearchbar-input::placeholder {
-  color: black;
-  opacity: 1;
-}
-
-.navsearchbar-input {
-  font-size: 1rem;
-  padding-left: 2.5rem;
-  transition: opacity 0.3s ease;
-  background: transparent;
-  border-width: 0 !important;
-  z-index: 9;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.navsearchbar-input:focus,
-.navsearchbar-input:focus-visible {
-  box-shadow: none;
-  outline: none;
-  border-color: inherit;
-}
-
-.navsearchbar-button {
-  color: black;
-}
-
-.navsearchbar-button:hover {
-  color: #9d0013;
-}
-
-/* ========================================================================== 
-   Search Bar
-   ========================================================================== */
-
-.searchbar-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: visible;
-  background: white;
-  border-radius: 9999999999px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  width: 100%;
-  min-width: 400px;
-}
-
-.searchbar-border {
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
-}
-
-.searchbar-input-container {
-  background: transparent;
-  flex: 1;
-}
-
-.searchbar-input::placeholder {
-  color: black;
-  opacity: 1;
-}
-
-.searchbar-input {
-  font-size: 0.875rem;
-  transition: opacity 0.3s ease;
-  background: transparent;
-  z-index: 9;
-  border-width: 0 !important;
-  border-radius: 9999999999px;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.searchbar-input:focus,
-.searchbar-input:focus-visible,
-.searchbar-input:active,
-.searchbar-input:focus,
-.searchbar-input:focus-within,
-.searchbar-input:hover {
-  border-width: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.searchbar-toggle-button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  color: #9d0013 !important;
-  background: transparent !important;
-  z-index: 9999999999 !important;
-}
-
-.searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
-.searchbar-toggle-button:active {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.toggle-button {
-  width: 0px;
-  z-index: 9999999;
-  color: black !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  color: #9d0013 !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
-.searchbar-toggle-button:active {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
 */ .drawer-content {
   padding: 12px !important;
 }
@@ -440,24 +314,29 @@ html:not(.right-open) body .main-content {
 
 /* Let content inside the right drawer wrap and never overflow */
 .right-sidebar .drawer-content {
-  overflow-wrap: anywhere; /* modern, preferred */
-  word-break: break-word; /* fallback */
+  overflow-wrap: anywhere;
+  /* modern, preferred */
+  word-break: break-word;
+  /* fallback */
   padding-left: 10px;
   padding-right: 10px;
-  min-width: 0; /* fix flex shrink edge cases */
+  min-width: 0;
+  /* fix flex shrink edge cases */
 }
 
 /* Chip: allow multi-line wrapping + don’t overflow the drawer */
 .srch-drawer-link {
   display: inline-flex;
-  flex-wrap: wrap; /* allow wrapping to 2+ lines */
+  flex-wrap: wrap;
+  /* allow wrapping to 2+ lines */
   max-width: 100%;
-  white-space: normal !important; /* was nowrap; this is the fix */
+  white-space: normal !important;
+  /* was nowrap; this is the fix */
   line-height: 1.2;
 }
 
 /* Keep the label from forcing a single long line */
-.srch-drawer-link > span,
+.srch-drawer-link>span,
 .srch-drawer-link .chakra-text {
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -514,9 +393,11 @@ html:not(.right-open) body .main-content {
 }
 
 .header-toggle:focus-visible {
-  outline: 2px solid #9d0013; /* your brand color */
+  outline: 2px solid #9d0013;
+  /* your brand color */
   outline-offset: 2px;
 }
+
 .header-toggle:hover {
   transform: scale(1.25);
 }
@@ -524,13 +405,6 @@ html:not(.right-open) body .main-content {
 /* ==========================
    QUICK, SAFE OVERRIDES
    ========================== */
-
-/* 1) Make markdown page padding a token we can cancel for the divider */
-.markdown-page {
-  --page-pad: 100px; /* matches your current 100px */
-  padding-left: var(--page-pad);
-  padding-right: var(--page-pad);
-}
 
 /* 2) Divider that spans the full content width (not viewport), while ignoring
       the .markdown-page padding. It will auto-stop at sidebars because
@@ -559,7 +433,8 @@ html:not(.right-open) body .main-content {
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
-  position: relative; /* anchor for the toggle button */
+  position: relative;
+  /* anchor for the toggle button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -596,7 +471,8 @@ html:not(.right-open) body .main-content {
   font-size: 11px;
   line-height: 1;
   position: relative;
-  top: 1px; /* small visual nudge */
+  top: 1px;
+  /* small visual nudge */
 }
 
 /* center the control in the header strip */
@@ -605,6 +481,7 @@ html:not(.right-open) body .main-content {
   justify-content: right;
   padding: 8px 0;
 }
+
 /* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
 .sidebar-toggle {
   /* nuke default button look */
@@ -637,6 +514,7 @@ html:not(.right-open) body .main-content {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -653,17 +531,15 @@ html:not(.right-open) body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400; /* tweak if you want lighter */
-  letter-spacing: 0.02em; /* optional, matches figma-ish */
+  font-weight: 400;
+  /* tweak if you want lighter */
+  letter-spacing: 0.02em;
+  /* optional, matches figma-ish */
   color: var(--srch-brown);
-  margin: 0 0 4px 0; /* small gap above the H1 */
-  text-transform: uppercase; /* optional, matches figma */
-}
-
-.search-results-page {
-  --page-pad: min(150px, 10vw);
-  padding-left: var(--page-pad);
-  padding-right: var(--page-pad);
+  margin: 0 0 4px 0;
+  /* small gap above the H1 */
+  text-transform: uppercase;
+  /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -692,20 +568,24 @@ html:not(.right-open) body .main-content {
   font-weight: bold !important;
   font-style: bold !important;
   font-family: "Be Vietnam Pro" !important;
-  font-weight: 700 !important; /* or bold */
+  font-weight: 700 !important;
+  /* or bold */
 }
 
 /* Collapse phantom inline spacing between chips and text */
 .srch-drawer-link {
-  margin-left: -2px; /* pulls chip into collapsed inline gap */
+  margin-left: -2px;
+  /* pulls chip into collapsed inline gap */
 }
 
-.srch-drawer-link + .srch-drawer-link {
-  margin-left: 0; /* prevents chain-over-collapse for chip→chip */
+.srch-drawer-link+.srch-drawer-link {
+  margin-left: 0;
+  /* prevents chain-over-collapse for chip→chip */
 }
 
-p > .srch-drawer-link:first-child {
-  margin-left: 0; /* safety: don't pull chip into paragraph edge */
+p>.srch-drawer-link:first-child {
+  margin-left: 0;
+  /* safety: don't pull chip into paragraph edge */
 }
 
 .srch-drawer-link:hover {
@@ -746,7 +626,8 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px); /* Moves the element 12px to the left */
+  transform: translateX(12px);
+  /* Moves the element 12px to the left */
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -848,6 +729,7 @@ html.right-open .right-sidebar {
   cursor: pointer !important;
   color: var(--srch-brown) !important;
 }
+
 /* Disable transitions while dragging (optional polish) */
 .left-sidebar.resizing,
 .right-sidebar.resizing {
@@ -859,20 +741,23 @@ html.right-open .right-sidebar {
   position: fixed !important;
   top: var(--navbar-height) !important;
   bottom: 0 !important;
-  right: var(--right-sidebar-width) !important; /* follows drawer edge */
+  right: var(--right-sidebar-width) !important;
+  /* follows drawer edge */
   width: 10px !important;
-  transform: translateX(-6px); /* overlap seam for easier grab */
+  transform: translateX(-6px);
+  /* overlap seam for easier grab */
   cursor: col-resize !important;
   pointer-events: auto;
   background: transparent !important;
   z-index: 35;
 }
+
 .right-resize-hitbox.is-resizing {
   background: rgba(83, 28, 0, 0.06) !important;
 }
 
 /* Hide/disable when drawer is closed */
-.right-sidebar.close ~ .right-resize-hitbox {
+.right-sidebar.close~.right-resize-hitbox {
   pointer-events: none !important;
   display: none !important;
 }
@@ -888,7 +773,8 @@ html.right-open .right-sidebar {
   width: var(--left-sidebar-width) !important;
 
   background: var(--cs-bg) !important;
-  border-right: 1px solid var(--cs-divider) !important; /* thin vertical divider */
+  border-right: 1px solid var(--cs-divider) !important;
+  /* thin vertical divider */
 
   overflow-y: auto !important;
   opacity: 0;
@@ -905,6 +791,7 @@ html.right-open .right-sidebar {
   backface-visibility: hidden;
   transform: translateX(-100%);
 }
+
 .left-sidebar.open {
   transform: translateX(0);
   opacity: 1;
@@ -925,6 +812,7 @@ html.right-open .right-sidebar {
   cursor: col-resize !important;
   background: transparent !important;
 }
+
 .left-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
@@ -935,7 +823,8 @@ html.right-open .right-sidebar {
 .sidebar-header-controls {
   display: flex;
   justify-content: right;
-  padding: 12px 16px 6px; /* extra top room like Figma */
+  padding: 12px 16px 6px;
+  /* extra top room like Figma */
 }
 
 .sidebar-toggle {
@@ -949,11 +838,14 @@ html.right-open .right-sidebar {
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: var(--cs-text); /* #4F3629 */
+  color: var(--cs-text);
+  /* #4F3629 */
 }
+
 .sidebar-toggle:hover {
   opacity: 0.9;
 }
+
 .sidebar-toggle:focus-visible {
   outline: 2px solid #9d0013;
   outline-offset: 2px;
@@ -964,6 +856,7 @@ html.right-open .right-sidebar {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -979,14 +872,17 @@ html.right-open .right-sidebar {
    ========================================================================== */
 .sidebar-section {
   margin-bottom: 6px;
-} /* subtle breathing room between sections */
+}
+
+/* subtle breathing room between sections */
 
 /* SECTION ROWS */
 .sidebar-section-header {
   /* edge-to-edge highlight inside a padded container (NavContent wrapper uses 16px) */
   margin-left: -16px;
   margin-right: -16px;
-  padding: 8px 16px; /* move padding here so the bg spans full width */
+  padding: 8px 16px;
+  /* move padding here so the bg spans full width */
   border-radius: 0 !important;
   transition:
     background-color var(--cs-ease),
@@ -996,12 +892,14 @@ html.right-open .right-sidebar {
 }
 
 .sidebar-section-header:hover:not(.is-active) {
-  background: rgba(0, 0, 0, 0.04); /* gentle hover only for non-active */
+  background: rgba(0, 0, 0, 0.04);
+  /* gentle hover only for non-active */
 }
 
 /* Active section row (route-aware via .is-active from JSX) */
 .sidebar-section-header.is-active {
-  background: var(--cs-active) !important; /* #e6e2dd */
+  background: var(--cs-active) !important;
+  /* #e6e2dd */
   border-color: var(--cs-active) !important;
   border-radius: 0 !important;
 }
@@ -1009,9 +907,11 @@ html.right-open .right-sidebar {
 /* Title text in section row — default REGULAR, only active is BOLD */
 .sidebar-section-title {
   font: "Be Vietnam Pro";
-  font-weight: 400 !important; /* default regular */
+  font-weight: 400 !important;
+  /* default regular */
   font-size: 16px !important;
-  color: var(--cs-text) !important; /* #4F3629 */
+  color: var(--cs-text) !important;
+  /* #4F3629 */
 }
 
 /* Bold only when the section is the active route */
@@ -1026,8 +926,10 @@ html.right-open .right-sidebar {
    - Add vertical rhythm when a section is open.
    ========================================================================== */
 .sidebar-subsection-container {
-  padding-left: 22px; /* indent subsections */
-  margin-top: 8px; /* space under the section row when opened */
+  padding-left: 22px;
+  /* indent subsections */
+  margin-top: 8px;
+  /* space under the section row when opened */
 }
 
 .sidebar-sub-row {
@@ -1038,11 +940,15 @@ html.right-open .right-sidebar {
     color var(--cs-ease);
   background: transparent;
 }
+
 .sidebar-sub-row:hover {
   background: rgba(83, 28, 0, 0.06);
-} /* subtle hover */
+}
+
+/* subtle hover */
 .sidebar-sub-row.is-active {
-  background: var(--cs-brown); /* #531C00 */
+  background: var(--cs-brown);
+  /* #531C00 */
 }
 
 /* Subsection text */
@@ -1050,11 +956,15 @@ html.right-open .right-sidebar {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 400 !important;
   font-size: 14px !important;
-  color: var(--cs-text) !important; /* default #4F3629 */
+  color: var(--cs-text) !important;
+  /* default #4F3629 */
 }
+
 .sidebar-sub-row.is-active .sidebar-subsection {
-  color: #ffffff !important; /* white when active pill */
-  font-weight: 600 !important; /* bold only for active subsection */
+  color: #ffffff !important;
+  /* white when active pill */
+  font-weight: 600 !important;
+  /* bold only for active subsection */
 }
 
 /* =============================================================================
@@ -1082,12 +992,15 @@ html.right-open .right-sidebar {
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 3.5px 7.5px !important; /* More interior padding → more pill */
-  border-radius: 15px !important; /* Perfect pill shape */
+  padding: 3.5px 7.5px !important;
+  /* More interior padding → more pill */
+  border-radius: 15px !important;
+  /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important; /* More breathing room between text + icon */
+  gap: 6px !important;
+  /* More breathing room between text + icon */
 }

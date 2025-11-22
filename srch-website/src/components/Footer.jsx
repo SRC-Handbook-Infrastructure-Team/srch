@@ -4,41 +4,35 @@ import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
 import {
-  Box,
-  HStack,
-  VStack,
-  Image,
-  Text,
-  Icon,
-  Collapse,
+  Box
 } from "@chakra-ui/react";
-import "../About.css";
-import "../LandingPage.css";
+import "../Footer.css"
 
 function Footer() {
   return (
     <Box className="footer-container">
       <div className="line-divider"></div>
-
-      <div className="link-section-primer-footer">
-        <div className="modules-section-primer-footer">
-          <div className="modules-primer-footer">
-            <div className="logo-area-primer-footer">
-              <img
-                src={logoImage}
-                alt="SRC Handbook Logo"
-                width={100}
-                height={91}
-              />
-            </div>
-            <div className="module-heading-primer-footer">Have Feedback?</div>
-            <p className="feedback-contact-primer-footer">
-              Contact:{" "}
-              <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
-            </p>
+      <div className="footer-content">
+        <div className="hide-wide show-narrow">
+          <img
+            src={logoImage}
+            alt="SRC Handbook Logo"
+            width={100}
+            height={31.58}
+            objectFit="contain"
+          />
+        </div>
+        <div className="links-section">
+          <div className="logo-container show-wide hide-narrow">
+            <img
+              src={logoImage}
+              alt="SRC Handbook Logo"
+              width={100}
+              height={31.58}
+            />
           </div>
-          <div className="modules-primer-footer">
-            <div className="modules-heading-primer-footer">Modules</div>
+          <div>
+            <div className="heading-footer">Modules</div>
             <div className="primer-link-primer-footer">
               <div className="primer-link-photo-primer-footer">
                 <img
@@ -107,9 +101,9 @@ function Footer() {
               </button>
             </div>
           </div>
-          <div className="modules-primer-footer">
-            <div className="module-heading-primer-footer">Quick Links</div>
-            <div className="module-links-primer-footer">
+          <div className="footer-links">
+            <div className="footer-links">
+              <div className="heading-footer">Quick Links</div>
               <button
                 onClick={() => navigate("/about")}
                 className="module-link-primer-footer"
@@ -123,9 +117,29 @@ function Footer() {
                 Acknowledgements
               </button>
             </div>
+            <div className="footer-links second-column show-narrow hide-wide">
+              <div className="heading-footer">Have Feedback?</div>
+              <p className="feedback-footer">
+                Contact:{" "}
+                <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
+              </p>
+              <p className="feedback-footer">
+                <a href="?">Bug Report Form</a>
+              </p>
+            </div>
+          </div>
+          <div className="footer-links show-wide hide-narrow">
+            <div className="heading-footer">Have Feedback?</div>
+            <p className="feedback-footer">
+              Contact:{" "}
+              <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
+            </p>
+            <p className="feedback-footer">
+              <a>Bug Report Form</a>
+            </p>
           </div>
         </div>
-        <p className="feedback-contact-primer-footer">
+        <p className="copyright">
           © 2025 Brown University. All rights reserved.
         </p>
       </div>

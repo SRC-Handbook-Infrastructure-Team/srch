@@ -4,7 +4,6 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import ContentsSidebar from "./components/ContentsSidebar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import Acknowledgements from "./pages/Acknowledgements";
@@ -53,11 +52,6 @@ function AppRoutes() {
         </SidebarLayout>
       ) : (
         <>
-          {!isSearchPage &&
-            !isHomePage &&
-            !isAcknowledgementsPage &&
-            !isAboutPage && <ContentsSidebar />}
-
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/acknowledgements" element={<Acknowledgements />} />
@@ -68,7 +62,7 @@ function AppRoutes() {
         </>
       )}
       <NavBar />
-      <Footer />
+      {!isMarkdownPage && <Footer />}
     </>
   );
 }

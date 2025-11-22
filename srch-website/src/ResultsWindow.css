@@ -4,7 +4,6 @@
 
 .results-autofill {
   z-index: 2147483000;
-  /* background-color: transparent;  <-- comment/remove this */
   color: black !important;
 }
 
@@ -269,13 +268,16 @@
 
 .pages-and-buttons-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 15px;
 }
 
+
 .pages-row {
   display: flex;
-  align-items: center;
+  justify-items: center;
   gap: 15px;
   padding: 5px 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -314,7 +316,8 @@
   padding: 5px 15px;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  justify-content: right;
+  justify-content: center;
+  justify-self: center;
   align-items: center;
   display: flex;
   background: transparent;
