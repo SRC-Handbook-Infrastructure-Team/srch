@@ -1,4 +1,4 @@
-import "../Footer.css";
+import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../assets/logo.png";
 import privacyIcon from "../assets/privacy-icon.svg";
