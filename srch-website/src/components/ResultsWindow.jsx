@@ -1,4 +1,4 @@
-import "../ResultsWindow.css";
+import "../styles/ResultsWindow.css";
 import React, { useState, useEffect } from "react";
 import { Collapse, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
