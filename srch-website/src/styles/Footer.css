@@ -136,6 +136,10 @@ img {
   padding-top: 5px;
 }
 
+.logo-image-footer {
+  cursor: pointer;
+}
+
 .module-link-primer-footer {
   color: var(--color-text);
   font-size: small;

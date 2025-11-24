@@ -20,6 +20,7 @@ function Footer() {
         <div className="hide-wide show-narrow">
           <img
             src={logoImage}
+            className="logo-image-footer"
             alt="SRC Handbook Logo"
             width={100}
             height={31.58}
@@ -30,6 +31,7 @@ function Footer() {
           <div className="logo-container show-wide hide-narrow">
             <img
               src={logoImage}
+              className="logo-image-footer"
               alt="SRC Handbook Logo"
               width={100}
               height={31.58}
