@@ -2,7 +2,6 @@ import "../LandingPage.css";
 import "../ContentPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import logoImage from "../assets/logo.png";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
 import bookIcon from "../assets/bookIcon.png";
@@ -177,6 +176,7 @@ function Home() {
                 <div className="list-item">
                   <img
                     src={targetIcon}
+                    className="list-icon"
                     alt="Target Icon"
                     width={24}
                     height={24}
@@ -190,6 +190,7 @@ function Home() {
                 <div className="list-item">
                   <img
                     src={peopleIcon}
+                    className="list-icon"
                     alt="People Icon"
                     width={24}
                     height={24}
@@ -202,6 +203,7 @@ function Home() {
                 <div className="list-item">
                   <img
                     src={lightbulbIcon}
+                    className="list-icon"
                     alt="Lightbulb Icon"
                     width={24}
                     height={24}
@@ -212,7 +214,13 @@ function Home() {
                 </div>
 
                 <div className="list-item">
-                  <img src={bookIcon} alt="Book Icon" width={24} height={24} />
+                  <img
+                    src={bookIcon}
+                    className="list-icon"
+                    alt="Book Icon"
+                    width={24}
+                    height={24}
+                  />
                   <p className="list-text">
                     Adapt and contribute content so it remains relevant and
                     impactful
@@ -228,6 +236,7 @@ function Home() {
                 <span className="learn-more-text">Learn more</span>
                 <img
                   src={buttonArrow}
+                  className="button-icon"
                   alt="Arrow for the Learn More Button"
                   width={24}
                   height={24}

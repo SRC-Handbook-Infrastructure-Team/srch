@@ -181,7 +181,6 @@ button:focus-visible {
   background: white;
 }
 
-
 mark {
   background-color: var(--color-accent-light);
   color: var(--color-accent);
@@ -280,7 +279,6 @@ h4 {
   border-radius: 6px;
 }
 
-
 */ .drawer-content {
   padding: 12px !important;
 }
@@ -336,7 +334,7 @@ html:not(.right-open) body .main-content {
 }
 
 /* Keep the label from forcing a single long line */
-.srch-drawer-link>span,
+.srch-drawer-link > span,
 .srch-drawer-link .chakra-text {
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -578,12 +576,12 @@ html:not(.right-open) body .main-content {
   /* pulls chip into collapsed inline gap */
 }
 
-.srch-drawer-link+.srch-drawer-link {
+.srch-drawer-link + .srch-drawer-link {
   margin-left: 0;
   /* prevents chain-over-collapse for chip→chip */
 }
 
-p>.srch-drawer-link:first-child {
+p > .srch-drawer-link:first-child {
   margin-left: 0;
   /* safety: don't pull chip into paragraph edge */
 }
@@ -757,7 +755,7 @@ html.right-open .right-sidebar {
 }
 
 /* Hide/disable when drawer is closed */
-.right-sidebar.close~.right-resize-hitbox {
+.right-sidebar.close ~ .right-resize-hitbox {
   pointer-events: none !important;
   display: none !important;
 }

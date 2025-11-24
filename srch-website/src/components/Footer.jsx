@@ -1,17 +1,21 @@
+import "../Footer.css";
+import { useNavigate } from "react-router-dom";
 import logoImage from "../assets/logo.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-import {
-  Box
-} from "@chakra-ui/react";
-import "../Footer.css"
+import { Box } from "@chakra-ui/react";
 
 function Footer() {
+  const navigate = useNavigate();
+  const privacySlug = "/privacy/whatIsPrivacy";
+  const accessibilitySlug = "/accessibility/whatIsAccessibility";
+  const decisionSlug = "/automatedDecisionMaking/fairness";
+  const aiSlug = "/generativeAI/copyright";
   return (
     <Box className="footer-container">
-      <div className="line-divider"></div>
+      <div className="footer-line-divider"></div>
       <div className="footer-content">
         <div className="hide-wide show-narrow">
           <img
@@ -19,7 +23,7 @@ function Footer() {
             alt="SRC Handbook Logo"
             width={100}
             height={31.58}
-            objectFit="contain"
+            onClick={() => navigate("/")}
           />
         </div>
         <div className="links-section">
@@ -29,6 +33,7 @@ function Footer() {
               alt="SRC Handbook Logo"
               width={100}
               height={31.58}
+              onClick={() => navigate("/")}
             />
           </div>
           <div>
@@ -121,7 +126,9 @@ function Footer() {
               <div className="heading-footer">Have Feedback?</div>
               <p className="feedback-footer">
                 Contact:{" "}
-                <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
+                <a href="mailto:src_handbook@brown.edu">
+                  src_handbook@brown.edu
+                </a>
               </p>
               <p className="feedback-footer">
                 <a href="?">Bug Report Form</a>
@@ -135,7 +142,9 @@ function Footer() {
               <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
             </p>
             <p className="feedback-footer">
-              <a>Bug Report Form</a>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
+                Bug Report Form
+              </a>
             </p>
           </div>
         </div>

@@ -1,92 +1,91 @@
 .navsearchbar-container {
-    position: relative;
-    align-items: center;
-    overflow: visible;
-    width: 100%;
-    margin-top: 0.5rem;
+  position: relative;
+  align-items: center;
+  overflow: visible;
+  width: 100%;
+  margin-top: 0.5rem;
 }
 
 .navsearchbar-input-container {
-    display: flex;
-    align-items: center;
-    overflow: visible;
+  display: flex;
+  align-items: center;
+  overflow: visible;
 }
 
 .navsearchbar-input::placeholder {
-    color: black;
-    opacity: 1;
+  color: black;
+  opacity: 1;
 }
 
 .navsearchbar-input {
-    font-size: 1rem;
-    padding-left: 2.5rem;
-    transition: opacity 0.3s ease;
-    background: transparent;
-    border-width: 0 !important;
-    z-index: 9;
-    opacity: 1;
-    pointer-events: auto;
+  font-size: 1rem;
+  padding-left: 2.5rem;
+  transition: opacity 0.3s ease;
+  background: transparent;
+  border-width: 0 !important;
+  z-index: 9;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .navsearchbar-input:focus,
 .navsearchbar-input:focus-visible {
-    box-shadow: none;
-    outline: none;
-    border-color: inherit;
+  box-shadow: none;
+  outline: none;
+  border-color: inherit;
 }
 
 .navsearchbar-button {
-    color: black;
+  color: black;
 }
 
 .navsearchbar-button:hover {
-    color: #9d0013;
+  color: #9d0013;
 }
-
 
 /* ========================================================================== 
    Search Bar
    ========================================================================== */
 
 .searchbar-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    overflow: visible;
-    background: white;
-    border-radius: 9999999999px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-top: 5px;
-    padding-bottom: 5px;
-    width: 100%;
-    min-width: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  background: white;
+  border-radius: 9999999999px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  min-width: 400px;
 }
 
 .searchbar-border {
-    border-color: whitesmoke;
-    border-width: 3px;
-    border-radius: 6px;
+  border-color: whitesmoke;
+  border-width: 3px;
+  border-radius: 6px;
 }
 
 .searchbar-input-container {
-    background: transparent;
-    flex: 1;
+  background: transparent;
+  flex: 1;
 }
 
 .searchbar-input::placeholder {
-    color: black;
-    opacity: 1;
+  color: black;
+  opacity: 1;
 }
 
 .searchbar-input {
-    font-size: 0.875rem;
-    transition: opacity 0.3s ease;
-    background: transparent;
-    z-index: 9;
-    border-width: 0 !important;
-    border-radius: 9999999999px;
-    opacity: 1;
-    pointer-events: auto;
+  font-size: 0.875rem;
+  transition: opacity 0.3s ease;
+  background: transparent;
+  z-index: 9;
+  border-width: 0 !important;
+  border-radius: 9999999999px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .searchbar-input:focus,
@@ -95,52 +94,52 @@
 .searchbar-input:focus,
 .searchbar-input:focus-within,
 .searchbar-input:hover {
-    border-width: 0 !important;
-    box-shadow: none !important;
-    outline: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .searchbar-toggle-button:hover {
-    outline: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    color: #9d0013 !important;
-    background: transparent !important;
-    z-index: 9999999999 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #9d0013 !important;
+  background: transparent !important;
+  z-index: 9999999999 !important;
 }
 
 .searchbar-toggle-button:focus,
 .searchbar-toggle-button:focus-visible,
 .searchbar-toggle-button:active {
-    outline: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
 }
 
 .toggle-button {
-    width: 0px;
-    z-index: 9999999;
-    color: black !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: transparent !important;
+  width: 0px;
+  z-index: 9999999;
+  color: black !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
 }
 
 .searchbar-toggle-button:hover {
-    outline: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    color: #9d0013 !important;
-    background: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #9d0013 !important;
+  background: transparent !important;
 }
 
 .searchbar-toggle-button:focus,
 .searchbar-toggle-button:focus-visible,
 .searchbar-toggle-button:active {
-    outline: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
 }

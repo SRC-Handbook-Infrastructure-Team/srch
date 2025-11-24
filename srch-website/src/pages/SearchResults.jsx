@@ -1,5 +1,5 @@
-import "../SearchResults.css"
-import "../ResultsWindow.css"
+import "../SearchResults.css";
+import "../ResultsWindow.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
@@ -30,7 +30,11 @@ function SearchResults() {
           maxResults={0}
         />
         <br></br>
-        <ResultsWindow searchQuery={searchQuery} floating={false} truncateSnippet={true} />
+        <ResultsWindow
+          searchQuery={searchQuery}
+          floating={false}
+          truncateSnippet={true}
+        />
       </div>
     </div>
   );
