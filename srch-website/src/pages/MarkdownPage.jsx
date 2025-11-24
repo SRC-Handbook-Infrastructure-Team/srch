@@ -1,5 +1,5 @@
-import "../LandingPage.css";
-import "../ContentPage.css";
+import "../styles/LandingPage.css";
+import "../styles/ContentPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToast, Box } from "@chakra-ui/react";

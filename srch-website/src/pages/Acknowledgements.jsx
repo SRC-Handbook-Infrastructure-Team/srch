@@ -32,7 +32,9 @@
  * ============================================================================
  */
 
-import "../Acknowledgements.css";
+import "../styles/Acknowledgements.css";
+import "../styles/LandingPage.css";
+
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
@@ -46,7 +48,6 @@ import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-
 // Data
 import team from "../team.json";
 
@@ -58,7 +59,7 @@ import team from "../team.json";
 function getMemberPhotoSrc(member) {
   // Current convention: files in public/srch-s25/assets/member-photos
   // Example: "suresh.jpg" -> "/srch-s25/assets/member-photos/suresh.jpg"
-  return `/srch-s25/assets/member-photos/${member.photo}`;
+  return `public/assets/member-photos/${member.photo}`;
 }
 
 /* =============================================================================
@@ -68,7 +69,7 @@ function getMemberPhotoSrc(member) {
  * - Sorting is alphabetical by name for stability
  * - Each card:
  *     1) Photo (masked by ../src/assets/Photo.png) or masked gray placeholder
- *     2) Name + Pronouns
+ *     2) Name + Pronoun
  *     3) Position | Degree, GradYear
  *     4) Action icons (email/linkedin/website) if present
  * - All spacing, font sizes, and icon dims are handled via CSS classes.
@@ -249,7 +250,7 @@ export default function Acknowledgements() {
           - .ack-hero (position: fixed; background image)
           - .ack-lower-content (margin-top: Nvh to start after the hero)
       */}
-      <div className="ack-hero">
+      <div className="upper-content">
         <div className="upper-text-section">
           <div className="website-title">Meet our Team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}

@@ -3,8 +3,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import "../SearchBar.css";
-
+import "../styles/SearchBar.css";
 function NavSearchBar({
   searchQuery,
   setSearchQuery,

@@ -3,7 +3,7 @@ import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import "../ContentPage.css";
+import "../styles/ContentPage.css";
 
 function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const containerRef = useRef(null);

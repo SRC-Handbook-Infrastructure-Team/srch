@@ -1,5 +1,5 @@
-import "../SearchResults.css";
-import "../ResultsWindow.css";
+import "../styles/SearchResults.css";
+import "../styles/ResultsWindow.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";

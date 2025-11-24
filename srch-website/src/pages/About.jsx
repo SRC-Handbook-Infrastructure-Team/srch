@@ -8,25 +8,21 @@
  * • No ContentsSidebar on this page
  * ============================================================================
  */
-
-import "../About.css";
-import "../LandingPage.css";
-
+import "../styles/About.css";
+import "../styles/LandingPage.css";
 export default function About() {
   return (
     <>
       {/* 1. FIXED HERO (same structure as Acknowledgements) */}
-      <div className="about-hero">
-        <div className="about-upper-text">
-          <div className="about-title">
-            About the SRC
-            <br />
-            Handbook
+      <div className="upper-content">
+        <div className="upper-text-section">
+          <div className="website-title" id="about-title">
+            About the SRC Handbook
           </div>
-          <p className="about-sub">
+          <div className="info-section">
             Learn how to use this resource, how it’s structured, and the story
             behind its creation.
-          </p>
+          </div>
         </div>
       </div>
 
