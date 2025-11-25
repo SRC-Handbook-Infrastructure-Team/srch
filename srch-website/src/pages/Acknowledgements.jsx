@@ -51,8 +51,8 @@ import team from "../team.json";
  * Centralize how we compute an image src so it’s easy to swap storage paths.
  * ===========================================================================*/
 function getMemberPhotoSrc(member) {
-  // Current convention: files in public/srch-s25/assets/member-photos
-  // Example: "suresh.jpg" -> "/srch-s25/assets/member-photos/suresh.jpg"
+  // Current convention: files in public/srch/assets/member-photos
+  // Example: "suresh.jpg" -> "/srch/assets/member-photos/suresh.jpg"
   return `public/assets/member-photos/${member.photo}`;
 }
 

@@ -17,5 +17,5 @@ export default defineConfig({
       },
     },
   ],
-  base: "/srch-s25/",
+  base: "/srch/",
 });
