@@ -411,13 +411,11 @@ html {
   z-index: -1;
 }
 
-/* Full-width line just above the footer section */
 .footer-divider {
-  width: 100%;
   height: 2px;
   background: rgba(90, 45, 0, 0.5);
-  margin: 0;
 }
+
 
 
 .content-section {

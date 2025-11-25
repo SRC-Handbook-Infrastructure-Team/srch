@@ -15,8 +15,6 @@ import {
 import "../LandingPage.css"
 import { useNavigate } from "react-router-dom";
 
-
-
 function Footer() {
   const navigate = useNavigate();
 
@@ -29,7 +27,8 @@ function Footer() {
     return (
     <Box className="footer-container">
       {/* use a footer-specific divider so it can be full-width */}
-      <div className="footer-divider"></div>
+      <div className="page-divider page-divider-margin"></div>
+
 
         <div className="link-section-primer-footer">
           <div className="modules-section-primer-footer">
