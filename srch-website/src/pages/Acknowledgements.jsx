@@ -42,6 +42,12 @@ import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 
+// Footer assets (shared with Home)
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
 // Data
 import team from "../team.json";
 
@@ -271,7 +277,6 @@ export default function Acknowledgements() {
           teamName="additional_faculty"
         />
       </div>
-      <Footer />
     </>
   );
 }

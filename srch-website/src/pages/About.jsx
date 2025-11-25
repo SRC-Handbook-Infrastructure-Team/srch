@@ -8,19 +8,17 @@
  * • No ContentsSidebar on this page
  * ============================================================================
  */
-
+import "../styles/About.css";
 import "../styles/LandingPage.css";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-
 export default function About() {
   return (
     <>
-      <NavBar />
       {/* 1. FIXED HERO (same structure as Acknowledgements) */}
       <div className="upper-content">
         <div className="upper-text-section">
-          <div className="website-title" id="about-title">About the SRC Handbook</div>
+          <div className="website-title" id="about-title">
+            About the SRC Handbook
+          </div>
           <div className="info-section">
             Learn how to use this resource, how it’s structured, and the story
             behind its creation.
@@ -58,7 +56,6 @@ export default function About() {
           </ul>
         </section>
       </div>
-      <Footer />
     </>
   );
 }

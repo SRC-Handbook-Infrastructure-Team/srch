@@ -10,8 +10,8 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import Footer from "../components/Footer"
-
+import { saveScrollPosition } from "../components/ScrollManager";
+import Footer from "../components/Footer";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -168,7 +168,6 @@ function MarkdownPage() {
   }, [location.state, location.search]);
 
   const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
@@ -182,7 +181,6 @@ function MarkdownPage() {
   const contentRef = useRef(null);
 
   const formattedTitle = useMemo(() => {
-    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
 
     return getFormattedTitle(
@@ -222,80 +220,78 @@ function MarkdownPage() {
   }
 
   async function openGlobalDrawerForTerm(term, opts = {}) {
-  const { noToggle = false, noNavigate = false, silent = false } = opts;
+    const { noToggle = false, noNavigate = false, silent = false } = opts;
 
-  if (!term) return;
-  const key = String(term).toLowerCase();
+    if (!term) return;
+    const key = String(term).toLowerCase();
 
-  if (!noToggle && drawerActiveKey === key) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
+    if (!noToggle && drawerActiveKey === key) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+
+      if (!noNavigate) {
+        saveScrollPosition(scrollKey);
+        navigate(`/${sectionId}/${subsectionId}`, { replace: true });
+      }
+      return;
+    }
+
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      if (!silent) {
+        toast({
+          title: "Sidebar Entry Not Found",
+          description: `The sidebar entry "${term}" could not be found in this subsection.`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      }
+      return;
+    }
+
+    let drawerFile = null;
+    try {
+      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+    } catch (_) {}
+
+    const contentToShow =
+      drawerFile?.content ||
+      (typeof sidebarEntry === "string"
+        ? sidebarEntry
+        : sidebarEntry.content) ||
+      "";
+
+    const heading =
+      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+      String(term).replace(/-/g, " ");
+
+    const node = (
+      <>
+        <div className="drawer-meta-label">Familiar Case Studies</div>
+        <div className="drawer-meta-divider" />
+
+        <h2 className="drawer-section-title">
+          {highlightText(heading, highlight)}
+        </h2>
+
+        <MarkdownRenderer
+          content={contentToShow}
+          onDrawerOpen={handleDrawerOpen}
+          onNavigation={handleNavigation}
+          highlight={highlight}
+        />
+      </>
+    );
+
+    setDrawerActiveKey(key);
+    openRightDrawer(node);
 
     if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}`);
+      navigate(`/${sectionId}/${subsectionId}/${term}`, { replace: true });
     }
-
-    return;
   }
-
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    if (!silent) {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-    return;
-  }
-
-  let drawerFile = null;
-  try {
-    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-  } catch (_) {}
-
-  const contentToShow =
-    drawerFile?.content ||
-    (typeof sidebarEntry === "string"
-      ? sidebarEntry
-      : sidebarEntry.content) ||
-    "";
-
-  const heading =
-    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-    String(term).replace(/-/g, " ");
-
-  const node = (
-    <>
-      <div className="drawer-meta-label">Familiar Case Studies</div>
-      <div className="drawer-meta-divider" />
-
-      <h2 className="drawer-section-title">
-        {highlightText(heading, highlight)}
-      </h2>
-
-      <MarkdownRenderer
-        content={contentToShow}
-        onDrawerOpen={handleDrawerOpen}
-        onNavigation={handleNavigation}
-        highlight={highlight}
-      />
-    </>
-  );
-
-  setDrawerActiveKey(key);
-  openRightDrawer(node);
-
-  if (!noNavigate) {
-    navigate(`/${sectionId}/${subsectionId}/${term}`);
-  }
-}
-
-    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
@@ -307,6 +303,7 @@ function MarkdownPage() {
 
       if (!sectionId) {
         const sections = await getSections();
+        saveScrollPosition();
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -344,6 +341,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
 
@@ -411,6 +409,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
       }
@@ -453,82 +452,82 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-  // No term → close drawer and clear active state
-  if (!urlTerm) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-    return;
-  }
+    // No term → close drawer and clear active state
+    if (!urlTerm) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+      return;
+    }
 
-  const key = String(urlTerm).toLowerCase();
+    const key = String(urlTerm).toLowerCase();
 
-  // Wait until sidebar is actually loaded before trying to open the drawer
-  if (!sidebar || Object.keys(sidebar).length === 0) {
-    return; // sidebar not ready yet → we'll re-run when sidebar updates
-  }
+    // Wait until sidebar is actually loaded before trying to open the drawer
+    if (!sidebar || Object.keys(sidebar).length === 0) {
+      return; // sidebar not ready yet → we'll re-run when sidebar updates
+    }
 
-  // Optionally guard: only auto-open if the entry really exists
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    // You can choose to silently ignore here, or log/track if you want
-    return;
-  }
+    // Optionally guard: only auto-open if the entry really exists
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      // You can choose to silently ignore here, or log/track if you want
+      return;
+    }
 
-  // URL-driven open: don't toggle off, don't navigate again, no toast
-  openGlobalDrawerForTerm(key, {
-    noToggle: true,
-    noNavigate: true,
-    silent: true,
-  });
-}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
+    // URL-driven open: don't toggle off, don't navigate again, no toast
+    openGlobalDrawerForTerm(key, {
+      noToggle: true,
+      noNavigate: true,
+      silent: true,
+    });
+  }, [urlTerm, sidebar]); // <— important: depend on sidebar too
 
+  const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
-  const checkAndNavigate = useCallback(
-    async (path) => {
-      if (isLoading) return;
-      const pathParts = path.split("/").filter(Boolean);
+  async function checkAndNavigate(path) {
+    if (isLoading) return;
+    const pathParts = path.split("/").filter(Boolean);
+    const targetSectionId = pathParts[0];
+    const targetSubsectionId = pathParts[1] || null;
 
-      const targetSectionId = pathParts[0];
-      const targetSubsectionId = pathParts[1] || null;
+    try {
+      let contentExists = false;
+      if (targetSubsectionId) {
+        const result = await getContent(targetSectionId, targetSubsectionId);
+        contentExists = result !== null;
+      } else {
+        const result = await getContent(targetSectionId);
+        contentExists = result !== null;
+      }
 
-      try {
-        let contentExists = false;
-        if (targetSubsectionId) {
-          const result = await getContent(targetSectionId, targetSubsectionId);
-          contentExists = result !== null;
-        } else {
-          const result = await getContent(targetSectionId);
-          contentExists = result !== null;
-        }
-        if (contentExists) navigate(`/${path}`);
-        else {
-          toast({
-            title: targetSubsectionId
-              ? "Subsection Not Found"
-              : "Section Not Found",
-            description: targetSubsectionId
-              ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
-              : `The section "${targetSectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-        }
-      } catch (error) {
-        console.error("Error checking content:", error);
+      if (contentExists) {
+        saveScrollPosition(scrollKey); // Save scroll before navigating
+        navigate(`/${path}`);
+      } else {
         toast({
-          title: "Navigation Error",
-          description: "An error occurred while trying to navigate.",
+          title: targetSubsectionId
+            ? "Subsection Not Found"
+            : "Section Not Found",
+          description: targetSubsectionId
+            ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
+            : `The section "${targetSectionId}" could not be found.`,
           status: "error",
           duration: 5000,
           isClosable: true,
           position: "bottom-right",
         });
       }
-    },
-    [isLoading, navigate, toast]
-  );
+    } catch (error) {
+      console.error("Error checking content:", error);
+      toast({
+        title: "Navigation Error",
+        description: "An error occurred while trying to navigate.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  }
 
   function handleDrawerOpen(term) {
     openGlobalDrawerForTerm(term);
@@ -547,23 +546,9 @@ function MarkdownPage() {
     }
   }
 
-  useEffect(() => {
-    if (!mainContent) return;
-    const timer = setTimeout(() => {
-      if (location.hash) {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [mainContent, location.hash]);
-
   return (
     <div className="markdown-page">
-      <Box mb={10}>
+      <Box className="markdown-content">
         <div className="page-header">
           <p className="page-section-label">
             {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
@@ -608,11 +593,13 @@ function MarkdownPage() {
               onNavigation={handleNavigation}
               isFinal={contentFinal}
               highlight={highlight}
+              activeDrawerTerm={urlTerm}
             />
           </Box>
         )}
-        <Footer/>
       </Box>
+      <div className="page-height"></div>
+      <Footer />
     </div>
   );
 }

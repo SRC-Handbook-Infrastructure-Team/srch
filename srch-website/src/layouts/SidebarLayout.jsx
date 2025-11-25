@@ -173,7 +173,7 @@ export default function SidebarLayout({ children }) {
   /** ---------------- NAVBAR HEIGHT SYNC ---------------- */
   useEffect(() => {
   // Force a constant navbar height of 80px (Netflix-level consistency)
-  const fixedHeight = "80px";
+  const fixedHeight = "70px";
   document.documentElement.style.setProperty("--navbar-height", fixedHeight);
   document.documentElement.style.setProperty("--nav-bar-height", fixedHeight);
 }, []);

@@ -3,8 +3,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import "../styles/ContentPage.css";
-
+import "../styles/SearchBar.css";
 function NavSearchBar({
   searchQuery,
   setSearchQuery,
@@ -18,10 +17,9 @@ function NavSearchBar({
 
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
-      // Delay focus to wait for Collapse animation to complete
       const timer = setTimeout(() => {
         inputRef.current.focus();
-      }, 300); // 300ms to match Collapse duration
+      }, 300);
 
       return () => clearTimeout(timer);
     }
@@ -74,7 +72,6 @@ function NavSearchBar({
           searchQuery={searchQuery}
           maxResults={maxResults}
           setIsSearchOpen={setIsSearchOpen}
-          floating={false}
         />
       </Collapse>
     </Box>

@@ -1,0 +1,342 @@
+/* ==========================================================================
+   Search Results Window
+   ========================================================================== */
+
+.results-autofill {
+  z-index: 2147483000;
+  color: black;
+}
+
+.results-white-background {
+  background: white;
+}
+
+.results-list {
+  overflow-y: auto;
+  padding: 0 0.5rem 0 0.5rem;
+  z-index: 999999999999999999;
+}
+
+.results-top-row {
+  color: #4a5568;
+  font-size: 0.875rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 1rem;
+  border-bottom: 1px solid #5a2d0047;
+}
+
+.result-row {
+  border-bottom: 1px solid #62381714;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.results-item {
+  padding: 15px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.results-item:hover {
+  background-color: #d8d7d741;
+  transition: background-color 0.5s ease;
+}
+
+.results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.results-section {
+  background: #9d0013;
+  display: block;
+  color: white;
+  padding: 0rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: normal;
+  margin-right: 0.75rem;
+}
+
+.results-title {
+  display: block;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.result-snippet {
+  font-size: 0.875rem;
+  color: black;
+  padding-top: 1rem;
+}
+
+.result-snippet-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-snippet-text-clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-snippet-readmore {
+  position: static;
+  z-index: 0;
+  pointer-events: auto;
+  text-align: right;
+  justify-self: flex-start;
+}
+
+.read-more-button {
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  background: darkgray;
+  color: white;
+  font-size: 0.75rem;
+  border: none;
+}
+
+.results-view-all {
+  padding: 0.75rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.view-all-link {
+  cursor: pointer;
+  color: #3182ce;
+  text-decoration: underline;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.view-all-link:hover {
+  color: #2b6cb0;
+}
+
+.pages-row {
+  justify-content: center;
+  align-content: center;
+}
+
+/* ========================================================================== 
+     Search Results Window (Floating)
+     ========================================================================== */
+
+.results-window-floating {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: 20px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 1.25rem 0 1.25rem;
+}
+
+.results-window {
+  padding: 0 1.25rem 0 1.25rem;
+}
+
+.navsearchbar-container {
+  position: relative;
+  align-items: center;
+  overflow: visible;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.results-list-floating {
+  overflow-y: auto;
+  padding-top: 0.5rem;
+}
+
+.results-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+}
+
+.results-found-count {
+  font-weight: 500;
+}
+
+.results-per-page-selector span {
+  user-select: none;
+}
+
+.per-page-number {
+  cursor: pointer;
+  margin: 0 4px;
+  text-decoration: none;
+  outline: none;
+}
+
+.per-page-number.selected {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.result-row {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 0;
+}
+
+.results-header {
+  display: flex;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.results-section {
+  color: white;
+}
+
+.results-title {
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.result-snippet {
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.results-view-all {
+  font-size: 0.9rem;
+  color: #4a5568;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-all-link {
+  color: #3182ce;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+.view-all-link:hover,
+.view-all-link:focus {
+  color: #2c5282;
+  outline: none;
+}
+
+.pagination-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 1rem;
+  justify-content: center;
+}
+
+.pagination-row.wrapped {
+  justify-content: flex-start;
+}
+
+.pages-and-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.pages-row {
+  display: flex;
+  justify-items: center;
+  gap: 15px;
+  padding: 5px 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.pages-row:hover {
+  background: rgba(83, 28, 0, 0.05);
+}
+
+.page-number {
+  cursor: pointer;
+  color: #5d3210;
+  user-select: none;
+  outline: none;
+  font-size: 1rem;
+  text-align: center;
+  white-space: nowrap;
+  min-width: 20px;
+  align-self: center;
+  align-content: center;
+}
+
+.page-number.selected {
+  font-weight: bold;
+}
+
+.page-nav {
+  cursor: pointer;
+  color: #5d3210;
+  height: 34px;
+  text-align: center;
+  font-size: 1rem;
+  user-select: none;
+  outline: none;
+  padding: 5px 15px;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  justify-self: center;
+  align-items: center;
+  display: flex;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.page-nav[aria-disabled="true"] {
+  cursor: default;
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+.page-nav:hover {
+  text-decoration: none;
+  background-color: rgba(83, 28, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.page-nav.invisible {
+  visibility: hidden;
+  transition: visibility 0.2s ease;
+}

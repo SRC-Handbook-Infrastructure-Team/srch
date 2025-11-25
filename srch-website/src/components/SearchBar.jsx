@@ -40,7 +40,6 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
       ref={containerRef}
       className={"searchbar-container"}
       onClick={handleContainerClick}
-
     >
       <IconButton
         aria-label="Toggle search bar"
@@ -60,12 +59,8 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onKeyDown={handleKeyDown}
         />
         <Collapse in={showResults} animateOpacity>
-          <ResultsWindow
-            searchQuery={searchQuery}
-            maxResults={maxResults}
-            floating={true}
-          />
-         </Collapse>
+          <ResultsWindow searchQuery={searchQuery} maxResults={maxResults} />
+        </Collapse>
       </Box>
       <Collapse in={searchQuery} animateOpacity>
         <IconButton

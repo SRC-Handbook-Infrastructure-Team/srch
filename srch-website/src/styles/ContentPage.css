@@ -22,9 +22,12 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Layout metrics */
-  --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
-  --right-sidebar-width: 0px; /* JS updates these */
-  --navbar-height: 80px; /* unified baseline */
+  --toolbar-height: 0px;
+  /* set >0 only if a toolbar is rendered */
+  --right-sidebar-width: 0px;
+  /* JS updates these */
+  --navbar-height: 70px;
+  /* unified baseline */
   --left-sidebar-width: var(--left-sidebar-width, 250px);
 
   /* Colors / theme */
@@ -57,6 +60,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -74,6 +78,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   max-width: 100vw;
+  word-break: keep-all;
 }
 
 a {
@@ -81,6 +86,7 @@ a {
   color: var(--color-accent);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--color-accent);
   text-decoration: underline;
@@ -99,20 +105,14 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
-  font-weight: 600;
-  border-radius: 3px;
-  padding: 2px 2px;
 }
 
 /* ==========================================================================
@@ -135,7 +135,8 @@ mark {
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  z-index: 19; /* below NavBar (20), above content */
+  z-index: 19;
+  /* below NavBar (20), above content */
 }
 
 /* ========================================================================== 
@@ -145,13 +146,15 @@ mark {
 .sidebar-section-header {
   border: 1px solid transparent;
   border-radius: 6px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 /*  Route-aware highlight (via .is-active class from JSX) */
 .sidebar-section-header.is-active {
-  border-color: #c9c9c9 !important;
-  background-color: #c9c9c9 !important;
+  border-color: #c9c9c9;
+  background-color: #c9c9c9;
 }
 
 /*  Optional subtle hover, but DO NOT override active state */
@@ -161,15 +164,25 @@ mark {
 
 /* Ensures the entire row feels clickable and avoids visual jitter */
 .sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
+  pointer-events: none;
+  /* interaction handled by container */
 }
 
 /* ==========================================================================
    Markdown & Content
    ========================================================================== */
 .markdown-page {
+  background: var(--cs-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.markdown-content {
   padding-left: 100px;
   padding-right: 100px;
+  padding-bottom: 100px;
+  background: white;
 }
 
 mark {
@@ -177,7 +190,11 @@ mark {
   color: var(--color-accent);
   font-weight: 600;
   border-radius: 3px;
-  padding: 2px 2px;
+}
+
+.page-height {
+  flex-grow: 1;
+  background-color: var(--color-bg);
 }
 
 /* ==========================================================================
@@ -185,9 +202,9 @@ mark {
    ========================================================================== */
 .sidebar-link-active {
   color: var(--color-accent);
-  color: var(--color-accent) !important;
   font-weight: 600;
 }
+
 .sidebar-link:hover {
   color: var(--color-accent);
 }
@@ -234,6 +251,7 @@ h4 {
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .nav-section:hover {
   background-color: var(--nav-hover-bg);
 }
@@ -242,17 +260,21 @@ h4 {
   display: flex;
   align-items: center;
 }
+
 .nav-section-text {
   font-weight: 500;
 }
+
 .nav-subsection {
   display: flex;
   align-items: center;
 }
+
 .nav-subsection-text {
   font-size: 0.875rem;
   padding: 4px;
 }
+
 .nav-subsection-active {
   font-weight: 700;
 }
@@ -265,567 +287,8 @@ h4 {
   border-radius: 6px;
 }
 
-/* ========================================================================== 
-   Navigation Bar
-   ========================================================================== */
-
-.top-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  margin: 0;
-
-  /* Let it grow with content, but don’t be smaller than 80px */
-  height: auto;
-  min-height: 80px;
-
-  display: block; /* your layout inside (header-hstack etc.) handles flex */
-  border-bottom: 1px solid #e2e8f0;
-  background-color: white;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-}
-
-
-.top-navbar a:hover,
-.top-navbar a:button,
-.top-navbar .nav-link:hover,
-.top-navbar .nav-button:hover {
-  color: #9d0013;
-}
-
-.navbar-padding {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.navbar-logo-container {
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-}
-
-.header-hstack {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  overflow: visible;
-  width: 100%;
-  height: min-content;
-}
-
-.right-hstack {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
-.nav-dropdown {
-  position: relative;
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-}
-
-.nav-dropdown-title {
-  border-radius: 0.375rem;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  user-select: none;
-  transition: color 0.2s;
-}
-
-.nav-dropdown-title:hover {
-  color: #9d0013;
-}
-
-.nav-dropdown-title-text {
-  pointer-events: auto;
-  user-select: none;
-  color: inherit;
-  cursor: pointer;
-  margin-right: 0.25rem;
-  font-weight: 500;
-}
-
-.nav-dropdown-chevron {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.2s;
-  user-select: none;
-}
-
-.nav-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  padding-top: 0.25rem;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 0.375rem;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  min-width: max-content;
-  justify-content: center;
-}
-
-.nav-dropdown-item {
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-dropdown-item:hover {
-  color: #9d0013;
-}
-
-/* Text boxes for simple nav links */
-.nav-link-box {
-  height: min-content;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  text-align: center;
-  user-select: none;
-  transition: color 0.2s;
-  white-space: nowrap;
-}
-
-.nav-link-box:hover {
-  color: #9d0013;
-}
-
-.mobile-menu-vstack {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  padding-top: 1rem;
-  padding-bottom: 0.25rem;
-  width: 100%;
-}
-
-.mobile-modules-container {
-  position: relative;
-}
-
-.mobile-modules-toggle {
-  border-radius: 0.375rem;
-  cursor: pointer;
-  text-align: left;
-  width: min-content;
-  white-space: nowrap;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: color 0.3s;
-}
-
-.mobile-modules-toggle:hover {
-  color: #9d0013;
-}
-
-.mobile-modules-chevron {
-  transition: transform 0.3s;
-  width: 20px;
-  height: 20px;
-}
-
-.mobile-modules-collapse {
-  overflow: visible;
-  width: min-content;
-  padding-top: 0.5rem;
-  padding-left: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.mobile-module-item {
-  cursor: pointer;
-  white-space: nowrap;
-  user-select: none;
-  transition: color 0.2s;
-}
-
-.mobile-module-item:hover {
-  color: #9d0013;
-}
-
-.icon-button {
-  padding: 0rem;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@media (min-width: 48em) {
-  .hide-md {
-    display: none !important;
-  }
-  .show-md {
-    display: flex !important;
-  }
-}
-
-@media (max-width: 47.99em) {
-  .hide-base {
-    display: none !important;
-  }
-  .show-base {
-    display: inline-flex !important;
-  }
-}
-
-/* ========================================================================== 
-   Nav Search Bar
-   ========================================================================== */
-
-.navsearchbar-container {
-  position: relative;
-  align-items: center;
-  overflow: visible;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.navsearchbar-input-container {
-  display: flex;
-  align-items: center;
-  overflow: visible;
-  margin-bottom: 0.25rem;
-}
-
-.navsearchbar-input::placeholder {
-  color: black;
-  opacity: 1;
-}
-
-.navsearchbar-input {
-  font-size: 1rem;
-  padding-left: 2.5rem;
-  transition: opacity 0.3s ease;
-  background: transparent;
-  border-width: 0 !important;
-  z-index: 9;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.navsearchbar-input:focus,
-.navsearchbar-input:focus-visible {
-  box-shadow: none;
-  outline: none;
-  border-color: inherit;
-}
-
-.navsearchbar-button {
-  color: black;
-}
-
-.navsearchbar-button:hover {
-  color: #9d0013;
-}
-
-/* ========================================================================== 
-   Search Bar
-   ========================================================================== */
-
-.searchbar-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: visible;
-  background: white;
-  border-radius: 9999999999px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  width: 100%;
-  min-width: 400px;
-}
-
-.searchbar-border {
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
-}
-
-.searchbar-input-container {
-  background: transparent;
-  flex: 1;
-}
-
-.searchbar-input::placeholder {
-  color: black;
-  opacity: 1;
-}
-
-.searchbar-input {
-  font-size: 0.875rem;
-  transition: opacity 0.3s ease;
-  background: transparent;
-  z-index: 9;
-  border-width: 0 !important;
-  border-radius: 9999999999px;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.searchbar-input:focus,
-.searchbar-input:focus-visible,
-.searchbar-input:active,
-.searchbar-input:focus,
-.searchbar-input:focus-within,
-.searchbar-input:hover {
-  border-width: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.searchbar-toggle-button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  color: #9d0013 !important;
-  background: transparent !important;
-  z-index: 9999999999 !important;
-}
-
-.searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
-.searchbar-toggle-button:active {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.toggle-button {
-  width: 0px;
-  z-index: 9999999;
-  color: black !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  color: #9d0013 !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
-.searchbar-toggle-button:active {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-*/
-
-
-  /* ==========================================================================
-   Search Results Window
-   ========================================================================== */
-
-  .results-autofill {
-  z-index: 2147483000;
-  /* background-color: transparent;  <-- comment/remove this */
-  color: black !important;
-}
-
-
-.results-white-background {
-  background: white;
-}
-
-.results-list {
-  overflow-y: auto;
-  padding: 0 0.5rem 0 0.5rem;
-  z-index: 999999999999999999;
-}
-
-.results-count {
-  color: #718096;
-  font-size: 0.875rem;
-}
-
-.result-row {
-  border-bottom: 1px solid #e2e8f0;
-padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.results-item {
-  padding: 15px;
-border-radius: 9px;
-}
-
-.results-item:hover {
-  background-color: #d8d7d741;
-  transition: background-color 0.5s ease;
-}
-
-.results-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.25rem;
-}
-
-.results-section {
-  background: #9d0013;
-  display: block;
-  color: white;
-  padding: 0rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  margin-right: 0.75rem;
-}
-
-.results-title {
-  display: block;
-  align-items: center;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #4a5568;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.result-snippet {
-  font-size: 0.875rem;
-  color: black;
-  padding-top: 1rem;
-}
-
-.result-snippet-text {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.result-snippet-text.clamped {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.read-more-button,
-.result-snippet-readmore {
-  position: static !important;
-  z-index: 0 !important;
-  pointer-events: auto !important;
-  text-align: right;
-  justify-self: flex-start;
-}
-
-.read-more-button {
-  position: relative;
-  padding: 0.25rem 0.5rem;
-  background: darkgray !important;
-  color: white !important;
-  font-size: 0.75rem;
-  border: none;
-}
-
-.results-view-all {
-  padding: 0.75rem 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #718096;
-  font-size: 0.875rem;
-}
-
-.view-all-link {
-  cursor: pointer;
-  color: #3182ce;
-  text-decoration: underline;
-  font-size: 0.875rem;
-  outline: none;
-}
-
-.view-all-link:hover {
-  color: #2b6cb0;
-}
-
-/* ========================================================================== 
-   Search Results Window (Floating)
-   ========================================================================== */
-
-.results-window-floating {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-top: 20px;
-  background: white;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 0 1.25rem 0 1.25rem;
-}
-
-/* Base (non-floating) results window – used in NavSearchBar */
-.results-window {
-  margin-top: 8px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  padding: 0.75rem 1rem;
-}
-
-.navsearchbar-container {
-  position: relative;
-  align-items: center;
-  overflow: visible;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-
-/* list styles */
-.results-list {
-  overflow-y: auto;
-  padding: 0 0.5rem 0 0.5rem;
-  z-index: 999999999999999999;
-}
-
-.results-list-floating {
-  overflow-y: auto;
-    padding-top: 0.5rem;
-}
-
-.drawer-content {
-  padding: 12px !important;
+*/ .drawer-content {
+  padding: 12px;
 }
 
 html {
@@ -834,8 +297,7 @@ html {
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  margin-top: var(--navbar-height) !important;
-  min-height: 100vh;
+  margin-top: calc(var(--navbar-height)) !important;
 
   /* FIX: combine left & right margin transitions */
   transition:
@@ -844,7 +306,6 @@ html body .main-content {
 
   overflow: clip;
 }
-
 
 /* When the drawer is open, make room for it */
 html.right-open body .main-content {
@@ -856,21 +317,26 @@ html:not(.right-open) body .main-content {
   margin-right: 0 !important;
 }
 
-
-
 /* Let content inside the right drawer wrap and never overflow */
 .right-sidebar .drawer-content {
-  overflow-wrap: anywhere;   /* modern, preferred */
-  word-break: break-word;    /* fallback */
-  min-width: 0;              /* fix flex shrink edge cases */
+  overflow-wrap: anywhere;
+  /* modern, preferred */
+  word-break: break-word;
+  /* fallback */
+  padding-left: 10px;
+  padding-right: 10px;
+  min-width: 0;
+  /* fix flex shrink edge cases */
 }
 
 /* Chip: allow multi-line wrapping + don’t overflow the drawer */
 .srch-drawer-link {
   display: inline-flex;
-  flex-wrap: wrap;           /* allow wrapping to 2+ lines */
+  flex-wrap: wrap;
+  /* allow wrapping to 2+ lines */
   max-width: 100%;
-  white-space: normal !important;  /* was nowrap; this is the fix */
+  white-space: normal;
+  /* was nowrap; this is the fix */
   line-height: 1.2;
 }
 
@@ -881,8 +347,6 @@ html:not(.right-open) body .main-content {
   word-break: break-word;
   min-width: 0;
 }
-
-
 
 .page-header-row {
   display: flex;
@@ -934,9 +398,11 @@ html:not(.right-open) body .main-content {
 }
 
 .header-toggle:focus-visible {
-  outline: 2px solid #9d0013; /* your brand color */
+  outline: 2px solid #9d0013;
+  /* your brand color */
   outline-offset: 2px;
 }
+
 .header-toggle:hover {
   transform: scale(1.25);
 }
@@ -944,13 +410,6 @@ html:not(.right-open) body .main-content {
 /* ==========================
    QUICK, SAFE OVERRIDES
    ========================== */
-
-/* 1) Make markdown page padding a token we can cancel for the divider */
-.markdown-page {
-  --page-pad: 100px; /* matches your current 100px */
-  padding-left: var(--page-pad);
-  padding-right: var(--page-pad);
-}
 
 /* 2) Divider that spans the full content width (not viewport), while ignoring
       the .markdown-page padding. It will auto-stop at sidebars because
@@ -972,7 +431,6 @@ html:not(.right-open) body .main-content {
   margin-left: calc(-1 * var(--page-pad)) !important;
 }
 
-
 /* Neutralize any legacy "fullbleed" rules that used vw/transform */
 .page-divider-margin {
   margin: 12px 0 12px;
@@ -980,7 +438,8 @@ html:not(.right-open) body .main-content {
 
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
-  position: relative; /* anchor for the toggle button */
+  position: relative;
+  /* anchor for the toggle button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1017,7 +476,8 @@ html:not(.right-open) body .main-content {
   font-size: 11px;
   line-height: 1;
   position: relative;
-  top: 1px; /* small visual nudge */
+  top: 1px;
+  /* small visual nudge */
 }
 
 /* center the control in the header strip */
@@ -1026,6 +486,7 @@ html:not(.right-open) body .main-content {
   justify-content: right;
   padding: 8px 0;
 }
+
 /* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
 .sidebar-toggle {
   /* nuke default button look */
@@ -1058,6 +519,7 @@ html:not(.right-open) body .main-content {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -1074,11 +536,16 @@ html:not(.right-open) body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400; /* tweak if you want lighter */
-  letter-spacing: 0.02em; /* optional, matches figma-ish */
+  font-weight: 400;
+  padding-top: 12px;
+  /* tweak if you want lighter */
+  letter-spacing: 0.02em;
+  /* optional, matches figma-ish */
   color: var(--srch-brown);
-  margin: 0 0 4px 0; /* small gap above the H1 */
-  text-transform: uppercase; /* optional, matches figma */
+  margin: 0 0 4px 0;
+  /* small gap above the H1 */
+  text-transform: uppercase;
+  /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -1098,26 +565,33 @@ html:not(.right-open) body .main-content {
   height: auto !important;
 
   /* Motion */
-  transition: border-color 160ms ease, background-color 160ms ease,
-    color 160ms ease, transform 120ms ease !important;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease !important;
   transform-origin: center center;
   font-weight: bold !important;
   font-style: bold !important;
   font-family: "Be Vietnam Pro" !important;
-  font-weight: 700 !important; /* or bold */
+  font-weight: 700 !important;
+  /* or bold */
 }
 
 /* Collapse phantom inline spacing between chips and text */
 .srch-drawer-link {
-  margin-left: -2px; /* pulls chip into collapsed inline gap */
+  margin-left: -2px;
+  /* pulls chip into collapsed inline gap */
 }
 
 .srch-drawer-link + .srch-drawer-link {
-  margin-left: 0; /* prevents chain-over-collapse for chip→chip */
+  margin-left: 0;
+  /* prevents chain-over-collapse for chip→chip */
 }
 
 p > .srch-drawer-link:first-child {
-  margin-left: 0; /* safety: don't pull chip into paragraph edge */
+  margin-left: 0;
+  /* safety: don't pull chip into paragraph edge */
 }
 
 .srch-drawer-link:hover {
@@ -1158,7 +632,8 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px); /* Moves the element 12px to the left */
+  transform: translateX(12px);
+  /* Moves the element 12px to the left */
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -1196,11 +671,12 @@ html.right-open .right-sidebar {
   opacity: 0 !important;
 }
 
-
 /* Resizer (left edge of right drawer) — identical thickness/behavior as left */
 .right-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
@@ -1209,8 +685,6 @@ html.right-open .right-sidebar {
 .right-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
-
-
 
 .right-sidebar .drawer-content .callout,
 .right-sidebar .drawer-content [class*="box"],
@@ -1261,6 +735,7 @@ html.right-open .right-sidebar {
   cursor: pointer !important;
   color: var(--srch-brown) !important;
 }
+
 /* Disable transitions while dragging (optional polish) */
 .left-sidebar.resizing,
 .right-sidebar.resizing {
@@ -1272,14 +747,17 @@ html.right-open .right-sidebar {
   position: fixed !important;
   top: var(--navbar-height) !important;
   bottom: 0 !important;
-  right: var(--right-sidebar-width) !important; /* follows drawer edge */
+  right: var(--right-sidebar-width) !important;
+  /* follows drawer edge */
   width: 10px !important;
-  transform: translateX(-6px); /* overlap seam for easier grab */
+  transform: translateX(-6px);
+  /* overlap seam for easier grab */
   cursor: col-resize !important;
   pointer-events: auto;
   background: transparent !important;
   z-index: 35;
 }
+
 .right-resize-hitbox.is-resizing {
   background: rgba(83, 28, 0, 0.06) !important;
 }
@@ -1301,12 +779,13 @@ html.right-open .right-sidebar {
   width: var(--left-sidebar-width) !important;
 
   background: var(--cs-bg) !important;
-  border-right: 1px solid var(--cs-divider) !important; /* thin vertical divider */
+  border-right: 1px solid var(--cs-divider) !important;
+  /* thin vertical divider */
 
   overflow-y: auto !important;
   opacity: 0;
   transform: translateX(-100%);
-  
+
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.25s ease;
@@ -1318,24 +797,31 @@ html.right-open .right-sidebar {
   backface-visibility: hidden;
   transform: translateX(-100%);
 }
-.left-sidebar.open { transform: translateX(0); opacity: 1; }
+
+.left-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
 
 .left-sidebar.closing {
   transform: translateX(-100%) !important;
   opacity: 0 !important;
 }
 
-
-
 /* Resize handle */
 .left-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
 }
-.left-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
+.left-resizer.is-resizing {
+  background: rgba(83, 28, 0, 0.08) !important;
+}
 
 /* =============================================================================
    HEADER CONTROLS (Expand/Collapse all)
@@ -1343,7 +829,8 @@ html.right-open .right-sidebar {
 .sidebar-header-controls {
   display: flex;
   justify-content: right;
-  padding: 12px 16px 6px; /* extra top room like Figma */
+  padding: 12px 16px 6px;
+  /* extra top room like Figma */
 }
 
 .sidebar-toggle {
@@ -1357,20 +844,30 @@ html.right-open .right-sidebar {
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: var(--cs-text);                 /* #4F3629 */
-  
-
+  color: var(--cs-text);
+  /* #4F3629 */
 }
-.sidebar-toggle:hover { opacity: 0.9; }
-.sidebar-toggle:focus-visible { outline: 2px solid #9d0013; outline-offset: 2px; }
+
+.sidebar-toggle:hover {
+  opacity: 0.9;
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid #9d0013;
+  outline-offset: 2px;
+}
 
 .icon-double-chevron {
   display: inline-flex;
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
-  width: 12px; height: 6px; display: block; fill: currentColor;
+  width: 12px;
+  height: 6px;
+  display: block;
+  fill: currentColor;
 }
 
 /* =============================================================================
@@ -1379,39 +876,48 @@ html.right-open .right-sidebar {
    - Chevron toggles expand/collapse (JS stops propagation).
    - Active section row ALWAYS uses warm grey background.
    ========================================================================== */
-.sidebar-section { margin-bottom: 6px; } /* subtle breathing room between sections */
+.sidebar-section {
+  margin-bottom: 6px;
+}
+
+/* subtle breathing room between sections */
 
 /* SECTION ROWS */
 .sidebar-section-header {
   /* edge-to-edge highlight inside a padded container (NavContent wrapper uses 16px) */
   margin-left: -16px;
   margin-right: -16px;
-  padding: 8px 16px;              /* move padding here so the bg spans full width */
+  padding: 8px 16px;
+  /* move padding here so the bg spans full width */
   border-radius: 0 !important;
-  transition: background-color var(--cs-ease), border-color var(--cs-ease);
+  transition:
+    background-color var(--cs-ease),
+    border-color var(--cs-ease);
   border: 1px solid transparent;
   background: transparent;
 }
 
-
 .sidebar-section-header:hover:not(.is-active) {
-  background: rgba(0,0,0,0.04); /* gentle hover only for non-active */
+  background: rgba(0, 0, 0, 0.04);
+  /* gentle hover only for non-active */
 }
 
 /* Active section row (route-aware via .is-active from JSX) */
 .sidebar-section-header.is-active {
-  background: var(--cs-active) !important; /* #e6e2dd */
+  background: var(--cs-active) !important;
+  /* #e6e2dd */
   border-color: var(--cs-active) !important;
   border-radius: 0 !important;
-
 }
 
 /* Title text in section row — default REGULAR, only active is BOLD */
 .sidebar-section-title {
   font: "Be Vietnam Pro";
-  font-weight: 400 !important;             /* default regular */
+  font-weight: 400 !important;
+  /* default regular */
   font-size: 16px !important;
-  color: var(--cs-text) !important;        /* #4F3629 */
+  color: var(--cs-text) !important;
+  /* #4F3629 */
 }
 
 /* Bold only when the section is the active route */
@@ -1426,19 +932,29 @@ html.right-open .right-sidebar {
    - Add vertical rhythm when a section is open.
    ========================================================================== */
 .sidebar-subsection-container {
-  padding-left: 22px;     /* indent subsections */
-  margin-top: 8px;        /* space under the section row when opened */
+  padding-left: 22px;
+  /* indent subsections */
+  margin-top: 8px;
+  /* space under the section row when opened */
 }
 
 .sidebar-sub-row {
   border-radius: 8px;
   padding: 6px 10px;
-  transition: background-color var(--cs-ease), color var(--cs-ease);
+  transition:
+    background-color var(--cs-ease),
+    color var(--cs-ease);
   background: transparent;
 }
-.sidebar-sub-row:hover { background: rgba(83,28,0,0.06); } /* subtle hover */
+
+.sidebar-sub-row:hover {
+  background: rgba(83, 28, 0, 0.06);
+}
+
+/* subtle hover */
 .sidebar-sub-row.is-active {
-  background: var(--cs-brown);           /* #531C00 */
+  background: var(--cs-brown);
+  /* #531C00 */
 }
 
 /* Subsection text */
@@ -1446,42 +962,51 @@ html.right-open .right-sidebar {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 400 !important;
   font-size: 14px !important;
-  color: var(--cs-text) !important;      /* default #4F3629 */
+  color: var(--cs-text) !important;
+  /* default #4F3629 */
 }
+
 .sidebar-sub-row.is-active .sidebar-subsection {
-  color: #FFFFFF !important;             /* white when active pill */
-  font-weight: 600 !important;           /* bold only for active subsection */
+  color: #ffffff !important;
+  /* white when active pill */
+  font-weight: 600 !important;
+  /* bold only for active subsection */
 }
 
 /* =============================================================================
    BADGE
    ========================================================================== */
 .beta-tag {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #EFEFEF; color: #333;
-  font-weight: 700; font-size: 0.75rem;
-  padding: 2px 8px; margin-left: 8px; border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #efefef;
+  color: #333;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 6px;
 }
 
 /* =============================================================================
    SMALL POLISH
    ========================================================================== */
 .sidebar-btn:hover {
-     opacity: 0.8;
-     }
-
+  opacity: 0.8;
+}
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 3.5px 7.5px !important;       /* More interior padding → more pill */
-  border-radius: 15px !important;    /* Perfect pill shape */
+  padding: 3.5px 7.5px !important;
+  /* More interior padding → more pill */
+  border-radius: 15px !important;
+  /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;                /* More breathing room between text + icon */
+  gap: 6px !important;
+  /* More breathing room between text + icon */
 }
-
-
-
