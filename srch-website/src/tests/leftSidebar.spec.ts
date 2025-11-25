@@ -10,7 +10,11 @@ function slugify(text = "") {
         .replace(/\s+/g, "-")
         .replace(/-+/g, "-");
 }
-test.describe('Sidebar tests', () => {
+
+test.describe('Sidebar tests in small screen size', () => {
+})
+
+test.describe('Sidebar tests in full screen size', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/srch/privacy/whatIsPrivacy/');
@@ -54,3 +58,4 @@ test.describe('Sidebar tests', () => {
         // test code
     });
 })
+
