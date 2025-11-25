@@ -598,6 +598,7 @@ function MarkdownPage() {
           </Box>
         )}
       </Box>
+      <div className="page-height"></div>
       <Footer />
     </div>
   );

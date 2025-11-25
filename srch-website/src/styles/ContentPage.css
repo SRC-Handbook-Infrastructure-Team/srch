@@ -173,6 +173,9 @@ button:focus-visible {
    ========================================================================== */
 .markdown-page {
   background: var(--cs-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--navbar-height));
 }
 
 .markdown-content {
@@ -187,6 +190,11 @@ mark {
   color: var(--color-accent);
   font-weight: 600;
   border-radius: 3px;
+}
+
+.page-height {
+  flex-grow: 1;
+  background-color: var(--color-bg);
 }
 
 /* ==========================================================================
@@ -289,8 +297,7 @@ html {
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  margin-top: var(--navbar-height) !important;
-  min-height: 100vh;
+  margin-top: calc(var(--navbar-height)) !important;
 
   /* FIX: combine left & right margin transitions */
   transition:
@@ -530,6 +537,7 @@ html:not(.right-open) body .main-content {
   font-size: 12px;
   line-height: 24px;
   font-weight: 400;
+  padding-top: 12px;
   /* tweak if you want lighter */
   letter-spacing: 0.02em;
   /* optional, matches figma-ish */

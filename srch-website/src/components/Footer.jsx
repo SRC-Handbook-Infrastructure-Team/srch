@@ -18,7 +18,7 @@ function Footer() {
       <div className="footer-line-divider"></div>
       <div className="footer-content">
         <div className="footer-box">
-          <div className="hide-wide show-narrow">
+          <div className="logo-container hide-wide show-narrow">
             <img
               src={logoImage}
               className="logo-image-footer"

@@ -1,5 +1,6 @@
 .search-results-page {
   --page-pad: min(150px, 10vw);
+  padding-top: 50px;
   padding-left: var(--page-pad);
   padding-right: var(--page-pad);
 }
@@ -37,7 +38,7 @@
 .content {
   position: relative;
   z-index: 99999;
-  margin-top: 120px;
+  margin-top: var(--navbar-height);
   min-height: 100vh;
 }
 
