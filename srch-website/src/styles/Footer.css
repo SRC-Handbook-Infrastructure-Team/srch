@@ -41,9 +41,26 @@
 
   /* Motion */
   --cs-ease: 180ms ease;
+
+  /* ------------------------------------------------------------------------
+     🎨 Design Tokens — Base Color System
+     ------------------------------------------------------------------------ */
+
+  --color-text: #1a1a1a;
+  --color-text-hover: #9d0013;
+  --color-text-accent: #7a000f;
+  --color-text-muted: #555;
+  --color-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-border: #e0d7ce;
+  /* from new theme */
+  --color-accent: #7b4b24;
+  /* new accent color */
+  --color-accent-light: #f3ece6;
 }
 
-img {
+.footer-icon {
   width: 100px;
   object-fit: contain;
   display: block;
@@ -82,7 +99,7 @@ img {
 
 .links-section {
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   flex-direction: row;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -145,7 +162,7 @@ img {
   font-size: small;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
-  word-wrap: break-word;
+  white-space: nowrap;
   background: none;
   border: none;
   padding: 0;
@@ -155,7 +172,7 @@ img {
 }
 
 .module-link-primer-footer:hover {
-  color: #9d0013;
+  color: var(--color-text-hover);
 }
 
 .feedback-footer {
@@ -167,13 +184,13 @@ img {
 }
 
 .feedback-footer a {
-  color: #9d0013;
+  color: var(--color-text-hover);
   text-decoration: underline;
   transition: color 0.2s;
 }
 
 .feedback-footer a:hover {
-  color: #7a000f;
+  color: var(--color-text-accent);
 }
 
 .copyright {
@@ -184,42 +201,42 @@ img {
   word-wrap: break-word;
 }
 
-.copyright a {
-  color: #9d0013;
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.copyright a:hover {
-  color: #7a000f;
-}
-
-@container (min-width: 48em) {
+@container (min-width: 49em) {
   .footer-content {
     align-items: center;
   }
 
   .footer-content .hide-wide {
-    display: none !important;
+    display: none;
   }
 
   .footer-content .show-wide {
-    display: flex !important;
+    display: flex;
   }
 }
 
-@container (max-width: 47.99em) {
+@container (max-width: 48.99em) {
   .footer-content {
-    align-items: center;
+    align-self: center;
+    align-content: center;
+    width: 100%;
+  }
+
+  .footer-box {
+    align-self: center;
+    align-content: center;
+    width: min-content;
   }
 
   .footer-content .hide-narrow {
-    display: none !important;
+    display: none;
   }
 
   .footer-content .show-narrow {
-    display: inline-flex !important;
-    justify-items: center;
-    align-items: flex-start;
+    display: grid;
+  }
+  .links-section {
+    justify-content: center;
+    width: min-content;
   }
 }

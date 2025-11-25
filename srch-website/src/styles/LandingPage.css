@@ -96,6 +96,7 @@ html {
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
+  word-break: keep-all;
 }
 
 .background-gradient {

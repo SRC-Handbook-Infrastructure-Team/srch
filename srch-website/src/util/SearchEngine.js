@@ -177,7 +177,14 @@ function truncateSnippet(snippet, searchQuery) {
   return snippet;
 }
 
-function extractBlocksFromContent(sectionId, sectionTitle, content, subsectionId = null, subsectionTitle = null) {
+function extractBlocksFromContent(
+  sectionId,
+  sectionTitle,
+  content,
+  subsectionId = null,
+  subsectionTitle = null,
+  defaultTitle = null
+) {
   const lines = content.replace(/\r/g, "").split("\n");
   const blocks = [];
 
@@ -206,7 +213,9 @@ function extractBlocksFromContent(sectionId, sectionTitle, content, subsectionId
         subsection: subsectionId,
         subsectionTitle: subsectionTitle,
         anchor: "intro",
-        title: "Introduction",
+        title: defaultTitle
+          ? getPlaintextFromMarkdown(defaultTitle)
+          : "Introduction",
         content: currentLines.join("\n").trim(),
         isDrawer: false,
       });
@@ -237,10 +246,17 @@ export async function initializeIndex() {
   for (const section of sections) {
     const subsections = await getSubsections(section.id);
     for (const subsection of subsections) {
-      const { mainContent: subMain, sidebarRaw: subSidebar } = extractMainAndSidebar(subsection.content);
+      const { mainContent: subMain, sidebarRaw: subSidebar } =
+        extractMainAndSidebar(subsection.content);
       const subSidebarParsed = subSidebar ? parseSidebar(subSidebar) : {};
 
-      const subBlocks = extractBlocksFromContent(section.id, section.title, subMain, subsection.id, subsection.title);
+      const subBlocks = extractBlocksFromContent(
+        section.id,
+        section.title,
+        subMain,
+        subsection.id,
+        subsection.title
+      );
       contentArray.push(...subBlocks);
 
       for (const [key, value] of Object.entries(subSidebarParsed)) {
@@ -249,7 +265,8 @@ export async function initializeIndex() {
           section.title,
           value.content,
           subsection.id,
-          subsection.title
+          subsection.title,
+          value.heading || null
         );
 
         sidebarBlocks.forEach((block) => {
@@ -262,7 +279,6 @@ export async function initializeIndex() {
             isDrawer: true,
           });
         });
-
       }
     }
   }
@@ -322,7 +338,10 @@ export async function search(query, truncateSnippetFlag = true) {
         "gi"
       );
 
-      const titleMatches = doc.title && doc.title.toLowerCase().includes(query.toLowerCase()) && doc.title !== "Introduction";
+      const titleMatches =
+        doc.title &&
+        doc.title.toLowerCase().includes(query.toLowerCase()) &&
+        doc.title !== "Introduction";
       const contentHasMatch =
         doc.content &&
         getPlaintextFromMarkdown(doc.content)

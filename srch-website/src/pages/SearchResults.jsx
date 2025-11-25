@@ -3,12 +3,13 @@ import "../styles/ResultsWindow.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 import { SearchBar } from "../components/SearchBar";
-import { ResultsWindow } from "../components/ResultsWindow";
+import { ResultsPage } from "../components/ResultsPage";
 import { useState, useEffect } from "react";
 
 function SearchResults() {
-  const { query } = useParams();
-  const decodedQuery = decodeURIComponent(query || "");
+  const { query = "", page } = useParams();
+  const decodedQuery = decodeURIComponent(query);
+  const pageNum = page ? parseInt(page, 10) : 1;
   const [searchQuery, setSearchQuery] = useState(decodedQuery);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function SearchResults() {
       <div className="background-gradient" />
       <div className="background-fade" />
       <div className="content">
-        <Heading as="h1" size="2xl" mb={8} sx={{ color: "#581000 !important" }}>
+        <Heading as="h1" size="2xl" className="search-results-header">
           Search Results
         </Heading>
         <SearchBar
@@ -30,10 +31,11 @@ function SearchResults() {
           maxResults={0}
         />
         <br></br>
-        <ResultsWindow
+        <ResultsPage
           searchQuery={searchQuery}
           floating={false}
           truncateSnippet={true}
+          pageNumber={pageNum}
         />
       </div>
     </div>

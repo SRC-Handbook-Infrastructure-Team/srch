@@ -72,7 +72,6 @@ function NavSearchBar({
           searchQuery={searchQuery}
           maxResults={maxResults}
           setIsSearchOpen={setIsSearchOpen}
-          floating={false}
         />
       </Collapse>
     </Box>

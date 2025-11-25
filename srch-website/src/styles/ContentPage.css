@@ -78,6 +78,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   max-width: 100vw;
+  word-break: keep-all;
 }
 
 a {
@@ -152,8 +153,8 @@ button:focus-visible {
 
 /*  Route-aware highlight (via .is-active class from JSX) */
 .sidebar-section-header.is-active {
-  border-color: #c9c9c9 !important;
-  background-color: #c9c9c9 !important;
+  border-color: #c9c9c9;
+  background-color: #c9c9c9;
 }
 
 /*  Optional subtle hover, but DO NOT override active state */
@@ -193,7 +194,6 @@ mark {
    ========================================================================== */
 .sidebar-link-active {
   color: var(--color-accent);
-  color: var(--color-accent) !important;
   font-weight: 600;
 }
 
@@ -280,7 +280,7 @@ h4 {
 }
 
 */ .drawer-content {
-  padding: 12px !important;
+  padding: 12px;
 }
 
 html {
@@ -328,7 +328,7 @@ html:not(.right-open) body .main-content {
   flex-wrap: wrap;
   /* allow wrapping to 2+ lines */
   max-width: 100%;
-  white-space: normal !important;
+  white-space: normal;
   /* was nowrap; this is the fix */
   line-height: 1.2;
 }

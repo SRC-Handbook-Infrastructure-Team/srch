@@ -1,7 +1,6 @@
 import "./styles/App.css";
-
+import ScrollManager from "./components/ScrollManager";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import MarkdownPage from "./pages/MarkdownPage";
@@ -21,21 +20,9 @@ function AppRoutes() {
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (location.hash) {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [location]);
-
   return (
     <>
+      <ScrollManager />
       {isMarkdownPage ? (
         <SidebarLayout>
           <Routes>
@@ -56,6 +43,7 @@ function AppRoutes() {
             <Route path="/" element={<Home />} />
             <Route path="/acknowledgements" element={<Acknowledgements />} />
             <Route path="/about" element={<About />} />
+            <Route path="/search/:query/:page" element={<SearchResults />} />
             <Route path="/search/:query" element={<SearchResults />} />
             <Route path="/search" element={<SearchResults />} />
           </Routes>

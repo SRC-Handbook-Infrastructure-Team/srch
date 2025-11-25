@@ -17,18 +17,8 @@ function Footer() {
     <Box className="footer-container">
       <div className="footer-line-divider"></div>
       <div className="footer-content">
-        <div className="hide-wide show-narrow">
-          <img
-            src={logoImage}
-            className="logo-image-footer"
-            alt="SRC Handbook Logo"
-            width={100}
-            height={31.58}
-            onClick={() => navigate("/")}
-          />
-        </div>
-        <div className="links-section">
-          <div className="logo-container show-wide hide-narrow">
+        <div className="footer-box">
+          <div className="hide-wide show-narrow">
             <img
               src={logoImage}
               className="logo-image-footer"
@@ -38,93 +28,121 @@ function Footer() {
               onClick={() => navigate("/")}
             />
           </div>
-          <div>
-            <div className="heading-footer">Modules</div>
-            <div className="primer-link-primer-footer">
-              <div className="primer-link-photo-primer-footer">
-                <img
-                  src={privacyIcon}
-                  alt="Privacy Icon"
-                  width={24}
-                  height={24}
-                />
-              </div>
-              <button
-                onClick={() => navigate(privacySlug)}
-                className="module-link-primer-footer"
-              >
-                Privacy
-              </button>
+          <div className="links-section">
+            <div className="logo-container show-wide hide-narrow">
+              <img
+                src={logoImage}
+                className="logo-image-footer"
+                alt="SRC Handbook Logo"
+                width={100}
+                height={31.58}
+                onClick={() => navigate("/")}
+              />
             </div>
+            <div>
+              <div className="heading-footer">Modules</div>
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    className="footer-icon"
+                    src={privacyIcon}
+                    alt="Privacy Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(privacySlug)}
+                  className="module-link-primer-footer"
+                >
+                  Privacy
+                </button>
+              </div>
 
-            <div className="primer-link-primer-footer">
-              <div className="primer-link-photo-primer-footer">
-                <img
-                  src={accessibilityIcon}
-                  alt="Accessibility Icon"
-                  width={24}
-                  height={24}
-                />
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    className="footer-icon"
+                    src={accessibilityIcon}
+                    alt="Accessibility Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(accessibilitySlug)}
+                  className="module-link-primer-footer"
+                >
+                  Accessibility
+                </button>
               </div>
-              <button
-                onClick={() => navigate(accessibilitySlug)}
-                className="module-link-primer-footer"
-              >
-                Accessibility
-              </button>
-            </div>
 
-            <div className="primer-link-primer-footer">
-              <div className="primer-link-photo-primer-footer">
-                <img
-                  src={automatedIcon}
-                  alt="Automated Decision Making Icon"
-                  width={24}
-                  height={24}
-                />
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    className="footer-icon"
+                    src={automatedIcon}
+                    alt="Automated Decision Making Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(decisionSlug)}
+                  className="module-link-primer-footer"
+                >
+                  Automated Decision Making
+                </button>
               </div>
-              <button
-                onClick={() => navigate(decisionSlug)}
-                className="module-link-primer-footer"
-              >
-                Automated Decision Making
-              </button>
-            </div>
 
-            <div className="primer-link-primer-footer">
-              <div className="primer-link-photo-primer-footer">
-                <img
-                  src={aiIcon}
-                  alt="Generative AI Icon"
-                  width={24}
-                  height={24}
-                />
+              <div className="primer-link-primer-footer">
+                <div className="primer-link-photo-primer-footer">
+                  <img
+                    className="footer-icon"
+                    src={aiIcon}
+                    alt="Generative AI Icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <button
+                  onClick={() => navigate(aiSlug)}
+                  className="module-link-primer-footer"
+                >
+                  Generative AI
+                </button>
               </div>
-              <button
-                onClick={() => navigate(aiSlug)}
-                className="module-link-primer-footer"
-              >
-                Generative AI
-              </button>
             </div>
-          </div>
-          <div className="footer-links">
             <div className="footer-links">
-              <div className="heading-footer">Quick Links</div>
-              <button
-                onClick={() => navigate("/about")}
-                className="module-link-primer-footer"
-              >
-                About
-              </button>
-              <button
-                onClick={() => navigate("/acknowledgements")}
-                className="module-link-primer-footer"
-              >
-                Acknowledgements
-              </button>
+              <div className="footer-links">
+                <div className="heading-footer">Quick Links</div>
+                <button
+                  onClick={() => navigate("/about")}
+                  className="module-link-primer-footer"
+                >
+                  About
+                </button>
+                <button
+                  onClick={() => navigate("/acknowledgements")}
+                  className="module-link-primer-footer"
+                >
+                  Acknowledgements
+                </button>
+              </div>
+              <div className="footer-links second-column show-narrow hide-wide">
+                <div className="heading-footer">Have Feedback?</div>
+                <p className="feedback-footer">
+                  Contact:{" "}
+                  <a href="mailto:src_handbook@brown.edu">
+                    src_handbook@brown.edu
+                  </a>
+                </p>
+                <p className="feedback-footer">
+                  <a href="?">Bug Report Form</a>
+                </p>
+              </div>
             </div>
-            <div className="footer-links second-column show-narrow hide-wide">
+            <div className="footer-links show-wide hide-narrow">
               <div className="heading-footer">Have Feedback?</div>
               <p className="feedback-footer">
                 Contact:{" "}
@@ -133,26 +151,16 @@ function Footer() {
                 </a>
               </p>
               <p className="feedback-footer">
-                <a href="?">Bug Report Form</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
+                  Bug Report Form
+                </a>
               </p>
             </div>
           </div>
-          <div className="footer-links show-wide hide-narrow">
-            <div className="heading-footer">Have Feedback?</div>
-            <p className="feedback-footer">
-              Contact:{" "}
-              <a href="mailto:src_handbook@brown.edu">src_handbook@brown.edu</a>
-            </p>
-            <p className="feedback-footer">
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
-                Bug Report Form
-              </a>
-            </p>
-          </div>
+          <p className="copyright">
+            © 2025 Brown University. All rights reserved.
+          </p>
         </div>
-        <p className="copyright">
-          © 2025 Brown University. All rights reserved.
-        </p>
       </div>
     </Box>
   );

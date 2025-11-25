@@ -10,6 +10,7 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
+import { saveScrollPosition } from "../components/ScrollManager";
 import Footer from "../components/Footer";
 
 function MarkdownPage() {
@@ -144,7 +145,7 @@ function MarkdownPage() {
           day: "numeric",
         });
       }
-    } catch (e) { }
+    } catch (e) {}
     return dateString; // fallback: show raw
   }
 
@@ -167,7 +168,6 @@ function MarkdownPage() {
   }, [location.state, location.search]);
 
   const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
@@ -181,7 +181,6 @@ function MarkdownPage() {
   const contentRef = useRef(null);
 
   const formattedTitle = useMemo(() => {
-    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
 
     return getFormattedTitle(
@@ -231,9 +230,9 @@ function MarkdownPage() {
       setDrawerActiveKey(null);
 
       if (!noNavigate) {
-        navigate(`/${sectionId}/${subsectionId}`);
+        saveScrollPosition(scrollKey);
+        navigate(`/${sectionId}/${subsectionId}`, { replace: true });
       }
-
       return;
     }
 
@@ -255,7 +254,7 @@ function MarkdownPage() {
     let drawerFile = null;
     try {
       drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) { }
+    } catch (_) {}
 
     const contentToShow =
       drawerFile?.content ||
@@ -290,7 +289,7 @@ function MarkdownPage() {
     openRightDrawer(node);
 
     if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}/${term}`);
+      navigate(`/${sectionId}/${subsectionId}/${term}`, { replace: true });
     }
   }
 
@@ -304,6 +303,7 @@ function MarkdownPage() {
 
       if (!sectionId) {
         const sections = await getSections();
+        saveScrollPosition();
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -341,6 +341,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
 
@@ -408,6 +409,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
       }
@@ -479,52 +481,53 @@ function MarkdownPage() {
     });
   }, [urlTerm, sidebar]); // <— important: depend on sidebar too
 
-  const checkAndNavigate = useCallback(
-    async (path) => {
-      if (isLoading) return;
-      const pathParts = path.split("/").filter(Boolean);
+  const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
-      const targetSectionId = pathParts[0];
-      const targetSubsectionId = pathParts[1] || null;
+  async function checkAndNavigate(path) {
+    if (isLoading) return;
+    const pathParts = path.split("/").filter(Boolean);
+    const targetSectionId = pathParts[0];
+    const targetSubsectionId = pathParts[1] || null;
 
-      try {
-        let contentExists = false;
-        if (targetSubsectionId) {
-          const result = await getContent(targetSectionId, targetSubsectionId);
-          contentExists = result !== null;
-        } else {
-          const result = await getContent(targetSectionId);
-          contentExists = result !== null;
-        }
-        if (contentExists) navigate(`/${path}`);
-        else {
-          toast({
-            title: targetSubsectionId
-              ? "Subsection Not Found"
-              : "Section Not Found",
-            description: targetSubsectionId
-              ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
-              : `The section "${targetSectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-        }
-      } catch (error) {
-        console.error("Error checking content:", error);
+    try {
+      let contentExists = false;
+      if (targetSubsectionId) {
+        const result = await getContent(targetSectionId, targetSubsectionId);
+        contentExists = result !== null;
+      } else {
+        const result = await getContent(targetSectionId);
+        contentExists = result !== null;
+      }
+
+      if (contentExists) {
+        saveScrollPosition(scrollKey); // Save scroll before navigating
+        navigate(`/${path}`);
+      } else {
         toast({
-          title: "Navigation Error",
-          description: "An error occurred while trying to navigate.",
+          title: targetSubsectionId
+            ? "Subsection Not Found"
+            : "Section Not Found",
+          description: targetSubsectionId
+            ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
+            : `The section "${targetSectionId}" could not be found.`,
           status: "error",
           duration: 5000,
           isClosable: true,
           position: "bottom-right",
         });
       }
-    },
-    [isLoading, navigate, toast]
-  );
+    } catch (error) {
+      console.error("Error checking content:", error);
+      toast({
+        title: "Navigation Error",
+        description: "An error occurred while trying to navigate.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  }
 
   function handleDrawerOpen(term) {
     openGlobalDrawerForTerm(term);
@@ -542,20 +545,6 @@ function MarkdownPage() {
       }
     }
   }
-
-  useEffect(() => {
-    if (!mainContent) return;
-    const timer = setTimeout(() => {
-      if (location.hash) {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [mainContent, location.hash]);
 
   return (
     <div className="markdown-page">
@@ -604,6 +593,7 @@ function MarkdownPage() {
               onNavigation={handleNavigation}
               isFinal={contentFinal}
               highlight={highlight}
+              activeDrawerTerm={urlTerm}
             />
           </Box>
         )}
