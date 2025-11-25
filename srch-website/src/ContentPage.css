@@ -25,6 +25,8 @@
   --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px; /* JS updates these */
   --navbar-height: 80px; /* unified baseline */
+  --mobile-menu-height: 200px; /* height of slide-down mobile menu panel */
+  --mobile-menu-height-expanded: 300px;    /* when modules dropdown is open */
   --left-sidebar-width: var(--left-sidebar-width, 250px);
 
   /* Colors / theme */
@@ -285,6 +287,9 @@ h4 {
 }
 
 
+
+
+
 .top-navbar a:hover,
 .top-navbar a:button,
 .top-navbar .nav-link:hover,
@@ -482,7 +487,7 @@ h4 {
   }
 }
 
-@media (max-width: 47.99em) {
+@media (max-width: 80em) {
   .hide-base {
     display: none !important;
   }
@@ -490,6 +495,8 @@ h4 {
     display: inline-flex !important;
   }
 }
+
+
 
 /* ========================================================================== 
    Nav Search Bar
@@ -835,6 +842,12 @@ html body .main-content {
   transition:
     margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
     margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7);
+  
+  transition:
+    margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-top 0.25s cubic-bezier(0.22, .7, 0.36, .7);
+
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -1268,7 +1281,7 @@ html.right-open .right-sidebar {
   top: var(--navbar-height) !important;
   bottom: 0 !important;
   right: var(--right-sidebar-width) !important; /* follows drawer edge */
-  width: 10px !important;
+  width: 6px !important;
   transform: translateX(-6px); /* overlap seam for easier grab */
   cursor: col-resize !important;
   pointer-events: auto;
@@ -1279,11 +1292,22 @@ html.right-open .right-sidebar {
   background: rgba(83, 28, 0, 0.06) !important;
 }
 
+
 /* Hide/disable when drawer is closed */
 .right-sidebar.close ~ .right-resize-hitbox {
   pointer-events: none !important;
   display: none !important;
 }
+
+/* Turn off gray drag highlight on both resizers & hitbox */
+.left-resizer.is-resizing,
+.right-resizer.is-resizing,
+.right-resize-hitbox,
+.right-resize-hitbox.is-resizing {
+  background: transparent !important;
+}
+
+
 
 /* =============================================================================
    SHELL
@@ -1330,7 +1354,7 @@ html.right-open .right-sidebar {
   cursor: col-resize !important;
   background: transparent !important;
 }
-.left-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
 
 /* =============================================================================
    HEADER CONTROLS (Expand/Collapse all)
@@ -1493,18 +1517,19 @@ html.right-open .right-sidebar {
    When the layout container is narrower than 1280px but above mobile,
    we let CSS “flip” main-content to overlay-friendly margins.
 */
-@container layout (max-width: 1279px) and (min-width: 769px) {
+@container layout (max-width: 1279px) {
   html body .main-content {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
 }
 
-html[data-layout-mode="overlay"].right-open body .main-content {
+
+/* In overlay mode, sidebars should slide over content instead of pushing it */
+html[data-layout-mode="overlay"] body .main-content {
+  margin-left: 0 !important;
   margin-right: 0 !important;
 }
-
-
 
 
 /* Default: no scrim */
@@ -1556,68 +1581,6 @@ html[data-layout-mode="overlay"].right-open body .main-content {
   background: var(--sidebar-bg, #fff);
 }
 
-/* ============================================================================
-   MOBILE = OVERLAY (UNIFIED VISUAL SYSTEM)
-   ----------------------------------------------------------------------------
-   This block ensures mobile behaves EXACTLY like overlay mode:
-   - sidebars float over content
-   - no main-content shifting
-   - scrim works identically
-   - no resize handles active
-============================================================================ */
-
-/* 1. Main content NEVER shifts in mobile */
-html[data-layout-mode="mobile"] body .main-content {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-/* 2. When a panel is open, still do NOT shift */
-html[data-layout-mode="mobile"].right-open body .main-content {
-  margin-right: 0 !important;
-}
-
-/* 3. Scrim identical to overlay mode */
-.sidebar-layout.has-panel-open[data-layout-mode="mobile"]::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  opacity: 1;
-  pointer-events: auto;
-  z-index: 14; /* same depth layering as overlay */
-}
-
-/* 4. Left sidebar overlay behavior in mobile */
-html[data-layout-mode="mobile"] .left-sidebar {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-
-html[data-layout-mode="mobile"] .left-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-/* 5. Right sidebar overlay behavior in mobile */
-html[data-layout-mode="mobile"] .right-sidebar {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-html[data-layout-mode="mobile"].right-open .right-sidebar,
-html[data-layout-mode="mobile"] .right-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-/* 6. Disable resize UI on mobile (no confusing drag areas) */
-html[data-layout-mode="mobile"] .left-resizer,
-html[data-layout-mode="mobile"] .right-resizer,
-html[data-layout-mode="mobile"] .right-resize-hitbox {
-  display: none !important;
-  pointer-events: none !important;
-}
 
 /* 7. Ensure no accidental layout push via custom container queries */
 @container layout (max-width: 768px) {
@@ -1627,4 +1590,168 @@ html[data-layout-mode="mobile"] .right-resize-hitbox {
   }
 }
 
+/* Target the layout wrapper when in overlay mode */
+.sidebar-layout[data-layout-mode="overlay"] {
+  /* This prevents the desktop-only elements (which rely on min-width: 48em) 
+     from showing when the viewport is between 768px and 1280px. */
+  .hide-base.show-md {
+    display: none !important; 
+  }
+}
 
+
+/* Slightly tighten the padding above the logo when
+   the dropdown is open in overlay mode. */
+.sidebar-layout[data-layout-mode="overlay"] 
+  .top-navbar[data-menu-open="true"] 
+  .navbar-padding {
+  padding-top: 0.75rem;    /* was 1rem; adjust to taste */
+}
+
+
+
+/* Typography for mobile dropdown items: About, Acknowledgements, Modules */
+.mobile-menu-vstack .nav-link-box,
+.mobile-menu-vstack .mobile-modules-toggle,
+.mobile-menu-vstack .mobile-module-item {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;        /* ⬅️ change this for size */
+  line-height: 1.6;
+  color: var(--srch-brown);         /* ⬅️ change this for color */
+}
+
+.mobile-menu-vstack {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cs-bg); /* off-white, like sidebars */
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  width: 100%;
+}
+
+/* Extra spacing between the expanded navbar dropdown and the page header
+   (PRIVACY / title) when in overlay mode. */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"]
+  ~ .main-content
+  .markdown-page {
+  padding-top: 24px;
+}
+
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"]
+  ~ .main-content
+  .page-divider-margin {
+  margin-top: 16px;
+  margin-bottom: 24px; /* more gap between header + body copy */
+}
+
+/* -------------------------------------------------------
+   Overlay / split-screen header layout
+   ------------------------------------------------------- */
+
+/* Stack title and "Last updated" vertically in overlay mode */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-header-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px; /* small vertical gap between title and last-updated */
+}
+
+/* Give the title a bit more room and slightly smaller size
+   so it wraps to at most ~2 lines instead of 3 when narrow. */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-title {
+  align-self: flex-start;
+  font-size: 35px;      
+  line-height: 1.25;
+  max-width: 32rem;      /* tweak to control wrapping */
+}
+
+/* Move "Last updated" just below the title and clean up the weird offset.
+   Right-align it by default while still being below the title. */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-last-updated {
+  align-self: flex-end;
+  margin-left: 0;
+  margin-top: 4px;
+  transform: none;
+  font-size: 12px;       /* slightly smaller label */
+  line-height: 1.4;
+  max-width: 18rem;      /* keeps it to 1–2 lines max */
+  text-align: right;
+}
+
+/* More breathing room between the divider and the markdown content
+   in overlay mode only. */
+.sidebar-layout[data-layout-mode="overlay"] 
+  .markdown-page 
+  .page-divider.page-divider-margin {
+  margin-bottom: 24px;   /* was 12px – double the space under the line */
+}
+
+/* Slide-down mobile menu panel that lives under the fixed navbar */
+.mobile-menu-panel {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+
+  z-index: 19; /* below navbar (20), above content */
+  background: var(--cs-bg); /* off-white, same as sidebars */
+  border-bottom: 1px solid color-mix(in srgb, var(--cs-divider) 30%, transparent);
+
+
+  padding: 1.25rem 2rem 1.75rem;
+  /*  starting “off-screen” state + animation curve */
+  transform: translateY(-12px);
+  opacity: 0;
+  transition:
+    transform 0.22s cubic-bezier(0.22, 0.7, 0.36, 0.7),
+    opacity 0.18s ease-out;
+  
+}
+
+/* When mobile menu is open, slide the panel into place */
+.top-navbar[data-menu-open="true"] + .chakra-collapse .mobile-menu-panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/* Let the existing stack just handle layout inside the panel */
+.mobile-menu-panel .mobile-menu-vstack {
+  background: transparent;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  width: 100%;
+}
+
+/* Typography for mobile dropdown items: About, Acknowledgements, Modules */
+.mobile-menu-vstack .nav-link-box,
+.mobile-menu-vstack .mobile-modules-toggle,
+.mobile-menu-vstack .mobile-module-item {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--srch-brown);
+}
+
+/* Mobile menu open, modules *not* expanded */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"][data-modules-expanded="false"]
+  ~ .main-content {
+  margin-top: calc(var(--navbar-height) + var(--mobile-menu-height)) !important;
+}
+
+/* Mobile menu open, modules expanded */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"][data-modules-expanded="true"]
+  ~ .main-content {
+  margin-top: calc(var(--navbar-height) + var(--mobile-menu-height-expanded)) !important;
+}
+
+/* Full-width line just above the footer section */
+.footer-divider {
+  width: 100%;
+  height: 2px;
+  background: rgba(90, 45, 0, 0.5);
+  margin: 0;
+}

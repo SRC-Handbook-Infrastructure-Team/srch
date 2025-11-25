@@ -8,6 +8,7 @@ import {
   Text,
   Icon,
   Collapse,
+  Slide,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -21,7 +22,8 @@ import logo from "../assets/logo.png";
 import "../ContentPage.css";
 import { color } from "framer-motion";
 
-function NavBar({ className = "" }) {
+function NavBar({ className = ""}) {
+  
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -158,88 +160,190 @@ function NavBar({ className = "" }) {
     );
   };
 
-  return (
-    <Box
-      as="header"
-      className={`top-navbar ${className}`.trim()}
-      onMouseLeave={() => setIsSearchOpen(false)}
-    >
-      <Box className="navbar-padding">
-        <HStack className="header-hstack">
-          <Box className="navbar-logo-container" onClick={() => navigate("/")}>
-            <HStack alignItems={"center"}>
-              <Image
-                src={logo}
-                alt="Socially Responsible Computing Handbook"
-                height={"30px"}
-                objectFit="contain"
-              />
-            </HStack>
-          </Box>
-
-          <HStack className="right-hstack" spacing={"1rem"}>
+    return (
+    <>
+      {/* Fixed top navbar */}
+      <Box
+        as="header"
+        className={`top-navbar ${className}`.trim()}
+        data-menu-open={isMenuOpen ? "true" : "false"}
+        data-modules-expanded={isModulesExpanded ? "true" : "false"}
+        onMouseLeave={() => setIsSearchOpen(false)}
+      >
+        <Box className="navbar-padding">
+          <HStack className="header-hstack">
+            {/* Logo ---------------------------------------------------- */}
             <Box
-              className="hide-base show-md"
-              onMouseLeave={() => setOpenSection(null)}
+              className="navbar-logo-container"
+              onClick={() => navigate("/")}
             >
-              <Box className="nav-dropdown">
-                <Box
-                  className="nav-dropdown-title"
-                  onMouseEnter={() => setOpenSection("modules")}
-                  onClick={(e) => toggleSection("modules", e)}
-                >
-                  <Text
-                    className="nav-dropdown-title-text"
-                    color={openSection === "modules" ? "#9D0013" : "inherit"}
-                  >
-                    Modules
-                  </Text>
-                  <Icon
-                    as={ChevronDownIcon}
-                    className="nav-dropdown-chevron"
-                    style={{
-                      transform:
-                        openSection === "modules"
-                          ? "rotate(180deg)"
-                          : undefined,
-                    }}
-                  />
-                </Box>
-                <Collapse in={openSection === "modules"} animateOpacity>
-                  <Box className="nav-dropdown-menu">
-                    <VStack align="stretch" spacing={0}>
-                      {sections.slice(1).map((section) => (
-                        <Box
-                          key={section.id}
-                          className="nav-dropdown-item"
-                          onClick={(e) => {
-                            const sectionSubsections = subsections[section.id];
-                            if (
-                              sectionSubsections &&
-                              sectionSubsections.length > 0
-                            ) {
-                              navigate(
-                                `/${section.id}/${sectionSubsections[0].id}`
-                              );
-                            } else {
-                              navigate(`/${section.id}`);
-                            }
-                            toggleSection(section.id, e);
-                          }}
-                        >
-                          <Text fontWeight="medium" whiteSpace="nowrap">
-                            {section.title}
-                          </Text>
-                        </Box>
-                      ))}
-                    </VStack>
-                  </Box>
-                </Collapse>
-              </Box>
+              <HStack alignItems={"center"}>
+                <Image
+                  src={logo}
+                  alt="Socially Responsible Computing Handbook"
+                  height={"30px"}
+                  objectFit="contain"
+                />
+              </HStack>
             </Box>
+
+            {/* Right side icons / desktop nav -------------------------- */}
+            <HStack className="right-hstack" spacing={"1rem"}>
+              {/* Desktop: Modules dropdown */}
+              <Box
+                className="hide-base show-md"
+                onMouseLeave={() => setOpenSection(null)}
+              >
+                <Box className="nav-dropdown">
+                  <Box
+                    className="nav-dropdown-title"
+                    onMouseEnter={() => setOpenSection("modules")}
+                    onClick={(e) => toggleSection("modules", e)}
+                  >
+                    <Text
+                      className="nav-dropdown-title-text"
+                      color={openSection === "modules" ? "#9D0013" : "inherit"}
+                    >
+                      Modules
+                    </Text>
+                    <Icon
+                      as={ChevronDownIcon}
+                      className="nav-dropdown-chevron"
+                      style={{
+                        transform:
+                          openSection === "modules"
+                            ? "rotate(180deg)"
+                            : undefined,
+                      }}
+                    />
+                  </Box>
+                  <Collapse in={openSection === "modules"} animateOpacity>
+                    <Box className="nav-dropdown-menu">
+                      <VStack align="stretch" spacing={0}>
+                        {sections.slice(1).map((section) => (
+                          <Box
+                            key={section.id}
+                            className="nav-dropdown-item"
+                            onClick={(e) => {
+                              const sectionSubsections =
+                                subsections[section.id];
+                              if (
+                                sectionSubsections &&
+                                sectionSubsections.length > 0
+                              ) {
+                                navigate(
+                                  `/${section.id}/${sectionSubsections[0].id}`
+                                );
+                              } else {
+                                navigate(`/${section.id}`);
+                              }
+                              toggleSection(section.id, e);
+                            }}
+                          >
+                            <Text fontWeight="medium" whiteSpace="nowrap">
+                              {section.title}
+                            </Text>
+                          </Box>
+                        ))}
+                      </VStack>
+                    </Box>
+                  </Collapse>
+                </Box>
+              </Box>
+
+              {/* Desktop: About / Acknowledgements */}
+              <Box
+                className="nav-link-box hide-base show-md"
+                onClick={() => {
+                  const firstSection = sections[0];
+                  const sectionSubsections = subsections[firstSection.id];
+                  if (sectionSubsections && sectionSubsections.length > 0) {
+                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                  } else {
+                    navigate(`/${firstSection.id}`);
+                  }
+                }}
+              >
+                <Text>About</Text>
+              </Box>
+              <Box
+                className="nav-link-box hide-base show-md"
+                onClick={() => navigate("/acknowledgements")}
+              >
+                <Text>Acknowledgements</Text>
+              </Box>
+
+              {/* Icons: dark mode / search */}
+              <Box className="icon-button">
+                <MoonIcon
+                  className="navsearchbar-button"
+                  fontSize={"lg"}
+                ></MoonIcon>
+              </Box>
+              <Box
+                className="icon-button"
+                onClick={() => {
+                  if (!isSearchOpen) {
+                    forceSearchOpen();
+                  } else {
+                    setIsSearchOpen(false);
+                  }
+                }}
+              >
+                <SearchIcon
+                  className="navsearchbar-button"
+                  fontSize={"lg"}
+                ></SearchIcon>
+              </Box>
+
+              {/* Mobile hamburger (only shows on base) */}
+              <Box
+                className="icon-button show-base hide-md"
+                onClick={() => {
+                  if (!isMenuOpen) {
+                    forceMenuOpen();
+                  } else {
+                    setIsMenuOpen(false);
+                  }
+                }}
+              >
+                <HamburgerIcon
+                  color="black"
+                  fontSize={"x-large"}
+                ></HamburgerIcon>
+              </Box>
+            </HStack>
+          </HStack>
+
+          {/* Search bar under the nav (same as before) */}
+          <Collapse in={isSearchOpen} animateOpacity>
+            <NavSearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setIsSearchOpen={setIsSearchOpen}
+              isSearchOpen={isSearchOpen}
+              maxResults={2}
+              align="stretch"
+            />
+          </Collapse>
+        </Box>
+      </Box>
+
+      {/* ===========================================
+          Mobile slide-down menu PANEL (separate)
+          =========================================== */}
+      <Collapse in={isMenuOpen} animateOpacity>
+        <Box className="mobile-menu-panel show-base hide-md">
+          <VStack
+            align={"start"}
+            spacing={7}
+            className="mobile-menu-vstack"
+          >
+            {/* About */}
             <Box
-              className="nav-link-box hide-base show-md"
+              className="nav-link-box"
               onClick={() => {
+                setIsMenuOpen(false);
                 const firstSection = sections[0];
                 const sectionSubsections = subsections[firstSection.id];
                 if (sectionSubsections && sectionSubsections.length > 0) {
@@ -249,70 +353,10 @@ function NavBar({ className = "" }) {
                 }
               }}
             >
-              <Text>About</Text>
-            </Box>
-            <Box
-              className="nav-link-box hide-base show-md"
-              onClick={() => navigate("/acknowledgements")}
-            >
-              <Text>Acknowledgements</Text>
-            </Box>
-            <Box className="icon-button">
-              <MoonIcon
-                className="navsearchbar-button"
-                fontSize={"lg"}
-              ></MoonIcon>
-            </Box>
-            <Box
-              className="icon-button"
-              onClick={() => {
-                if (!isSearchOpen) {
-                  forceSearchOpen();
-                } else {
-                  setIsSearchOpen(false);
-                }
-              }}
-            >
-              <SearchIcon
-                className="navsearchbar-button"
-                fontSize={"lg"}
-              ></SearchIcon>
-            </Box>
-            <Box
-              className="icon-button show-base hide-md"
-              onClick={() => {
-                if (!isMenuOpen) {
-                  forceMenuOpen();
-                } else {
-                  setIsMenuOpen(false);
-                }
-              }}
-            >
-              <HamburgerIcon color="black" fontSize={"x-large"}></HamburgerIcon>
-            </Box>
-          </HStack>
-        </HStack>
-
-        <Collapse in={isMenuOpen} animateOpacity>
-          <VStack
-            align={"start"}
-            className="mobile-menu-vstack show-base hide-md"
-            onMouseLeave={() => setIsMenuOpen(false)}
-          >
-            <Box
-              className="nav-link-box"
-              onClick={() => {
-                setIsMenuOpen(false);
-                const sectionSubsections = subsections[sections[0].id];
-                if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${sections[0].id}/${sectionSubsections[0].id}`);
-                } else {
-                  navigate(`/${sections[0].id}`);
-                }
-              }}
-            >
               About
             </Box>
+
+            {/* Acknowledgements */}
             <Box
               className="nav-link-box"
               onClick={() => {
@@ -322,11 +366,14 @@ function NavBar({ className = "" }) {
             >
               Acknowledgements
             </Box>
-            <Box
+
+            {/* Modules dropdown in mobile panel */}
+            <Box 
               className="mobile-modules-container"
               onMouseEnter={() => setIsModulesExpanded(true)}
               onMouseLeave={() => setIsModulesExpanded(false)}
             >
+              
               <Box
                 className="mobile-modules-toggle"
                 onClick={() => setIsModulesExpanded(!isModulesExpanded)}
@@ -346,8 +393,6 @@ function NavBar({ className = "" }) {
                 in={isModulesExpanded}
                 animateOpacity={true}
                 style={{ overflow: "visible", width: "min-content" }}
-                duration={0.3}
-                className="mobile-modules-collapse"
               >
                 <VStack align="stretch" spacing={1}>
                   {sections.slice(1).map((section) => (
@@ -377,20 +422,11 @@ function NavBar({ className = "" }) {
               </Collapse>
             </Box>
           </VStack>
-        </Collapse>
-        <Collapse in={isSearchOpen} animateOpacity>
-          <NavSearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setIsSearchOpen={setIsSearchOpen}
-            isSearchOpen={isSearchOpen}
-            maxResults={2}
-            align="stretch"
-          />
-        </Collapse>
-      </Box>
-    </Box>
+        </Box>
+      </Collapse>
+    </>
   );
+
 }
 
 export default NavBar;

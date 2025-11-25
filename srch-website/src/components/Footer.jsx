@@ -13,12 +13,23 @@ import {
   Collapse,
 } from "@chakra-ui/react";
 import "../LandingPage.css"
+import { useNavigate } from "react-router-dom";
+
 
 
 function Footer() {
+  const navigate = useNavigate();
+
+  const privacySlug = "/privacy/whatIsPrivacy";
+  const accessibilitySlug = "/accessibility/whatIsAccessibility";
+  const decisionSlug = "/automatedDecisionMaking/fairness";
+  const aiSlug = "/generativeAI/copyright";
+
+  
     return (
     <Box className="footer-container">
-                <div className="line-divider"></div>
+      {/* use a footer-specific divider so it can be full-width */}
+      <div className="footer-divider"></div>
 
         <div className="link-section-primer-footer">
           <div className="modules-section-primer-footer">

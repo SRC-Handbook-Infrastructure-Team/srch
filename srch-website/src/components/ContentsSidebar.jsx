@@ -145,7 +145,8 @@ useEffect(() => {
 }, [collapsed]);
 
   /* ----------------------------- Environment ------------------------------ */
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  
+  const [isNarrowView] = useMediaQuery("(max-width: 1280px)"); // Note: SPLITSCREEN_BREAKPOINT is 1280 [2]
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
   const navigate = useNavigate();
@@ -528,45 +529,7 @@ useEffect(() => {
     toggleSection,
   ]);
 
-  /* =========================================================================
-     Mobile Drawer Variant
-     ========================================================================= */
-  if (isMobile) {
-    return (
-      <>
-        <Button
-          variant="ghost"
-          leftIcon={<GiHamburgerMenu size="20px" />}
-          onClick={onOpen}
-          aria-label="Open contents"
-        >
-          Contents
-        </Button>
-
-        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerBody>
-              <div className="sidebar-header-controls">
-                <button
-                  className="sidebar-expand-toggle"
-                  onClick={toggleExpandCollapse}
-                  aria-pressed={allExpanded}
-                >
-                  {allExpanded ? "Collapse all" : "Expand all"}
-                  <span className="double-chevron">{allExpanded ? "⟱" : "⟰"}</span>
-                </button>
-              </div>
-
-              {/* WHY: Render the same nav content used on desktop for consistent behavior. */}
-              <NavContent />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </>
-    );
-  }
+  
 
   /* =========================================================================
      Desktop Sidebar

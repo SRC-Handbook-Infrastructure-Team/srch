@@ -411,6 +411,15 @@ html {
   z-index: -1;
 }
 
+/* Full-width line just above the footer section */
+.footer-divider {
+  width: 100%;
+  height: 2px;
+  background: rgba(90, 45, 0, 0.5);
+  margin: 0;
+}
+
+
 .content-section {
   width: 100vw;
   padding-top: 84px;
@@ -1312,5 +1321,146 @@ html {
   }
   .about-section {
     padding: 0 12px;
+  }
+}
+
+/* ============================================================================
+   SHARED HERO LAYOUT (Home, Acknowledgements, About) --> #TODO: Clean up old CSS after migration
+   ============================================================================ */
+
+/* 1. Shared hero shell: gradient background, fixed, full-width */
+.upper-content,
+.ack-hero,
+.about-hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--ack-upper-height);
+  z-index: 0;
+
+  background-image: url("../src/assets/landing-page-background-gradient.png");
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  padding: 0 var(--ack-hero-paddingX);
+  border-top: 1px solid white;
+
+  transition: background-image 0.3s ease;
+}
+
+/* Shared hover state */
+.upper-content:hover,
+.ack-hero:hover,
+.about-hero:hover {
+  background-image: url("../src/assets/blurred-background.png");
+}
+
+/* 2. Shared hero text block (top div that holds title + subtitle) */
+.upper-text-section,
+.ack-upper-text-section,
+.about-upper-text {
+  width: min(36rem, 80vw);
+  margin-top: 20vh;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  z-index: 1;
+  align-items: flex-start;
+  text-align: left;
+
+  /* override older transforms / widths */
+  padding-left: 0;
+  transform: none;
+}
+
+/* 3. Shared title styles (Home uses .website-title, About uses .about-title) */
+.website-title,
+.about-title {
+  width: auto;
+  max-width: 32rem;
+  height: auto;
+
+  font-family: var(--title-font);
+  font-weight: 700;
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  color: var(--color-text);
+
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+/* Kill the old Acknowledgements offsets that made things jumbled */
+.ack-hero .website-title {
+  position: static;
+  left: auto;
+  top: auto;
+}
+
+/* 4. Shared subtitle / body text under the hero title */
+.info-section,
+.about-sub {
+  width: auto;
+  max-width: 32rem;
+
+  font-family: var(--content-font);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-text);
+
+  margin: 0;
+}
+
+/* ============================================================================
+   RESPONSIVE TWEAKS — keep layout clean as window shrinks
+   ============================================================================ */
+
+/* Medium: center text block horizontally, keep left-aligned text */
+@media (max-width: 1024px) {
+  .upper-content,
+  .ack-hero,
+  .about-hero {
+    align-items: center;
+  }
+
+  .upper-text-section,
+  .ack-upper-text-section,
+  .about-upper-text {
+    width: min(90vw, 36rem);
+    margin-top: 16vh;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Smaller: center text, slightly smaller headings, friendlier line lengths */
+@media (max-width: 768px) {
+  .upper-text-section,
+  .ack-upper-text-section,
+  .about-upper-text {
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .website-title,
+  .about-title {
+    font-size: clamp(2.1rem, 7vw, 3.2rem);
+  }
+
+  .info-section,
+  .about-sub {
+    font-size: 16px;
   }
 }

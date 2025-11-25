@@ -11,16 +11,16 @@ import { useLocation, useNavigate } from "react-router-dom";
  * These give us a single place to reason about layout modes and constraints.
  */
 const MIN_MAIN_WIDTH = 700;
-const MOBILE_BREAKPOINT = 768;
 const SPLITSCREEN_BREAKPOINT = 1280;
 const RIGHT_MIN_WIDTH = 375;
 const RIGHT_MAX_WIDTH = 700;
 
 function computeLayoutMode(viewportWidth) {
-  if (viewportWidth <= MOBILE_BREAKPOINT) return "mobile";
   if (viewportWidth <= SPLITSCREEN_BREAKPOINT) return "overlay"; // split-screen / narrow desktop
   return "wide";
 }
+
+
 
 /**
  * SidebarLayout
@@ -49,6 +49,14 @@ export default function SidebarLayout({ children }) {
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+    // Keep the <html> element in sync with React's layoutMode
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.layoutMode = layoutMode;
+    }
+  }, [layoutMode]);
+
 
   /** ---------------- FREEZE / RELEASE MAIN CONTENT (wide only) ---------------- */
   const freezeMainContent = useCallback(() => {
@@ -413,7 +421,8 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
         }
         data-layout-mode={layoutMode}
       >
-        <NavBar />
+        <NavBar layoutMode={layoutMode} />
+
 
         {/* Optional helper badge for QA / dev; you can remove this later */}
         <div className="layout-mode-badge">{layoutMode}</div>
