@@ -1,0 +1,1 @@
+// test that enabling and disabling dark mode changes colors in all pages

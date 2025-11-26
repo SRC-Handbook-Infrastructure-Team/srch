@@ -1,11 +1,11 @@
-import "./App.css";
-
+import "./styles/App.css";
+import ScrollManager from "./components/ScrollManager";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import ContentsSidebar from "./components/ContentsSidebar";
+import Footer from "./components/Footer";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import Acknowledgements from "./pages/Acknowledgements"; //  now ONE page
+import Acknowledgements from "./pages/Acknowledgements";
 import { SearchResults } from "./pages/SearchResults";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
@@ -17,13 +17,12 @@ function AppRoutes() {
     location.pathname.startsWith("/acknowledgements");
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
-
-  //  Markdown layout logic
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
 
   return (
     <>
+      <ScrollManager />
       {isMarkdownPage ? (
         <SidebarLayout>
           <Routes>
@@ -40,29 +39,18 @@ function AppRoutes() {
         </SidebarLayout>
       ) : (
         <>
-          {/*  Sidebar on every non-home, non-search, non-acknowledgements, non-about page */}
-          {!isSearchPage &&
-            !isHomePage &&
-            !isAcknowledgementsPage &&
-            !isAboutPage && <ContentsSidebar />}
-
-          <NavBar />
-
           <Routes>
             <Route path="/" element={<Home />} />
-
-            {/*  ONE SINGLE ACKNOWLEDGEMENTS PAGE */}
             <Route path="/acknowledgements" element={<Acknowledgements />} />
             <Route path="/about" element={<About />} />
-
-            {/*  Search */}
+            <Route path="/search/:query/:page" element={<SearchResults />} />
             <Route path="/search/:query" element={<SearchResults />} />
             <Route path="/search" element={<SearchResults />} />
           </Routes>
-
-          <NavBar />
         </>
       )}
+      <NavBar />
+      {!isMarkdownPage && <Footer />}
     </>
   );
 }

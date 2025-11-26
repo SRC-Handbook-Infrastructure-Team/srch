@@ -344,15 +344,16 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
+  activeDrawerTerm,
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
     let processed =
       typeof content === "string" ? content : content.content || "";
     if (typeof processed === "string") {
-      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {        return `<sidebar-ref term="${term}"></sidebar-ref>`;
+      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
+        return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
-      
     }
     return processed;
   }, [content]);
@@ -494,6 +495,20 @@ function focusDrawerChip(term) {
   }, [activeDrawerLink]);
 
 
+  useEffect(() => {
+    if (!activeDrawerTerm) {
+      setActiveDrawerLink(null);
+      return;
+    }
+    const key = String(activeDrawerTerm).toLowerCase();
+
+    const timer = setTimeout(() => {
+      const el = document.querySelector(`[data-term="${key}"]`);
+      setActiveDrawerLink(el || null);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [activeDrawerTerm, content, sidebar]);
 
   const BetaTag = () => (
     <Box
@@ -513,42 +528,6 @@ function focusDrawerChip(term) {
       BETA
     </Box>
   );
-
-  /**
-   * Safely removes ONLY whitespace-only text nodes inside <p> tags.
-   * This avoids ReactMarkdown inserting empty "" or " " nodes
-   * that create visual gaps between text + <sidebar-ref> chips.
-   *
-   * Critically:
-   * - Does NOT remove spaces inside real text ("a dog" stays intact)
-   * - Only affects direct children of <p>
-   */
-  function cleanParagraphChildren(children) {
-    return React.Children.toArray(children).filter((child) => {
-      if (typeof child === "string") {
-        return child.trim() !== ""; // keep text that has ANY non-space chars
-      }
-      return child; // keep React elements unchanged
-    });
-  }
-
-  function tightenAroundSidebarRefs(children) {
-  const arr = React.Children.toArray(children);
-  for (let i = 0; i < arr.length; i++) {
-    const cur = arr[i];
-    const isChip =
-      React.isValidElement(cur) &&
-      (cur.type === 'sidebar-ref' || cur.props?.className?.includes('srch-drawer-link'));
-    if (!isChip) continue;
-
-    const prev = arr[i - 1];
-    const next = arr[i + 1];
-    if (typeof prev === 'string') arr[i - 1] = prev.replace(/\s+$/, ''); // trim end
-    if (typeof next === 'string') arr[i + 1] = next.replace(/^\s+/, ''); // trim start
-  }
-  return arr;
-}
-
 
   const components = useMemo(
     () => ({
@@ -583,7 +562,7 @@ function focusDrawerChip(term) {
           </Heading>
         );
       },
-      p: ({children}) => {
+      p: ({ children }) => {
         return (
           <Text mb={3} lineHeight="1.6" color={BLACK}>
             {highlightText(children, highlight)}
@@ -678,8 +657,8 @@ function focusDrawerChip(term) {
           typeof child === "string"
             ? child
             : Array.isArray(child) && typeof child[0] === "string"
-            ? child[0]
-            : null;
+              ? child[0]
+              : null;
 
         if (number && /^\d+$/.test(number)) {
           return (
@@ -771,7 +750,6 @@ function focusDrawerChip(term) {
             term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
           : `⚠️ Missing: ${term}`;
 
-
         return (
           <Box
             as={RouterLink}
@@ -784,40 +762,50 @@ function focusDrawerChip(term) {
                 return;
               }
 
+              const scrollY =
+                typeof window !== "undefined" ? window.scrollY : 0;
               if (value) {
                 setActiveDrawerLink(e.currentTarget);
                 onDrawerOpen && onDrawerOpen(term);
+
+                if (typeof window !== "undefined") {
+                  requestAnimationFrame(() =>
+                    requestAnimationFrame(() => window.scrollTo(0, scrollY))
+                  );
+                }
               }
             }}
             className={`srch-drawer-link ${
               activeDrawerLink === term ? "srch-drawer-link-active" : ""
             }`}
-            data-term={term}
+            data-term={term.toLowerCase()}
             display="inline-flex"
             verticalAlign="baseline"
             alignItems="center"
-                      
             gap="6px"
             px="10px"
             py="4px"
             mx="0"
             my="2px"
-            
             borderRadius="999px"
             color={RED}
             textDecoration="none"
             border="1px solid transparent"
             whiteSpace="normal"
             flexShrink={1}
-            maxW="100%"               // don’t exceed container
-            minW={0}                  // allow shrink in tight columns
+            maxW="100%" // don’t exceed container
+            minW={0} // allow shrink in tight columns
           >
             <Text
               as="span"
               fontWeight="700"
               fontSize="inherit"
               lineHeight="inherit"
-              sx={{ overflowWrap: "anywhere", wordBreak: "break-word", minWidth: 0}}
+              sx={{
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+                minWidth: 0,
+              }}
             >
               {highlightText(toShow, highlight)}
             </Text>
@@ -860,15 +848,17 @@ function focusDrawerChip(term) {
   );
 
   // Add near the top of your component (inside the component)
-return (
-  <ReactMarkdown
-    components={components}
-    remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
-    rehypePlugins={[rehypeRaw]}
-  >
-    {processedContent}
-  </ReactMarkdown>
-);
+  return (
+    <div>
+      <ReactMarkdown
+        components={components}
+        remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
+        rehypePlugins={[rehypeRaw]}
+      >
+        {processedContent}
+      </ReactMarkdown>
+    </div>
+  );
+}
 
-
-}export default MarkdownRenderer;
+export default MarkdownRenderer;

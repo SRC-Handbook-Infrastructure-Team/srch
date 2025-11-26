@@ -25,6 +25,14 @@
   --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px; /* JS updates these */
   --navbar-height: 80px; /* unified baseline */
+  --mobile-menu-height: 200px; /* height of slide-down mobile menu panel */
+  --mobile-menu-height-expanded: 300px;    /* when modules dropdown is open */
+  --toolbar-height: 0px;
+  /* set >0 only if a toolbar is rendered */
+  --right-sidebar-width: 0px;
+  /* JS updates these */
+  --navbar-height: 70px;
+  /* unified baseline */
   --left-sidebar-width: var(--left-sidebar-width, 250px);
 
   /* Colors / theme */
@@ -57,6 +65,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -74,6 +83,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   max-width: 100vw;
+  word-break: keep-all;
 }
 
 a {
@@ -81,6 +91,7 @@ a {
   color: var(--color-accent);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--color-accent);
   text-decoration: underline;
@@ -99,20 +110,14 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--button-hover-border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
-  font-weight: 600;
-  border-radius: 3px;
-  padding: 2px 2px;
 }
 
 /* ==========================================================================
@@ -135,7 +140,8 @@ mark {
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  z-index: 19; /* below NavBar (20), above content */
+  z-index: 19;
+  /* below NavBar (20), above content */
 }
 
 /* ========================================================================== 
@@ -145,13 +151,15 @@ mark {
 .sidebar-section-header {
   border: 1px solid transparent;
   border-radius: 6px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 /*  Route-aware highlight (via .is-active class from JSX) */
 .sidebar-section-header.is-active {
-  border-color: #c9c9c9 !important;
-  background-color: #c9c9c9 !important;
+  border-color: #c9c9c9;
+  background-color: #c9c9c9;
 }
 
 /*  Optional subtle hover, but DO NOT override active state */
@@ -161,15 +169,25 @@ mark {
 
 /* Ensures the entire row feels clickable and avoids visual jitter */
 .sidebar-section-header * {
-  pointer-events: none; /* interaction handled by container */
+  pointer-events: none;
+  /* interaction handled by container */
 }
 
 /* ==========================================================================
    Markdown & Content
    ========================================================================== */
 .markdown-page {
+  background: var(--cs-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.markdown-content {
   padding-left: 100px;
   padding-right: 100px;
+  padding-bottom: 100px;
+  background: white;
 }
 
 mark {
@@ -177,7 +195,11 @@ mark {
   color: var(--color-accent);
   font-weight: 600;
   border-radius: 3px;
-  padding: 2px 2px;
+}
+
+.page-height {
+  flex-grow: 1;
+  background-color: var(--color-bg);
 }
 
 /* ==========================================================================
@@ -185,9 +207,9 @@ mark {
    ========================================================================== */
 .sidebar-link-active {
   color: var(--color-accent);
-  color: var(--color-accent) !important;
   font-weight: 600;
 }
+
 .sidebar-link:hover {
   color: var(--color-accent);
 }
@@ -234,6 +256,7 @@ h4 {
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .nav-section:hover {
   background-color: var(--nav-hover-bg);
 }
@@ -242,17 +265,21 @@ h4 {
   display: flex;
   align-items: center;
 }
+
 .nav-section-text {
   font-weight: 500;
 }
+
 .nav-subsection {
   display: flex;
   align-items: center;
 }
+
 .nav-subsection-text {
   font-size: 0.875rem;
   padding: 4px;
 }
+
 .nav-subsection-active {
   font-weight: 700;
 }
@@ -286,6 +313,9 @@ h4 {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 20;
 }
+
+
+
 
 
 .top-navbar a:hover,
@@ -485,7 +515,7 @@ h4 {
   }
 }
 
-@media (max-width: 47.99em) {
+@media (max-width: 80em) {
   .hide-base {
     display: none !important;
   }
@@ -493,6 +523,8 @@ h4 {
     display: inline-flex !important;
   }
 }
+
+
 
 /* ========================================================================== 
    Nav Search Bar
@@ -553,11 +585,13 @@ h4 {
   display: flex;
   align-items: center;
   overflow: visible;
-  background: transparent;
-  width: 75vw;
+  background: white;
   border-radius: 9999999999px;
-
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  min-width: 400px;
 }
 
 .searchbar-border {
@@ -671,14 +705,20 @@ h4 {
   font-size: 0.875rem;
 }
 
-.results-item {
-  margin-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.result-row {
   border-bottom: 1px solid #e2e8f0;
+padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.results-item :hover {
-  background-color: #d8d7d7;
+.results-item {
+  padding: 15px;
+border-radius: 9px;
+}
+
+.results-item:hover {
+  background-color: #d8d7d741;
+  transition: background-color 0.5s ease;
 }
 
 .results-header {
@@ -712,7 +752,6 @@ h4 {
   font-size: 0.875rem;
   color: black;
   padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .result-snippet-text {
@@ -750,7 +789,7 @@ h4 {
 }
 
 .results-view-all {
-  padding: 0.5rem 0;
+  padding: 0.75rem 0.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -779,7 +818,6 @@ h4 {
   left: 0;
   right: 0;
   margin-top: 20px;
-  /* transform: translateY(-40px); */
   background: white;
   border-radius: 20px;
   display: flex;
@@ -815,30 +853,32 @@ h4 {
 
 .results-list-floating {
   overflow-y: auto;
-  
+    padding-top: 0.5rem;
 }
 
 .drawer-content {
   padding: 12px !important;
 }
 
-html {
-  scroll-padding-top: 70px;
-}
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  margin-top: var(--navbar-height) !important;
-  min-height: 100vh;
+  margin-top: calc(var(--navbar-height)) !important;
 
   /* FIX: combine left & right margin transitions */
   transition:
-    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7);
+  
+  transition:
+    margin-left 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-right 0.22s cubic-bezier(0.22, .7, 0.36, .7),
+    margin-top 0.25s cubic-bezier(0.22, .7, 0.36, .7);
 
-  overflow: clip;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-
 
 /* When the drawer is open, make room for it */
 html.right-open body .main-content {
@@ -850,21 +890,26 @@ html:not(.right-open) body .main-content {
   margin-right: 0 !important;
 }
 
-
-
 /* Let content inside the right drawer wrap and never overflow */
 .right-sidebar .drawer-content {
-  overflow-wrap: anywhere;   /* modern, preferred */
-  word-break: break-word;    /* fallback */
-  min-width: 0;              /* fix flex shrink edge cases */
+  overflow-wrap: anywhere;
+  /* modern, preferred */
+  word-break: break-word;
+  /* fallback */
+  padding-left: 10px;
+  padding-right: 10px;
+  min-width: 0;
+  /* fix flex shrink edge cases */
 }
 
 /* Chip: allow multi-line wrapping + don’t overflow the drawer */
 .srch-drawer-link {
   display: inline-flex;
-  flex-wrap: wrap;           /* allow wrapping to 2+ lines */
+  flex-wrap: wrap;
+  /* allow wrapping to 2+ lines */
   max-width: 100%;
-  white-space: normal !important;  /* was nowrap; this is the fix */
+  white-space: normal;
+  /* was nowrap; this is the fix */
   line-height: 1.2;
 }
 
@@ -875,8 +920,6 @@ html:not(.right-open) body .main-content {
   word-break: break-word;
   min-width: 0;
 }
-
-
 
 .page-header-row {
   display: flex;
@@ -928,9 +971,11 @@ html:not(.right-open) body .main-content {
 }
 
 .header-toggle:focus-visible {
-  outline: 2px solid #9d0013; /* your brand color */
+  outline: 2px solid #9d0013;
+  /* your brand color */
   outline-offset: 2px;
 }
+
 .header-toggle:hover {
   transform: scale(1.25);
 }
@@ -939,13 +984,6 @@ html:not(.right-open) body .main-content {
    QUICK, SAFE OVERRIDES
    ========================== */
 
-/* 1) Make markdown page padding a token we can cancel for the divider */
-.markdown-page {
-  --page-pad: 100px; /* matches your current 100px */
-  padding-left: var(--page-pad);
-  padding-right: var(--page-pad);
-}
-
 /* 2) Divider that spans the full content width (not viewport), while ignoring
       the .markdown-page padding. It will auto-stop at sidebars because
       .main-content uses margins equal to sidebar widths. */
@@ -953,7 +991,6 @@ html:not(.right-open) body .main-content {
   height: 2px;
   background: var(--srch-brown, #531c00);
   border: 0;
-  margin: 12px 0 24px;
 
   /* Full-bleed within .main-content: cancel the .markdown-page padding */
   margin-left: calc(-1 * var(--page-pad));
@@ -967,9 +1004,15 @@ html:not(.right-open) body .main-content {
   margin-left: calc(-1 * var(--page-pad)) !important;
 }
 
+/* Neutralize any legacy "fullbleed" rules that used vw/transform */
+.page-divider-margin {
+  margin: 12px 0 12px;
+}
+
 /* 4) Make sure the header row can contain absolutely-positioned children */
 .page-header-row {
-  position: relative; /* anchor for the toggle button */
+  position: relative;
+  /* anchor for the toggle button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1006,7 +1049,8 @@ html:not(.right-open) body .main-content {
   font-size: 11px;
   line-height: 1;
   position: relative;
-  top: 1px; /* small visual nudge */
+  top: 1px;
+  /* small visual nudge */
 }
 
 /* center the control in the header strip */
@@ -1015,6 +1059,7 @@ html:not(.right-open) body .main-content {
   justify-content: right;
   padding: 8px 0;
 }
+
 /* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
 .sidebar-toggle {
   /* nuke default button look */
@@ -1047,6 +1092,7 @@ html:not(.right-open) body .main-content {
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
   width: 12px;
   height: 6px;
@@ -1063,11 +1109,16 @@ html:not(.right-open) body .main-content {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 12px;
   line-height: 24px;
-  font-weight: 400; /* tweak if you want lighter */
-  letter-spacing: 0.02em; /* optional, matches figma-ish */
+  font-weight: 400;
+  padding-top: 12px;
+  /* tweak if you want lighter */
+  letter-spacing: 0.02em;
+  /* optional, matches figma-ish */
   color: var(--srch-brown);
-  margin: 0 0 4px 0; /* small gap above the H1 */
-  text-transform: uppercase; /* optional, matches figma */
+  margin: 0 0 4px 0;
+  /* small gap above the H1 */
+  text-transform: uppercase;
+  /* optional, matches figma */
 }
 
 /* ==========================================================================
@@ -1087,26 +1138,33 @@ html:not(.right-open) body .main-content {
   height: auto !important;
 
   /* Motion */
-  transition: border-color 160ms ease, background-color 160ms ease,
-    color 160ms ease, transform 120ms ease !important;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease !important;
   transform-origin: center center;
   font-weight: bold !important;
   font-style: bold !important;
   font-family: "Be Vietnam Pro" !important;
-  font-weight: 700 !important; /* or bold */
+  font-weight: 700 !important;
+  /* or bold */
 }
 
 /* Collapse phantom inline spacing between chips and text */
 .srch-drawer-link {
-  margin-left: -2px; /* pulls chip into collapsed inline gap */
+  margin-left: -2px;
+  /* pulls chip into collapsed inline gap */
 }
 
 .srch-drawer-link + .srch-drawer-link {
-  margin-left: 0; /* prevents chain-over-collapse for chip→chip */
+  margin-left: 0;
+  /* prevents chain-over-collapse for chip→chip */
 }
 
 p > .srch-drawer-link:first-child {
-  margin-left: 0; /* safety: don't pull chip into paragraph edge */
+  margin-left: 0;
+  /* safety: don't pull chip into paragraph edge */
 }
 
 .srch-drawer-link:hover {
@@ -1147,7 +1205,8 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px); /* Moves the element 12px to the left */
+  transform: translateX(12px);
+  /* Moves the element 12px to the left */
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -1185,11 +1244,12 @@ html.right-open .right-sidebar {
   opacity: 0 !important;
 }
 
-
 /* Resizer (left edge of right drawer) — identical thickness/behavior as left */
 .right-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
@@ -1198,8 +1258,6 @@ html.right-open .right-sidebar {
 .right-resizer.is-resizing {
   background: rgba(83, 28, 0, 0.08) !important;
 }
-
-
 
 .right-sidebar .drawer-content .callout,
 .right-sidebar .drawer-content [class*="box"],
@@ -1250,6 +1308,7 @@ html.right-open .right-sidebar {
   cursor: pointer !important;
   color: var(--srch-brown) !important;
 }
+
 /* Disable transitions while dragging (optional polish) */
 .left-sidebar.resizing,
 .right-sidebar.resizing {
@@ -1262,22 +1321,34 @@ html.right-open .right-sidebar {
   top: var(--navbar-height) !important;
   bottom: 0 !important;
   right: var(--right-sidebar-width) !important; /* follows drawer edge */
-  width: 10px !important;
+  width: 6px !important;
   transform: translateX(-6px); /* overlap seam for easier grab */
   cursor: col-resize !important;
   pointer-events: auto;
   background: transparent !important;
   z-index: 35;
 }
+
 .right-resize-hitbox.is-resizing {
   background: rgba(83, 28, 0, 0.06) !important;
 }
+
 
 /* Hide/disable when drawer is closed */
 .right-sidebar.close ~ .right-resize-hitbox {
   pointer-events: none !important;
   display: none !important;
 }
+
+/* Turn off gray drag highlight on both resizers & hitbox */
+.left-resizer.is-resizing,
+.right-resizer.is-resizing,
+.right-resize-hitbox,
+.right-resize-hitbox.is-resizing {
+  background: transparent !important;
+}
+
+
 
 /* =============================================================================
    SHELL
@@ -1290,12 +1361,13 @@ html.right-open .right-sidebar {
   width: var(--left-sidebar-width) !important;
 
   background: var(--cs-bg) !important;
-  border-right: 1px solid var(--cs-divider) !important; /* thin vertical divider */
+  border-right: 1px solid var(--cs-divider) !important;
+  /* thin vertical divider */
 
   overflow-y: auto !important;
   opacity: 0;
   transform: translateX(-100%);
-  
+
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.25s ease;
@@ -1307,24 +1379,28 @@ html.right-open .right-sidebar {
   backface-visibility: hidden;
   transform: translateX(-100%);
 }
-.left-sidebar.open { transform: translateX(0); opacity: 1; }
+
+.left-sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
 
 .left-sidebar.closing {
   transform: translateX(-100%) !important;
   opacity: 0 !important;
 }
 
-
-
 /* Resize handle */
 .left-resizer {
   position: absolute !important;
-  top: 0; right: 0; bottom: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
 }
-.left-resizer.is-resizing { background: rgba(83, 28, 0, 0.08) !important; }
+
 
 /* =============================================================================
    HEADER CONTROLS (Expand/Collapse all)
@@ -1332,7 +1408,8 @@ html.right-open .right-sidebar {
 .sidebar-header-controls {
   display: flex;
   justify-content: right;
-  padding: 12px 16px 6px; /* extra top room like Figma */
+  padding: 12px 16px 6px;
+  /* extra top room like Figma */
 }
 
 .sidebar-toggle {
@@ -1346,20 +1423,30 @@ html.right-open .right-sidebar {
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: var(--cs-text);                 /* #4F3629 */
-  
-
+  color: var(--cs-text);
+  /* #4F3629 */
 }
-.sidebar-toggle:hover { opacity: 0.9; }
-.sidebar-toggle:focus-visible { outline: 2px solid #9d0013; outline-offset: 2px; }
+
+.sidebar-toggle:hover {
+  opacity: 0.9;
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid #9d0013;
+  outline-offset: 2px;
+}
 
 .icon-double-chevron {
   display: inline-flex;
   flex-direction: column;
   line-height: 0;
 }
+
 .icon-double-chevron svg {
-  width: 12px; height: 6px; display: block; fill: currentColor;
+  width: 12px;
+  height: 6px;
+  display: block;
+  fill: currentColor;
 }
 
 /* =============================================================================
@@ -1368,39 +1455,48 @@ html.right-open .right-sidebar {
    - Chevron toggles expand/collapse (JS stops propagation).
    - Active section row ALWAYS uses warm grey background.
    ========================================================================== */
-.sidebar-section { margin-bottom: 6px; } /* subtle breathing room between sections */
+.sidebar-section {
+  margin-bottom: 6px;
+}
+
+/* subtle breathing room between sections */
 
 /* SECTION ROWS */
 .sidebar-section-header {
   /* edge-to-edge highlight inside a padded container (NavContent wrapper uses 16px) */
   margin-left: -16px;
   margin-right: -16px;
-  padding: 8px 16px;              /* move padding here so the bg spans full width */
+  padding: 8px 16px;
+  /* move padding here so the bg spans full width */
   border-radius: 0 !important;
-  transition: background-color var(--cs-ease), border-color var(--cs-ease);
+  transition:
+    background-color var(--cs-ease),
+    border-color var(--cs-ease);
   border: 1px solid transparent;
   background: transparent;
 }
 
-
 .sidebar-section-header:hover:not(.is-active) {
-  background: rgba(0,0,0,0.04); /* gentle hover only for non-active */
+  background: rgba(0, 0, 0, 0.04);
+  /* gentle hover only for non-active */
 }
 
 /* Active section row (route-aware via .is-active from JSX) */
 .sidebar-section-header.is-active {
-  background: var(--cs-active) !important; /* #e6e2dd */
+  background: var(--cs-active) !important;
+  /* #e6e2dd */
   border-color: var(--cs-active) !important;
   border-radius: 0 !important;
-
 }
 
 /* Title text in section row — default REGULAR, only active is BOLD */
 .sidebar-section-title {
   font: "Be Vietnam Pro";
-  font-weight: 400 !important;             /* default regular */
+  font-weight: 400 !important;
+  /* default regular */
   font-size: 16px !important;
-  color: var(--cs-text) !important;        /* #4F3629 */
+  color: var(--cs-text) !important;
+  /* #4F3629 */
 }
 
 /* Bold only when the section is the active route */
@@ -1415,19 +1511,29 @@ html.right-open .right-sidebar {
    - Add vertical rhythm when a section is open.
    ========================================================================== */
 .sidebar-subsection-container {
-  padding-left: 22px;     /* indent subsections */
-  margin-top: 8px;        /* space under the section row when opened */
+  padding-left: 22px;
+  /* indent subsections */
+  margin-top: 8px;
+  /* space under the section row when opened */
 }
 
 .sidebar-sub-row {
   border-radius: 8px;
   padding: 6px 10px;
-  transition: background-color var(--cs-ease), color var(--cs-ease);
+  transition:
+    background-color var(--cs-ease),
+    color var(--cs-ease);
   background: transparent;
 }
-.sidebar-sub-row:hover { background: rgba(83,28,0,0.06); } /* subtle hover */
+
+.sidebar-sub-row:hover {
+  background: rgba(83, 28, 0, 0.06);
+}
+
+/* subtle hover */
 .sidebar-sub-row.is-active {
-  background: var(--cs-brown);           /* #531C00 */
+  background: var(--cs-brown);
+  /* #531C00 */
 }
 
 /* Subsection text */
@@ -1435,34 +1541,43 @@ html.right-open .right-sidebar {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-weight: 400 !important;
   font-size: 14px !important;
-  color: var(--cs-text) !important;      /* default #4F3629 */
+  color: var(--cs-text) !important;
+  /* default #4F3629 */
 }
+
 .sidebar-sub-row.is-active .sidebar-subsection {
-  color: #FFFFFF !important;             /* white when active pill */
-  font-weight: 600 !important;           /* bold only for active subsection */
+  color: #ffffff !important;
+  /* white when active pill */
+  font-weight: 600 !important;
+  /* bold only for active subsection */
 }
 
 /* =============================================================================
    BADGE
    ========================================================================== */
 .beta-tag {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #EFEFEF; color: #333;
-  font-weight: 700; font-size: 0.75rem;
-  padding: 2px 8px; margin-left: 8px; border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #efefef;
+  color: #333;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 6px;
 }
 
 /* =============================================================================
    SMALL POLISH
    ========================================================================== */
 .sidebar-btn:hover {
-     opacity: 0.8;
-     }
-
+  opacity: 0.8;
+}
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 4px 2.5px !important;       /* More interior padding → more pill */
+  padding: 4px 2.25px !important;       /* More interior padding → more pill */
   border-radius: 6px !important;    /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
@@ -1487,18 +1602,19 @@ html.right-open .right-sidebar {
    When the layout container is narrower than 1280px but above mobile,
    we let CSS “flip” main-content to overlay-friendly margins.
 */
-@container layout (max-width: 1279px) and (min-width: 769px) {
+@container layout (max-width: 1279px) {
   html body .main-content {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
 }
 
-html[data-layout-mode="overlay"].right-open body .main-content {
+
+/* In overlay mode, sidebars should slide over content instead of pushing it */
+html[data-layout-mode="overlay"] body .main-content {
+  margin-left: 0 !important;
   margin-right: 0 !important;
 }
-
-
 
 
 /* Default: no scrim */
@@ -1550,68 +1666,6 @@ html[data-layout-mode="overlay"].right-open body .main-content {
   background: var(--sidebar-bg, #fff);
 }
 
-/* ============================================================================
-   MOBILE = OVERLAY (UNIFIED VISUAL SYSTEM)
-   ----------------------------------------------------------------------------
-   This block ensures mobile behaves EXACTLY like overlay mode:
-   - sidebars float over content
-   - no main-content shifting
-   - scrim works identically
-   - no resize handles active
-============================================================================ */
-
-/* 1. Main content NEVER shifts in mobile */
-html[data-layout-mode="mobile"] body .main-content {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-/* 2. When a panel is open, still do NOT shift */
-html[data-layout-mode="mobile"].right-open body .main-content {
-  margin-right: 0 !important;
-}
-
-/* 3. Scrim identical to overlay mode */
-.sidebar-layout.has-panel-open[data-layout-mode="mobile"]::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  opacity: 1;
-  pointer-events: auto;
-  z-index: 14; /* same depth layering as overlay */
-}
-
-/* 4. Left sidebar overlay behavior in mobile */
-html[data-layout-mode="mobile"] .left-sidebar {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-
-html[data-layout-mode="mobile"] .left-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-/* 5. Right sidebar overlay behavior in mobile */
-html[data-layout-mode="mobile"] .right-sidebar {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-html[data-layout-mode="mobile"].right-open .right-sidebar,
-html[data-layout-mode="mobile"] .right-sidebar.open {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-/* 6. Disable resize UI on mobile (no confusing drag areas) */
-html[data-layout-mode="mobile"] .left-resizer,
-html[data-layout-mode="mobile"] .right-resizer,
-html[data-layout-mode="mobile"] .right-resize-hitbox {
-  display: none !important;
-  pointer-events: none !important;
-}
 
 /* 7. Ensure no accidental layout push via custom container queries */
 @container layout (max-width: 768px) {
@@ -1621,4 +1675,171 @@ html[data-layout-mode="mobile"] .right-resize-hitbox {
   }
 }
 
+/* Target the layout wrapper when in overlay mode */
+.sidebar-layout[data-layout-mode="overlay"] {
+  /* This prevents the desktop-only elements (which rely on min-width: 48em) 
+     from showing when the viewport is between 768px and 1280px. */
+  .hide-base.show-md {
+    display: none !important; 
+  }
+}
 
+
+/* Slightly tighten the padding above the logo when
+   the dropdown is open in overlay mode. */
+.sidebar-layout[data-layout-mode="overlay"] 
+  .top-navbar[data-menu-open="true"] 
+  .navbar-padding {
+  padding-top: 0.75rem;    /* was 1rem; adjust to taste */
+}
+
+
+
+/* Typography for mobile dropdown items: About, Acknowledgements, Modules */
+.mobile-menu-vstack .nav-link-box,
+.mobile-menu-vstack .mobile-modules-toggle,
+.mobile-menu-vstack .mobile-module-item {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;        /* ⬅️ change this for size */
+  line-height: 1.6;
+  color: var(--srch-brown);         /* ⬅️ change this for color */
+}
+
+.mobile-menu-vstack {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cs-bg); /* off-white, like sidebars */
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  width: 100%;
+}
+
+/* Extra spacing between the expanded navbar dropdown and the page header
+   (PRIVACY / title) when in overlay mode. */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"]
+  ~ .main-content
+  .markdown-page {
+  padding-top: 24px;
+}
+
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"]
+  ~ .main-content
+  .page-divider-margin {
+  margin-top: 16px;
+  margin-bottom: 24px; /* more gap between header + body copy */
+}
+
+/* -------------------------------------------------------
+   Overlay / split-screen header layout
+   ------------------------------------------------------- */
+
+/* Stack title and "Last updated" vertically in overlay mode */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-header-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px; /* small vertical gap between title and last-updated */
+}
+
+/* Give the title a bit more room and slightly smaller size
+   so it wraps to at most ~2 lines instead of 3 when narrow. */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-title {
+  align-self: flex-start;
+  font-size: 35px;      
+  line-height: 1.25;
+  max-width: 32rem;      /* tweak to control wrapping */
+}
+
+/* Move "Last updated" just below the title and clean up the weird offset.
+   Right-align it by default while still being below the title. */
+.sidebar-layout[data-layout-mode="overlay"] .markdown-page .page-last-updated {
+  align-self: flex-end;
+  margin-left: 0;
+  margin-top: 4px;
+  transform: none;
+  font-size: 12px;       /* slightly smaller label */
+  line-height: 1.4;
+  max-width: 18rem;      /* keeps it to 1–2 lines max */
+  text-align: right;
+}
+
+/* More breathing room between the divider and the markdown content
+   in overlay mode only. */
+.sidebar-layout[data-layout-mode="overlay"] 
+  .markdown-page 
+  .page-divider.page-divider-margin {
+  margin-bottom: 24px;   /* was 12px – double the space under the line */
+}
+
+/* Slide-down mobile menu panel that lives under the fixed navbar */
+.mobile-menu-panel {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+
+  z-index: 19; /* below navbar (20), above content */
+  background: var(--cs-bg); /* off-white, same as sidebars */
+  border-bottom: 1px solid color-mix(in srgb, var(--cs-divider) 30%, transparent);
+
+
+  padding: 1.25rem 2rem 1.75rem;
+  /*  starting “off-screen” state + animation curve */
+  transform: translateY(-12px);
+  opacity: 0;
+  transition:
+    transform 0.22s cubic-bezier(0.22, 0.7, 0.36, 0.7),
+    opacity 0.18s ease-out;
+  
+}
+
+/* When mobile menu is open, slide the panel into place */
+.top-navbar[data-menu-open="true"] + .chakra-collapse .mobile-menu-panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/* Let the existing stack just handle layout inside the panel */
+.mobile-menu-panel .mobile-menu-vstack {
+  background: transparent;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  width: 100%;
+}
+
+/* Typography for mobile dropdown items: About, Acknowledgements, Modules */
+.mobile-menu-vstack .nav-link-box,
+.mobile-menu-vstack .mobile-modules-toggle,
+.mobile-menu-vstack .mobile-module-item {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--srch-brown);
+}
+
+/* Mobile menu open, modules *not* expanded */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"][data-modules-expanded="false"]
+  ~ .main-content {
+  margin-top: calc(var(--navbar-height) + var(--mobile-menu-height)) !important;
+}
+
+/* Mobile menu open, modules expanded */
+html[data-layout-mode="overlay"]
+  .top-navbar[data-menu-open="true"][data-modules-expanded="true"]
+  ~ .main-content {
+  margin-top: calc(var(--navbar-height) + var(--mobile-menu-height-expanded)) !important;
+}
+
+.footer-divider {
+  height: 2px;
+  background: rgba(90, 45, 0, 0.5);
+}
+
+/* Make the footer span the full content width on primer pages */
+.markdown-page .footer-container {
+  margin-left: calc(-1 * var(--page-pad));
+  width: calc(100% + (var(--page-pad) * 2));
+}

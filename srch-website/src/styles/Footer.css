@@ -1,0 +1,232 @@
+/* --------------------------------------------------------------------------
+   Root Design Tokens & Theme Variables
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Layout metrics */
+  --toolbar-height: 0px;
+  /* set >0 only if a toolbar is rendered */
+  --right-sidebar-width: 0px;
+  /* JS updates these */
+  --navbar-height: 70px;
+  /* unified baseline */
+  --left-sidebar-width: var(--left-sidebar-width, 250px);
+
+  /* Colors / theme */
+  --color-text: #1a1a1a;
+  --color-text-muted: #555;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-border: #e0d7ce;
+  --color-accent: #7b4b24;
+  --color-accent-light: #f3ece6;
+
+  --space-lg: 400px;
+  --srch-brown: #531c00;
+  --sidebar-bg: rgba(251, 251, 250, 1);
+
+  /* Shared sidebar palette (Figma) */
+  --cs-brown: #531c00;
+  --cs-text: #4f3629;
+  --cs-bg: rgba(251, 251, 250, 1);
+  --cs-active: #e6e2dd;
+  --cs-divider: #c7beb5;
+
+  /* Motion */
+  --cs-ease: 180ms ease;
+
+  /* ------------------------------------------------------------------------
+     🎨 Design Tokens — Base Color System
+     ------------------------------------------------------------------------ */
+
+  --color-text: #1a1a1a;
+  --color-text-hover: #9d0013;
+  --color-text-accent: #7a000f;
+  --color-text-muted: #555;
+  --color-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+  --color-border: #e0d7ce;
+  /* from new theme */
+  --color-accent: #7b4b24;
+  /* new accent color */
+  --color-accent-light: #f3ece6;
+}
+
+.footer-icon {
+  width: 100px;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-line-divider {
+  position: relative;
+  margin: 0 auto;
+  background: var(--cs-divider);
+  z-index: -1;
+  width: 100vw;
+  height: 1px;
+}
+
+.footer-container {
+  container-type: inline-size;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  background: var(--cs-bg);
+}
+
+.footer-content {
+  display: flex;
+  font-size: small;
+  flex-direction: column;
+  padding-top: 1rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.logo-container {
+  align-items: flex-start;
+}
+
+.links-section {
+  display: flex;
+  flex-direction: row;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  gap: 0.5rem 1.5rem;
+}
+
+.heading-footer {
+  color: var(--color-text);
+  font-family: var(--content-font);
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+.primer-link-primer-footer {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+  display: flex;
+}
+
+.primer-link-photo-primer-footer {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primer-link-photo-primer-footer img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.second-column {
+  padding-top: 5px;
+}
+
+.logo-image-footer {
+  cursor: pointer;
+}
+
+.module-link-primer-footer {
+  color: var(--color-text);
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  white-space: nowrap;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.module-link-primer-footer:hover {
+  color: var(--color-text-hover);
+}
+
+.feedback-footer {
+  color: var(--color-text);
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  word-wrap: break-word;
+}
+
+.feedback-footer a {
+  color: var(--color-text-hover);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.feedback-footer a:hover {
+  color: var(--color-text-accent);
+}
+
+.copyright {
+  color: var(--color-text);
+  font-size: medium;
+  font-family: var(--content-font);
+  font-weight: var(--sub-weight);
+  word-wrap: break-word;
+}
+
+@container (min-width: 49em) {
+  .footer-content {
+    align-items: center;
+  }
+
+  .footer-content .hide-wide {
+    display: none;
+  }
+
+  .footer-content .show-wide {
+    display: flex;
+  }
+}
+
+@container (max-width: 48.99em) {
+  .footer-content {
+    align-self: center;
+    align-content: center;
+    width: 100%;
+  }
+
+  .footer-box {
+    align-self: center;
+    align-content: center;
+    width: min-content;
+  }
+
+  .footer-content .hide-narrow {
+    display: none;
+  }
+
+  .footer-content .show-narrow {
+    display: grid;
+  }
+  .links-section {
+    justify-content: center;
+    width: min-content;
+  }
+}

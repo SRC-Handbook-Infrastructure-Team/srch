@@ -41,8 +41,7 @@ export default function SidebarToggleButton() {
         color: "var(--text-primary, #531c00)",
       }}
     >
-      {/* Simple hamburger glyph; can swap for an icon later */}
-      ☰
+      {/* Simple hamburger glyph; can swap for an icon later */}☰
     </button>
   );
 }

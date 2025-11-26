@@ -7,12 +7,12 @@ final: false
 # Introduction to Copyright and Generative AI
 
 US Copyright law has been completely upended by the rise of claims using generative artificial intelligence. For example, currently, under US copyright law, artistic style is not itself copyrightable and only finished works themselves are. Artistic styles being uncopyrightable has become an issue in the AI copyright space, as distinctive styles themselves are becoming increasingly generated without any credit to artists themselves due to models training on an abundance of artist’s works. This generative phenomenon has been increasingly present, but was highlighted in 2025 with OpenAI’s image generator that was capable of easily generating images in the style of Hayao Miyazaki, the co-founder of Japanese animation house Studio Ghibli. With OpenAI training its models on copious amounts of Studio Ghibli media, users were able to attach an image or request an image be generated in Miyazaki’s style with ease without any copyright filters. This training presented an issue of the legality of training AI models on art and copyrighted content. But, the output of the studio ghibli style presented the issue of who owns, if anyone, the copyright of AI generated content? Proponents against these generations argue that decades of artistic hard work has been exploited. The Studio Ghibli trend was not the only instance of artistic work being used for AI training without permission, but merely highlighted the issue.
-![The 'distracted boyfriend' meme using Miyazaki’s Studio Ghibli style with OpenAI’s Image Generator.](/srch-s25/assets/primer-photos/ghibli_meme.jpg)
+![The 'distracted boyfriend' meme using Miyazaki’s Studio Ghibli style with OpenAI’s Image Generator.](/srch/assets/primer-photos/ghibli_meme.jpg)
 **_The 'distracted boyfriend' meme using Miyazaki’s Studio Ghibli style with OpenAI’s Image Generator._**
 
 ## What is the difference between IP and Copyright?
 
-![Copyright bubble graph](/srch-s25/assets/primer-photos/Copyright.jpg)
+![Copyright bubble graph](/srch/assets/primer-photos/Copyright.jpg)
 Intellectual Property (IP) is the broad legal category that protects the creations of the mind through patents, trademarks, copyrights, and trade secrets. Copyright is a specific type of IP that protects original creative works such as books, music, and art from unauthorized use.
 
 | **Copyright Rights**                           | **Copyright Protects**                      | **Copyright Does Not Protect** |
@@ -40,7 +40,7 @@ With the rise of multimodal artificial intelligence, AI models can now output va
 
 AI copyright issues related to inputs—particularly the use of copyrighted data for training AI models—are at the center of major legal and policy debates. These concerns primarily involve whether training AI models such as ChatGPT, Suno, Udio, Stability AI, and Midjourney on copyrighted materials constitutes copyright infringement or is valid under the Fair Use Doctrine. When developing AI models, especially ones at scale, developers will oftentimes scrape the internet to acquire enormous amounts of media that includes text, images, video, and art to train the model. As stated before, the items that have been scraped from the internet to train AI models are sometimes copyrighted, and owners are not given compensation or asked for consent for this training. This has resulted in copyright owners seeing their work resembles in AI outputs, negatively affecting their profits, copyrights, and artistic autonomy, potentially resulting in infringement.
 
-![Copyright bubble graph](/srch-s25/assets/primer-photos/copyright_graph.jpg)
+![Copyright bubble graph](/srch/assets/primer-photos/copyright_graph.jpg)
 
 ### Current Legal Landscape
 
@@ -100,7 +100,7 @@ At the moment, courts must determine whether AI-generated outputs are derivative
 
 The US Copyright Office (USCO) has affirmed that the existing principles of copyright law are flexible enough to apply to AI, as they have applied well to technological innovations in the past, and changes to the existing law are not required to provide protections for AI generated output. USCO has concluded that the outputs that have resulted from generative AI can only be protected by copyright if there has been sufficient human contribution and creativity beyond just prompting the AI model. Situations where human authors could claim copyright protections for AI generated works include where the human has made a creative arrangement or modification to the output.
 
-![A Recent Entrance to Paradise ](/srch-s25/assets/primer-photos/A_Recent_Entrance_to_Paradise.jpg) ![ Zarya of the Dawn](/srch-s25/assets/primer-photos/zarya.jpg)
+![A Recent Entrance to Paradise ](/srch/assets/primer-photos/A_Recent_Entrance_to_Paradise.jpg) ![ Zarya of the Dawn](/srch/assets/primer-photos/zarya.jpg)
 
 **_A Recent Entrance to Paradise and Zarya of the Dawn_**
 
