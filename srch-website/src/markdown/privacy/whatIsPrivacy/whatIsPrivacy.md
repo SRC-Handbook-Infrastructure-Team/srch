@@ -1,5 +1,5 @@
 ---
-title: What Is Privacy?
+title: What is Privacy?
 order: 1
 final: true
 ---

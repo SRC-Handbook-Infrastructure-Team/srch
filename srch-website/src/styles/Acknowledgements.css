@@ -58,7 +58,7 @@
   background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
-.upper-text-section {
+.ack-hero .upper-text-section {
   width: 33vw;
   margin-top: 20vh;
   display: flex;
@@ -67,22 +67,19 @@
   z-index: 1;
 }
 
-.website-title {
-  font-family: "Funnel Sans", sans-serif;
-  font-weight: 700;
-  font-size: 84px;
-  line-height: 100px;
-  color: var(--ack-text);
-}
+
 
 /* Only on the Acknowledgements hero */
 .ack-hero .website-title {
-  position: relative; /* keeps its original layout space */
-  left: -300px; /* shift LEFT */
-  top: 70px; /* shift DOWN */
+  position: relative;   /* keeps its original layout space */
+  left: -300px;          /* shift LEFT */
+  top: 70px;            /* shift DOWN */
+  font-size: 84px;
+  line-height: 100px;
 }
 
-.info-section {
+
+.ack-hero .info-section {
   font-family: "Be Vietnam Pro", sans-serif;
   font-size: 18px;
   line-height: 28px;

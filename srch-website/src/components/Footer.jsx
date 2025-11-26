@@ -9,11 +9,14 @@ import { Box } from "@chakra-ui/react";
 
 function Footer() {
   const navigate = useNavigate();
+
   const privacySlug = "/privacy/whatIsPrivacy";
   const accessibilitySlug = "/accessibility/whatIsAccessibility";
   const decisionSlug = "/automatedDecisionMaking/fairness";
   const aiSlug = "/generativeAI/copyright";
-  return (
+
+  
+    return (
     <Box className="footer-container">
       <div className="footer-line-divider"></div>
       <div className="footer-content">

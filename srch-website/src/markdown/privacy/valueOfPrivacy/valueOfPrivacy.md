@@ -8,9 +8,9 @@ final: true
 
 ## What is privacy good for?
 
-As previously seen, privacy can be [**understood**](whatIsPrivacy) in a myriad of ways. While conceptions of privacy vary, there is broad agreement that privacy facilitates certain{goods}for both individuals and society at large. The way people determine and prioritize these goods depends on their understanding of privacy.
+As previously seen, privacy can be [**understood**](whatIsPrivacy) in a myriad of ways. While conceptions of privacy vary, there is broad agreement that privacy facilitates certain {goods} for both individuals and society at large. The way people determine and prioritize these goods depends on their understanding of privacy.
 
-This section provides a broad set of goods{across-definitions}without any particular ordering.
+This section provides a broad set of goods {across-definitions} without any particular ordering.
 
 Many people hold the belief that privacy does not have value. This is often framed in questions similar to “if I’ve done nothing wrong, why do I need privacy?” Rather than countering this argument directly, we present the ways privacy could be useful across contexts. We strive to answer the guiding question: “what is privacy good for?”
 

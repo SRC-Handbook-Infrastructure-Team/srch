@@ -154,6 +154,7 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
+  const windowScrollRef = useRef(0);
 
   const layout = useLayout() || {};
   const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
@@ -179,6 +180,8 @@ function MarkdownPage() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   const contentRef = useRef(null);
+  // store the scroll position to prevent jumps when drawer opens/closes
+const scrollPosRef = useRef(0);
 
   const formattedTitle = useMemo(() => {
     const fastSubs = getFastCachedSubsections(sectionId);
@@ -219,22 +222,15 @@ function MarkdownPage() {
     return null;
   }
 
-  async function openGlobalDrawerForTerm(term, opts = {}) {
-    const { noToggle = false, noNavigate = false, silent = false } = opts;
+  /**
+ * Pure UI helper: given a term key, render its content into the right drawer.
+ * No navigation. No toggling. This is invoked ONLY by the URL-driven controller.
+ */
+async function openGlobalDrawerForTerm(term, opts = {}) {
+  const { silent = false } = opts;
 
-    if (!term) return;
-    const key = String(term).toLowerCase();
-
-    if (!noToggle && drawerActiveKey === key) {
-      closeRightDrawer();
-      setDrawerActiveKey(null);
-
-      if (!noNavigate) {
-        saveScrollPosition(scrollKey);
-        navigate(`/${sectionId}/${subsectionId}`, { replace: true });
-      }
-      return;
-    }
+  if (!term) return;
+  const key = String(term).toLowerCase();
 
     const sidebarEntry = getSidebarContent(key);
     if (!sidebarEntry) {
@@ -276,26 +272,34 @@ function MarkdownPage() {
           {highlightText(heading, highlight)}
         </h2>
 
-        <MarkdownRenderer
-          content={contentToShow}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          highlight={highlight}
-        />
-      </>
-    );
+      <MarkdownRenderer
+        content={contentToShow}
+        sidebar={sidebar}
+        sectionId={sectionId}
+        subsectionId={subsectionId}
+        onDrawerOpen={handleDrawerOpen}
+        onNavigation={handleNavigation}
+        highlight={highlight}
+        urlTerm={urlTerm}
+      />
+    </>
+  );
 
-    setDrawerActiveKey(key);
-    openRightDrawer(node);
+  setDrawerActiveKey(key);
+  openRightDrawer(node);
+}
 
-    if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}/${term}`, { replace: true });
-    }
-  }
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
+
+  // Restore scroll after markdown re-renders (fixes jump)
+useEffect(() => {
+  if (!contentRef.current) return;
+  contentRef.current.scrollTop = scrollPosRef.current;
+}, [mainContent]);
+
 
   useEffect(() => {
     async function loadContent() {
@@ -473,65 +477,120 @@ function MarkdownPage() {
       return;
     }
 
-    // URL-driven open: don't toggle off, don't navigate again, no toast
-    openGlobalDrawerForTerm(key, {
-      noToggle: true,
-      noNavigate: true,
-      silent: true,
-    });
-  }, [urlTerm, sidebar]); // <— important: depend on sidebar too
+    // URL-driven open: pure UI call, no nav/toggle
+  openGlobalDrawerForTerm(key, {
+    silent: true,
+  });
+}, [urlTerm, sidebar]);
+
 
   const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
-  async function checkAndNavigate(path) {
-    if (isLoading) return;
-    const pathParts = path.split("/").filter(Boolean);
-    const targetSectionId = pathParts[0];
-    const targetSubsectionId = pathParts[1] || null;
+  const checkAndNavigate = useCallback(
+    async (path) => {
+      if (isLoading) return;
+      const pathParts = path.split("/").filter(Boolean);
+      const targetSectionId = pathParts[0];
+      const targetSubsectionId = pathParts[1] || null;
 
-    try {
-      let contentExists = false;
-      if (targetSubsectionId) {
-        const result = await getContent(targetSectionId, targetSubsectionId);
-        contentExists = result !== null;
-      } else {
-        const result = await getContent(targetSectionId);
-        contentExists = result !== null;
-      }
-
-      if (contentExists) {
-        saveScrollPosition(scrollKey); // Save scroll before navigating
-        navigate(`/${path}`);
-      } else {
+      try {
+        let contentExists = false;
+        if (targetSubsectionId) {
+          const result = await getContent(targetSectionId, targetSubsectionId);
+          contentExists = result !== null;
+        } else {
+          const result = await getContent(targetSectionId);
+          contentExists = result !== null;
+        }
+        if (contentExists) navigate(`/${path}`);
+        else {
+          toast({
+            title: targetSubsectionId
+              ? "Subsection Not Found"
+              : "Section Not Found",
+            description: targetSubsectionId
+              ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
+              : `The section "${targetSectionId}" could not be found.`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+        }
+      } catch (error) {
+        console.error("Error checking content:", error);
         toast({
-          title: targetSubsectionId
-            ? "Subsection Not Found"
-            : "Section Not Found",
-          description: targetSubsectionId
-            ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
-            : `The section "${targetSectionId}" could not be found.`,
+          title: "Navigation Error",
+          description: "An error occurred while trying to navigate.",
           status: "error",
           duration: 5000,
           isClosable: true,
           position: "bottom-right",
         });
       }
-    } catch (error) {
-      console.error("Error checking content:", error);
-      toast({
-        title: "Navigation Error",
-        description: "An error occurred while trying to navigate.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
+    },
+    [isLoading, navigate, toast]
+  );
+
+  // Save scroll BEFORE drawer changes cause any re-renders
+function saveScrollPosition() {
+  if (contentRef.current) {
+    scrollPosRef.current = contentRef.current.scrollTop;
+  }
+}
+
+
+  /**
+ * Click handler for drawer chips:
+ * - ONLY updates the URL.
+ * - UI changes are handled by the URL-driven controller effect below.
+ */
+function handleDrawerOpen(term) {
+  saveScrollPosition();
+
+  windowScrollRef.current = window.scrollY || 0;
+
+  const basePath = `/${sectionId}/${subsectionId}`;
+
+  // 🔻 Close: chip told us "I'm already active, please close"
+  if (!term) {
+    // 1) Close the drawer immediately
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+
+    // 2) Strip /:term from URL if present
+    if (location.pathname !== basePath) {
+      navigate(basePath, { replace: true });
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, windowScrollRef.current);
       });
+      
     }
+    return;
   }
 
-  function handleDrawerOpen(term) {
-    openGlobalDrawerForTerm(term);
+  // 🔺 Open: chip told us which term to show
+  const key = String(term).toLowerCase();
+  const targetPath = `${basePath}/${key}`;
+
+  // Ensure URL includes the term so it’s shareable/deep-linkable
+  if (location.pathname !== targetPath) {
+    navigate(targetPath);
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, windowScrollRef.current);
+    });
   }
+
+  // Open the drawer UI *right now* for this term
+  openGlobalDrawerForTerm(key, { silent: true });
+}
+
+
+
+
+
 
   function handleNavigation(targetId) {
     closeRightDrawer();
@@ -545,6 +604,20 @@ function MarkdownPage() {
       }
     }
   }
+
+   // Only handle in-page anchor links like #some-heading
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth" });
+  }, [location.hash]);
+
+
+
 
   return (
     <div className="markdown-page">
@@ -591,7 +664,7 @@ function MarkdownPage() {
               onNavigation={handleNavigation}
               isFinal={contentFinal}
               highlight={highlight}
-              activeDrawerTerm={urlTerm}
+              urlTerm={urlTerm}
             />
           </Box>
         )}

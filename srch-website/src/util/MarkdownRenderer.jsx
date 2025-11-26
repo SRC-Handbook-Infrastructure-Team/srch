@@ -343,6 +343,7 @@ function MarkdownRenderer({
   onNavigation,
   isFinal,
   highlight,
+  urlTerm,
   activeDrawerTerm,
 }) {
   const processedContent = useMemo(() => {
@@ -372,6 +373,7 @@ function MarkdownRenderer({
    *    When it closes, we remove the active class from all sidebar-ref pills.
    * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
+  
   const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
   useEffect(() => {
@@ -408,6 +410,9 @@ function MarkdownRenderer({
     };
   }, []);
 
+
+
+
   const setActiveDrawerLink = (el) => {
     try {
       document
@@ -424,6 +429,71 @@ function MarkdownRenderer({
       /* no-op */
     }
   };
+
+  // Smooth, one-time focus for drawer chip when opening/closing
+function focusDrawerChip(term) {
+  if (!term) return;
+
+  window.requestAnimationFrame(() => {
+    const el = document.querySelector(
+      `.srch-drawer-link[data-term="${term}"]`
+    );
+    if (!el) return;
+
+    // Find nearest scroll container
+    let container = el.parentElement;
+    while (container && container !== document.body) {
+      const style = window.getComputedStyle(container);
+      if (style.overflowY === "auto" || style.overflowY === "scroll") break;
+      container = container.parentElement;
+    }
+
+    // Default to window scroll
+    if (!container || container === document.body) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
+      });
+      return;
+    }
+
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    const margin = 24;
+
+    const isAbove = eRect.top < cRect.top + margin;
+    const isBelow = eRect.bottom > cRect.bottom - margin;
+
+    if (!isAbove && !isBelow) return; // already visible → no movement
+
+    const delta = isAbove
+      ? eRect.top - cRect.top - margin
+      : eRect.bottom - cRect.bottom + margin;
+
+    container.scrollTo({
+      top: container.scrollTop + delta,
+      behavior: "smooth",
+    });
+  });
+}
+
+  // After drawer link becomes active, wait for the drawer animation
+  // to finish and then gently scroll it into view.
+  useEffect(() => {
+    if (!activeDrawerLink) return;
+
+    const drawer = document.querySelector(".right-sidebar");
+    if (!drawer) return;
+
+    // Match the CSS transition on .right-sidebar (0.35s)
+    const timeout = setTimeout(() => {
+      focusDrawerChip(activeDrawerLink);
+    }, 350);
+
+    return () => clearTimeout(timeout);
+  }, [activeDrawerLink]);
+
 
   useEffect(() => {
     if (!activeDrawerTerm) {
@@ -686,6 +756,12 @@ function MarkdownRenderer({
             to={`/${sectionId}/${subsectionId}/${term}`}
             onClick={(e) => {
               e.preventDefault();
+              if (activeDrawerLink === term) {
+                setActiveDrawerLink(null);
+                onDrawerOpen && onDrawerOpen(null);
+                return;
+              }
+
               const scrollY =
                 typeof window !== "undefined" ? window.scrollY : 0;
               if (value) {
@@ -767,18 +843,16 @@ function MarkdownRenderer({
       subsectionId,
       sidebar,
       highlight,
+      urlTerm,
     ]
   );
 
+  // Add near the top of your component (inside the component)
   return (
     <div>
       <ReactMarkdown
         components={components}
-        remarkPlugins={[
-          remarkGfm,
-          [remarkHighlight, highlight],
-          remarkSidebarRef,
-        ]}
+        remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
         rehypePlugins={[rehypeRaw]}
       >
         {processedContent}

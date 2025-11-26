@@ -32,7 +32,7 @@
  * ============================================================================
  */
 
-import "../styles/Acknowledgements.css";
+
 import "../styles/LandingPage.css";
 
 import { MdEmail } from "react-icons/md";
