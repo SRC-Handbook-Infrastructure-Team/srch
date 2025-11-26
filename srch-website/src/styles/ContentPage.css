@@ -184,10 +184,13 @@ button:focus-visible {
 }
 
 .markdown-content {
-  padding-left: 100px;
-  padding-right: 100px;
   padding-bottom: 100px;
   background: white;
+}
+
+.markdown-margin {
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 mark {
@@ -925,6 +928,7 @@ html:not(.right-open) body .main-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  white-space: nowrap;
   gap: 10px;
 }
 
