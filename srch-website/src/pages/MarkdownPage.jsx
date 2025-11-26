@@ -549,7 +549,7 @@ function MarkdownPage() {
   return (
     <div className="markdown-page">
       <Box className="markdown-content">
-        <div className="page-header">
+        <div className="page-header markdown-margin">
           <p className="page-section-label">
             {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
           </p>
@@ -577,13 +577,11 @@ function MarkdownPage() {
               {leftSidebar?.collapsed ? ">" : "<"}
             </button>
           </div>
-
-          {/* Full-bleed divider that spans the whole viewport, Figma-style */}
-          <div className="page-divider page-divider--fullbleed page-divider-margin" />
         </div>
+        <div className="page-divider page-divider--fullbleed page-divider-margin" />
 
         {mainContent && (
-          <Box ref={contentRef}>
+          <Box className="markdown-margin" ref={contentRef}>
             <MarkdownRenderer
               content={mainContent}
               sidebar={sidebar}
