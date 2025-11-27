@@ -38,8 +38,7 @@
   /* Mark element colors */
   --mark-bg: var(--color-accent-light);
   --mark-color: #9D0039;
-  /* A5D8AE with 47% opacity */
-
+  --case-studies-numbered-list-color: #9D0039;
   /* Colors / theme */
   --color-text: #1a1a1a;
   --header-text-color: #531c00;
@@ -101,6 +100,8 @@
   --results-bg: #263A26;
   --sidebar-phrase-text-color: #A5D8AE;
   --mark-color: rgba(165, 216, 174, 0.47);
+  --case-studies-numbered-list-color: #A5D8AE;
+
 
 
   --color-text-muted: #b0b0b0;
@@ -284,13 +285,16 @@ mark {
    Headings & Typography
    ========================================================================== */
 h1,
-h2,
-h4 {
+h2{
   color: var(--color-accent);
 }
 
 h3 {
   color: var(--sub-header-text-color);
+}
+
+h4 {
+  color: var(--case-studies-numbered-list-color);
 }
 
 /* ==========================================================================
