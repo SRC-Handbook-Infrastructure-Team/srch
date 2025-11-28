@@ -6,7 +6,6 @@ html {
   margin: 0 auto;
 }
 
-
 /* ========================================================================== 
    Navigation Bar
    ========================================================================== */
@@ -32,13 +31,6 @@ html {
 .top-navbar .nav-link:hover,
 .top-navbar .nav-button:hover {
   color: #9d0013;
-}
-
-.navbar-padding {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .navbar-logo-container {
@@ -103,6 +95,13 @@ html {
   height: 20px;
   transition: transform 0.2s;
   user-select: none;
+}
+
+.navbar-padding {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .nav-dropdown-menu {
