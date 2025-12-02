@@ -165,11 +165,6 @@ button:focus-visible {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-/* Ensures the entire row feels clickable and avoids visual jitter */
-.sidebar-section-header * {
-  pointer-events: none;
-  /* interaction handled by container */
-}
 
 /* ==========================================================================
    Markdown & Content

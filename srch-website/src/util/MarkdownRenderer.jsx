@@ -344,7 +344,7 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
-  activeDrawerTerm,
+  
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -495,20 +495,7 @@ function focusDrawerChip(term) {
   }, [activeDrawerLink]);
 
 
-  useEffect(() => {
-    if (!activeDrawerTerm) {
-      setActiveDrawerLink(null);
-      return;
-    }
-    const key = String(activeDrawerTerm).toLowerCase();
-
-    const timer = setTimeout(() => {
-      const el = document.querySelector(`[data-term="${key}"]`);
-      setActiveDrawerLink(el || null);
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [activeDrawerTerm, content, sidebar]);
+ 
 
   const BetaTag = () => (
     <Box
