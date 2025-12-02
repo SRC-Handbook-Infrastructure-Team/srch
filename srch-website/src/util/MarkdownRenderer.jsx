@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo, useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -365,137 +365,6 @@ function MarkdownRenderer({
   const RED_DARK = "#7a000f"; // hover shade (kept for compatibility; not used on chips)
   const BLACK = "#000000";
 
-  /* ------------------------------------------------------------------------
-   * Active drawer link state handling (no external integration required)
-   *
-   *  - We add 'srch-drawer-link-active' to the clicked <sidebar-ref>.
-   *  - A MutationObserver watches '.right-sidebar' for '.open'.
-   *    When it closes, we remove the active class from all sidebar-ref pills.
-   * --------------------------------------------------------------------- */
-  const observerRef = useRef(null);
-  
-  const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
-
-  useEffect(() => {
-    const drawer = document.querySelector(".right-sidebar");
-    if (!drawer) return;
-
-    const cleanupAllActive = () => {
-      document
-        .querySelectorAll(".srch-drawer-link-active")
-        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
-      setActiveDrawerLinkState(null);
-    };
-
-    const obs = new MutationObserver(() => {
-      const isOpen = drawer.classList.contains("open");
-      if (!isOpen) {
-        cleanupAllActive();
-      }
-    });
-
-    obs.observe(drawer, { attributes: true, attributeFilter: ["class"] });
-    observerRef.current = obs;
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-      // Safety cleanup on unmount
-      document
-        .querySelectorAll(".srch-drawer-link-active")
-        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
-      setActiveDrawerLinkState(null);
-    };
-  }, []);
-
-
-
-
-  const setActiveDrawerLink = (el) => {
-    try {
-      document
-        .querySelectorAll(".srch-drawer-link-active")
-        .forEach((n) => n.classList.remove("srch-drawer-link-active"));
-      if (el) {
-        el.classList.add("srch-drawer-link-active");
-        const term = el.dataset?.term || el.getAttribute?.("data-term") || null;
-        setActiveDrawerLinkState(term);
-      } else {
-        setActiveDrawerLinkState(null);
-      }
-    } catch (e) {
-      /* no-op */
-    }
-  };
-
-  // Smooth, one-time focus for drawer chip when opening/closing
-function focusDrawerChip(term) {
-  if (!term) return;
-
-  window.requestAnimationFrame(() => {
-    const el = document.querySelector(
-      `.srch-drawer-link[data-term="${term}"]`
-    );
-    if (!el) return;
-
-    // Find nearest scroll container
-    let container = el.parentElement;
-    while (container && container !== document.body) {
-      const style = window.getComputedStyle(container);
-      if (style.overflowY === "auto" || style.overflowY === "scroll") break;
-      container = container.parentElement;
-    }
-
-    // Default to window scroll
-    if (!container || container === document.body) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "nearest",
-      });
-      return;
-    }
-
-    const cRect = container.getBoundingClientRect();
-    const eRect = el.getBoundingClientRect();
-    const margin = 24;
-
-    const isAbove = eRect.top < cRect.top + margin;
-    const isBelow = eRect.bottom > cRect.bottom - margin;
-
-    if (!isAbove && !isBelow) return; // already visible → no movement
-
-    const delta = isAbove
-      ? eRect.top - cRect.top - margin
-      : eRect.bottom - cRect.bottom + margin;
-
-    container.scrollTo({
-      top: container.scrollTop + delta,
-      behavior: "smooth",
-    });
-  });
-}
-
-  // After drawer link becomes active, wait for the drawer animation
-  // to finish and then gently scroll it into view.
-  useEffect(() => {
-    if (!activeDrawerLink) return;
-
-    const drawer = document.querySelector(".right-sidebar");
-    if (!drawer) return;
-
-    // Match the CSS transition on .right-sidebar (0.35s)
-    const timeout = setTimeout(() => {
-      focusDrawerChip(activeDrawerLink);
-    }, 350);
-
-    return () => clearTimeout(timeout);
-  }, [activeDrawerLink]);
-
-
- 
 
   const BetaTag = () => (
     <Box
@@ -718,88 +587,87 @@ function focusDrawerChip(term) {
        * - Shape: radius 17px, height 32px, variable width
        */
       "sidebar-ref": ({ node }) => {
-        let raw = node.properties?.["term"] || "";
-        let term = raw;
-        let label = null;
+  let raw = node.properties?.["term"] || "";
+  let term = raw;
+  let label = null;
 
-        //  Support alias syntax {term|Custom Label}
-        if (raw.includes("|")) {
-          const [keyPart, labelPart] = raw.split("|");
-          term = keyPart.trim();
-          label = labelPart.trim();
-        }
+  // Support alias syntax {term|Custom Label}
+  if (raw.includes("|")) {
+    const [keyPart, labelPart] = raw.split("|");
+    term = keyPart.trim();
+    label = labelPart.trim();
+  }
 
-        const termKey = term.toLowerCase();
-        const value = sidebar?.[termKey];
+  const termKey = term.toLowerCase();
+  const value = sidebar?.[termKey];
 
-        const toShow = value
-          ? label ||
-            term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-          : `⚠️ Missing: ${term}`;
+  // 🔑 Active state is derived purely from the URL param
+  const isActive =
+    urlTerm && urlTerm.toLowerCase() === termKey;
 
-        return (
-          <Box
-            as={RouterLink}
-            to={`/${sectionId}/${subsectionId}/${term}`}
-            onClick={(e) => {
-              e.preventDefault();
-              if (activeDrawerLink === term) {
-                setActiveDrawerLink(null);
-                onDrawerOpen && onDrawerOpen(null);
-                return;
-              }
+  const toShow = value
+    ? label ||
+      term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+    : `⚠️ Missing: ${term}`;
 
-              const scrollY =
-                typeof window !== "undefined" ? window.scrollY : 0;
-              if (value) {
-                setActiveDrawerLink(e.currentTarget);
-                onDrawerOpen && onDrawerOpen(term);
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (!value) return;
 
-                if (typeof window !== "undefined") {
-                  requestAnimationFrame(() =>
-                    requestAnimationFrame(() => window.scrollTo(0, scrollY))
-                  );
-                }
-              }
-            }}
-            className={`srch-drawer-link ${
-              activeDrawerLink === term ? "srch-drawer-link-active" : ""
-            }`}
-            data-term={term.toLowerCase()}
-            display="inline-flex"
-            verticalAlign="baseline"
-            alignItems="center"
-            gap="6px"
-            px="10px"
-            py="4px"
-            mx="0"
-            my="2px"
-            borderRadius="999px"
-            color={RED}
-            textDecoration="none"
-            border="1px solid transparent"
-            whiteSpace="normal"
-            flexShrink={1}
-            maxW="100%" // don’t exceed container
-            minW={0} // allow shrink in tight columns
-          >
-            <Text
-              as="span"
-              fontWeight="700"
-              fontSize="inherit"
-              lineHeight="inherit"
-              sx={{
-                overflowWrap: "anywhere",
-                wordBreak: "break-word",
-                minWidth: 0,
-              }}
-            >
-              {highlightText(toShow, highlight)}
-            </Text>
-            <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
-          </Box>
-        );
-      },
+    if (isActive) {
+      // Clicking the active chip closes the drawer
+      onDrawerOpen && onDrawerOpen(null);
+    } else {
+      // Clicking an inactive chip opens that term
+      onDrawerOpen && onDrawerOpen(termKey);
+    }
+  };
+
+  return (
+    <Box
+      as={RouterLink}
+      to={`/${sectionId}/${subsectionId}/${termKey}`}
+      onClick={handleClick}
+      className={`srch-drawer-link ${
+        isActive ? "srch-drawer-link-active" : ""
+      }`}
+      data-term={termKey}
+      display="inline-flex"
+      verticalAlign="baseline"
+      alignItems="center"
+      gap="6px"
+      px="10px"
+      py="4px"
+      mx="0"
+      my="2px"
+      borderRadius="999px"
+      color={RED}
+      textDecoration="none"
+      border="1px solid transparent"
+      whiteSpace="normal"
+      flexShrink={1}
+      maxW="100%"
+      minW={0}
+    >
+      <Text
+        as="span"
+        fontWeight="700"
+        fontSize="inherit"
+        lineHeight="inherit"
+        sx={{
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
+          minWidth: 0,
+        }}
+      >
+        {highlightText(toShow, highlight)}
+      </Text>
+      <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
+    </Box>
+  );
+},
+
+      
 
       "nav-link": ({ node }) => {
         const text = node.properties?.text;

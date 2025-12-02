@@ -583,8 +583,7 @@ function handleDrawerOpen(term) {
     });
   }
 
-  // Open the drawer UI *right now* for this term
-  openGlobalDrawerForTerm(key, { silent: true });
+  
 }
 
 
