@@ -67,7 +67,14 @@ function NavSearchBar({
           }}
         />
       </Box>
-      <Collapse in={searchQuery} animateOpacity>
+      <Collapse
+        in={searchQuery}
+        animateOpacity
+        transition={{
+          enter: { duration: 0.5 },
+          exit: { duration: 0.25 },
+        }}
+      >
         <ResultsWindow
           searchQuery={searchQuery}
           maxResults={maxResults}
