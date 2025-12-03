@@ -373,7 +373,7 @@ function MarkdownRenderer({
    *    When it closes, we remove the active class from all sidebar-ref pills.
    * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
-  
+
   const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
   useEffect(() => {
@@ -410,9 +410,6 @@ function MarkdownRenderer({
     };
   }, []);
 
-
-
-
   const setActiveDrawerLink = (el) => {
     try {
       document
@@ -431,52 +428,52 @@ function MarkdownRenderer({
   };
 
   // Smooth, one-time focus for drawer chip when opening/closing
-function focusDrawerChip(term) {
-  if (!term) return;
+  function focusDrawerChip(term) {
+    if (!term) return;
 
-  window.requestAnimationFrame(() => {
-    const el = document.querySelector(
-      `.srch-drawer-link[data-term="${term}"]`
-    );
-    if (!el) return;
+    window.requestAnimationFrame(() => {
+      const el = document.querySelector(
+        `.srch-drawer-link[data-term="${term}"]`
+      );
+      if (!el) return;
 
-    // Find nearest scroll container
-    let container = el.parentElement;
-    while (container && container !== document.body) {
-      const style = window.getComputedStyle(container);
-      if (style.overflowY === "auto" || style.overflowY === "scroll") break;
-      container = container.parentElement;
-    }
+      // Find nearest scroll container
+      let container = el.parentElement;
+      while (container && container !== document.body) {
+        const style = window.getComputedStyle(container);
+        if (style.overflowY === "auto" || style.overflowY === "scroll") break;
+        container = container.parentElement;
+      }
 
-    // Default to window scroll
-    if (!container || container === document.body) {
-      el.scrollIntoView({
+      // Default to window scroll
+      if (!container || container === document.body) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+        return;
+      }
+
+      const cRect = container.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      const margin = 24;
+
+      const isAbove = eRect.top < cRect.top + margin;
+      const isBelow = eRect.bottom > cRect.bottom - margin;
+
+      if (!isAbove && !isBelow) return; // already visible → no movement
+
+      const delta = isAbove
+        ? eRect.top - cRect.top - margin
+        : eRect.bottom - cRect.bottom + margin;
+
+      container.scrollTo({
+        top: container.scrollTop + delta,
         behavior: "smooth",
-        block: "nearest",
-        inline: "nearest",
       });
-      return;
-    }
-
-    const cRect = container.getBoundingClientRect();
-    const eRect = el.getBoundingClientRect();
-    const margin = 24;
-
-    const isAbove = eRect.top < cRect.top + margin;
-    const isBelow = eRect.bottom > cRect.bottom - margin;
-
-    if (!isAbove && !isBelow) return; // already visible → no movement
-
-    const delta = isAbove
-      ? eRect.top - cRect.top - margin
-      : eRect.bottom - cRect.bottom + margin;
-
-    container.scrollTo({
-      top: container.scrollTop + delta,
-      behavior: "smooth",
     });
-  });
-}
+  }
 
   // After drawer link becomes active, wait for the drawer animation
   // to finish and then gently scroll it into view.
@@ -493,7 +490,6 @@ function focusDrawerChip(term) {
 
     return () => clearTimeout(timeout);
   }, [activeDrawerLink]);
-
 
   useEffect(() => {
     if (!activeDrawerTerm) {
@@ -528,6 +524,7 @@ function focusDrawerChip(term) {
       BETA
     </Box>
   );
+  const ref = (React.useRef < HTMLLIElement) | (null > null);
 
   const components = useMemo(
     () => ({
@@ -614,8 +611,12 @@ function focusDrawerChip(term) {
         const { id, children, ...rest } = props;
         const childrenArray = Array.isArray(children) ? children : [children];
 
+        // Treat only footnote-definition <li> elements as "isFootnoteRef"
+        const isFootnoteRef =
+          typeof id === "string" && id.startsWith("user-content-fn-");
+
         let number = null;
-        if (id && id.startsWith("user-content-fn-")) {
+        if (isFootnoteRef) {
           const match = id.match(/\d+/);
           if (match) number = match[0];
         }
@@ -626,7 +627,7 @@ function focusDrawerChip(term) {
             id={id}
             {...rest}
             style={{
-              listStyle: "none",
+              listStyle: isFootnoteRef ? "none" : undefined,
               paddingLeft: "1.5em",
               position: "relative",
             }}
@@ -681,7 +682,25 @@ function focusDrawerChip(term) {
       },
 
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
-      ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
+      ol: ({ node, ...props }) => {
+        const isFootnotes =
+          node?.data?.hName === "ol" &&
+          node?.data?.hProperties?.className?.includes("footnotes");
+
+        if (isFootnotes) {
+          return (
+            <OrderedList {...props}>
+              {React.Children.map(props.children, (child) =>
+                React.isValidElement(child)
+                  ? React.cloneElement(child, { isFootnoteRef: true })
+                  : child
+              )}
+            </OrderedList>
+          );
+        }
+
+        return <OrderedList {...props} />;
+      },
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
@@ -852,7 +871,11 @@ function focusDrawerChip(term) {
     <div>
       <ReactMarkdown
         components={components}
-        remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
+        remarkPlugins={[
+          remarkGfm,
+          [remarkHighlight, highlight],
+          remarkSidebarRef,
+        ]}
         rehypePlugins={[rehypeRaw]}
       >
         {processedContent}
