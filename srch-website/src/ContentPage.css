@@ -327,9 +327,6 @@ html:not(.right-open) body .main-content {
 }
 
 
-
-
-
 /* Let content inside the right drawer wrap and never overflow */
 .right-sidebar .drawer-content {
   overflow-wrap: anywhere;
@@ -1268,5 +1265,6 @@ html[data-layout-mode="overlay"]
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
 }
+
 
 

@@ -121,6 +121,9 @@ export default function SidebarLayout({ children }) {
     });
   }, [isRightOpen, rightSidebar.width]);
 
+  
+
+
   /** ---------------- AUTO-CLOSE DRAWER ON *PAGE* CHANGE ---------------- */
   const location = useLocation();
   const navigate = useNavigate();
@@ -147,6 +150,14 @@ export default function SidebarLayout({ children }) {
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
+  // Decide which layout mode we're in based on viewport width
+const layoutMode = viewportWidth >= 1280 ? "split" : "overlay";
+
+useEffect(() => {
+  const root = document.documentElement;
+  root.dataset.layoutMode = layoutMode; // sets data-layout-mode="overlay" or "split"
+}, [layoutMode]);
+
 
   useEffect(() => {
     const available = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
@@ -244,7 +255,7 @@ export default function SidebarLayout({ children }) {
   /** ---------------- RENDER ---------------- */
   return (
     <LayoutContext.Provider value={layoutValue}>
-      <div className="sidebar-layout">
+      <div className="sidebar-layout" data-layout-mode={layoutMode}>
         <NavBar />
 
         {/* FLEX SHELL: reserved (authoritative rail below NavBar if needed later) */}
