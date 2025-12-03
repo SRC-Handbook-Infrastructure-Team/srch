@@ -58,11 +58,25 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
         />
-        <Collapse in={showResults} animateOpacity>
+        <Collapse
+          in={showResults}
+          animateOpacity
+          transition={{
+            enter: { duration: 0.5 },
+            exit: { duration: 0.25 },
+          }}
+        >
           <ResultsWindow searchQuery={searchQuery} maxResults={maxResults} />
         </Collapse>
       </Box>
-      <Collapse in={searchQuery} animateOpacity>
+      <Collapse
+        in={searchQuery}
+        animateOpacity
+        transition={{
+          enter: { duration: 0.5 },
+          exit: { duration: 0.25 },
+        }}
+      >
         <IconButton
           aria-label="Toggle search bar"
           icon={<CloseIcon fontSize={"x-small"} />}
