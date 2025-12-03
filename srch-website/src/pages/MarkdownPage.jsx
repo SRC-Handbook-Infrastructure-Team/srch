@@ -547,34 +547,26 @@ function saveScrollPosition() {
  */
 function handleDrawerOpen(term) {
   saveScrollPosition();
-
   windowScrollRef.current = window.scrollY || 0;
 
   const basePath = `/${sectionId}/${subsectionId}`;
 
-  // 🔻 Close: chip told us "I'm already active, please close"
+  // 🔻 Close: remove :term from URL, let effect handle drawer close
   if (!term) {
-    // 1) Close the drawer immediately
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-
-    // 2) Strip /:term from URL if present
     if (location.pathname !== basePath) {
       navigate(basePath, { replace: true });
 
       requestAnimationFrame(() => {
         window.scrollTo(0, windowScrollRef.current);
       });
-      
     }
     return;
   }
 
-  // 🔺 Open: chip told us which term to show
+  // 🔺 Open: add :term to URL, let effect handle drawer open
   const key = String(term).toLowerCase();
   const targetPath = `${basePath}/${key}`;
 
-  // Ensure URL includes the term so it’s shareable/deep-linkable
   if (location.pathname !== targetPath) {
     navigate(targetPath);
 
@@ -582,8 +574,6 @@ function handleDrawerOpen(term) {
       window.scrollTo(0, windowScrollRef.current);
     });
   }
-
-  
 }
 
 
