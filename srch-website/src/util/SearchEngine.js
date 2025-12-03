@@ -327,6 +327,7 @@ export async function search(query, truncateSnippetFlag = true) {
     []
   );
 
+  console.log("All Results:", allResults);
   const snippetResults = [];
   const seenKeys = new Set();
 
@@ -338,10 +339,11 @@ export async function search(query, truncateSnippetFlag = true) {
         "gi"
       );
 
+      const cleanTitle = getPlaintextFromMarkdown(doc.title);
       const titleMatches =
-        doc.title &&
-        doc.title.toLowerCase().includes(query.toLowerCase()) &&
-        doc.title !== "Introduction";
+        cleanTitle &&
+        cleanTitle.toLowerCase().includes(query.toLowerCase()) &&
+        cleanTitle !== "Introduction";
       const contentHasMatch =
         doc.content &&
         getPlaintextFromMarkdown(doc.content)
@@ -355,8 +357,8 @@ export async function search(query, truncateSnippetFlag = true) {
           snippetResults.push({
             ...res,
             id: titleKey,
-            snippet: doc.title.replace(regex, "<mark>$1</mark>"),
-            allSnippets: [doc.title.replace(regex, "<mark>$1</mark>")],
+            snippet: cleanTitle.replace(regex, "<mark>$1</mark>"),
+            allSnippets: [cleanTitle.replace(regex, "<mark>$1</mark>")],
           });
         }
       }

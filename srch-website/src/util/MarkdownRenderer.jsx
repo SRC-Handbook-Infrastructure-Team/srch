@@ -524,6 +524,7 @@ function MarkdownRenderer({
       BETA
     </Box>
   );
+  const ref = (React.useRef < HTMLLIElement) | (null > null);
 
   const components = useMemo(
     () => ({
@@ -610,8 +611,12 @@ function MarkdownRenderer({
         const { id, children, ...rest } = props;
         const childrenArray = Array.isArray(children) ? children : [children];
 
+        // Treat only footnote-definition <li> elements as "isFootnoteRef"
+        const isFootnoteRef =
+          typeof id === "string" && id.startsWith("user-content-fn-");
+
         let number = null;
-        if (id && id.startsWith("user-content-fn-")) {
+        if (isFootnoteRef) {
           const match = id.match(/\d+/);
           if (match) number = match[0];
         }
@@ -622,6 +627,7 @@ function MarkdownRenderer({
             id={id}
             {...rest}
             style={{
+              listStyle: isFootnoteRef ? "none" : undefined,
               paddingLeft: "1.5em",
               position: "relative",
             }}
@@ -676,7 +682,25 @@ function MarkdownRenderer({
       },
 
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
-      ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
+      ol: ({ node, ...props }) => {
+        const isFootnotes =
+          node?.data?.hName === "ol" &&
+          node?.data?.hProperties?.className?.includes("footnotes");
+
+        if (isFootnotes) {
+          return (
+            <OrderedList {...props}>
+              {React.Children.map(props.children, (child) =>
+                React.isValidElement(child)
+                  ? React.cloneElement(child, { isFootnoteRef: true })
+                  : child
+              )}
+            </OrderedList>
+          );
+        }
+
+        return <OrderedList {...props} />;
+      },
       code: ({ inline, ...props }) =>
         inline ? (
           <Code {...props} />
