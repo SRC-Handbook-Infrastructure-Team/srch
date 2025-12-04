@@ -424,8 +424,7 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
         <NavBar layoutMode={layoutMode} />
 
 
-        {/* Optional helper badge for QA / dev; you can remove this later */}
-        <div className="layout-mode-badge">{layoutMode}</div>
+        
 
         {/* Reserved flex rail under NavBar (unchanged) */}
         <div className="layout-rail" role="presentation" />
