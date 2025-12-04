@@ -25,8 +25,8 @@
   --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px; /* JS updates these */
   --navbar-height: 70px; /* unified baseline */
-  --mobile-menu-height: 200px; /* height of slide-down mobile menu panel */
-  --mobile-menu-height-expanded: 300px; /* when modules dropdown is open */
+  --mobile-menu-height: 250px; /* height of slide-down mobile menu panel */
+  --mobile-menu-height-expanded: 350px; /* when modules dropdown is open */
   --toolbar-height: 0px;
   /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px;
@@ -1117,22 +1117,13 @@ html[data-layout-mode="overlay"] body .main-content {
   width: 100%;
 }
 
-/* Extra spacing between the expanded navbar dropdown and the page header
-   (PRIVACY / title) when in overlay mode. */
-html[data-layout-mode="overlay"]
-  .top-navbar[data-menu-open="true"]
-  ~ .main-content
-  .markdown-page {
-  padding-top: 24px;
+/* Mobile menu offset for ALL overlay widths, driven by JS */
+html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
+  margin-top: calc(
+    var(--navbar-height) + var(--mobile-menu-offset)
+  ) !important;
 }
 
-html[data-layout-mode="overlay"]
-  .top-navbar[data-menu-open="true"]
-  ~ .main-content
-  .page-divider-margin {
-  margin-top: 16px;
-  margin-bottom: 24px; /* more gap between header + body copy */
-}
 
 /* -------------------------------------------------------
    Overlay / split-screen header layout
@@ -1274,4 +1265,41 @@ html[data-layout-mode="overlay"]
   .show-base {
     display: inline-flex !important;
   }
+}
+
+.header-toggle {
+  position: fixed;
+  top: calc(var(--navbar-height) + 19px);
+  right: 0;
+  left: 12px;
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24.615px;
+  height: 11.565px;
+  transform: scale(1.2);
+
+  color: var(--srch-brown, #531c00);
+  cursor: pointer;
+
+  /* 🔻 kill the circles */
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.header-toggle:hover {
+  transform: scale(1.25);
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* optional: remove the extra circular focus ring */
+.header-toggle:focus,
+.header-toggle:focus-visible {
+  outline: none;
 }

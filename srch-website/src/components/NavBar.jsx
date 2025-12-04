@@ -39,7 +39,7 @@ function NavBar({ className = "", layoutMode }) {
   const [openSection, setOpenSection] = useState(null);
 
   const hasLoadedData = useRef(false);
-  const panelRef = useRef(null); // 👈 mobile dropdown panel
+  const panelRef = useRef(null); 
 
     useEffect(() => {
     const root = document.documentElement;
@@ -363,7 +363,7 @@ function NavBar({ className = "", layoutMode }) {
       {/* Mobile slide-down menu PANEL */}
       <Collapse in={isMenuOpen} animateOpacity>
         <Box
-          ref={panelRef} // 👈 IMPORTANT: attach the ref here
+          ref={panelRef} // 
           className="mobile-menu-panel show-base hide-md"
         >
           <VStack align={"start"} spacing={7} className="mobile-menu-vstack">

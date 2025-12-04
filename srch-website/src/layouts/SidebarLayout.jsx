@@ -36,6 +36,14 @@ export default function SidebarLayout({ children }) {
   const mainRef = useRef(null);
   const innerRef = useRef(null);
   const scrollPosRef = useRef(0);
+  function getScrollContainer() {
+  if (typeof document !== "undefined") {
+    const main = document.getElementById("main");
+    if (main) return main;
+  }
+  return window;
+}
+
 
 
   /** ---------------- VIEWPORT WIDTH + LAYOUT MODE ---------------- */
@@ -266,7 +274,10 @@ export default function SidebarLayout({ children }) {
  */
 const closeRightDrawerAndResetUrl = useCallback(() => {
   // 1. Save scroll BEFORE drawer closes
-  scrollPosRef.current = window.scrollY;
+  const sc = getScrollContainer();
+  const currentTop =
+    sc === window ? window.scrollY || 0 : sc.scrollTop || 0;
+  scrollPosRef.current = currentTop;
 
   // 2. Close the drawer
   closeRightDrawer();
@@ -277,15 +288,21 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
   // 4. Navigate without losing scroll
   if (location.pathname !== basePath) {
     navigate(basePath, { replace: true });
-    // Critical: restore next frame (router updates DOM first)
+
+    // Restore AFTER router updates DOM
     requestAnimationFrame(() => {
-      window.scrollTo({
-        top: scrollPosRef.current,
-        behavior: "instant", // prevent smooth scroll conflict
-      });
+      const sc2 = getScrollContainer();
+      const top = scrollPosRef.current || 0;
+
+      if (sc2 === window) {
+        window.scrollTo({ top, behavior: "auto" });
+      } else {
+        sc2.scrollTo({ top, behavior: "auto" });
+      }
     });
   }
 }, [closeRightDrawer, location.pathname, navigate]);
+
 
 
 
