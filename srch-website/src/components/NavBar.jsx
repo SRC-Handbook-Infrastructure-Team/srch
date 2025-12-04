@@ -8,7 +8,6 @@ import {
   Text,
   Icon,
   Collapse,
-  Slide,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -20,10 +19,8 @@ import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
 import "../styles/ContentPage.css";
-import { color } from "framer-motion";
 
-function NavBar({ className = ""}) {
-  
+function NavBar({ className = "", layoutMode }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -31,6 +28,7 @@ function NavBar({ className = ""}) {
   const pathParts = currentPath.split("/").filter(Boolean);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
@@ -38,8 +36,44 @@ function NavBar({ className = ""}) {
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
-  const hasLoadedData = useRef(false);
   const [openSection, setOpenSection] = useState(null);
+
+  const hasLoadedData = useRef(false);
+  const panelRef = useRef(null); // 👈 mobile dropdown panel
+
+    useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    console.log(
+      "[NavBar offset] layoutMode=",
+      layoutMode,
+      "isMenuOpen=",
+      isMenuOpen,
+      "isModulesExpanded=",
+      isModulesExpanded
+    );
+
+    // Only push content in overlay mode (mobile / narrow)
+    if (layoutMode !== "overlay") {
+      root.style.setProperty("--mobile-menu-offset", "0px");
+      console.log("[NavBar offset] set to 0px (not overlay)");
+      return;
+    }
+
+    // Menu closed → no offset
+    if (!isMenuOpen) {
+      root.style.setProperty("--mobile-menu-offset", "0px");
+      console.log("[NavBar offset] set to 0px (menu closed)");
+      return;
+    }
+
+    // Menu open → fixed height based on modules state
+    const height = isModulesExpanded ? 300 : 200; // px
+    root.style.setProperty("--mobile-menu-offset", `${height}px`);
+    console.log("[NavBar offset] set to", height, "px");
+  }, [layoutMode, isMenuOpen, isModulesExpanded]);
+
 
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
@@ -51,14 +85,22 @@ function NavBar({ className = ""}) {
     setIsSearchOpen(true);
   }
 
-  function forceMenuOpen() {
-    setIsSearchOpen(false);
-    setIsMenuOpen(true);
-  }
+  function toggleMenu() {
+  setIsSearchOpen(false);
+  setIsMenuOpen((prev) => {
+    const next = !prev;
+    console.log("[NavBar] hamburger clicked, isMenuOpen ->", next);
+    return next;
+  });
+}
+
 
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location.pathname]);
+
+  
+
 
   useEffect(() => {
     if (hasLoadedData.current) return;
@@ -103,7 +145,7 @@ function NavBar({ className = ""}) {
       }
     }
     loadAllData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (
@@ -118,7 +160,7 @@ function NavBar({ className = ""}) {
         });
       }
     }
-  }, [subsections, navigate]);
+  }, [subsections, navigate, currentSectionId, currentSubsectionId]);
 
   const NavDropdown = ({ title, items, isExpanded, onToggle }) => {
     const handleClick = (e) => {
@@ -160,7 +202,7 @@ function NavBar({ className = ""}) {
     );
   };
 
-    return (
+  return (
     <>
       {/* Fixed top navbar */}
       <Box
@@ -172,7 +214,7 @@ function NavBar({ className = ""}) {
       >
         <Box className="navbar-padding">
           <HStack className="header-hstack">
-            {/* Logo ---------------------------------------------------- */}
+            {/* Logo */}
             <Box
               className="navbar-logo-container"
               onClick={() => navigate("/")}
@@ -187,7 +229,7 @@ function NavBar({ className = ""}) {
               </HStack>
             </Box>
 
-            {/* Right side icons / desktop nav -------------------------- */}
+            {/* Right side icons / desktop nav */}
             <HStack className="right-hstack" spacing={"1rem"}>
               {/* Desktop: Modules dropdown */}
               <Box
@@ -202,7 +244,9 @@ function NavBar({ className = ""}) {
                   >
                     <Text
                       className="nav-dropdown-title-text"
-                      color={openSection === "modules" ? "#9D0013" : "inherit"}
+                      color={
+                        openSection === "modules" ? "#9D0013" : "inherit"
+                      }
                     >
                       Modules
                     </Text>
@@ -258,7 +302,9 @@ function NavBar({ className = ""}) {
                   const firstSection = sections[0];
                   const sectionSubsections = subsections[firstSection.id];
                   if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                    navigate(
+                      `/${firstSection.id}/${sectionSubsections[0].id}`
+                    );
                   } else {
                     navigate(`/${firstSection.id}`);
                   }
@@ -275,10 +321,7 @@ function NavBar({ className = ""}) {
 
               {/* Icons: dark mode / search */}
               <Box className="icon-button">
-                <MoonIcon
-                  className="navsearchbar-button"
-                  fontSize={"lg"}
-                ></MoonIcon>
+                <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
               </Box>
               <Box
                 className="icon-button"
@@ -290,32 +333,20 @@ function NavBar({ className = ""}) {
                   }
                 }}
               >
-                <SearchIcon
-                  className="navsearchbar-button"
-                  fontSize={"lg"}
-                ></SearchIcon>
+                <SearchIcon className="navsearchbar-button" fontSize={"lg"} />
               </Box>
 
               {/* Mobile hamburger (only shows on base) */}
               <Box
                 className="icon-button show-base hide-md"
-                onClick={() => {
-                  if (!isMenuOpen) {
-                    forceMenuOpen();
-                  } else {
-                    setIsMenuOpen(false);
-                  }
-                }}
+                onClick={toggleMenu}
               >
-                <HamburgerIcon
-                  color="black"
-                  fontSize={"x-large"}
-                ></HamburgerIcon>
+                <HamburgerIcon color="black" fontSize={"x-large"} />
               </Box>
             </HStack>
           </HStack>
 
-          {/* Search bar under the nav (same as before) */}
+          {/* Search bar under the nav */}
           <Collapse in={isSearchOpen} animateOpacity>
             <NavSearchBar
               searchQuery={searchQuery}
@@ -329,16 +360,13 @@ function NavBar({ className = ""}) {
         </Box>
       </Box>
 
-      {/* ===========================================
-          Mobile slide-down menu PANEL (separate)
-          =========================================== */}
+      {/* Mobile slide-down menu PANEL */}
       <Collapse in={isMenuOpen} animateOpacity>
-        <Box className="mobile-menu-panel show-base hide-md">
-          <VStack
-            align={"start"}
-            spacing={7}
-            className="mobile-menu-vstack"
-          >
+        <Box
+          ref={panelRef} // 👈 IMPORTANT: attach the ref here
+          className="mobile-menu-panel show-base hide-md"
+        >
+          <VStack align={"start"} spacing={7} className="mobile-menu-vstack">
             {/* About */}
             <Box
               className="nav-link-box"
@@ -347,7 +375,9 @@ function NavBar({ className = ""}) {
                 const firstSection = sections[0];
                 const sectionSubsections = subsections[firstSection.id];
                 if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                  navigate(
+                    `/${firstSection.id}/${sectionSubsections[0].id}`
+                  );
                 } else {
                   navigate(`/${firstSection.id}`);
                 }
@@ -368,12 +398,11 @@ function NavBar({ className = ""}) {
             </Box>
 
             {/* Modules dropdown in mobile panel */}
-            <Box 
+            <Box
               className="mobile-modules-container"
               onMouseEnter={() => setIsModulesExpanded(true)}
               onMouseLeave={() => setIsModulesExpanded(false)}
             >
-              
               <Box
                 className="mobile-modules-toggle"
                 onClick={() => setIsModulesExpanded(!isModulesExpanded)}
@@ -426,7 +455,6 @@ function NavBar({ className = ""}) {
       </Collapse>
     </>
   );
-
 }
 
 export default NavBar;

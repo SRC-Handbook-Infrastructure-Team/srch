@@ -1263,3 +1263,32 @@ html[data-layout-mode="overlay"]
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
 }
+
+
+.icon-button {
+  padding: 0rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 48em) {
+  .hide-md {
+    display: none !important;
+  }
+  .show-md {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 80em) {
+  .hide-base {
+    display: none !important;
+  }
+  .show-base {
+    display: inline-flex !important;
+  }
+}

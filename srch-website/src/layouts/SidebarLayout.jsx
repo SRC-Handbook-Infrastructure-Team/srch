@@ -6,25 +6,59 @@ import ContentsSidebar from "../components/ContentsSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 
 /**
+ * Layout constants
+ * --------------------------------------------------------------------------
+ * These give us a single place to reason about layout modes and constraints.
+ */
+const MIN_MAIN_WIDTH = 700;
+const SPLITSCREEN_BREAKPOINT = 1280;
+const RIGHT_MIN_WIDTH = 375;
+const RIGHT_MAX_WIDTH = 700;
+
+function computeLayoutMode(viewportWidth) {
+  if (viewportWidth <= SPLITSCREEN_BREAKPOINT) return "overlay"; // split-screen / narrow desktop
+  return "wide";
+}
+
+
+
+/**
  * SidebarLayout
- * -----------------------------------------------------------------------------
- * Two sidebars + top NavBar + main content.
- *
- * Performance principles applied:
- * 1) Move resize work off React's render path (done in useResizableSidebar).
- * 2) Pass explicit props for the left sidebar (width, handlers) to avoid
- *    context churn during drag. Context remains for non-hot-path consumers
- *    (e.g., header buttons elsewhere).
- * 3) Sync CSS vars for widths in the hook + here for the right drawer open/close.
- * 4) Avoid unnecessary effects; rely on ResizeObserver + rAF inside the hook.
- * -----------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
+ * “Approach 0+”:
+ * - Keeps your existing resizable sidebars + drawer behavior.
+ * - Adds a tiny panelManager (state-machine-ish) to centralize “who can be open”.
+ * - Uses a layoutMode ("wide" | "overlay" | "mobile") for behavior decisions.
+ * - Exposes layoutMode via data attribute + context for CSS/consumers.
  */
 export default function SidebarLayout({ children }) {
-  /** ---------------- REFS FOR DOM ELEMENTS (performance) ---------------- */
+  /** ---------------- DOM REFS (for optional freeze logic) ---------------- */
   const mainRef = useRef(null);
   const innerRef = useRef(null);
+  const scrollPosRef = useRef(0);
 
-  /** ---------------- FREEZE / RELEASE MAIN CONTENT ---------------- */
+
+  /** ---------------- VIEWPORT WIDTH + LAYOUT MODE ---------------- */
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1440
+  );
+  const layoutMode = computeLayoutMode(viewportWidth);
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+    // Keep the <html> element in sync with React's layoutMode
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.layoutMode = layoutMode;
+    }
+  }, [layoutMode]);
+
+
+  /** ---------------- FREEZE / RELEASE MAIN CONTENT (wide only) ---------------- */
   const freezeMainContent = useCallback(() => {
     const main = mainRef.current;
     const inner = innerRef.current;
@@ -53,6 +87,20 @@ export default function SidebarLayout({ children }) {
     }, 220);
   }, []);
 
+  // In overlay / mobile modes, we don’t need to freeze main content,
+  // because the side panels slide over instead of pushing.
+  const freezeForSidebars = useCallback(() => {
+    if (layoutMode === "wide") {
+      freezeMainContent();
+    }
+  }, [layoutMode, freezeMainContent]);
+
+  const releaseForSidebars = useCallback(() => {
+    if (layoutMode === "wide") {
+      releaseMainContent();
+    }
+  }, [layoutMode, releaseMainContent]);
+
   /** ---------------- LEFT SIDEBAR CONFIG ---------------- */
   const leftSidebar = useResizableSidebar({
     storageKey: "leftSidebarWidth",
@@ -62,69 +110,148 @@ export default function SidebarLayout({ children }) {
     collapsedWidth: 0,
     side: "left",
     cssVarName: "--left-sidebar-width",
-    onStartResize: freezeMainContent,
-    onStopResize: releaseMainContent,
+    onStartResize: freezeForSidebars,
+    onStopResize: releaseForSidebars,
   });
-
-  /** ---------------- RESPONSIVE SAFEGUARD CONSTANT ---------------- */
-  const MIN_MAIN_WIDTH = 700;
 
   /** ---------------- RIGHT SIDEBAR CONFIG ---------------- */
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
     defaultWidth: 400,
-    minWidth: 375,
-    maxWidth: 700,
+    minWidth: RIGHT_MIN_WIDTH,
+    maxWidth: RIGHT_MAX_WIDTH,
     side: "right",
     cssVarName: "--right-sidebar-width",
-    onStartResize: freezeMainContent,
-    onStopResize: releaseMainContent,
+    onStartResize: freezeForSidebars,
+    onStopResize: releaseForSidebars,
     getDynamicBounds: () => {
-      const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
+      const vw =
+        typeof window !== "undefined" ? window.innerWidth : viewportWidth;
 
+      if (layoutMode === "overlay") {
+        // Overlay: main content doesn’t need a strict MIN_MAIN_WIDTH.
+        const maxByPercent = Math.floor(vw * 0.75);
+        return {
+          min: RIGHT_MIN_WIDTH,
+          max: Math.min(maxByPercent, RIGHT_MAX_WIDTH),
+        };
+      }
+
+      // Wide desktop: preserve existing “protect main content” behavior.
       const availableForRight = Math.max(
         vw - MIN_MAIN_WIDTH - (leftSidebar?.width || 0),
         0
       );
-
       return {
-        min: rightSidebar?.minWidth ?? 375,
-        max: Math.min(availableForRight, rightSidebar?.maxWidth ?? 700),
+        min: RIGHT_MIN_WIDTH,
+        max: Math.min(availableForRight, RIGHT_MAX_WIDTH),
       };
     },
   });
 
-  /** ---------------- RIGHT DRAWER STATE ---------------- */
+  /** ---------------- RIGHT DRAWER CONTENT STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
-  /** Memoized drawer functions (performance) */
+  /** ---------------- PANEL MANAGER (tiny state machine) ----------------
+   *
+   * Panels: "left" | "right"
+   * Modes:
+   *  - wide: both may be open; sidebars push content.
+   *  - overlay: exactly one panel open at a time; panels overlay content.
+   *  - mobile: left uses Chakra Drawer; right generally closed or unused here.
+   *
+   * We DO NOT duplicate state. We orchestrate using:
+   *  - leftSidebar.collapsed / leftSidebar.toggleCollapsed()
+   *  - isRightOpen / setIsRightOpen()
+   */
+  const openPanel = useCallback(
+    (id) => {
+      if (id === "left") {
+        // In overlay mode, close right first.
+        if (layoutMode === "overlay" && isRightOpen) {
+          setIsRightOpen(false);
+          setRightContent(null);
+        }
+        if (leftSidebar.collapsed) {
+          leftSidebar.toggleCollapsed();
+        }
+      } else if (id === "right") {
+        // In overlay mode, collapse left before opening right.
+        if (layoutMode === "overlay" && !leftSidebar.collapsed) {
+          leftSidebar.toggleCollapsed();
+        }
+        setIsRightOpen(true);
+      }
+    },
+    [layoutMode, isRightOpen, leftSidebar]
+  );
+
+  const closePanel = useCallback(
+    (id) => {
+      if (id === "left") {
+        if (!leftSidebar.collapsed) {
+          leftSidebar.toggleCollapsed();
+        }
+      } else if (id === "right") {
+        if (isRightOpen) {
+          setIsRightOpen(false);
+          setRightContent(null);
+        }
+      }
+    },
+    [isRightOpen, leftSidebar]
+  );
+
+  const togglePanel = useCallback(
+    (id) => {
+      if (id === "left") {
+        if (leftSidebar.collapsed) openPanel("left");
+        else closePanel("left");
+      } else if (id === "right") {
+        if (isRightOpen) closePanel("right");
+        else openPanel("right");
+      }
+    },
+    [openPanel, closePanel, leftSidebar.collapsed, isRightOpen]
+  );
+
+  /** Maintain original openRightDrawer / closeRightDrawer API
+   * so existing callers don’t need to change.
+   */
   const closeRightDrawer = useCallback(() => {
-    setIsRightOpen(false);
-    setRightContent(null);
-  }, []);
+    closePanel("right");
+  }, [closePanel]);
 
-  const openRightDrawer = useCallback((content) => {
-    setRightContent(content);
-    setIsRightOpen(true);
-  }, []);
+  const openRightDrawer = useCallback(
+    (content) => {
+      setRightContent(content);
+      openPanel("right");
+    },
+    [openPanel]
+  );
 
-  /** Sync drawer width to CSS var (single effect — avoids redundancy) */
+  /** When switching into overlay mode, enforce “only one panel open” */
+  useEffect(() => {
+    if (layoutMode !== "overlay") return;
+    if (!leftSidebar.collapsed && isRightOpen) {
+      // Prefer keeping the nav (left), so close right.
+      closePanel("right");
+    }
+  }, [layoutMode, leftSidebar.collapsed, isRightOpen, closePanel]);
+
+  /** ---------------- SYNC RIGHT WIDTH TO CSS VAR + HTML CLASS ---------------- */
   useEffect(() => {
     const target = document.documentElement;
     const value = isRightOpen ? `${rightSidebar.width}px` : "0px";
 
-    // One layout frame sync — ensures margin/flex vars update atomically
     requestAnimationFrame(() => {
       target.style.setProperty("--right-sidebar-width", value);
       target.classList.toggle("right-open", isRightOpen);
     });
   }, [isRightOpen, rightSidebar.width]);
 
-  
-
-
-  /** ---------------- AUTO-CLOSE DRAWER ON *PAGE* CHANGE ---------------- */
+  /** ---------------- AUTO-CLOSE DRAWER ON PAGE CHANGE ---------------- */
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -132,6 +259,36 @@ export default function SidebarLayout({ children }) {
     const parts = path.split("/").filter(Boolean);
     return `/${parts.slice(0, 2).join("/") || ""}`;
   };
+
+  /**
+ * Close the right drawer AND normalize the URL back to the base
+ * (/section/subsection). This keeps URL, CSS state, and drawer state in sync.
+ */
+const closeRightDrawerAndResetUrl = useCallback(() => {
+  // 1. Save scroll BEFORE drawer closes
+  scrollPosRef.current = window.scrollY;
+
+  // 2. Close the drawer
+  closeRightDrawer();
+
+  // 3. Compute base path for removal of /:term
+  const basePath = getBasePath(location.pathname);
+
+  // 4. Navigate without losing scroll
+  if (location.pathname !== basePath) {
+    navigate(basePath, { replace: true });
+    // Critical: restore next frame (router updates DOM first)
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: scrollPosRef.current,
+        behavior: "instant", // prevent smooth scroll conflict
+      });
+    });
+  }
+}, [closeRightDrawer, location.pathname, navigate]);
+
+
+
 
   const prevBasePathRef = useRef(getBasePath(location.pathname));
 
@@ -146,20 +303,12 @@ export default function SidebarLayout({ children }) {
     prevBasePathRef.current = nextBase;
   }, [location.pathname, isRightOpen, closeRightDrawer]);
 
-  /** ---------------- RESPONSIVE SAFEGUARD ---------------- */
-  const [viewportWidth, setViewportWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1440
-  );
-  // Decide which layout mode we're in based on viewport width
-const layoutMode = viewportWidth >= 1280 ? "split" : "overlay";
-
-useEffect(() => {
-  const root = document.documentElement;
-  root.dataset.layoutMode = layoutMode; // sets data-layout-mode="overlay" or "split"
-}, [layoutMode]);
-
-
+  /** ---------------- WIDE-MODE SAFEGUARD (two panels push main) ---------------- */
   useEffect(() => {
+    if (layoutMode !== "wide" || leftSidebar.collapsed || !isRightOpen) {
+      return;
+    }
+
     const available = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
 
     if (leftSidebar.width + rightSidebar.width > available) {
@@ -174,29 +323,26 @@ useEffect(() => {
       }
     }
   }, [
+    layoutMode,
     viewportWidth,
     leftSidebar.width,
     rightSidebar.width,
     leftSidebar.minWidth,
     rightSidebar.minWidth,
+    leftSidebar.collapsed,
+    isRightOpen,
+    leftSidebar,
+    rightSidebar,
   ]);
 
   /** ---------------- NAVBAR HEIGHT SYNC ---------------- */
   useEffect(() => {
-    // Force a constant navbar height of 70px (Netflix-level consistency)
     const fixedHeight = "70px";
     document.documentElement.style.setProperty("--navbar-height", fixedHeight);
     document.documentElement.style.setProperty("--nav-bar-height", fixedHeight);
   }, []);
 
-  /** ---------------- VIEWPORT WIDTH TRACKER ---------------- */
-  useEffect(() => {
-    const handleResize = () => setViewportWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize, { passive: true });
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  /** ---------------- KEYBOARD RESIZE SUPPORT ---------------- */
+  /** ---------------- KEYBOARD RESIZE SUPPORT (unchanged) ---------------- */
   useEffect(() => {
     const handleKeyResize = (e) => {
       if (e.altKey || e.metaKey || e.ctrlKey) return;
@@ -218,11 +364,16 @@ useEffect(() => {
     return () => window.removeEventListener("keydown", handleKeyResize);
   }, [leftSidebar]);
 
-  /**
-   * ---------------- CONTEXT (non-hot-path only) ----------------
-   */
+  /** ---------------- CONTEXT VALUE ---------------- */
   const layoutValue = useMemo(
     () => ({
+      layoutMode,
+      panelManager: {
+        openPanel,
+        closePanel,
+        togglePanel,
+      },
+
       rightSidebar,
       rightContent,
       isRightOpen,
@@ -235,10 +386,14 @@ useEffect(() => {
         minWidth: leftSidebar.minWidth,
         maxWidth: leftSidebar.maxWidth,
         collapsedWidth: leftSidebar.collapsedWidth,
-        toggle: leftSidebar.toggleCollapsed,
+        toggle: () => togglePanel("left"),
       },
     }),
     [
+      layoutMode,
+      openPanel,
+      closePanel,
+      togglePanel,
       rightSidebar,
       rightContent,
       isRightOpen,
@@ -252,13 +407,27 @@ useEffect(() => {
     ]
   );
 
+  /** ---------------- DEV-ONLY MODE BADGE (remove if you want) ---------------- */
+  const hasOverlayPanelOpen =
+    layoutMode === "overlay" &&
+    (!leftSidebar.collapsed || isRightOpen);
+
   /** ---------------- RENDER ---------------- */
   return (
     <LayoutContext.Provider value={layoutValue}>
-      <div className="sidebar-layout" data-layout-mode={layoutMode}>
-        <NavBar />
+      <div
+        className={
+          "sidebar-layout" + (hasOverlayPanelOpen ? " has-panel-open" : "")
+        }
+        data-layout-mode={layoutMode}
+      >
+        <NavBar layoutMode={layoutMode} />
 
-        {/* FLEX SHELL: reserved (authoritative rail below NavBar if needed later) */}
+
+        {/* Optional helper badge for QA / dev; you can remove this later */}
+        <div className="layout-mode-badge">{layoutMode}</div>
+
+        {/* Reserved flex rail under NavBar (unchanged) */}
         <div className="layout-rail" role="presentation" />
 
         {/* LEFT: Contents sidebar (hidden on /search) */}
@@ -268,7 +437,7 @@ useEffect(() => {
             width={leftSidebar.width}
             collapsed={!!leftSidebar.collapsed}
             isResizing={leftSidebar.isResizing}
-            onToggleSidebar={leftSidebar.toggleCollapsed}
+            onToggleSidebar={() => togglePanel("left")}
             onStartResize={leftSidebar.startResize}
             onHandleKeyDown={leftSidebar.handleKeyDown}
           />
@@ -289,16 +458,11 @@ useEffect(() => {
           {isRightOpen && (
             <>
               <button
-                onClick={() => {
-                  const basePath = getBasePath(location.pathname);
-                  navigate(basePath, { replace: true });
-                  // MarkdownPage will see urlTerm go away and call closeRightDrawer().
-                }}
+                onClick={closeRightDrawerAndResetUrl}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    const basePath = getBasePath(location.pathname);
-                    navigate(basePath, { replace: true });
+                    closeRightDrawerAndResetUrl();
                   }
                 }}
                 className="right-drawer-close-btn"
@@ -316,7 +480,7 @@ useEffect(() => {
           )}
         </aside>
 
-        {/* RIGHT: External resize hitbox (sits just left of the drawer edge) */}
+        {/* RIGHT: External resize hitbox (unchanged) */}
         {isRightOpen && (
           <div
             className={`right-resize-hitbox ${
