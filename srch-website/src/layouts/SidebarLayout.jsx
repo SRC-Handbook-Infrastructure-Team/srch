@@ -25,10 +25,9 @@ function computeLayoutMode(viewportWidth) {
 /**
  * SidebarLayout
  * ---------------------------------------------------------------------------
- * “Approach 0+”:
- * - Keeps your existing resizable sidebars + drawer behavior.
+ * - Keeps existing resizable sidebars + drawer behavior.
  * - Adds a tiny panelManager (state-machine-ish) to centralize “who can be open”.
- * - Uses a layoutMode ("wide" | "overlay" | "mobile") for behavior decisions.
+ * - Uses a layoutMode ("wide" | "overlay") for behavior decisions.
  * - Exposes layoutMode via data attribute + context for CSS/consumers.
  */
 export default function SidebarLayout({ children }) {
@@ -95,7 +94,7 @@ export default function SidebarLayout({ children }) {
     }, 220);
   }, []);
 
-  // In overlay / mobile modes, we don’t need to freeze main content,
+  // In overlay mode, we don’t need to freeze main content,
   // because the side panels slide over instead of pushing.
   const freezeForSidebars = useCallback(() => {
     if (layoutMode === "wide") {
@@ -167,7 +166,6 @@ export default function SidebarLayout({ children }) {
    * Modes:
    *  - wide: both may be open; sidebars push content.
    *  - overlay: exactly one panel open at a time; panels overlay content.
-   *  - mobile: left uses Chakra Drawer; right generally closed or unused here.
    *
    * We DO NOT duplicate state. We orchestrate using:
    *  - leftSidebar.collapsed / leftSidebar.toggleCollapsed()
@@ -244,7 +242,7 @@ export default function SidebarLayout({ children }) {
     if (layoutMode !== "overlay") return;
     if (!leftSidebar.collapsed && isRightOpen) {
       // Prefer keeping the nav (left), so close right.
-      closePanel("right");
+      closePanel("left");
     }
   }, [layoutMode, leftSidebar.collapsed, isRightOpen, closePanel]);
 
