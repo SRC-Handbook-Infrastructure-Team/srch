@@ -254,7 +254,9 @@ export default function Acknowledgements() {
         <div className="upper-text-section">
           <div className="website-title">Meet our Team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
-          <div className="info-section"></div>
+          <div className="info-section">
+            Meet our leadership, writers, developers and designers who made this project possible.
+          </div>
         </div>
       </div>
 

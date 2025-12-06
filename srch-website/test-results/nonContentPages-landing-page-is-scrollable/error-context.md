@@ -1,0 +1,143 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: Brown SRC Handbook
+        - generic [ref=e8]: This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you're an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools.
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - generic [ref=e12]: Check out our curriculum
+            - generic [ref=e13]: Explore our focus areas of socially responsible computing
+          - generic [ref=e14]:
+            - button "Privacy Icon Privacy Think critically about privacy and its applications to computer science." [ref=e15] [cursor=pointer]:
+              - img "Privacy Icon" [ref=e17]
+              - generic [ref=e18]:
+                - generic [ref=e19]: Privacy
+                - generic [ref=e20]: Think critically about privacy and its applications to computer science.
+            - button "Accessibility Icon Accessibility Think critically about accessibility and its applications to computer science." [ref=e21] [cursor=pointer]:
+              - img "Accessibility Icon" [ref=e23]
+              - generic [ref=e24]:
+                - generic [ref=e25]: Accessibility
+                - generic [ref=e26]: Think critically about accessibility and its applications to computer science.
+            - button "Automated Decision Making Icon Automated Decision Making Think critically about automated decision making and its applications to computer science." [ref=e27] [cursor=pointer]:
+              - img "Automated Decision Making Icon" [ref=e29]
+              - generic [ref=e30]:
+                - generic [ref=e31]: Automated Decision Making
+                - generic [ref=e32]: Think critically about automated decision making and its applications to computer science.
+            - button "Generative AI Icon Generative AI Think critically about Generative AI and its applications to computer science." [ref=e33] [cursor=pointer]:
+              - img "Generative AI Icon" [ref=e35]
+              - generic [ref=e36]:
+                - generic [ref=e37]: Generative AI
+                - generic [ref=e38]: Think critically about Generative AI and its applications to computer science.
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - heading "Search for Content" [level=2] [ref=e42]
+            - paragraph [ref=e43]: Find specific topics, case studies, and resources quickly
+          - generic [ref=e45]:
+            - button "Toggle search bar" [ref=e46] [cursor=pointer]:
+              - img [ref=e47]
+            - textbox "Search for topics, case studies, terms..." [ref=e50]
+        - generic [ref=e52]:
+          - heading "How to use the Handbook" [level=2] [ref=e53]
+          - generic [ref=e54]:
+            - paragraph [ref=e55]:
+              - text: Each section contains a series of primers that are loosely aligned with learning objectives in the SRC curriculum.
+              - text: "Use them to:"
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - img "Target Icon" [ref=e58]
+                - paragraph [ref=e59]: Structure your lesson or course with embedded ethical modules
+              - generic [ref=e60]:
+                - img "People Icon" [ref=e61]
+                - paragraph [ref=e62]: Give students real examples that connect tech to society
+              - generic [ref=e63]:
+                - img "Lightbulb Icon" [ref=e64]
+                - paragraph [ref=e65]: Foster inclusive, critical thinking in the classroom
+              - generic [ref=e66]:
+                - img "Book Icon" [ref=e67]
+                - paragraph [ref=e68]: Adapt and contribute content so it remains relevant and impactful
+          - button "Learn more Arrow for the Learn More Button" [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]: Learn more
+            - img "Arrow for the Learn More Button" [ref=e72]
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - heading "Connect with Us" [level=2] [ref=e76]
+            - paragraph [ref=e77]: Follow us to receive CNTR news and updates!
+          - generic [ref=e78]:
+            - 'link "CNTR logo CNTR Website: cntr.brown.edu" [ref=e79] [cursor=pointer]':
+              - /url: https://cntr.brown.edu/
+              - generic [ref=e80]:
+                - img "CNTR logo" [ref=e81]
+                - paragraph [ref=e82]:
+                  - text: "CNTR Website:"
+                  - text: cntr.brown.edu
+            - 'link "instagram logo CNTR Instagram: @brown_cntr" [ref=e83] [cursor=pointer]':
+              - /url: https://www.instagram.com/brown_cntr/
+              - generic [ref=e84]:
+                - img "instagram logo" [ref=e85]
+                - paragraph [ref=e86]:
+                  - text: "CNTR Instagram:"
+                  - link "@brown_cntr" [ref=e87]:
+                    - /url: https://www.instagram.com/brown_cntr/
+            - 'link "src@Brown logo SRC@Brown Website: responsible.cs.brown.edu" [ref=e88] [cursor=pointer]':
+              - /url: https://responsible.cs.brown.edu/
+              - generic [ref=e89]:
+                - img "src@Brown logo" [ref=e90]
+                - paragraph [ref=e91]:
+                  - text: "SRC@Brown Website:"
+                  - link "responsible.cs.brown.edu" [ref=e92]:
+                    - /url: https://responsible.cs.brown.edu/
+    - banner [ref=e93]:
+      - generic [ref=e95]:
+        - img "Socially Responsible Computing Handbook" [ref=e98] [cursor=pointer]
+        - generic [ref=e99]:
+          - generic [ref=e102] [cursor=pointer]:
+            - paragraph [ref=e103]: Modules
+            - img [ref=e104]
+          - paragraph [ref=e107] [cursor=pointer]: About
+          - paragraph [ref=e109] [cursor=pointer]: Acknowledgements
+          - img [ref=e111] [cursor=pointer]
+          - img [ref=e114] [cursor=pointer]
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - img "SRC Handbook Logo" [ref=e122] [cursor=pointer]
+        - generic [ref=e123]:
+          - generic [ref=e124]: Modules
+          - generic [ref=e125]:
+            - img "Privacy Icon" [ref=e127]
+            - button "Privacy" [ref=e128] [cursor=pointer]
+          - generic [ref=e129]:
+            - img "Accessibility Icon" [ref=e131]
+            - button "Accessibility" [ref=e132] [cursor=pointer]
+          - generic [ref=e133]:
+            - img "Automated Decision Making Icon" [ref=e135]
+            - button "Automated Decision Making" [ref=e136] [cursor=pointer]
+          - generic [ref=e137]:
+            - img "Generative AI Icon" [ref=e139]
+            - button "Generative AI" [ref=e140] [cursor=pointer]
+        - generic [ref=e142]:
+          - generic [ref=e143]: Quick Links
+          - button "About" [ref=e144] [cursor=pointer]
+          - button "Acknowledgements" [ref=e145] [cursor=pointer]
+        - generic [ref=e146]:
+          - generic [ref=e147]: Have Feedback?
+          - paragraph [ref=e148]:
+            - text: "Contact:"
+            - link "src_handbook@brown.edu" [ref=e149] [cursor=pointer]:
+              - /url: mailto:src_handbook@brown.edu
+          - paragraph [ref=e150]:
+            - link "Bug Report Form" [ref=e151] [cursor=pointer]:
+              - /url: https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog
+      - paragraph [ref=e152]: © 2025 Brown University. All rights reserved.
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"
+```
