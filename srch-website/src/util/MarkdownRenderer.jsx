@@ -622,7 +622,6 @@ function MarkdownRenderer({
             id={id}
             {...rest}
             style={{
-              paddingLeft: "1.5em",
               position: "relative",
             }}
           >

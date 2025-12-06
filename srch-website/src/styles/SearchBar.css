@@ -3,10 +3,13 @@
   align-items: center;
   overflow: visible;
   width: 100%;
-  margin-top: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .navsearchbar-input-container {
+  position: fixed;
+  width: calc(100% - 4rem);
   display: flex;
   align-items: center;
   overflow: visible;

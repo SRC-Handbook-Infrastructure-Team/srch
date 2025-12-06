@@ -38,40 +38,50 @@ function NavSearchBar({
 
   return (
     <Box ref={containerRef} className={`navsearchbar-container`}>
-      <Box className={`navsearchbar-input-container`}>
-        <IconButton
-          aria-label="Toggle nav search bar"
-          icon={<SearchIcon fontSize={"lg"} />}
-          className="searchbar-toggle-button toggle-button"
-          onClick={search}
-        />
-        <Input
-          autoFocus
-          ref={inputRef}
-          style={{ padding: 0 }}
-          className={"navsearchbar-input"}
-          type="text"
-          placeholder={"Search for topics, case studies, terms..."}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          _focus={{
-            boxShadow: "none",
-            outline: "none",
-            borderColor: "inherit",
-          }}
-          _focusVisible={{
-            boxShadow: "none",
-            outline: "none",
-            borderColor: "inherit",
-          }}
-        />
-      </Box>
+      <Collapse
+        in={isSearchOpen}
+        animateOpacity
+        transition={{
+          enter: { duration: 0.1, delay: 0.15 },
+          exit: { duration: 0.15 },
+        }}
+      >
+        <Box className={`navsearchbar-input-container`}>
+          <IconButton
+            aria-label="Toggle nav search bar"
+            icon={<SearchIcon fontSize={"lg"} />}
+            className="searchbar-toggle-button toggle-button"
+            onClick={search}
+          />
+          <Input
+            autoFocus
+            ref={inputRef}
+            style={{ padding: 0 }}
+            className={"navsearchbar-input"}
+            type="text"
+            placeholder={"Search for topics, case studies, terms..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            _focus={{
+              boxShadow: "none",
+              outline: "none",
+              borderColor: "inherit",
+            }}
+            _focusVisible={{
+              boxShadow: "none",
+              outline: "none",
+              borderColor: "inherit",
+            }}
+          />
+        </Box>
+      </Collapse>
+      <Box height={"40px"}></Box>
       <Collapse
         in={searchQuery}
         animateOpacity
         transition={{
-          enter: { duration: 0.5 },
+          enter: { duration: 0.25 },
           exit: { duration: 0.25 },
         }}
       >
