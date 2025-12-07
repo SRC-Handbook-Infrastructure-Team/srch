@@ -44,7 +44,9 @@ function Home() {
         <div className="lower-content">
           <div className="content-section">
             <div className="content-header">
-              <div className="curriculum-title">Check out our curriculum</div>
+              <div className="section-title" style={{ overflowWrap: "break-word" }}>
+                Check out our curriculum
+              </div>
               <div className="curriculum-subtext">
                 Explore our focus areas of socially responsible computing
               </div>
@@ -142,7 +144,7 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title">Search for Content</h2>
+              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Search for Content</h2>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
@@ -250,7 +252,7 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title">Connect with Us</h2>
+              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Connect with Us</h2>
               <p className="search-subtitle">
                 Follow us to receive CNTR news and updates!
               </p>

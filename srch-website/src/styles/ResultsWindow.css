@@ -276,15 +276,11 @@
 .pages-row {
   display: flex;
   justify-items: center;
-  gap: 15px;
+  gap: 12px;
   padding: 5px 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   transition: all 0.2s;
-}
-
-.pages-row:hover {
-  background: rgba(83, 28, 0, 0.05);
 }
 
 .page-number {
@@ -302,6 +298,9 @@
 
 .page-number.selected {
   font-weight: bold;
+}
+.page-number:hover {
+  text-decoration: underline;
 }
 
 .page-nav {
