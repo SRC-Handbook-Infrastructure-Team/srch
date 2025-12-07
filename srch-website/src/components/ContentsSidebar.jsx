@@ -564,7 +564,7 @@ useEffect(() => {
             top: 0,
             zIndex: 20,
             background: "var(--cs-bg)", // match rail background
-            padding: "8px 16px 4px",
+            padding: "8px 0px 4px 0px",
             display: "flex",
             justifyContent: "flex-end",
           }}

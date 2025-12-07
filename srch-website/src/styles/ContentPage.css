@@ -115,7 +115,10 @@ button:hover {
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px auto -webkit-focus-ring-color;
+}
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ==========================================================================
@@ -512,6 +515,7 @@ html:not(.right-open) body .main-content {
   cursor: pointer;
 }
 
+
 .sidebar-toggle:focus-visible {
   outline: 2px solid #9d0013;
   outline-offset: 2px;
@@ -643,6 +647,8 @@ p > .srch-drawer-link:first-child {
   margin-top: 12px;
   transform: translateX(12px);
   /* Moves the element 12px to the left */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* RIGHT SIDEBAR (Drawer) */

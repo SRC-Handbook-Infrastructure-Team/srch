@@ -41,13 +41,13 @@
 ------------------------------------------------------------------------ */
 
   --x-small-text: 16px;
-  --small-text: 18px;
-  --smedium-text: 20px;
+  --body-text: 18px;
   --medium-text: 28px;
   --large-text: 48px;
   --x-large-text: 70px;
   --title-weight: 500;
   --sub-weight: 400;
+
 
   /* ------------------------------------------------------------------------
      🎨 Design Tokens —  Fonts
@@ -56,9 +56,12 @@
   --title-font: "Funnel Sans", sans-serif;
   --title-weight: 500;
   --sub-weight: 400;
+
+  --x-small-spacing: 6px;
+  --small-spacing: 12px;
   --small-gap: 36px;
   --medium-gap: 56px;
-  --large-gap: 84px;
+  --section-spacing: 84px;
   --space-none: 0;
   --upper-content-height: 75vh;
 
@@ -184,7 +187,7 @@ html {
 
 @media (max-width: 772px) {
   .info-section {
-    width: 530px;
+    width: 500px;
   }
 
   .root {
@@ -193,6 +196,7 @@ html {
 
   .upper-text-section {
     padding-left: calc((455 / 1512) * 100vw);
+    padding-right: 18vw;
   }
 }
 
@@ -212,10 +216,6 @@ html {
 .upper-content.scrolled {
   opacity: 0.7;
 }
-
-
-
-
 
 
 .lower-content {
@@ -266,7 +266,7 @@ html {
   width: 100%;
   text-align: center;
   color: var(--color-text);
-  font-size: var(--small-text);
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -372,7 +372,7 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   display: flex;
 }
 
@@ -411,8 +411,8 @@ html {
 
 .content-section {
   width: 100vw;
-  padding-top: 84px;
-  padding-bottom: 84px;
+  padding-top: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
   align-self: center;
   justify-content: center;
   flex-direction: column;
@@ -426,7 +426,7 @@ html {
   color: var(--color-text);
   font-family: var(--title-font);
   font-weight: var(--title-weight);
-  font-size: 48px;
+  font-size: var(--large-text);
   word-wrap: break-word;
 }
 
@@ -434,7 +434,7 @@ html {
   width: 75%;
   text-align: center;
   color: var(--color-text);
-  font-size: 18px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -449,8 +449,8 @@ html {
   align-self: stretch;
   text-align: center;
   color: var(--color-text);
-  font-size: 48px;
-  padding-bottom: 24px;
+  font-size: var(--large-text);
+  padding-bottom: 12px;
   font-family: var(--title-font);
   font-weight: var(--title-weight);
   word-wrap: break-word;
@@ -530,7 +530,7 @@ html {
 }
 
 .learn-more-button:hover {
-  background: rgba(83, 28, 0, 0.05);
+  background: rgba(83, 28, 0, 0.036);
   outline-color: rgba(83, 28, 0, 0.4);
 }
 
@@ -611,6 +611,7 @@ html {
   .logo-area {
     padding-right: 50px;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -625,6 +626,10 @@ html {
 
   .modules {
     width: 100%;
+  }
+
+  .landing-search-container {
+    width: 80%;
   }
 }
 
@@ -688,7 +693,7 @@ html {
 
 .ack-hero .info-section {
   font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 18px;
+  font-size: var(--body-text);
   line-height: 28px;
   color: var(--ack-text);
 }
@@ -809,7 +814,7 @@ html {
 }
 
 .ack-card-fullname {
-  font-size: 18px;
+  font-size: var(--body-text);
   font-weight: 600;
   color: var(--ack-brand-brown);
   line-height: 22px;
@@ -975,7 +980,7 @@ html {
 
 .about-sub {
   font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 18px;
+  font-size: var(--body-text);
   color: #1a1a1a;
   line-height: 28px;
   max-width: 600px;
@@ -1004,8 +1009,7 @@ html {
 
 .about-section h2 {
   font-family: "Funnel Sans", sans-serif;
-  font-weight: 900;
-  font-size: 48px;
+  font-size: var(--large-text);
   line-height: 1.2;
   margin-bottom: 24px;
   color: rgba(0, 0, 0, 1);
@@ -1017,18 +1021,18 @@ html {
   font-size: 20px;
   line-height: 1.6;
   max-width: 650px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .about-section ul {
-  padding-left: 22px;
+  padding-left: 24px;
   margin-top: 8px;
 }
 
 .about-section li {
   font-family: "Be Vietnam Pro", sans-serif;
   color: rgba(0, 0, 0, 1);
-  font-size: 20px;
+  font-size: var(--body-text);
   line-height: 1.6;
   margin-bottom: 8px;
 }
@@ -1053,11 +1057,14 @@ html {
   .about-lower-content {
     padding: 72px 80px;
   }
+  .lower-content {
+    margin-top: 60vh;
+  }
 }
 
 @media (max-width: 768px) {
   .about-title {
-    font-size: 48px;
+    font-size: var(--large-text);
   }
   .about-upper-text {
     width: 80vw;
@@ -1133,12 +1140,12 @@ html {
 .website-title,
 .about-title {
   width: auto;
-  max-width: 32rem;
+  max-width: 34rem;
   height: auto;
 
   font-family: var(--title-font);
   font-weight: 700;
-  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  font-size: clamp(3rem, 5vw, 4.5rem);
   line-height: 1.1;
   color: var(--color-text);
 
@@ -1159,10 +1166,10 @@ html {
 .info-section,
 .about-sub {
   width: auto;
-  max-width: 32rem;
+  max-width: 34rem;
 
   font-family: var(--content-font);
-  font-size: 18px;
+  font-size: var(--body-text);
   line-height: 1.6;
   color: var(--color-text);
 
@@ -1197,13 +1204,13 @@ html {
   .ack-upper-text-section,
   .about-upper-text {
     align-items: center;
-    text-align: center;
+    text-align: left;
     gap: 16px;
   }
 
   .website-title,
   .about-title {
-    font-size: clamp(2.1rem, 7vw, 3.2rem);
+    font-size: clamp(2.5rem, 7vw, 3.5rem);
   }
 
   .info-section,

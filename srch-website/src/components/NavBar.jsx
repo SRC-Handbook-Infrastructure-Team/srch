@@ -188,7 +188,7 @@ function NavBar({ className = ""}) {
             </Box>
 
             {/* Right side icons / desktop nav -------------------------- */}
-            <HStack className="right-hstack" spacing={"1rem"}>
+            <HStack className="right-hstack" spacing={"1.5rem"}>
               {/* Desktop: Modules dropdown */}
               <Box
                 className="hide-base show-md"
