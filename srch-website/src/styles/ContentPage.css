@@ -1304,3 +1304,8 @@ html[data-layout-mode="overlay"]
 .header-toggle:focus-visible {
   outline: none;
 }
+
+.sidebar-toggle:focus,
+.sidebar-toggle:focus-visible {
+  outline: none;
+}
