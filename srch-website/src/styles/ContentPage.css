@@ -396,12 +396,13 @@ html:not(.right-open) body .main-content {
   right: 0;
   z-index: 10;
   left: 12px;
+  padding: 8px 0px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24.615px;
-  height: 11.565px;
+  width: 24px;
+  height: 12px;
   transform: scale(1.2);
 
   color: var(--srch-brown, #531c00);
@@ -416,7 +417,7 @@ html:not(.right-open) body .main-content {
 }
 
 .header-toggle:hover {
-  transform: scale(1.25);
+  transform: scale(1.35);
 }
 
 /* ==========================
@@ -491,58 +492,6 @@ html:not(.right-open) body .main-content {
   top: 1px;
   /* small visual nudge */
 }
-
-/* center the control in the header strip */
-.sidebar-header-controls {
-  display: flex;
-  justify-content: right;
-  padding: 8px 0;
-}
-
-/* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
-.sidebar-toggle {
-  /* nuke default button look */
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 500;
-  color: #4f3629;
-  cursor: pointer;
-}
-
-
-.sidebar-toggle:focus-visible {
-  outline: 2px solid #9d0013;
-  outline-offset: 2px;
-}
-
-/* optional subtle hover, no underline or box */
-.sidebar-toggle:hover {
-  opacity: 0.85;
-}
-
-/* double chevrons */
-.icon-double-chevron {
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 0;
-}
-
-.icon-double-chevron svg {
-  width: 12px;
-  height: 6px;
-  display: block;
-  fill: currentColor;
-}
-
-/* When collapsed (default), we want the chevrons pointing down;
-   When "Collapse all", flip them to up. We can do this in JSX
-   by rotating the container if you want a single rule. */
 
 /* Page section label at top of MarkdownPage */
 .markdown-page .page-section-label {
@@ -857,7 +806,7 @@ html.right-open .right-sidebar {
   gap: 6px;
   cursor: pointer;
 
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
@@ -886,6 +835,10 @@ html.right-open .right-sidebar {
   display: block;
   fill: currentColor;
 }
+
+/* When collapsed (default), we want the chevrons pointing down;
+   When "Collapse all", flip them to up. We can do this in JSX
+   by rotating the container if you want a single rule. */
 
 /* =============================================================================
    SECTION ROWS
@@ -1273,4 +1226,5 @@ html[data-layout-mode="overlay"]
 .markdown-page .footer-container {
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
+
 }

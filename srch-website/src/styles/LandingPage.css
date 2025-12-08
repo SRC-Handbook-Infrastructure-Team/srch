@@ -57,6 +57,10 @@
   --title-weight: 500;
   --sub-weight: 400;
 
+  /* ------------------------------------------------------------------------
+    🎨 Design Tokens —  Spacing
+    ------------------------------------------------------------------------ */
+
   --x-small-spacing: 6px;
   --small-spacing: 12px;
   --small-gap: 36px;
@@ -64,7 +68,6 @@
   --section-spacing: 84px;
   --space-none: 0;
   --upper-content-height: 75vh;
-
   --content-width: 627px;
 
   /* Card + grid geometry */
@@ -220,13 +223,11 @@ html {
 
 .lower-content {
   margin-top: var(--upper-content-height);
-  padding-top: 72px;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 20px;
   align-self: stretch;
   background: #fff;
   position: relative;
@@ -249,9 +250,42 @@ html {
   align-items: center;
   white-space: normal;
   overflow-wrap: normal;
-  gap: 12px;
+  gap: 6px;
   display: flex;
 }
+
+.scroll-caret-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-caret-button:hover {
+  opacity: 0.7;
+}
+
+.scroll-caret-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.scroll-caret-icon {
+  width: 36px;
+  height: 36px;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.scroll-caret-icon.hidden {
+  opacity: 0;
+}
+
 
 .curriculum-title {
   color: var(--color-text);
@@ -315,7 +349,11 @@ html {
 }
 
 .topic-card:focus {
-  outline: 1px solid #3a251a;
+  outline: 1.5px solid #3a251a;
+}
+
+.topic-card:active {
+  outline: 1.5px solid #3a251a !important;
 }
 
 .topic-card img {
@@ -365,7 +403,7 @@ html {
   justify-content: center;
   align-items: flex-start;
   padding: 0px;
-  gap: 6px;
+  gap: var(--x-small-spacing);
 }
 
 .topic-text {
@@ -407,8 +445,6 @@ html {
   background: rgba(90, 45, 0, 0.5);
 }
 
-
-
 .content-section {
   width: 100vw;
   padding-top: var(--section-spacing);
@@ -443,6 +479,7 @@ html {
 
 .landing-search-container {
   width: 60%;
+  transition: width 0.3s ease;
 }
 
 .section-title {
@@ -450,7 +487,6 @@ html {
   text-align: center;
   color: var(--color-text);
   font-size: var(--large-text);
-  padding-bottom: 12px;
   font-family: var(--title-font);
   font-weight: var(--title-weight);
   word-wrap: break-word;
@@ -496,7 +532,7 @@ html {
 .list-text {
   flex: 1;
   color: var(--color-text);
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -536,7 +572,7 @@ html {
 
 .learn-more-text {
   color: var(--color-text);
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   word-wrap: break-word;
@@ -552,7 +588,7 @@ html {
   justify-content: center;
   text-align: left;
   color: black;
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: 400;
   line-height: 28px;
@@ -584,10 +620,10 @@ html {
 /* Feedback Contact */
 .feedback-contact {
   color: var(--color-text);
-  font-size: 20px;
+  font-size: 18px;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
-  line-height: 30px;
+  line-height: 28px;
   word-wrap: break-word;
 }
 
@@ -630,6 +666,7 @@ html {
 
   .landing-search-container {
     width: 80%;
+    transition: width 0.3s ease;
   }
 }
 
@@ -686,13 +723,13 @@ html {
 .ack-hero .website-title {
   position: relative;
   left: -100px;
-  top: 70px;
+  top: 72px;
   font-size: 84px;
   line-height: 100px;
 }
 
 .ack-hero .info-section {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   font-size: var(--body-text);
   line-height: 28px;
   color: var(--ack-text);
@@ -756,7 +793,7 @@ html {
   width: var(--ack-card-width);
   display: flex;
   flex-direction: column;
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   box-sizing: border-box;
 }
 
@@ -827,7 +864,7 @@ html {
 
 .ack-card-subinfo {
   font-size: 15px;
-  line-height: 20px;
+  line-height: 18px;
   margin-top: 2px;
   color: #000;
 }
@@ -840,7 +877,7 @@ html {
 .ack-card-icons {
   margin-top: 10px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ack-icon-btn {
@@ -979,7 +1016,7 @@ html {
 }
 
 .about-sub {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   font-size: var(--body-text);
   color: #1a1a1a;
   line-height: 28px;
@@ -1016,9 +1053,9 @@ html {
 }
 
 .about-section p {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   color: rgba(0, 0, 0, 1);
-  font-size: 20px;
+  font-size: var(--body-text);
   line-height: 1.6;
   max-width: 650px;
   margin-bottom: 24px;
@@ -1030,7 +1067,7 @@ html {
 }
 
 .about-section li {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   color: rgba(0, 0, 0, 1);
   font-size: var(--body-text);
   line-height: 1.6;
@@ -1146,7 +1183,7 @@ html {
   font-family: var(--title-font);
   font-weight: 700;
   font-size: clamp(3rem, 5vw, 4.5rem);
-  line-height: 1.1;
+  line-height: 1.2;
   color: var(--color-text);
 
   margin: 0;
