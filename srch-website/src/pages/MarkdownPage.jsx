@@ -584,24 +584,39 @@ function handleDrawerOpen(term) {
   }
 }
 
+function handleNavigation(rawTargetId) {
+  // 1. Save where the user is in the main content *before* we close the drawer / navigate
+  saveContentScroll();
 
+  // 2. Normalize the target into a "section/subsection" path (no leading slash)
+  let targetId = String(rawTargetId || "").trim();
+  targetId = targetId.replace(/^\//, ""); // defensively strip leading "/"
 
+  let path;
 
-
-
-
-  function handleNavigation(targetId) {
-    closeRightDrawer();
-    if (targetId.includes("/")) {
-      checkAndNavigate(targetId);
+  if (targetId.includes("/")) {
+    // Already looks like "section/subsection"
+    path = targetId;
+  } else {
+    // Only a subsection slug was provided; infer the full path from current params
+    if (sectionId && !subsectionId) {
+      // We’re on a section-level page, so go to "section/subsection"
+      path = `${sectionId}/${targetId}`;
     } else {
-      if (sectionId && !subsectionId) {
-        checkAndNavigate(`${sectionId}/${targetId}`);
-      } else {
-        checkAndNavigate(targetId);
-      }
+      // Already on a subsection route; `targetId` is likely "section/subsection"
+      path = targetId;
     }
   }
+
+  // 3. Close the drawer UI
+  closeRightDrawer();
+  setDrawerActiveKey(null); // optional but keeps state in sync
+
+  // 4. Navigate, then restore scroll on the next frame after navigation occurs
+  checkAndNavigate(path).then(() => {
+    restoreContentScrollNextFrame();
+  });
+}
 
    // Only handle in-page anchor links like #some-heading
   useEffect(() => {
