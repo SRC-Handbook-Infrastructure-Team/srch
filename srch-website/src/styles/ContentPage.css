@@ -638,7 +638,6 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px);
   /* Moves the element 12px to the left */
 }
 

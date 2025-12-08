@@ -119,6 +119,7 @@ export default function SidebarLayout({ children }) {
     cssVarName: "--left-sidebar-width",
     onStartResize: freezeForSidebars,
     onStopResize: releaseForSidebars,
+    collapseAnimationDelay: layoutMode === "overlay" ? 350 : 0, // NEW
   });
 
   /** ---------------- RIGHT SIDEBAR CONFIG ---------------- */
@@ -249,13 +250,37 @@ export default function SidebarLayout({ children }) {
   /** ---------------- SYNC RIGHT WIDTH TO CSS VAR + HTML CLASS ---------------- */
   useEffect(() => {
     const target = document.documentElement;
-    const value = isRightOpen ? `${rightSidebar.width}px` : "0px";
+    let timer;
 
-    requestAnimationFrame(() => {
-      target.style.setProperty("--right-sidebar-width", value);
-      target.classList.toggle("right-open", isRightOpen);
-    });
-  }, [isRightOpen, rightSidebar.width]);
+    if (!isRightOpen) {
+      // CLOSING
+      if (layoutMode === "overlay") {
+        // Overlay: remove class immediately (triggers slide-out), delay width change
+        requestAnimationFrame(() => {
+          target.classList.remove("right-open");
+        });
+        timer = setTimeout(() => {
+          target.style.setProperty("--right-sidebar-width", "0px");
+        }, 350);
+      } else {
+        // Wide: immediate (unchanged behavior)
+        requestAnimationFrame(() => {
+          target.style.setProperty("--right-sidebar-width", "0px");
+          target.classList.remove("right-open");
+        });
+      }
+    } else {
+      // OPENING (same for both modes)
+      requestAnimationFrame(() => {
+        target.style.setProperty("--right-sidebar-width", `${rightSidebar.width}px`);
+        target.classList.add("right-open");
+      });
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isRightOpen, rightSidebar.width, layoutMode]);
 
   /** ---------------- AUTO-CLOSE DRAWER ON PAGE CHANGE ---------------- */
   const location = useLocation();
