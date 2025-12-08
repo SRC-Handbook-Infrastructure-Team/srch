@@ -23,7 +23,10 @@ function AppRoutes() {
   return (
     <>
       <ScrollManager />
+
       {isMarkdownPage ? (
+        // 🔹 Markdown / handbook routes:
+        // SidebarLayout itself renders <NavBar layoutMode={layoutMode} />
         <SidebarLayout>
           <Routes>
             <Route path="/:sectionId" element={<MarkdownPage />} />
@@ -38,7 +41,9 @@ function AppRoutes() {
           </Routes>
         </SidebarLayout>
       ) : (
+        // 🔹 Non-markdown routes: render a single NavBar here
         <>
+          <NavBar layoutMode="overlay" />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/acknowledgements" element={<Acknowledgements />} />
@@ -47,10 +52,9 @@ function AppRoutes() {
             <Route path="/search/:query" element={<SearchResults />} />
             <Route path="/search" element={<SearchResults />} />
           </Routes>
+          <Footer />
         </>
       )}
-      <NavBar />
-      {!isMarkdownPage && <Footer />}
     </>
   );
 }

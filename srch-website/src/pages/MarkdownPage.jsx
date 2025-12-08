@@ -10,8 +10,9 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { saveScrollPosition } from "../components/ScrollManager";
+import { saveScrollPosition as savePageScrollPosition } from "../components/ScrollManager";
 import Footer from "../components/Footer";
+
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -154,7 +155,24 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
-  const windowScrollRef = useRef(0);
+const contentScrollRef = useRef(0);
+
+function getScrollContainer() {
+  // This is the element that actually scrolls in your layout
+  return document.getElementById("main") || window;
+}
+
+function saveContentScroll() {
+  const sc = getScrollContainer();
+  if (sc === window) {
+    contentScrollRef.current = window.scrollY || 0;
+  } else {
+    contentScrollRef.current = sc.scrollTop || 0;
+  }
+}
+
+  
+
 
   const layout = useLayout() || {};
   const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
@@ -180,8 +198,7 @@ function MarkdownPage() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   const contentRef = useRef(null);
-  // store the scroll position to prevent jumps when drawer opens/closes
-const scrollPosRef = useRef(0);
+
 
   const formattedTitle = useMemo(() => {
     const fastSubs = getFastCachedSubsections(sectionId);
@@ -294,11 +311,9 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  // Restore scroll after markdown re-renders (fixes jump)
-useEffect(() => {
-  if (!contentRef.current) return;
-  contentRef.current.scrollTop = scrollPosRef.current;
-}, [mainContent]);
+  
+
+  
 
 
   useEffect(() => {
@@ -307,7 +322,7 @@ useEffect(() => {
 
       if (!sectionId) {
         const sections = await getSections();
-        saveScrollPosition();
+        savePageScrollPosition(location.pathname);
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -345,7 +360,7 @@ useEffect(() => {
             isClosable: true,
             position: "bottom-right",
           });
-          saveScrollPosition();
+          savePageScrollPosition(location.pathname);
           navigate(previousPath, { replace: true });
         }
 
@@ -413,7 +428,7 @@ useEffect(() => {
             isClosable: true,
             position: "bottom-right",
           });
-          saveScrollPosition();
+          savePageScrollPosition(location.pathname);
           navigate(previousPath, { replace: true });
         }
       }
@@ -532,78 +547,76 @@ useEffect(() => {
     [isLoading, navigate, toast]
   );
 
-  // Save scroll BEFORE drawer changes cause any re-renders
-function saveScrollPosition() {
-  if (contentRef.current) {
-    scrollPosRef.current = contentRef.current.scrollTop;
-  }
+
+function restoreContentScrollNextFrame() {
+  requestAnimationFrame(() => {
+    const main = document.getElementById("main");
+    if (main) {
+      main.scrollTo({ top: contentScrollRef.current, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: contentScrollRef.current, behavior: "auto" });
+    }
+  });
 }
 
-
-  /**
- * Click handler for drawer chips:
- * - ONLY updates the URL.
- * - UI changes are handled by the URL-driven controller effect below.
- */
 function handleDrawerOpen(term) {
-  saveScrollPosition();
-
-  windowScrollRef.current = window.scrollY || 0;
+  // Capture scroll before we mutate the URL
+  saveContentScroll();
 
   const basePath = `/${sectionId}/${subsectionId}`;
 
-  // 🔻 Close: chip told us "I'm already active, please close"
+  // 🔻 Close: remove :term from URL only, keep scroll
   if (!term) {
-    // 1) Close the drawer immediately
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-
-    // 2) Strip /:term from URL if present
     if (location.pathname !== basePath) {
       navigate(basePath, { replace: true });
-
-      requestAnimationFrame(() => {
-        window.scrollTo(0, windowScrollRef.current);
-      });
-      
+      restoreContentScrollNextFrame();
     }
     return;
   }
 
-  // 🔺 Open: chip told us which term to show
+  // 🔺 Open: add :term to URL only, keep scroll
   const key = String(term).toLowerCase();
   const targetPath = `${basePath}/${key}`;
 
-  // Ensure URL includes the term so it’s shareable/deep-linkable
   if (location.pathname !== targetPath) {
     navigate(targetPath);
-
-    requestAnimationFrame(() => {
-      window.scrollTo(0, windowScrollRef.current);
-    });
+    restoreContentScrollNextFrame();
   }
-
-  // Open the drawer UI *right now* for this term
-  openGlobalDrawerForTerm(key, { silent: true });
 }
 
+function handleNavigation(rawTargetId) {
+  // 1. Save where the user is in the main content *before* we close the drawer / navigate
+  saveContentScroll();
 
+  // 2. Normalize the target into a "section/subsection" path (no leading slash)
+  let targetId = String(rawTargetId || "").trim();
+  targetId = targetId.replace(/^\//, ""); // defensively strip leading "/"
 
+  let path;
 
-
-
-  function handleNavigation(targetId) {
-    closeRightDrawer();
-    if (targetId.includes("/")) {
-      checkAndNavigate(targetId);
+  if (targetId.includes("/")) {
+    // Already looks like "section/subsection"
+    path = targetId;
+  } else {
+    // Only a subsection slug was provided; infer the full path from current params
+    if (sectionId && !subsectionId) {
+      // We’re on a section-level page, so go to "section/subsection"
+      path = `${sectionId}/${targetId}`;
     } else {
-      if (sectionId && !subsectionId) {
-        checkAndNavigate(`${sectionId}/${targetId}`);
-      } else {
-        checkAndNavigate(targetId);
-      }
+      // Already on a subsection route; `targetId` is likely "section/subsection"
+      path = targetId;
     }
   }
+
+  // 3. Close the drawer UI
+  closeRightDrawer();
+  setDrawerActiveKey(null); // optional but keeps state in sync
+
+  // 4. Navigate, then restore scroll on the next frame after navigation occurs
+  checkAndNavigate(path).then(() => {
+    restoreContentScrollNextFrame();
+  });
+}
 
    // Only handle in-page anchor links like #some-heading
   useEffect(() => {
