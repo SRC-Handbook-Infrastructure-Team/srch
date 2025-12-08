@@ -639,6 +639,8 @@ p > .srch-drawer-link:first-child {
   left: -40px;
   margin-top: 12px;
   /* Moves the element 12px to the left */
+  transform: translateX(-10px);
+  
 }
 
 /* RIGHT SIDEBAR (Drawer) */
