@@ -57,7 +57,14 @@ export const ResultsWindow = React.memo(
           maxResults != null) && (
           <div className={classSuffix("results-window", floating)}>
             {searchResults != null && maxResults !== 0 && (
-              <Collapse in={searchQuery} animateOpacity>
+              <Collapse
+                in={searchQuery}
+                animateOpacity
+                transition={{
+                  enter: { duration: 0.5 },
+                  exit: { duration: 0.25 },
+                }}
+              >
                 <div
                   className={classSuffix("results-list", floating)}
                   style={
