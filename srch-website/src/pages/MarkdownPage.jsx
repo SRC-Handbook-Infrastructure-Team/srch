@@ -1,5 +1,5 @@
-import "../LandingPage.css";
-import "../ContentPage.css";
+import "../styles/LandingPage.css";
+import "../styles/ContentPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToast, Box } from "@chakra-ui/react";
@@ -10,13 +10,8 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import logoImage from "../assets/logo.png";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
-import Footer from "../components/Footer"
-
+import { saveScrollPosition } from "../components/ScrollManager";
+import Footer from "../components/Footer";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -159,6 +154,7 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
+  const windowScrollRef = useRef(0);
 
   const layout = useLayout() || {};
   const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
@@ -173,7 +169,6 @@ function MarkdownPage() {
   }, [location.state, location.search]);
 
   const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
@@ -185,9 +180,10 @@ function MarkdownPage() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   const contentRef = useRef(null);
+  // store the scroll position to prevent jumps when drawer opens/closes
+const scrollPosRef = useRef(0);
 
   const formattedTitle = useMemo(() => {
-    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
 
     return getFormattedTitle(
@@ -226,85 +222,84 @@ function MarkdownPage() {
     return null;
   }
 
-  async function openGlobalDrawerForTerm(term, opts = {}) {
-  const { noToggle = false, noNavigate = false, silent = false } = opts;
+  /**
+ * Pure UI helper: given a term key, render its content into the right drawer.
+ * No navigation. No toggling. This is invoked ONLY by the URL-driven controller.
+ */
+async function openGlobalDrawerForTerm(term, opts = {}) {
+  const { silent = false } = opts;
 
   if (!term) return;
   const key = String(term).toLowerCase();
 
-  if (!noToggle && drawerActiveKey === key) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-
-    if (!noNavigate) {
-      navigate(`/${sectionId}/${subsectionId}`);
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      if (!silent) {
+        toast({
+          title: "Sidebar Entry Not Found",
+          description: `The sidebar entry "${term}" could not be found in this subsection.`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      }
+      return;
     }
 
-    return;
-  }
+    let drawerFile = null;
+    try {
+      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+    } catch (_) {}
 
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    if (!silent) {
-      toast({
-        title: "Sidebar Entry Not Found",
-        description: `The sidebar entry "${term}" could not be found in this subsection.`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-    return;
-  }
+    const contentToShow =
+      drawerFile?.content ||
+      (typeof sidebarEntry === "string"
+        ? sidebarEntry
+        : sidebarEntry.content) ||
+      "";
 
-  let drawerFile = null;
-  try {
-    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-  } catch (_) {}
+    const heading =
+      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+      String(term).replace(/-/g, " ");
 
-  const contentToShow =
-    drawerFile?.content ||
-    (typeof sidebarEntry === "string"
-      ? sidebarEntry
-      : sidebarEntry.content) ||
-    "";
+    const node = (
+      <>
+        <div className="drawer-meta-label">Familiar Case Studies</div>
+        <div className="drawer-meta-divider" />
 
-  const heading =
-    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-    String(term).replace(/-/g, " ");
-
-  const node = (
-    <>
-      <div className="drawer-meta-label">Familiar Case Studies</div>
-      <div className="drawer-meta-divider" />
-
-      <h2 className="drawer-section-title">
-        {highlightText(heading, highlight)}
-      </h2>
+        <h2 className="drawer-section-title">
+          {highlightText(heading, highlight)}
+        </h2>
 
       <MarkdownRenderer
         content={contentToShow}
+        sidebar={sidebar}
+        sectionId={sectionId}
+        subsectionId={subsectionId}
         onDrawerOpen={handleDrawerOpen}
         onNavigation={handleNavigation}
         highlight={highlight}
+        urlTerm={urlTerm}
       />
     </>
   );
 
   setDrawerActiveKey(key);
   openRightDrawer(node);
-
-  if (!noNavigate) {
-    navigate(`/${sectionId}/${subsectionId}/${term}`);
-  }
 }
 
-    
 
   useEffect(() => {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
+
+  // Restore scroll after markdown re-renders (fixes jump)
+useEffect(() => {
+  if (!contentRef.current) return;
+  contentRef.current.scrollTop = scrollPosRef.current;
+}, [mainContent]);
+
 
   useEffect(() => {
     async function loadContent() {
@@ -312,6 +307,7 @@ function MarkdownPage() {
 
       if (!sectionId) {
         const sections = await getSections();
+        saveScrollPosition();
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -349,6 +345,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
 
@@ -416,6 +413,7 @@ function MarkdownPage() {
             isClosable: true,
             position: "bottom-right",
           });
+          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
       }
@@ -458,41 +456,40 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-  // No term → close drawer and clear active state
-  if (!urlTerm) {
-    closeRightDrawer();
-    setDrawerActiveKey(null);
-    return;
-  }
+    // No term → close drawer and clear active state
+    if (!urlTerm) {
+      closeRightDrawer();
+      setDrawerActiveKey(null);
+      return;
+    }
 
-  const key = String(urlTerm).toLowerCase();
+    const key = String(urlTerm).toLowerCase();
 
-  // Wait until sidebar is actually loaded before trying to open the drawer
-  if (!sidebar || Object.keys(sidebar).length === 0) {
-    return; // sidebar not ready yet → we'll re-run when sidebar updates
-  }
+    // Wait until sidebar is actually loaded before trying to open the drawer
+    if (!sidebar || Object.keys(sidebar).length === 0) {
+      return; // sidebar not ready yet → we'll re-run when sidebar updates
+    }
 
-  // Optionally guard: only auto-open if the entry really exists
-  const sidebarEntry = getSidebarContent(key);
-  if (!sidebarEntry) {
-    // You can choose to silently ignore here, or log/track if you want
-    return;
-  }
+    // Optionally guard: only auto-open if the entry really exists
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      // You can choose to silently ignore here, or log/track if you want
+      return;
+    }
 
-  // URL-driven open: don't toggle off, don't navigate again, no toast
+    // URL-driven open: pure UI call, no nav/toggle
   openGlobalDrawerForTerm(key, {
-    noToggle: true,
-    noNavigate: true,
     silent: true,
   });
-}, [urlTerm, sidebar]);  // <— important: depend on sidebar too
+}, [urlTerm, sidebar]);
 
+
+  const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
       const pathParts = path.split("/").filter(Boolean);
-
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
 
@@ -535,9 +532,65 @@ function MarkdownPage() {
     [isLoading, navigate, toast]
   );
 
-  function handleDrawerOpen(term) {
-    openGlobalDrawerForTerm(term);
+  // Save scroll BEFORE drawer changes cause any re-renders
+function saveScrollPosition() {
+  if (contentRef.current) {
+    scrollPosRef.current = contentRef.current.scrollTop;
   }
+}
+
+
+  /**
+ * Click handler for drawer chips:
+ * - ONLY updates the URL.
+ * - UI changes are handled by the URL-driven controller effect below.
+ */
+function handleDrawerOpen(term) {
+  saveScrollPosition();
+
+  windowScrollRef.current = window.scrollY || 0;
+
+  const basePath = `/${sectionId}/${subsectionId}`;
+
+  // 🔻 Close: chip told us "I'm already active, please close"
+  if (!term) {
+    // 1) Close the drawer immediately
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+
+    // 2) Strip /:term from URL if present
+    if (location.pathname !== basePath) {
+      navigate(basePath, { replace: true });
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, windowScrollRef.current);
+      });
+      
+    }
+    return;
+  }
+
+  // 🔺 Open: chip told us which term to show
+  const key = String(term).toLowerCase();
+  const targetPath = `${basePath}/${key}`;
+
+  // Ensure URL includes the term so it’s shareable/deep-linkable
+  if (location.pathname !== targetPath) {
+    navigate(targetPath);
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, windowScrollRef.current);
+    });
+  }
+
+  // Open the drawer UI *right now* for this term
+  openGlobalDrawerForTerm(key, { silent: true });
+}
+
+
+
+
+
 
   function handleNavigation(targetId) {
     closeRightDrawer();
@@ -552,24 +605,24 @@ function MarkdownPage() {
     }
   }
 
+   // Only handle in-page anchor links like #some-heading
   useEffect(() => {
-    if (!mainContent) return;
-    const timer = setTimeout(() => {
-      if (location.hash) {
-        const id = location.hash.replace("#", "");
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [mainContent, location.hash]);
+    if (!location.hash) return;
+
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth" });
+  }, [location.hash]);
+
+
+
 
   return (
     <div className="markdown-page">
-      <Box mb={10}>
-        <div className="page-header">
+      <Box className="markdown-content">
+        <div className="page-header markdown-margin">
           <p className="page-section-label">
             {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
           </p>
@@ -597,13 +650,11 @@ function MarkdownPage() {
               {leftSidebar?.collapsed ? ">" : "<"}
             </button>
           </div>
-
-          {/* Full-bleed divider that spans the whole viewport, Figma-style */}
-          <div className="page-divider page-divider--fullbleed page-divider-margin" />
         </div>
+        <div className="page-divider page-divider--fullbleed page-divider-margin" />
 
         {mainContent && (
-          <Box ref={contentRef}>
+          <Box className="markdown-margin" ref={contentRef}>
             <MarkdownRenderer
               content={mainContent}
               sidebar={sidebar}
@@ -613,11 +664,13 @@ function MarkdownPage() {
               onNavigation={handleNavigation}
               isFinal={contentFinal}
               highlight={highlight}
+              urlTerm={urlTerm}
             />
           </Box>
         )}
-        <Footer/>
       </Box>
+      <div className="page-height"></div>
+      <Footer />
     </div>
   );
 }

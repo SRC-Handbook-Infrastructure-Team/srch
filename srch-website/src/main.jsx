@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/srch-s25/">
+  <BrowserRouter basename="/srch/">
     <App />
   </BrowserRouter>
 );

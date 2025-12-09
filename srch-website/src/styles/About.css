@@ -10,62 +10,6 @@
    ============================================================================ */
 
 /* ============================================================================
-   1. HERO BANNER (full-screen, fixed)
-   ============================================================================ */
-
-.about-hero {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-
-  width: 100vw;
-  height: 100vh;
-
-  /* SAME exact background rules as Acknowledgements */
-  background-image: url("../src/assets/Property 1=Default.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  display: flex;
-  align-items: flex-start;
-  padding: 0 13.22vw;
-
-  border-top: 1px solid white; /* parity with Home */
-}
-
-.about-hero:hover {
-  background-image: url("../src/assets/Property 1=Variant2.png");
-}
-
-/* Position text block inside hero */
-.about-upper-text {
-  width: 33vw;
-  margin-top: 20vh;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  z-index: 1;
-}
-
-.about-title {
-  font-family: "Funnel Sans", sans-serif;
-  font-weight: 900;
-  font-size: 72px;
-  line-height: 1.05;
-  color: #1a1a1a;
-}
-
-.about-sub {
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 18px;
-  color: #1a1a1a;
-  line-height: 28px;
-  max-width: 600px;
-}
-
-/* ============================================================================
    2. LOWER CONTENT (slides upward over hero)
    ============================================================================ */
 

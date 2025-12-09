@@ -32,13 +32,15 @@
  * ============================================================================
  */
 
-import "../Acknowledgements.css";
+
+import "../styles/LandingPage.css";
+
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 
 // Footer assets (shared with Home)
 import logoImage from "../assets/logo.png";
@@ -46,7 +48,6 @@ import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-
 // Data
 import team from "../team.json";
 
@@ -56,9 +57,9 @@ import team from "../team.json";
  * Centralize how we compute an image src so it’s easy to swap storage paths.
  * ===========================================================================*/
 function getMemberPhotoSrc(member) {
-  // Current convention: files in public/srch-s25/assets/member-photos
-  // Example: "suresh.jpg" -> "/srch-s25/assets/member-photos/suresh.jpg"
-  return `/srch-s25/assets/member-photos/${member.photo}`;
+  // Current convention: files in public/srch/assets/member-photos
+  // Example: "suresh.jpg" -> "/srch/assets/member-photos/suresh.jpg"
+  return `public/assets/member-photos/${member.photo}`;
 }
 
 /* =============================================================================
@@ -68,7 +69,7 @@ function getMemberPhotoSrc(member) {
  * - Sorting is alphabetical by name for stability
  * - Each card:
  *     1) Photo (masked by ../src/assets/Photo.png) or masked gray placeholder
- *     2) Name + Pronouns
+ *     2) Name + Pronoun
  *     3) Position | Degree, GradYear
  *     4) Action icons (email/linkedin/website) if present
  * - All spacing, font sizes, and icon dims are handled via CSS classes.
@@ -98,7 +99,10 @@ function TeamGrid({ filteredTeam }) {
                 decoding="async"
               />
             ) : (
-              <div className="ack-card-photo ack-photo-fallback" aria-hidden="true" />
+              <div
+                className="ack-card-photo ack-photo-fallback"
+                aria-hidden="true"
+              />
             )}
 
             {/* --- Name + Pronouns row --- */}
@@ -112,8 +116,12 @@ function TeamGrid({ filteredTeam }) {
             {/* --- Role | Degree, GradYear --- */}
             <div className="ack-card-subinfo">
               {member.position}
-              {member.degree && member.degree.trim() !== "" && ` | ${member.degree}`}
-              {member.gradYear && member.gradYear.trim() !== "" && `, ${member.gradYear}`}
+              {member.degree &&
+                member.degree.trim() !== "" &&
+                ` | ${member.degree}`}
+              {member.gradYear &&
+                member.gradYear.trim() !== "" &&
+                `, ${member.gradYear}`}
             </div>
 
             {/* --- Icon row (conditionally renders each icon) --- */}
@@ -176,8 +184,12 @@ function TeamSection({ title, teamName }) {
   const members = team.filter((m) => m.team === teamName);
   if (members.length === 0) return null;
 
-  const active = members.filter((m) => String(m.active).toLowerCase() === "true");
-  const inactive = members.filter((m) => String(m.active).toLowerCase() === "false");
+  const active = members.filter(
+    (m) => String(m.active).toLowerCase() === "true"
+  );
+  const inactive = members.filter(
+    (m) => String(m.active).toLowerCase() === "false"
+  );
 
   return (
     <>
@@ -238,7 +250,7 @@ export default function Acknowledgements() {
           - .ack-hero (position: fixed; background image)
           - .ack-lower-content (margin-top: Nvh to start after the hero)
       */}
-      <div className="ack-hero">
+      <div className="upper-content">
         <div className="upper-text-section">
           <div className="website-title">Meet our Team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
@@ -264,9 +276,7 @@ export default function Acknowledgements() {
           title="Additional Contributors — Faculty Advisors"
           teamName="additional_faculty"
         />
-         </div>
-                    <Footer />
-
+      </div>
     </>
   );
 }

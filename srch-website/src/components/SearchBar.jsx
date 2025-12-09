@@ -3,7 +3,7 @@ import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResultsWindow } from "./ResultsWindow";
-import "../ContentPage.css";
+import "../styles/ContentPage.css";
 
 function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const containerRef = useRef(null);
@@ -40,7 +40,6 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
       ref={containerRef}
       className={"searchbar-container"}
       onClick={handleContainerClick}
-
     >
       <IconButton
         aria-label="Toggle search bar"
@@ -59,15 +58,25 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
         />
-        <Collapse in={showResults} animateOpacity>
-          <ResultsWindow
-            searchQuery={searchQuery}
-            maxResults={maxResults}
-            floating={true}
-          />
-         </Collapse>
+        <Collapse
+          in={showResults}
+          animateOpacity
+          transition={{
+            enter: { duration: 0.5 },
+            exit: { duration: 0.25 },
+          }}
+        >
+          <ResultsWindow searchQuery={searchQuery} maxResults={maxResults} />
+        </Collapse>
       </Box>
-      <Collapse in={searchQuery} animateOpacity>
+      <Collapse
+        in={searchQuery}
+        animateOpacity
+        transition={{
+          enter: { duration: 0.5 },
+          exit: { duration: 0.25 },
+        }}
+      >
         <IconButton
           aria-label="Toggle search bar"
           icon={<CloseIcon fontSize={"x-small"} />}
