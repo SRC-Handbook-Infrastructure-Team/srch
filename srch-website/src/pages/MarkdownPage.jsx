@@ -10,8 +10,12 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { saveScrollPosition as savePageScrollPosition } from "../components/ScrollManager";
-import Footer from "../components/Footer";
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
+import Footer from "../components/Footer"
 
 
 function MarkdownPage() {
@@ -155,24 +159,7 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
-const contentScrollRef = useRef(0);
-
-function getScrollContainer() {
-  // This is the element that actually scrolls in your layout
-  return document.getElementById("main") || window;
-}
-
-function saveContentScroll() {
-  const sc = getScrollContainer();
-  if (sc === window) {
-    contentScrollRef.current = window.scrollY || 0;
-  } else {
-    contentScrollRef.current = sc.scrollTop || 0;
-  }
-}
-
-  
-
+  const windowScrollRef = useRef(0);
 
   const layout = useLayout() || {};
   const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
@@ -187,6 +174,7 @@ function saveContentScroll() {
   }, [location.state, location.search]);
 
   const [sidebar, setSidebar] = useState({});
+  const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
@@ -198,9 +186,11 @@ function saveContentScroll() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   const contentRef = useRef(null);
-
+  // store the scroll position to prevent jumps when drawer opens/closes
+const scrollPosRef = useRef(0);
 
   const formattedTitle = useMemo(() => {
+    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
 
     return getFormattedTitle(
@@ -249,45 +239,45 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
   if (!term) return;
   const key = String(term).toLowerCase();
 
-    const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      if (!silent) {
-        toast({
-          title: "Sidebar Entry Not Found",
-          description: `The sidebar entry "${term}" could not be found in this subsection.`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom-right",
-        });
-      }
-      return;
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    if (!silent) {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
     }
+    return;
+  }
 
-    let drawerFile = null;
-    try {
-      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) {}
+  let drawerFile = null;
+  try {
+    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+  } catch (_) {}
 
-    const contentToShow =
-      drawerFile?.content ||
-      (typeof sidebarEntry === "string"
-        ? sidebarEntry
-        : sidebarEntry.content) ||
-      "";
+  const contentToShow =
+    drawerFile?.content ||
+    (typeof sidebarEntry === "string"
+      ? sidebarEntry
+      : sidebarEntry.content) ||
+    "";
 
-    const heading =
-      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-      String(term).replace(/-/g, " ");
+  const heading =
+    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+    String(term).replace(/-/g, " ");
 
-    const node = (
-      <>
-        <div className="drawer-meta-label">Familiar Case Studies</div>
-        <div className="drawer-meta-divider" />
+  const node = (
+    <>
+      <div className="drawer-meta-label">Familiar Case Studies</div>
+      <div className="drawer-meta-divider" />
 
-        <h2 className="drawer-section-title">
-          {highlightText(heading, highlight)}
-        </h2>
+      <h2 className="drawer-section-title">
+        {highlightText(heading, highlight)}
+      </h2>
 
       <MarkdownRenderer
         content={contentToShow}
@@ -311,9 +301,11 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  
-
-  
+  // Restore scroll after markdown re-renders (fixes jump)
+useEffect(() => {
+  if (!contentRef.current) return;
+  contentRef.current.scrollTop = scrollPosRef.current;
+}, [mainContent]);
 
 
   useEffect(() => {
@@ -322,7 +314,6 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
 
       if (!sectionId) {
         const sections = await getSections();
-        savePageScrollPosition(location.pathname);
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -360,7 +351,6 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
             isClosable: true,
             position: "bottom-right",
           });
-          savePageScrollPosition(location.pathname);
           navigate(previousPath, { replace: true });
         }
 
@@ -428,7 +418,6 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
             isClosable: true,
             position: "bottom-right",
           });
-          savePageScrollPosition(location.pathname);
           navigate(previousPath, { replace: true });
         }
       }
@@ -471,26 +460,26 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
   }, [sectionId]);
 
   useEffect(() => {
-    // No term → close drawer and clear active state
-    if (!urlTerm) {
-      closeRightDrawer();
-      setDrawerActiveKey(null);
-      return;
-    }
+  // No term → close drawer and clear active state
+  if (!urlTerm) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+    return;
+  }
 
-    const key = String(urlTerm).toLowerCase();
+  const key = String(urlTerm).toLowerCase();
 
-    // Wait until sidebar is actually loaded before trying to open the drawer
-    if (!sidebar || Object.keys(sidebar).length === 0) {
-      return; // sidebar not ready yet → we'll re-run when sidebar updates
-    }
+  // Wait until sidebar is actually loaded before trying to open the drawer
+  if (!sidebar || Object.keys(sidebar).length === 0) {
+    return; // sidebar not ready yet → we'll re-run when sidebar updates
+  }
 
-    // Optionally guard: only auto-open if the entry really exists
-    const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      // You can choose to silently ignore here, or log/track if you want
-      return;
-    }
+  // Optionally guard: only auto-open if the entry really exists
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    // You can choose to silently ignore here, or log/track if you want
+    return;
+  }
 
     // URL-driven open: pure UI call, no nav/toggle
   openGlobalDrawerForTerm(key, {
@@ -499,12 +488,12 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
 }, [urlTerm, sidebar]);
 
 
-  const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
       const pathParts = path.split("/").filter(Boolean);
+
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
 
@@ -547,76 +536,78 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
     [isLoading, navigate, toast]
   );
 
-
-function restoreContentScrollNextFrame() {
-  requestAnimationFrame(() => {
-    const main = document.getElementById("main");
-    if (main) {
-      main.scrollTo({ top: contentScrollRef.current, behavior: "auto" });
-    } else {
-      window.scrollTo({ top: contentScrollRef.current, behavior: "auto" });
-    }
-  });
+  // Save scroll BEFORE drawer changes cause any re-renders
+function saveScrollPosition() {
+  if (contentRef.current) {
+    scrollPosRef.current = contentRef.current.scrollTop;
+  }
 }
 
+
+  /**
+ * Click handler for drawer chips:
+ * - ONLY updates the URL.
+ * - UI changes are handled by the URL-driven controller effect below.
+ */
 function handleDrawerOpen(term) {
-  // Capture scroll before we mutate the URL
-  saveContentScroll();
+  saveScrollPosition();
+
+  windowScrollRef.current = window.scrollY || 0;
 
   const basePath = `/${sectionId}/${subsectionId}`;
 
-  // 🔻 Close: remove :term from URL only, keep scroll
+  // 🔻 Close: chip told us "I'm already active, please close"
   if (!term) {
+    // 1) Close the drawer immediately
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+
+    // 2) Strip /:term from URL if present
     if (location.pathname !== basePath) {
       navigate(basePath, { replace: true });
-      restoreContentScrollNextFrame();
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, windowScrollRef.current);
+      });
+      
     }
     return;
   }
 
-  // 🔺 Open: add :term to URL only, keep scroll
+  // 🔺 Open: chip told us which term to show
   const key = String(term).toLowerCase();
   const targetPath = `${basePath}/${key}`;
 
+  // Ensure URL includes the term so it’s shareable/deep-linkable
   if (location.pathname !== targetPath) {
     navigate(targetPath);
-    restoreContentScrollNextFrame();
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, windowScrollRef.current);
+    });
   }
+
+  // Open the drawer UI *right now* for this term
+  openGlobalDrawerForTerm(key, { silent: true });
 }
 
-function handleNavigation(rawTargetId) {
-  // 1. Save where the user is in the main content *before* we close the drawer / navigate
-  saveContentScroll();
 
-  // 2. Normalize the target into a "section/subsection" path (no leading slash)
-  let targetId = String(rawTargetId || "").trim();
-  targetId = targetId.replace(/^\//, ""); // defensively strip leading "/"
 
-  let path;
 
-  if (targetId.includes("/")) {
-    // Already looks like "section/subsection"
-    path = targetId;
-  } else {
-    // Only a subsection slug was provided; infer the full path from current params
-    if (sectionId && !subsectionId) {
-      // We’re on a section-level page, so go to "section/subsection"
-      path = `${sectionId}/${targetId}`;
+
+
+  function handleNavigation(targetId) {
+    closeRightDrawer();
+    if (targetId.includes("/")) {
+      checkAndNavigate(targetId);
     } else {
-      // Already on a subsection route; `targetId` is likely "section/subsection"
-      path = targetId;
+      if (sectionId && !subsectionId) {
+        checkAndNavigate(`${sectionId}/${targetId}`);
+      } else {
+        checkAndNavigate(targetId);
+      }
     }
   }
-
-  // 3. Close the drawer UI
-  closeRightDrawer();
-  setDrawerActiveKey(null); // optional but keeps state in sync
-
-  // 4. Navigate, then restore scroll on the next frame after navigation occurs
-  checkAndNavigate(path).then(() => {
-    restoreContentScrollNextFrame();
-  });
-}
 
    // Only handle in-page anchor links like #some-heading
   useEffect(() => {
@@ -680,6 +671,7 @@ function handleNavigation(rawTargetId) {
               urlTerm={urlTerm}
             />
           </Box>
+          
         )}
       </Box>
       <div className="page-height"></div>
