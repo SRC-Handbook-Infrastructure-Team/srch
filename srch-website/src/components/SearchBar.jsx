@@ -57,6 +57,9 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
+          _placeholder={{
+            color: "gray.500",
+          }}
         />
         <Collapse
           in={showResults}

@@ -621,8 +621,19 @@ function MarkdownRenderer({
             color={BLACK}
             id={id}
             {...rest}
+            sx={
+              number
+                ? {
+                    listStyleType: "none",
+                    "::marker": {
+                      display: "none",
+                    },
+                  }
+                : {}
+            }
             style={{
               position: "relative",
+              paddingLeft: number ? "1.5rem" : "0",
             }}
           >
             {number && (
