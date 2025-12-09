@@ -260,24 +260,20 @@ export async function initializeIndex() {
       contentArray.push(...subBlocks);
 
       for (const [key, value] of Object.entries(subSidebarParsed)) {
-        const sidebarBlocks = extractBlocksFromContent(
-          section.id,
-          section.title,
-          value.content,
-          subsection.id,
-          subsection.title,
-          value.heading || null
-        );
-
-        sidebarBlocks.forEach((block) => {
-          const baseId = `${section.id}/${subsection.id}#sidebar-${key}`;
-          contentArray.push({
-            ...block,
-            id: baseId,
-            anchor: key,
-            sidebarKey: key,
-            isDrawer: true,
-          });
+        const baseId = `${section.id}/${subsection.id}#sidebar-${key}`;
+        contentArray.push({
+          id: baseId,
+          section: section.id,
+          sectionTitle: section.title,
+          subsection: subsection.id,
+          subsectionTitle: subsection.title,
+          anchor: key,
+          title: getPlaintextFromMarkdown(
+            value.heading || key.replace(/-/g, " ")
+          ),
+          content: value.content,
+          sidebarKey: key,
+          isDrawer: true,
         });
       }
     }
@@ -327,6 +323,7 @@ export async function search(query, truncateSnippetFlag = true) {
     []
   );
 
+  console.log("All Results:", allResults);
   const snippetResults = [];
   const seenKeys = new Set();
 
@@ -338,10 +335,11 @@ export async function search(query, truncateSnippetFlag = true) {
         "gi"
       );
 
+      const cleanTitle = getPlaintextFromMarkdown(doc.title);
       const titleMatches =
-        doc.title &&
-        doc.title.toLowerCase().includes(query.toLowerCase()) &&
-        doc.title !== "Introduction";
+        cleanTitle &&
+        cleanTitle.toLowerCase().includes(query.toLowerCase()) &&
+        cleanTitle !== "Introduction";
       const contentHasMatch =
         doc.content &&
         getPlaintextFromMarkdown(doc.content)
@@ -355,8 +353,8 @@ export async function search(query, truncateSnippetFlag = true) {
           snippetResults.push({
             ...res,
             id: titleKey,
-            snippet: doc.title.replace(regex, "<mark>$1</mark>"),
-            allSnippets: [doc.title.replace(regex, "<mark>$1</mark>")],
+            snippet: cleanTitle.replace(regex, "<mark>$1</mark>"),
+            allSnippets: [cleanTitle.replace(regex, "<mark>$1</mark>")],
           });
         }
       }
