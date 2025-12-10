@@ -10,12 +10,12 @@ export default defineConfig({
       name: "copy-index-to-404",
       apply: "build",
       closeBundle() {
-        const indexPath = path.resolve(__dirname, "dist/index.html");
-        const notFoundPath = path.resolve(__dirname, "dist/404.html");
+        const indexPath = path.join(process.cwd(), "dist/index.html");
+        const notFoundPath = path.join(process.cwd(), "dist/404.html");
         fs.copyFileSync(indexPath, notFoundPath);
         console.log("✅ Copied index.html to 404.html");
       },
     },
   ],
-  base: "/srch/"
+  base: "/srch/",
 });
