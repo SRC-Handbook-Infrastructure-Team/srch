@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+if [ -z "$1" ]; then
+    echo "Usage: start-src-edit <branch-name>"
+    exit 1
+fi
+
+cd "$(dirname "$0")/.." || exit
+git checkout -b "$1"

@@ -1,0 +1,27 @@
+export PATH="/opt/homebrew/bin:$PATH"
+
+start-src-edit() {
+    if [ -z "$1" ]; then
+        echo "Usage: start-src-edit <primer-name>"
+        return 1
+    fi
+    cd ~/srch-website || return
+    git checkout -b "$1"
+}
+
+run-src-website() {
+    cd ~/srch-website || return
+    npm install
+    npm run dev
+}
+
+submit-src-changes() {
+    if [ -z "$2" ]; then
+        echo "Usage: submit-src-changes <primer-name> <branch-name>"
+        return 1
+    fi
+    cd ~/srch-test || return
+    git add -A
+    git commit -m "add $1"
+    git push -u origin "$2"
+}

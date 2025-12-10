@@ -154,10 +154,6 @@ html {
 }
 
 
-.upper-content:hover {
-  background-image: url("../assets/blurred-background.png");
-  transition: background-image 0.3s ease-in-out;
-}
 
 
 
@@ -1088,7 +1084,7 @@ html {
 
   background-image: url("../assets/landing-page-background-gradient.png");
   background-size: cover;
-  background-position: left center;
+  background-position: -82px;
   background-repeat: no-repeat;
 
   display: flex;
@@ -1103,11 +1099,6 @@ html {
 }
 
 /* Shared hover state */
-.upper-content:hover,
-.ack-hero:hover,
-.about-hero:hover {
-  background-image: url("../assets/blurred-background.png");
-}
 
 /* 2. Shared hero text block (top div that holds title + subtitle) */
 .upper-text-section,
