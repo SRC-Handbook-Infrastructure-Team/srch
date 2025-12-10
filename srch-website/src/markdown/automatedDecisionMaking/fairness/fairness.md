@@ -37,15 +37,15 @@ All the fairness criteria above seem desirable. However, it is mathematically im
 
 The **{mathematical-impossible-results}** generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of **{implementations}** that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
 
-![Pareto Front of Group Fairness Criteria](/srch/assets/primer-photos/fairness1.png)
+![Pareto Front of Group Fairness Criteria](/srchets/primer-photos/fairness1.png)
 
-![Parallel Coordinates Plot of Group Fairness Criteria](/srch/assets/primer-photos/fairness2.png)
+![Parallel Coordinates Plot of Group Fairness Criteria](/srchets/primer-photos/fairness2.png)
 
 A notable insight is that the data distributions capture _different beliefs_ about how skills are distributed in different populations. Therefore, the choice of an appropriate fairness measure relies on normative claims about the world in which the measure is applied.
 
 While the selection of fairness criteria involves inevitable trade-offs, the ultimate decision is not purely mathematical but also political, since it decides who benefits and who suffers.
 
-In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[justice in automated decision-making](/srch/automatedDecisionMaking/justice)**.
+In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[justice in automated decision-making](/srchomatedDecisionMaking/justice)**.
 
 ## References
 
