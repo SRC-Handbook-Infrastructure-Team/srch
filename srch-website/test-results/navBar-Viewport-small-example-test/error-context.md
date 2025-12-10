@@ -95,44 +95,41 @@
       - generic [ref=e95]:
         - img "Socially Responsible Computing Handbook" [ref=e98] [cursor=pointer]
         - generic [ref=e99]:
-          - generic [ref=e102] [cursor=pointer]:
-            - paragraph [ref=e103]: Modules
-            - img [ref=e104]
-          - paragraph [ref=e107] [cursor=pointer]: About
-          - paragraph [ref=e109] [cursor=pointer]: Acknowledgements
-          - img [ref=e111] [cursor=pointer]
-          - img [ref=e114] [cursor=pointer]
-    - generic [ref=e119]:
-      - generic [ref=e120]:
-        - img "SRC Handbook Logo" [ref=e122] [cursor=pointer]
-        - generic [ref=e123]:
-          - generic [ref=e124]: Modules
-          - generic [ref=e125]:
-            - img "Privacy Icon" [ref=e127]
-            - button "Privacy" [ref=e128] [cursor=pointer]
-          - generic [ref=e129]:
-            - img "Accessibility Icon" [ref=e131]
-            - button "Accessibility" [ref=e132] [cursor=pointer]
-          - generic [ref=e133]:
-            - img "Automated Decision Making Icon" [ref=e135]
-            - button "Automated Decision Making" [ref=e136] [cursor=pointer]
-          - generic [ref=e137]:
-            - img "Generative AI Icon" [ref=e139]
-            - button "Generative AI" [ref=e140] [cursor=pointer]
-        - generic [ref=e142]:
-          - generic [ref=e143]: Quick Links
-          - button "About" [ref=e144] [cursor=pointer]
-          - button "Acknowledgements" [ref=e145] [cursor=pointer]
-        - generic [ref=e146]:
-          - generic [ref=e147]: Have Feedback?
-          - paragraph [ref=e148]:
-            - text: "Contact:"
-            - link "src_handbook@brown.edu" [ref=e149] [cursor=pointer]:
-              - /url: mailto:src_handbook@brown.edu
-          - paragraph [ref=e150]:
-            - link "Bug Report Form" [ref=e151] [cursor=pointer]:
-              - /url: https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog
-      - paragraph [ref=e152]: © 2025 Brown University. All rights reserved.
+          - img [ref=e101] [cursor=pointer]
+          - img [ref=e104] [cursor=pointer]
+          - img [ref=e107] [cursor=pointer]
+    - generic [ref=e112]:
+      - img "SRC Handbook Logo" [ref=e114] [cursor=pointer]
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e117]: Modules
+          - generic [ref=e118]:
+            - img "Privacy Icon" [ref=e120]
+            - button "Privacy" [ref=e121] [cursor=pointer]
+          - generic [ref=e122]:
+            - img "Accessibility Icon" [ref=e124]
+            - button "Accessibility" [ref=e125] [cursor=pointer]
+          - generic [ref=e126]:
+            - img "Automated Decision Making Icon" [ref=e128]
+            - button "Automated Decision Making" [ref=e129] [cursor=pointer]
+          - generic [ref=e130]:
+            - img "Generative AI Icon" [ref=e132]
+            - button "Generative AI" [ref=e133] [cursor=pointer]
+        - generic [ref=e134]:
+          - generic [ref=e135]:
+            - generic [ref=e136]: Quick Links
+            - button "About" [ref=e137] [cursor=pointer]
+            - button "Acknowledgements" [ref=e138] [cursor=pointer]
+          - generic [ref=e139]:
+            - generic [ref=e140]: Have Feedback?
+            - paragraph [ref=e141]:
+              - text: "Contact:"
+              - link "src_handbook@brown.edu" [ref=e142] [cursor=pointer]:
+                - /url: mailto:src_handbook@brown.edu
+            - paragraph [ref=e143]:
+              - link "Bug Report Form" [ref=e144] [cursor=pointer]:
+                - /url: "?"
+      - paragraph [ref=e145]: © 2025 Brown University. All rights reserved.
   - generic:
     - region "Notifications-top"
     - region "Notifications-top-left"
