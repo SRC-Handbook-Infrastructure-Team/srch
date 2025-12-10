@@ -904,6 +904,22 @@ html {
   box-sizing: border-box;
 }
 
+@media (max-width: 1199px) {
+  .ack-grid {
+    grid-template-columns: repeat(2, var(--ack-card-width));
+    justify-content: center;
+    row-gap: 32px;  /* ← Add more vertical spacing when 2 columns */
+  }
+}
+
+@media (max-width: 700px) {
+  .ack-grid {
+    grid-template-columns: repeat(1, var(--ack-card-width));
+    justify-content: center;
+    row-gap: 48px;  /* ← Add even more vertical spacing when stacked */
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ack-icon-btn {
     transition: none;
@@ -1139,7 +1155,7 @@ html {
 
   font-family: var(--title-font);
   font-weight: 700;
-  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  font-size: clamp(3rem, 6vw, 5.5rem);  /* ← Increased from clamp(2.3rem, 5vw, 4.5rem) */
   line-height: 1.1;
   color: var(--color-text);
 
@@ -1148,6 +1164,9 @@ html {
   overflow-wrap: break-word;
   word-break: keep-all;
 }
+
+
+
 
 /* Kill the old Acknowledgements offsets that made things jumbled */
 .ack-hero .website-title {
@@ -1212,4 +1231,5 @@ html {
     font-size: 16px;
   }
 }
+
 
