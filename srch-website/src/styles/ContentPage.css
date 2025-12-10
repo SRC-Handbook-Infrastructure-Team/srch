@@ -1268,3 +1268,8 @@ html[data-layout-mode="overlay"]
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
 }
+
+[id^="user-content-fn-"],
+[id^="user-content-fnref-"] {
+  scroll-margin-top: var(--navbar-height);
+}
