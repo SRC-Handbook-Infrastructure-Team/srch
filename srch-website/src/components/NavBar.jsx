@@ -20,7 +20,7 @@ import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
 import "../styles/ContentPage.css";
 
-function NavBar({ className = "" }) {
+function NavBar({ className = "", layoutMode }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,6 +28,7 @@ function NavBar({ className = "" }) {
   const pathParts = currentPath.split("/").filter(Boolean);
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
@@ -35,8 +36,42 @@ function NavBar({ className = "" }) {
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
-  const hasLoadedData = useRef(false);
   const [openSection, setOpenSection] = useState(null);
+
+  const hasLoadedData = useRef(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    console.log(
+      "[NavBar offset] layoutMode=",
+      layoutMode,
+      "isMenuOpen=",
+      isMenuOpen,
+      "isModulesExpanded=",
+      isModulesExpanded,
+    );
+
+    // Only push content in overlay mode (mobile / narrow)
+    if (layoutMode !== "overlay") {
+      root.style.setProperty("--mobile-menu-offset", "0px");
+      console.log("[NavBar offset] set to 0px (not overlay)");
+      return;
+    }
+
+    // Menu closed → no offset
+    if (!isMenuOpen) {
+      root.style.setProperty("--mobile-menu-offset", "0px");
+      console.log("[NavBar offset] set to 0px (menu closed)");
+      return;
+    }
+
+    // Menu open → fixed height based on modules state
+    const height = isModulesExpanded ? 300 : 200; // px
+    root.style.setProperty("--mobile-menu-offset", `${height}px`);
+    console.log("[NavBar offset] set to", height, "px");
+  }, [layoutMode, isMenuOpen, isModulesExpanded]);
 
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
@@ -48,9 +83,13 @@ function NavBar({ className = "" }) {
     setIsSearchOpen(true);
   }
 
-  function forceMenuOpen() {
+  function toggleMenu() {
     setIsSearchOpen(false);
-    setIsMenuOpen(true);
+    setIsMenuOpen((prev) => {
+      const next = !prev;
+      console.log("[NavBar] hamburger clicked, isMenuOpen ->", next);
+      return next;
+    });
   }
 
   useEffect(() => {
@@ -64,7 +103,7 @@ function NavBar({ className = "" }) {
       try {
         const sectionsData = await getSections();
         const sortedSections = [...sectionsData].sort(
-          (a, b) => a.order - b.order
+          (a, b) => a.order - b.order,
         );
         setSections(sortedSections);
 
@@ -75,7 +114,7 @@ function NavBar({ className = "" }) {
           const sectionSubsections = await getSubsections(section.id);
           if (sectionSubsections.length > 0) {
             subsectionsMap[section.id] = sectionSubsections.sort(
-              (a, b) => a.order - b.order
+              (a, b) => a.order - b.order,
             );
 
             if (section.id === currentSectionId) {
@@ -101,7 +140,7 @@ function NavBar({ className = "" }) {
     }
     loadAllData();
   }, []);
-
+  
   useEffect(() => {
     if (
       currentSectionId &&
@@ -115,7 +154,7 @@ function NavBar({ className = "" }) {
         });
       }
     }
-  }, [subsections, navigate]);
+  }, [subsections, navigate, currentSectionId, currentSubsectionId]);
 
   return (
     <>
@@ -141,10 +180,7 @@ function NavBar({ className = "" }) {
                 />
               </HStack>
             </Box>
-            <HStack
-              className="right-hstack"
-              spacing={"1rem"}
-            >
+            <HStack className="right-hstack" spacing={"1rem"}>
               <Box className="hide-base show-md">
                 <Box className="nav-dropdown">
                   <Box
@@ -190,7 +226,7 @@ function NavBar({ className = "" }) {
                                 sectionSubsections.length > 0
                               ) {
                                 navigate(
-                                  `/${section.id}/${sectionSubsections[0].id}`
+                                  `/${section.id}/${sectionSubsections[0].id}`,
                                 );
                               } else {
                                 navigate(`/${section.id}`);
@@ -229,10 +265,7 @@ function NavBar({ className = "" }) {
                 <Text>Acknowledgements</Text>
               </Box>
               <Box className="icon-button">
-                <MoonIcon
-                  className="navsearchbar-button"
-                  fontSize={"lg"}
-                ></MoonIcon>
+                <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
               </Box>
               <Box
                 className="icon-button"
@@ -244,25 +277,13 @@ function NavBar({ className = "" }) {
                   }
                 }}
               >
-                <SearchIcon
-                  className="navsearchbar-button"
-                  fontSize={"lg"}
-                ></SearchIcon>
+                <SearchIcon className="navsearchbar-button" fontSize={"lg"} />
               </Box>
               <Box
                 className="icon-button show-base hide-md"
-                onClick={() => {
-                  if (!isMenuOpen) {
-                    forceMenuOpen();
-                  } else {
-                    setIsMenuOpen(false);
-                  }
-                }}
+                onClick={toggleMenu}
               >
-                <HamburgerIcon
-                  color="black"
-                  fontSize={"x-large"}
-                ></HamburgerIcon>
+                <HamburgerIcon color="black" fontSize={"x-large"} />
               </Box>
             </HStack>
           </HStack>
@@ -362,7 +383,7 @@ function NavBar({ className = "" }) {
                           sectionSubsections.length > 0
                         ) {
                           navigate(
-                            `/${section.id}/${sectionSubsections[0].id}`
+                            `/${section.id}/${sectionSubsections[0].id}`,
                           );
                         } else {
                           navigate(`/${section.id}`);

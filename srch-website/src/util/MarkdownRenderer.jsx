@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo, useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -44,7 +44,7 @@ export function highlightText(node, highlight) {
     const regex = new RegExp(`(${highlight})`, "gi");
     const parts = node.split(regex);
     return parts.map((part, idx) =>
-      regex.test(part) ? <mark key={idx}>{part}</mark> : part
+      regex.test(part) ? <mark key={idx}>{part}</mark> : part,
     );
   }
   if (Array.isArray(node)) {
@@ -54,7 +54,7 @@ export function highlightText(node, highlight) {
     return React.cloneElement(
       node,
       node.props,
-      highlightText(node.props.children, highlight)
+      highlightText(node.props.children, highlight),
     );
   }
   return node;
@@ -235,7 +235,7 @@ export const getContent = async (sectionId, subsectionId) => {
           mainContent = cleanContent.slice(0, splitIndex).trim();
           // the remainder after the matched divider heading line
           const afterDivider = cleanContent.slice(
-            dividerMatch.index + dividerMatch[0].length
+            dividerMatch.index + dividerMatch[0].length,
           );
           sidebarRaw = afterDivider.trim();
         }
@@ -344,7 +344,6 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
-  activeDrawerTerm,
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -433,7 +432,7 @@ function MarkdownRenderer({
 
     window.requestAnimationFrame(() => {
       const el = document.querySelector(
-        `.srch-drawer-link[data-term="${term}"]`
+        `.srch-drawer-link[data-term="${term}"]`,
       );
       if (!el) return;
 
@@ -533,7 +532,7 @@ function MarkdownRenderer({
             ? props.children.map((child) =>
                 typeof child === "string"
                   ? highlightText(child, highlight)
-                  : child
+                  : child,
               )
             : props.children}
           {isFinal === false && <BetaTag />}
@@ -598,7 +597,7 @@ function MarkdownRenderer({
                 highlightText(child, highlight)
               ) : (
                 <span key={index}>{child}</span>
-              )
+              ),
             )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
@@ -740,7 +739,7 @@ function MarkdownRenderer({
         let term = raw;
         let label = null;
 
-        //  Support alias syntax {term|Custom Label}
+        // Support alias syntax {term|Custom Label}
         if (raw.includes("|")) {
           const [keyPart, labelPart] = raw.split("|");
           term = keyPart.trim();
@@ -750,40 +749,36 @@ function MarkdownRenderer({
         const termKey = term.toLowerCase();
         const value = sidebar?.[termKey];
 
+        // 🔑 Active state is derived purely from the URL param
+        const isActive = urlTerm && urlTerm.toLowerCase() === termKey;
+
         const toShow = value
           ? label ||
             term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
           : `⚠️ Missing: ${term}`;
 
+        const handleClick = (e) => {
+          e.preventDefault();
+          if (!value) return;
+
+          if (isActive) {
+            // Clicking the active chip closes the drawer
+            onDrawerOpen && onDrawerOpen(null);
+          } else {
+            // Clicking an inactive chip opens that term
+            onDrawerOpen && onDrawerOpen(termKey);
+          }
+        };
+
         return (
           <Box
             as={RouterLink}
-            to={`/${sectionId}/${subsectionId}/${term}`}
-            onClick={(e) => {
-              e.preventDefault();
-              if (activeDrawerLink === term) {
-                setActiveDrawerLink(null);
-                onDrawerOpen && onDrawerOpen(null);
-                return;
-              }
-
-              const scrollY =
-                typeof window !== "undefined" ? window.scrollY : 0;
-              if (value) {
-                setActiveDrawerLink(e.currentTarget);
-                onDrawerOpen && onDrawerOpen(term);
-
-                if (typeof window !== "undefined") {
-                  requestAnimationFrame(() =>
-                    requestAnimationFrame(() => window.scrollTo(0, scrollY))
-                  );
-                }
-              }
-            }}
+            to={`/${sectionId}/${subsectionId}/${termKey}`}
+            onClick={handleClick}
             className={`srch-drawer-link ${
-              activeDrawerLink === term ? "srch-drawer-link-active" : ""
+              isActive ? "srch-drawer-link-active" : ""
             }`}
-            data-term={term.toLowerCase()}
+            data-term={termKey}
             display="inline-flex"
             verticalAlign="baseline"
             alignItems="center"
@@ -798,8 +793,8 @@ function MarkdownRenderer({
             border="1px solid transparent"
             whiteSpace="normal"
             flexShrink={1}
-            maxW="100%" // don’t exceed container
-            minW={0} // allow shrink in tight columns
+            maxW="100%"
+            minW={0}
           >
             <Text
               as="span"
@@ -849,7 +844,7 @@ function MarkdownRenderer({
       sidebar,
       highlight,
       urlTerm,
-    ]
+    ],
   );
 
   // Add near the top of your component (inside the component)
