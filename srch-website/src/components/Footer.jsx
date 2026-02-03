@@ -153,8 +153,8 @@ function Footer() {
                   src_handbook@brown.edu
                 </a>
               </p>
-              <p className="feedback-footer">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
+              <p className="feedback-footer bug-form">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog" target="_blank">
                   Bug Report Form
                 </a>
               </p>

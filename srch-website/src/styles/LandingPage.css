@@ -41,13 +41,13 @@
 ------------------------------------------------------------------------ */
 
   --x-small-text: 16px;
-  --small-text: 18px;
-  --smedium-text: 20px;
+  --body-text: 18px;
   --medium-text: 28px;
   --large-text: 48px;
   --x-large-text: 70px;
   --title-weight: 500;
   --sub-weight: 400;
+
 
   /* ------------------------------------------------------------------------
      🎨 Design Tokens —  Fonts
@@ -56,12 +56,18 @@
   --title-font: "Funnel Sans", sans-serif;
   --title-weight: 500;
   --sub-weight: 400;
+
+  /* ------------------------------------------------------------------------
+    🎨 Design Tokens —  Spacing
+    ------------------------------------------------------------------------ */
+
+  --x-small-spacing: 6px;
+  --small-spacing: 12px;
   --small-gap: 36px;
   --medium-gap: 56px;
-  --large-gap: 84px;
+  --section-spacing: 84px;
   --space-none: 0;
   --upper-content-height: 75vh;
-
   --content-width: 627px;
 
   /* Card + grid geometry */
@@ -184,7 +190,7 @@ html {
 
 @media (max-width: 772px) {
   .info-section {
-    width: 530px;
+    width: 500px;
   }
 
   .root {
@@ -193,6 +199,7 @@ html {
 
   .upper-text-section {
     padding-left: calc((455 / 1512) * 100vw);
+    padding-right: 18vw;
   }
 }
 
@@ -214,19 +221,13 @@ html {
 }
 
 
-
-
-
-
 .lower-content {
   margin-top: var(--upper-content-height);
-  padding-top: 72px;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 20px;
   align-self: stretch;
   background: #fff;
   position: relative;
@@ -250,9 +251,42 @@ html {
   align-items: center;
   white-space: normal;
   overflow-wrap: normal;
-  gap: 12px;
+  gap: 6px;
   display: flex;
 }
+
+.scroll-caret-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-caret-button:hover {
+  opacity: 0.7;
+}
+
+.scroll-caret-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.scroll-caret-icon {
+  width: 36px;
+  height: 36px;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.scroll-caret-icon.hidden {
+  opacity: 0;
+}
+
 
 .curriculum-title {
   color: var(--color-text);
@@ -267,7 +301,7 @@ html {
   width: 100%;
   text-align: center;
   color: var(--color-text);
-  font-size: var(--small-text);
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -316,7 +350,11 @@ html {
 }
 
 .topic-card:focus {
-  outline: 1px solid #3a251a;
+  outline: 1.5px solid #3a251a;
+}
+
+.topic-card:active {
+  outline: 1.5px solid #3a251a !important;
 }
 
 .topic-card img {
@@ -366,14 +404,14 @@ html {
   justify-content: center;
   align-items: flex-start;
   padding: 0px;
-  gap: 6px;
+  gap: var(--x-small-spacing);
 }
 
 .topic-text {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   display: flex;
 }
 
@@ -408,12 +446,10 @@ html {
   background: rgba(90, 45, 0, 0.5);
 }
 
-
-
 .content-section {
   width: 100vw;
-  padding-top: 84px;
-  padding-bottom: 84px;
+  padding-top: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
   align-self: center;
   justify-content: center;
   flex-direction: column;
@@ -427,7 +463,7 @@ html {
   color: var(--color-text);
   font-family: var(--title-font);
   font-weight: var(--title-weight);
-  font-size: 48px;
+  font-size: var(--large-text);
   word-wrap: break-word;
 }
 
@@ -435,7 +471,7 @@ html {
   width: 75%;
   text-align: center;
   color: var(--color-text);
-  font-size: 18px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -444,14 +480,14 @@ html {
 
 .landing-search-container {
   width: 60%;
+  transition: width 0.3s ease;
 }
 
 .section-title {
   align-self: stretch;
   text-align: center;
   color: var(--color-text);
-  font-size: 48px;
-  padding-bottom: 24px;
+  font-size: var(--large-text);
   font-family: var(--title-font);
   font-weight: var(--title-weight);
   word-wrap: break-word;
@@ -497,7 +533,7 @@ html {
 .list-text {
   flex: 1;
   color: var(--color-text);
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -531,13 +567,13 @@ html {
 }
 
 .learn-more-button:hover {
-  background: rgba(83, 28, 0, 0.05);
+  background: rgba(83, 28, 0, 0.036);
   outline-color: rgba(83, 28, 0, 0.4);
 }
 
 .learn-more-text {
   color: var(--color-text);
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   word-wrap: break-word;
@@ -553,7 +589,7 @@ html {
   justify-content: center;
   text-align: left;
   color: black;
-  font-size: 20px;
+  font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: 400;
   line-height: 28px;
@@ -585,10 +621,10 @@ html {
 /* Feedback Contact */
 .feedback-contact {
   color: var(--color-text);
-  font-size: 20px;
+  font-size: 18px;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
-  line-height: 30px;
+  line-height: 28px;
   word-wrap: break-word;
 }
 
@@ -612,6 +648,7 @@ html {
   .logo-area {
     padding-right: 50px;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -626,6 +663,11 @@ html {
 
   .modules {
     width: 100%;
+  }
+
+  .landing-search-container {
+    width: 80%;
+    transition: width 0.3s ease;
   }
 }
 
@@ -682,14 +724,14 @@ html {
 .ack-hero .website-title {
   position: relative;
   left: -100px;
-  top: 70px;
+  top: 72px;
   font-size: 84px;
   line-height: 100px;
 }
 
 .ack-hero .info-section {
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 18px;
+  font-family: var(--content-font);
+  font-size: var(--body-text);
   line-height: 28px;
   color: var(--ack-text);
 }
@@ -752,7 +794,7 @@ html {
   width: var(--ack-card-width);
   display: flex;
   flex-direction: column;
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   box-sizing: border-box;
 }
 
@@ -810,7 +852,7 @@ html {
 }
 
 .ack-card-fullname {
-  font-size: 18px;
+  font-size: var(--body-text);
   font-weight: 600;
   color: var(--ack-brand-brown);
   line-height: 22px;
@@ -823,7 +865,7 @@ html {
 
 .ack-card-subinfo {
   font-size: 15px;
-  line-height: 20px;
+  line-height: 18px;
   margin-top: 2px;
   color: #000;
 }
@@ -836,7 +878,7 @@ html {
 .ack-card-icons {
   margin-top: 10px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ack-icon-btn {
@@ -975,8 +1017,8 @@ html {
 }
 
 .about-sub {
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 18px;
+  font-family: var(--content-font);
+  font-size: var(--body-text);
   color: #1a1a1a;
   line-height: 28px;
   max-width: 600px;
@@ -1005,31 +1047,30 @@ html {
 
 .about-section h2 {
   font-family: "Funnel Sans", sans-serif;
-  font-weight: 900;
-  font-size: 48px;
+  font-size: var(--large-text);
   line-height: 1.2;
   margin-bottom: 24px;
   color: rgba(0, 0, 0, 1);
 }
 
 .about-section p {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   color: rgba(0, 0, 0, 1);
-  font-size: 20px;
+  font-size: var(--body-text);
   line-height: 1.6;
   max-width: 650px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .about-section ul {
-  padding-left: 22px;
+  padding-left: 24px;
   margin-top: 8px;
 }
 
 .about-section li {
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   color: rgba(0, 0, 0, 1);
-  font-size: 20px;
+  font-size: var(--body-text);
   line-height: 1.6;
   margin-bottom: 8px;
 }
@@ -1054,11 +1095,14 @@ html {
   .about-lower-content {
     padding: 72px 80px;
   }
+  .lower-content {
+    margin-top: 60vh;
+  }
 }
 
 @media (max-width: 768px) {
   .about-title {
-    font-size: 48px;
+    font-size: var(--large-text);
   }
   .about-upper-text {
     width: 80vw;
@@ -1134,13 +1178,13 @@ html {
 .website-title,
 .about-title {
   width: auto;
-  max-width: 32rem;
+  max-width: 34rem;
   height: auto;
 
   font-family: var(--title-font);
   font-weight: 700;
-  font-size: clamp(2.3rem, 5vw, 4.5rem);
-  line-height: 1.1;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 1.2;
   color: var(--color-text);
 
   margin: 0;
@@ -1160,10 +1204,10 @@ html {
 .info-section,
 .about-sub {
   width: auto;
-  max-width: 32rem;
+  max-width: 34rem;
 
   font-family: var(--content-font);
-  font-size: 18px;
+  font-size: var(--body-text);
   line-height: 1.6;
   color: var(--color-text);
 
@@ -1198,13 +1242,13 @@ html {
   .ack-upper-text-section,
   .about-upper-text {
     align-items: center;
-    text-align: center;
+    text-align: left;
     gap: 16px;
   }
 
   .website-title,
   .about-title {
-    font-size: clamp(2.1rem, 7vw, 3.2rem);
+    font-size: clamp(2.5rem, 7vw, 3.5rem);
   }
 
   .info-section,
