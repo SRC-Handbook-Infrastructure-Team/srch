@@ -44,7 +44,7 @@ export function highlightText(node, highlight) {
     const regex = new RegExp(`(${highlight})`, "gi");
     const parts = node.split(regex);
     return parts.map((part, idx) =>
-      regex.test(part) ? <mark key={idx}>{part}</mark> : part
+      regex.test(part) ? <mark key={idx}>{part}</mark> : part,
     );
   }
   if (Array.isArray(node)) {
@@ -54,7 +54,7 @@ export function highlightText(node, highlight) {
     return React.cloneElement(
       node,
       node.props,
-      highlightText(node.props.children, highlight)
+      highlightText(node.props.children, highlight),
     );
   }
   return node;
@@ -235,7 +235,7 @@ export const getContent = async (sectionId, subsectionId) => {
           mainContent = cleanContent.slice(0, splitIndex).trim();
           // the remainder after the matched divider heading line
           const afterDivider = cleanContent.slice(
-            dividerMatch.index + dividerMatch[0].length
+            dividerMatch.index + dividerMatch[0].length,
           );
           sidebarRaw = afterDivider.trim();
         }
@@ -344,7 +344,6 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
-  
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -365,6 +364,146 @@ function MarkdownRenderer({
   const RED_DARK = "#7a000f"; // hover shade (kept for compatibility; not used on chips)
   const BLACK = "#000000";
 
+  /* ------------------------------------------------------------------------
+   * Active drawer link state handling (no external integration required)
+   *
+   *  - We add 'srch-drawer-link-active' to the clicked <sidebar-ref>.
+   *  - A MutationObserver watches '.right-sidebar' for '.open'.
+   *    When it closes, we remove the active class from all sidebar-ref pills.
+   * --------------------------------------------------------------------- */
+  const observerRef = useRef(null);
+
+  const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
+
+  useEffect(() => {
+    const drawer = document.querySelector(".right-sidebar");
+    if (!drawer) return;
+
+    const cleanupAllActive = () => {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
+    };
+
+    const obs = new MutationObserver(() => {
+      const isOpen = drawer.classList.contains("open");
+      if (!isOpen) {
+        cleanupAllActive();
+      }
+    });
+
+    obs.observe(drawer, { attributes: true, attributeFilter: ["class"] });
+    observerRef.current = obs;
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      // Safety cleanup on unmount
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((el) => el.classList.remove("srch-drawer-link-active"));
+      setActiveDrawerLinkState(null);
+    };
+  }, []);
+
+  const setActiveDrawerLink = (el) => {
+    try {
+      document
+        .querySelectorAll(".srch-drawer-link-active")
+        .forEach((n) => n.classList.remove("srch-drawer-link-active"));
+      if (el) {
+        el.classList.add("srch-drawer-link-active");
+        const term = el.dataset?.term || el.getAttribute?.("data-term") || null;
+        setActiveDrawerLinkState(term);
+      } else {
+        setActiveDrawerLinkState(null);
+      }
+    } catch (e) {
+      /* no-op */
+    }
+  };
+
+  // Smooth, one-time focus for drawer chip when opening/closing
+  function focusDrawerChip(term) {
+    if (!term) return;
+
+    window.requestAnimationFrame(() => {
+      const el = document.querySelector(
+        `.srch-drawer-link[data-term="${term}"]`,
+      );
+      if (!el) return;
+
+      // Find nearest scroll container
+      let container = el.parentElement;
+      while (container && container !== document.body) {
+        const style = window.getComputedStyle(container);
+        if (style.overflowY === "auto" || style.overflowY === "scroll") break;
+        container = container.parentElement;
+      }
+
+      // Default to window scroll
+      if (!container || container === document.body) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+        return;
+      }
+
+      const cRect = container.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      const margin = 24;
+
+      const isAbove = eRect.top < cRect.top + margin;
+      const isBelow = eRect.bottom > cRect.bottom - margin;
+
+      if (!isAbove && !isBelow) return; // already visible → no movement
+
+      const delta = isAbove
+        ? eRect.top - cRect.top - margin
+        : eRect.bottom - cRect.bottom + margin;
+
+      container.scrollTo({
+        top: container.scrollTop + delta,
+        behavior: "smooth",
+      });
+    });
+  }
+
+  // After drawer link becomes active, wait for the drawer animation
+  // to finish and then gently scroll it into view.
+  useEffect(() => {
+    if (!activeDrawerLink) return;
+
+    const drawer = document.querySelector(".right-sidebar");
+    if (!drawer) return;
+
+    // Match the CSS transition on .right-sidebar (0.35s)
+    const timeout = setTimeout(() => {
+      focusDrawerChip(activeDrawerLink);
+    }, 350);
+
+    return () => clearTimeout(timeout);
+  }, [activeDrawerLink]);
+
+  useEffect(() => {
+    if (!activeDrawerTerm) {
+      setActiveDrawerLink(null);
+      return;
+    }
+    const key = String(activeDrawerTerm).toLowerCase();
+
+    const timer = setTimeout(() => {
+      const el = document.querySelector(`[data-term="${key}"]`);
+      setActiveDrawerLink(el || null);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [activeDrawerTerm, content, sidebar]);
 
   const BetaTag = () => (
     <Box
@@ -393,7 +532,7 @@ function MarkdownRenderer({
             ? props.children.map((child) =>
                 typeof child === "string"
                   ? highlightText(child, highlight)
-                  : child
+                  : child,
               )
             : props.children}
           {isFinal === false && <BetaTag />}
@@ -458,7 +597,7 @@ function MarkdownRenderer({
                 highlightText(child, highlight)
               ) : (
                 <span key={index}>{child}</span>
-              )
+              ),
             )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
@@ -481,10 +620,19 @@ function MarkdownRenderer({
             color={BLACK}
             id={id}
             {...rest}
+            sx={
+              number
+                ? {
+                    listStyleType: "none",
+                    "::marker": {
+                      display: "none",
+                    },
+                  }
+                : {}
+            }
             style={{
-              listStyle: "none",
-              paddingLeft: "1.5em",
               position: "relative",
+              paddingLeft: number ? "1.5rem" : "0",
             }}
           >
             {number && (
@@ -587,87 +735,84 @@ function MarkdownRenderer({
        * - Shape: radius 17px, height 32px, variable width
        */
       "sidebar-ref": ({ node }) => {
-  let raw = node.properties?.["term"] || "";
-  let term = raw;
-  let label = null;
+        let raw = node.properties?.["term"] || "";
+        let term = raw;
+        let label = null;
 
-  // Support alias syntax {term|Custom Label}
-  if (raw.includes("|")) {
-    const [keyPart, labelPart] = raw.split("|");
-    term = keyPart.trim();
-    label = labelPart.trim();
-  }
+        // Support alias syntax {term|Custom Label}
+        if (raw.includes("|")) {
+          const [keyPart, labelPart] = raw.split("|");
+          term = keyPart.trim();
+          label = labelPart.trim();
+        }
 
-  const termKey = term.toLowerCase();
-  const value = sidebar?.[termKey];
+        const termKey = term.toLowerCase();
+        const value = sidebar?.[termKey];
 
-  // 🔑 Active state is derived purely from the URL param
-  const isActive =
-    urlTerm && urlTerm.toLowerCase() === termKey;
+        // 🔑 Active state is derived purely from the URL param
+        const isActive = urlTerm && urlTerm.toLowerCase() === termKey;
 
-  const toShow = value
-    ? label ||
-      term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
-    : `⚠️ Missing: ${term}`;
+        const toShow = value
+          ? label ||
+            term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
+          : `⚠️ Missing: ${term}`;
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (!value) return;
+        const handleClick = (e) => {
+          e.preventDefault();
+          if (!value) return;
 
-    if (isActive) {
-      // Clicking the active chip closes the drawer
-      onDrawerOpen && onDrawerOpen(null);
-    } else {
-      // Clicking an inactive chip opens that term
-      onDrawerOpen && onDrawerOpen(termKey);
-    }
-  };
+          if (isActive) {
+            // Clicking the active chip closes the drawer
+            onDrawerOpen && onDrawerOpen(null);
+          } else {
+            // Clicking an inactive chip opens that term
+            onDrawerOpen && onDrawerOpen(termKey);
+          }
+        };
 
-  return (
-    <Box
-      as={RouterLink}
-      to={`/${sectionId}/${subsectionId}/${termKey}`}
-      onClick={handleClick}
-      className={`srch-drawer-link ${
-        isActive ? "srch-drawer-link-active" : ""
-      }`}
-      data-term={termKey}
-      display="inline-flex"
-      verticalAlign="baseline"
-      alignItems="center"
-      gap="6px"
-      px="10px"
-      py="4px"
-      mx="0"
-      my="2px"
-      borderRadius="999px"
-      color={RED}
-      textDecoration="none"
-      border="1px solid transparent"
-      whiteSpace="normal"
-      flexShrink={1}
-      maxW="100%"
-      minW={0}
-    >
-      <Text
-        as="span"
-        fontWeight="700"
-        fontSize="inherit"
-        lineHeight="inherit"
-        sx={{
-          overflowWrap: "anywhere",
-          wordBreak: "break-word",
-          minWidth: 0,
-        }}
-      >
-        {highlightText(toShow, highlight)}
-      </Text>
-      <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
-    </Box>
-  );
-},
-
-      
+        return (
+          <Box
+            as={RouterLink}
+            to={`/${sectionId}/${subsectionId}/${termKey}`}
+            onClick={handleClick}
+            className={`srch-drawer-link ${
+              isActive ? "srch-drawer-link-active" : ""
+            }`}
+            data-term={termKey}
+            display="inline-flex"
+            verticalAlign="baseline"
+            alignItems="center"
+            gap="6px"
+            px="10px"
+            py="4px"
+            mx="0"
+            my="2px"
+            borderRadius="999px"
+            color={RED}
+            textDecoration="none"
+            border="1px solid transparent"
+            whiteSpace="normal"
+            flexShrink={1}
+            maxW="100%"
+            minW={0}
+          >
+            <Text
+              as="span"
+              fontWeight="700"
+              fontSize="inherit"
+              lineHeight="inherit"
+              sx={{
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+                minWidth: 0,
+              }}
+            >
+              {highlightText(toShow, highlight)}
+            </Text>
+            <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
+          </Box>
+        );
+      },
 
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
@@ -699,7 +844,7 @@ function MarkdownRenderer({
       sidebar,
       highlight,
       urlTerm,
-    ]
+    ],
   );
 
   // Add near the top of your component (inside the component)
@@ -707,7 +852,11 @@ function MarkdownRenderer({
     <div>
       <ReactMarkdown
         components={components}
-        remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
+        remarkPlugins={[
+          remarkGfm,
+          [remarkHighlight, highlight],
+          remarkSidebarRef,
+        ]}
         rehypePlugins={[rehypeRaw]}
       >
         {processedContent}

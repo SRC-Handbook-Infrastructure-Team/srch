@@ -20,4 +20,4 @@ For example to clone using HTTPS, run
 
 8. Run `npm run deploy` from the `srch-website` directory to deploy your changes.
 
-9. You should automatically be able to view the deployed changes in our GitHub pages site: https://src-handbook-infrastructure-team.github.io/srch/
+9. You should automatically be able to view the deployed changes in our GitHub pages site: https://src-handbook-infrastructure-team.github.io/srch

@@ -11,12 +11,13 @@
   inset: 0;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: calc(100vw + 100px);
   height: 350px;
   background-image: url("../assets/landing-page-background-gradient.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  transform: translateX(-100px); 
 }
 
 .background-fade {
