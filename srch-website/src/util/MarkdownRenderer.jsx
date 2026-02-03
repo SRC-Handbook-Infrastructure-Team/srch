@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo, useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -44,7 +44,7 @@ export function highlightText(node, highlight) {
     const regex = new RegExp(`(${highlight})`, "gi");
     const parts = node.split(regex);
     return parts.map((part, idx) =>
-      regex.test(part) ? <mark key={idx}>{part}</mark> : part
+      regex.test(part) ? <mark key={idx}>{part}</mark> : part,
     );
   }
   if (Array.isArray(node)) {
@@ -54,7 +54,7 @@ export function highlightText(node, highlight) {
     return React.cloneElement(
       node,
       node.props,
-      highlightText(node.props.children, highlight)
+      highlightText(node.props.children, highlight),
     );
   }
   return node;
@@ -235,7 +235,7 @@ export const getContent = async (sectionId, subsectionId) => {
           mainContent = cleanContent.slice(0, splitIndex).trim();
           // the remainder after the matched divider heading line
           const afterDivider = cleanContent.slice(
-            dividerMatch.index + dividerMatch[0].length
+            dividerMatch.index + dividerMatch[0].length,
           );
           sidebarRaw = afterDivider.trim();
         }
@@ -344,7 +344,6 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
-  activeDrawerTerm,
 }) {
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -373,7 +372,7 @@ function MarkdownRenderer({
    *    When it closes, we remove the active class from all sidebar-ref pills.
    * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
-  
+
   const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
   useEffect(() => {
@@ -410,9 +409,6 @@ function MarkdownRenderer({
     };
   }, []);
 
-
-
-
   const setActiveDrawerLink = (el) => {
     try {
       document
@@ -431,52 +427,52 @@ function MarkdownRenderer({
   };
 
   // Smooth, one-time focus for drawer chip when opening/closing
-function focusDrawerChip(term) {
-  if (!term) return;
+  function focusDrawerChip(term) {
+    if (!term) return;
 
-  window.requestAnimationFrame(() => {
-    const el = document.querySelector(
-      `.srch-drawer-link[data-term="${term}"]`
-    );
-    if (!el) return;
+    window.requestAnimationFrame(() => {
+      const el = document.querySelector(
+        `.srch-drawer-link[data-term="${term}"]`,
+      );
+      if (!el) return;
 
-    // Find nearest scroll container
-    let container = el.parentElement;
-    while (container && container !== document.body) {
-      const style = window.getComputedStyle(container);
-      if (style.overflowY === "auto" || style.overflowY === "scroll") break;
-      container = container.parentElement;
-    }
+      // Find nearest scroll container
+      let container = el.parentElement;
+      while (container && container !== document.body) {
+        const style = window.getComputedStyle(container);
+        if (style.overflowY === "auto" || style.overflowY === "scroll") break;
+        container = container.parentElement;
+      }
 
-    // Default to window scroll
-    if (!container || container === document.body) {
-      el.scrollIntoView({
+      // Default to window scroll
+      if (!container || container === document.body) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+        return;
+      }
+
+      const cRect = container.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      const margin = 24;
+
+      const isAbove = eRect.top < cRect.top + margin;
+      const isBelow = eRect.bottom > cRect.bottom - margin;
+
+      if (!isAbove && !isBelow) return; // already visible → no movement
+
+      const delta = isAbove
+        ? eRect.top - cRect.top - margin
+        : eRect.bottom - cRect.bottom + margin;
+
+      container.scrollTo({
+        top: container.scrollTop + delta,
         behavior: "smooth",
-        block: "nearest",
-        inline: "nearest",
       });
-      return;
-    }
-
-    const cRect = container.getBoundingClientRect();
-    const eRect = el.getBoundingClientRect();
-    const margin = 24;
-
-    const isAbove = eRect.top < cRect.top + margin;
-    const isBelow = eRect.bottom > cRect.bottom - margin;
-
-    if (!isAbove && !isBelow) return; // already visible → no movement
-
-    const delta = isAbove
-      ? eRect.top - cRect.top - margin
-      : eRect.bottom - cRect.bottom + margin;
-
-    container.scrollTo({
-      top: container.scrollTop + delta,
-      behavior: "smooth",
     });
-  });
-}
+  }
 
   // After drawer link becomes active, wait for the drawer animation
   // to finish and then gently scroll it into view.
@@ -493,7 +489,6 @@ function focusDrawerChip(term) {
 
     return () => clearTimeout(timeout);
   }, [activeDrawerLink]);
-
 
   useEffect(() => {
     if (!activeDrawerTerm) {
@@ -537,7 +532,7 @@ function focusDrawerChip(term) {
             ? props.children.map((child) =>
                 typeof child === "string"
                   ? highlightText(child, highlight)
-                  : child
+                  : child,
               )
             : props.children}
           {isFinal === false && <BetaTag />}
@@ -602,7 +597,7 @@ function focusDrawerChip(term) {
                 highlightText(child, highlight)
               ) : (
                 <span key={index}>{child}</span>
-              )
+              ),
             )}
             {isExternal && (
               <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
@@ -625,10 +620,19 @@ function focusDrawerChip(term) {
             color={BLACK}
             id={id}
             {...rest}
+            sx={
+              number
+                ? {
+                    listStyleType: "none",
+                    "::marker": {
+                      display: "none",
+                    },
+                  }
+                : {}
+            }
             style={{
-              listStyle: "none",
-              paddingLeft: "1.5em",
               position: "relative",
+              paddingLeft: number ? "1.5rem" : "0",
             }}
           >
             {number && (
@@ -735,7 +739,7 @@ function focusDrawerChip(term) {
         let term = raw;
         let label = null;
 
-        //  Support alias syntax {term|Custom Label}
+        // Support alias syntax {term|Custom Label}
         if (raw.includes("|")) {
           const [keyPart, labelPart] = raw.split("|");
           term = keyPart.trim();
@@ -745,40 +749,36 @@ function focusDrawerChip(term) {
         const termKey = term.toLowerCase();
         const value = sidebar?.[termKey];
 
+        // 🔑 Active state is derived purely from the URL param
+        const isActive = urlTerm && urlTerm.toLowerCase() === termKey;
+
         const toShow = value
           ? label ||
             term.replace(/-/g, " ").replace(/Case Study(?!:)/g, "Case Study:")
           : `⚠️ Missing: ${term}`;
 
+        const handleClick = (e) => {
+          e.preventDefault();
+          if (!value) return;
+
+          if (isActive) {
+            // Clicking the active chip closes the drawer
+            onDrawerOpen && onDrawerOpen(null);
+          } else {
+            // Clicking an inactive chip opens that term
+            onDrawerOpen && onDrawerOpen(termKey);
+          }
+        };
+
         return (
           <Box
             as={RouterLink}
-            to={`/${sectionId}/${subsectionId}/${term}`}
-            onClick={(e) => {
-              e.preventDefault();
-              if (activeDrawerLink === term) {
-                setActiveDrawerLink(null);
-                onDrawerOpen && onDrawerOpen(null);
-                return;
-              }
-
-              const scrollY =
-                typeof window !== "undefined" ? window.scrollY : 0;
-              if (value) {
-                setActiveDrawerLink(e.currentTarget);
-                onDrawerOpen && onDrawerOpen(term);
-
-                if (typeof window !== "undefined") {
-                  requestAnimationFrame(() =>
-                    requestAnimationFrame(() => window.scrollTo(0, scrollY))
-                  );
-                }
-              }
-            }}
+            to={`/${sectionId}/${subsectionId}/${termKey}`}
+            onClick={handleClick}
             className={`srch-drawer-link ${
-              activeDrawerLink === term ? "srch-drawer-link-active" : ""
+              isActive ? "srch-drawer-link-active" : ""
             }`}
-            data-term={term.toLowerCase()}
+            data-term={termKey}
             display="inline-flex"
             verticalAlign="baseline"
             alignItems="center"
@@ -793,8 +793,8 @@ function focusDrawerChip(term) {
             border="1px solid transparent"
             whiteSpace="normal"
             flexShrink={1}
-            maxW="100%" // don’t exceed container
-            minW={0} // allow shrink in tight columns
+            maxW="100%"
+            minW={0}
           >
             <Text
               as="span"
@@ -844,7 +844,7 @@ function focusDrawerChip(term) {
       sidebar,
       highlight,
       urlTerm,
-    ]
+    ],
   );
 
   // Add near the top of your component (inside the component)
@@ -852,7 +852,11 @@ function focusDrawerChip(term) {
     <div>
       <ReactMarkdown
         components={components}
-        remarkPlugins={[remarkGfm, [remarkHighlight, highlight], remarkSidebarRef]}
+        remarkPlugins={[
+          remarkGfm,
+          [remarkHighlight, highlight],
+          remarkSidebarRef,
+        ]}
         rehypePlugins={[rehypeRaw]}
       >
         {processedContent}

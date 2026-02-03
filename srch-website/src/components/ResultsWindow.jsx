@@ -1,7 +1,7 @@
 import "../styles/ResultsWindow.css";
 import React, { useState, useEffect } from "react";
 import { Collapse, Box } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
 
 const classSuffix = (className, floating) =>
@@ -25,6 +25,7 @@ export const ResultsWindow = React.memo(
     const [searchResults, setSearchResults] = useState(null);
     const [isIndexInitialized, setIndexInitialized] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const floating = setIsSearchOpen == null;
 
     useEffect(() => {
@@ -57,7 +58,14 @@ export const ResultsWindow = React.memo(
           maxResults != null) && (
           <div className={classSuffix("results-window", floating)}>
             {searchResults != null && maxResults !== 0 && (
-              <Collapse in={searchQuery} animateOpacity>
+              <Collapse
+                in={searchQuery}
+                animateOpacity
+                transition={{
+                  enter: { duration: 0.5 },
+                  exit: { duration: 0.25 },
+                }}
+              >
                 <div
                   className={classSuffix("results-list", floating)}
                   style={
@@ -85,25 +93,44 @@ export const ResultsWindow = React.memo(
                             role="link"
                             tabIndex={0}
                             onClick={() => {
-                              navigate(
-                                `/${doc.section}/${doc.subsection || ""}${
-                                  doc.isDrawer
-                                    ? `/${doc.anchor}`
-                                    : `#${doc.anchor}`
-                                }`,
-                                { state: { highlight: searchQuery } }
-                              );
+                              const targetPath = `/${doc.section}/${doc.subsection || ""}${
+                                doc.isDrawer
+                                  ? `/${doc.anchor}`
+                                  : `#${doc.anchor}`
+                              }`;
+                              const currentPath =
+                                location.pathname + location.hash;
+
+                              if (
+                                currentPath === targetPath ||
+                                location.pathname === targetPath.split("#")[0]
+                              ) {
+                                window.location.reload();
+                              } else {
+                                navigate(targetPath, {
+                                  state: { highlight: searchQuery },
+                                });
+                              }
                             }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
-                                navigate(
-                                  `/${doc.section}/${doc.subsection || ""}${
-                                    doc.isDrawer
-                                      ? `/${doc.anchor}`
-                                      : `#${doc.anchor}`
-                                  }`
-                                );
+                                const targetPath = `/${doc.section}/${doc.subsection || ""}${
+                                  doc.isDrawer
+                                    ? `/${doc.anchor}`
+                                    : `#${doc.anchor}`
+                                }`;
+                                const currentPath =
+                                  location.pathname + location.hash;
+
+                                if (
+                                  currentPath === targetPath ||
+                                  location.pathname === targetPath.split("#")[0]
+                                ) {
+                                  window.location.reload();
+                                } else {
+                                  navigate(targetPath);
+                                }
                               }
                             }}
                           >

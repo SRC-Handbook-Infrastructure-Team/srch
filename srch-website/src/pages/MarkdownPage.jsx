@@ -10,8 +10,13 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { saveScrollPosition } from "../components/ScrollManager";
-import Footer from "../components/Footer";
+import logoImage from "../assets/logo.png";
+import privacyIcon from "../assets/privacy-icon.svg";
+import automatedIcon from "../assets/decision-icon.svg";
+import aiIcon from "../assets/ai-icon.svg";
+import accessibilityIcon from "../assets/accessibility-icon.svg";
+import Footer from "../components/Footer"
+
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -169,6 +174,7 @@ function MarkdownPage() {
   }, [location.state, location.search]);
 
   const [sidebar, setSidebar] = useState({});
+  const [drawerTerm, setDrawerTerm] = useState("");
   const [drawerActiveKey, setDrawerActiveKey] = useState(null);
 
   const [mainContent, setMainContent] = useState("");
@@ -184,6 +190,7 @@ function MarkdownPage() {
 const scrollPosRef = useRef(0);
 
   const formattedTitle = useMemo(() => {
+    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
 
     return getFormattedTitle(
@@ -232,45 +239,45 @@ async function openGlobalDrawerForTerm(term, opts = {}) {
   if (!term) return;
   const key = String(term).toLowerCase();
 
-    const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      if (!silent) {
-        toast({
-          title: "Sidebar Entry Not Found",
-          description: `The sidebar entry "${term}" could not be found in this subsection.`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom-right",
-        });
-      }
-      return;
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    if (!silent) {
+      toast({
+        title: "Sidebar Entry Not Found",
+        description: `The sidebar entry "${term}" could not be found in this subsection.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
     }
+    return;
+  }
 
-    let drawerFile = null;
-    try {
-      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) {}
+  let drawerFile = null;
+  try {
+    drawerFile = await getDrawerFile(sectionId, subsectionId, key);
+  } catch (_) {}
 
-    const contentToShow =
-      drawerFile?.content ||
-      (typeof sidebarEntry === "string"
-        ? sidebarEntry
-        : sidebarEntry.content) ||
-      "";
+  const contentToShow =
+    drawerFile?.content ||
+    (typeof sidebarEntry === "string"
+      ? sidebarEntry
+      : sidebarEntry.content) ||
+    "";
 
-    const heading =
-      (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
-      String(term).replace(/-/g, " ");
+  const heading =
+    (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
+    String(term).replace(/-/g, " ");
 
-    const node = (
-      <>
-        <div className="drawer-meta-label">Familiar Case Studies</div>
-        <div className="drawer-meta-divider" />
+  const node = (
+    <>
+      <div className="drawer-meta-label">Familiar Case Studies</div>
+      <div className="drawer-meta-divider" />
 
-        <h2 className="drawer-section-title">
-          {highlightText(heading, highlight)}
-        </h2>
+      <h2 className="drawer-section-title">
+        {highlightText(heading, highlight)}
+      </h2>
 
       <MarkdownRenderer
         content={contentToShow}
@@ -307,7 +314,6 @@ useEffect(() => {
 
       if (!sectionId) {
         const sections = await getSections();
-        saveScrollPosition();
         if (sections.length > 0) navigate(`/${sections[0].id}`);
         setIsLoading(false);
         return;
@@ -345,7 +351,6 @@ useEffect(() => {
             isClosable: true,
             position: "bottom-right",
           });
-          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
 
@@ -413,7 +418,6 @@ useEffect(() => {
             isClosable: true,
             position: "bottom-right",
           });
-          saveScrollPosition();
           navigate(previousPath, { replace: true });
         }
       }
@@ -456,26 +460,26 @@ useEffect(() => {
   }, [sectionId]);
 
   useEffect(() => {
-    // No term → close drawer and clear active state
-    if (!urlTerm) {
-      closeRightDrawer();
-      setDrawerActiveKey(null);
-      return;
-    }
+  // No term → close drawer and clear active state
+  if (!urlTerm) {
+    closeRightDrawer();
+    setDrawerActiveKey(null);
+    return;
+  }
 
-    const key = String(urlTerm).toLowerCase();
+  const key = String(urlTerm).toLowerCase();
 
-    // Wait until sidebar is actually loaded before trying to open the drawer
-    if (!sidebar || Object.keys(sidebar).length === 0) {
-      return; // sidebar not ready yet → we'll re-run when sidebar updates
-    }
+  // Wait until sidebar is actually loaded before trying to open the drawer
+  if (!sidebar || Object.keys(sidebar).length === 0) {
+    return; // sidebar not ready yet → we'll re-run when sidebar updates
+  }
 
-    // Optionally guard: only auto-open if the entry really exists
-    const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      // You can choose to silently ignore here, or log/track if you want
-      return;
-    }
+  // Optionally guard: only auto-open if the entry really exists
+  const sidebarEntry = getSidebarContent(key);
+  if (!sidebarEntry) {
+    // You can choose to silently ignore here, or log/track if you want
+    return;
+  }
 
     // URL-driven open: pure UI call, no nav/toggle
   openGlobalDrawerForTerm(key, {
@@ -484,12 +488,12 @@ useEffect(() => {
 }, [urlTerm, sidebar]);
 
 
-  const scrollKey = `/${sectionId || ""}/${subsectionId || ""}`;
 
   const checkAndNavigate = useCallback(
     async (path) => {
       if (isLoading) return;
       const pathParts = path.split("/").filter(Boolean);
+
       const targetSectionId = pathParts[0];
       const targetSubsectionId = pathParts[1] || null;
 
@@ -667,6 +671,7 @@ function handleDrawerOpen(term) {
               urlTerm={urlTerm}
             />
           </Box>
+          
         )}
       </Box>
       <div className="page-height"></div>

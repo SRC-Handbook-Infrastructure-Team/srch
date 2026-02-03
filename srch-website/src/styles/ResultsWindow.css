@@ -166,14 +166,6 @@
   padding: 0 1.25rem 0 1.25rem;
 }
 
-.navsearchbar-container {
-  position: relative;
-  align-items: center;
-  overflow: visible;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
 .results-list-floating {
   overflow-y: auto;
   padding-top: 0.5rem;

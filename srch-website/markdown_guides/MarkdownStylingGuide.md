@@ -83,10 +83,10 @@ For links to subsections in other sections: `[nav:Privacy Primer](privacy/whatIs
 
 ## Images
 
-Images should be placed in `/public/srch/assets/images/` and referenced like this:
+Images should be placed in `/public/srchets/images/` and referenced like this:
 
 ```markdown
-![Alt text](/public/srch/assets/images/filename.jpg)
+![Alt text](/public/srchets/images/filename.jpg)
 ```
 
 Always include meaningful alt text for accessibility.
