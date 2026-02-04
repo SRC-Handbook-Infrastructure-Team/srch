@@ -1,7 +1,7 @@
 import "../styles/LandingPage.css";
 import "../styles/ContentPage.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef} from "react";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
 import bookIcon from "../assets/bookIcon.png";
@@ -10,6 +10,7 @@ import peopleIcon from "../assets/peopleIcon.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
+import carotIcon from "../assets/carot-icon.svg";
 import instaLogo from "../assets/instagram-logo.svg";
 import srcLogo from "../assets/src_logo.svg";
 import cntrLogo from "../assets/cntr-logo.png";
@@ -23,6 +24,34 @@ function Home() {
   const decisionSlug = "/automatedDecisionMaking/fairness";
   const aiSlug = "/generativeAI/copyright";
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const curriculumTitleRef = useRef(null);
+
+  // Track scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if user has scrolled past the upper-content section
+      const scrollY = window.scrollY;
+      const upperContentHeight = window.innerHeight * 0.4; // Approximate upper-content height
+      setIsScrolledDown(scrollY > upperContentHeight);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle scroll to content or top
+  const handleScrollClick = () => {
+    if (curriculumTitleRef.current) {
+      const navbarHeight = 70;
+      const padding = 100;
+      window.scrollTo({
+        top: window.innerHeight - (navbarHeight + padding),
+        behavior: "smooth"
+      });
+    }
+  };
 
   return (
     <div className="layout">
@@ -44,7 +73,20 @@ function Home() {
         <div className="lower-content">
           <div className="content-section">
             <div className="content-header">
-              <div className="curriculum-title">Check out our curriculum</div>
+              <button 
+                className="scroll-caret-button"
+                onClick={handleScrollClick}
+                aria-label={isScrolledDown ? "Scroll to top" : "Scroll to curriculum"}
+              >
+                <img 
+                  src={carotIcon} 
+                  alt="Scroll" 
+                  className={`scroll-caret-icon ${isScrolledDown ? 'hidden' : ''}`}
+                />
+              </button>
+              <div className="section-title curriculum-title" ref={curriculumTitleRef} style={{ overflowWrap: "break-word" }}>
+                Check out our curriculum
+              </div>
               <div className="curriculum-subtext">
                 Explore our focus areas of socially responsible computing
               </div>
@@ -135,7 +177,7 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="search-title">Search for Content</h2>
+              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Search for Content</h2>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
@@ -241,9 +283,9 @@ function Home() {
 
           <div className="line-divider"></div>
 
-          <div className="content-section">
+          <div className="content-section connect-section">
             <div className="content-header">
-              <h2 className="search-title">Connect with Us</h2>
+              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Connect with Us</h2>
               <p className="search-subtitle">
                 Follow us to receive CNTR news and updates!
               </p>

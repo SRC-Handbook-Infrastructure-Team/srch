@@ -20,6 +20,7 @@ export default function useResizableSidebar({
   onStartResize = () => {},
   onStopResize = () => {},
   getDynamicBounds,
+  collapseAnimationDelay = 0, // NEW: delay CSS var change when collapsing (overlay mode)
 } = {}) {
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
@@ -273,9 +274,24 @@ export default function useResizableSidebar({
   /** Syncs sidebar width to CSS custom property */
   useEffect(() => {
     if (!isBrowser() || !cssVarName) return;
-    const value = `${collapsed ? collapsedWidth : width}px`;
-    document.documentElement.style.setProperty(cssVarName, value);
-  }, [cssVarName, width, collapsed, collapsedWidth]);
+
+    let timer;
+
+    // In overlay mode (when collapseAnimationDelay > 0), delay setting
+    // the CSS var to 0 so translateX(-100%) animates with the real width.
+    if (collapsed && collapseAnimationDelay > 0) {
+      timer = setTimeout(() => {
+        document.documentElement.style.setProperty(cssVarName, `${collapsedWidth}px`);
+      }, collapseAnimationDelay);
+    } else {
+      const value = `${collapsed ? collapsedWidth : width}px`;
+      document.documentElement.style.setProperty(cssVarName, value);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [cssVarName, width, collapsed, collapsedWidth, collapseAnimationDelay]);
 
   return {
     width,

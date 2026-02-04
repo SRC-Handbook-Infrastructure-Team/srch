@@ -83,6 +83,7 @@
   background: var(--cs-bg);
 }
 
+
 .footer-content {
   display: flex;
   font-size: small;
@@ -91,7 +92,8 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 1rem;
-  gap: 0.5rem;
+  gap: 0.05rem;
+  width: 100%;
 }
 
 .logo-container {
@@ -175,12 +177,13 @@
 
 .feedback-footer a {
   color: var(--color-text-hover);
-  text-decoration: underline;
   transition: color 0.2s;
 }
 
 .feedback-footer a:hover {
   color: var(--color-text-accent);
+  text-decoration: underline;
+  background-color: transparent;
 }
 
 .copyright {
@@ -190,6 +193,7 @@
   font-weight: var(--sub-weight);
   word-wrap: break-word;
 }
+
 
 @container (min-width: 49em) {
   .footer-content {

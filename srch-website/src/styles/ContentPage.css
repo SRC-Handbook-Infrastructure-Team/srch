@@ -25,8 +25,8 @@
   --toolbar-height: 0px; /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px; /* JS updates these */
   --navbar-height: 70px; /* unified baseline */
-  --mobile-menu-height: 200px; /* height of slide-down mobile menu panel */
-  --mobile-menu-height-expanded: 300px; /* when modules dropdown is open */
+  --mobile-menu-height: 250px; /* height of slide-down mobile menu panel */
+  --mobile-menu-height-expanded: 350px; /* when modules dropdown is open */
   --toolbar-height: 0px;
   /* set >0 only if a toolbar is rendered */
   --right-sidebar-width: 0px;
@@ -115,7 +115,10 @@ button:hover {
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px auto -webkit-focus-ring-color;
+}
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ==========================================================================
@@ -165,11 +168,6 @@ button:focus-visible {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-/* Ensures the entire row feels clickable and avoids visual jitter */
-.sidebar-section-header * {
-  pointer-events: none;
-  /* interaction handled by container */
-}
 
 /* ==========================================================================
    Markdown & Content
@@ -393,12 +391,13 @@ html:not(.right-open) body .main-content {
   right: 0;
   z-index: 10;
   left: 12px;
+  padding: 8px 0px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24.615px;
-  height: 11.565px;
+  width: 24px;
+  height: 12px;
   transform: scale(1.2);
 
   color: var(--srch-brown, #531c00);
@@ -413,7 +412,7 @@ html:not(.right-open) body .main-content {
 }
 
 .header-toggle:hover {
-  transform: scale(1.25);
+  transform: scale(1.35);
 }
 
 /* ==========================
@@ -453,6 +452,7 @@ html:not(.right-open) body .main-content {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  white-space: normal;
 }
 
 /* Expand/Collapse All — Figma spec */
@@ -488,57 +488,6 @@ html:not(.right-open) body .main-content {
   top: 1px;
   /* small visual nudge */
 }
-
-/* center the control in the header strip */
-.sidebar-header-controls {
-  display: flex;
-  justify-content: right;
-  padding: 8px 0;
-}
-
-/* Expand/Collapse link look — Be Vietnam Pro, 12px, #4F3629 */
-.sidebar-toggle {
-  /* nuke default button look */
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 500;
-  color: #4f3629;
-  cursor: pointer;
-}
-
-.sidebar-toggle:focus-visible {
-  outline: 2px solid #9d0013;
-  outline-offset: 2px;
-}
-
-/* optional subtle hover, no underline or box */
-.sidebar-toggle:hover {
-  opacity: 0.85;
-}
-
-/* double chevrons */
-.icon-double-chevron {
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 0;
-}
-
-.icon-double-chevron svg {
-  width: 12px;
-  height: 6px;
-  display: block;
-  fill: currentColor;
-}
-
-/* When collapsed (default), we want the chevrons pointing down;
-   When "Collapse all", flip them to up. We can do this in JSX
-   by rotating the container if you want a single rule. */
 
 /* Page section label at top of MarkdownPage */
 .markdown-page .page-section-label {
@@ -625,6 +574,7 @@ p > .srch-drawer-link:first-child {
   border-color: #9d0013 !important;
   text-decoration: none !important;
   font-weight: bold !important;
+  border-width: 2px;
 }
 
 /* Ensure the Info icon inherits currentColor (turns white on active) */
@@ -641,8 +591,10 @@ p > .srch-drawer-link:first-child {
   margin-left: 16px;
   left: -40px;
   margin-top: 12px;
-  transform: translateX(12px);
-  /* Moves the element 12px to the left */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  transform: translateX(-10px);
+  
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -851,7 +803,7 @@ html.right-open .right-sidebar {
   gap: 6px;
   cursor: pointer;
 
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
@@ -880,6 +832,10 @@ html.right-open .right-sidebar {
   display: block;
   fill: currentColor;
 }
+
+/* When collapsed (default), we want the chevrons pointing down;
+   When "Collapse all", flip them to up. We can do this in JSX
+   by rotating the container if you want a single rule. */
 
 /* =============================================================================
    SECTION ROWS
@@ -1009,14 +965,14 @@ html.right-open .right-sidebar {
 
 .srch-drawer-link {
   margin: 0 !important;
-  padding: 4px 2.25px !important; /* More interior padding → more pill */
-  border-radius: 6px !important; /* Perfect pill shape */
+  padding: 5px 0.6px !important; /* More interior padding → more pill */
+  border-radius: 9px !important; /* Perfect pill shape */
   line-height: 1 !important;
   vertical-align: baseline !important;
 
   display: inline-flex !important;
   align-items: center !important;
-  gap: 4px !important; /* More breathing room between text + icon */
+  gap: 3px !important; /* More breathing room between text + icon */
 }
 
 /* ----------------------------------------
@@ -1055,24 +1011,6 @@ html[data-layout-mode="overlay"] body .main-content {
   pointer-events: none;
 }
 
-/* ----------------------------------------
-   Dev layout mode badge
-   ---------------------------------------- */
-.layout-mode-badge {
-  position: fixed;
-  bottom: 8px;
-  right: 8px;
-  z-index: 50;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
-  font-size: 11px;
-  font-family: "Be Vietnam Pro", sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  pointer-events: none;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .left-sidebar,
@@ -1139,22 +1077,13 @@ html[data-layout-mode="overlay"] body .main-content {
   width: 100%;
 }
 
-/* Extra spacing between the expanded navbar dropdown and the page header
-   (PRIVACY / title) when in overlay mode. */
-html[data-layout-mode="overlay"]
-  .top-navbar[data-menu-open="true"]
-  ~ .main-content
-  .markdown-page {
-  padding-top: 24px;
+/* Mobile menu offset for ALL overlay widths, driven by JS */
+html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
+  margin-top: calc(
+    var(--navbar-height) + var(--mobile-menu-offset)
+  ) !important;
 }
 
-html[data-layout-mode="overlay"]
-  .top-navbar[data-menu-open="true"]
-  ~ .main-content
-  .page-divider-margin {
-  margin-top: 16px;
-  margin-bottom: 24px; /* more gap between header + body copy */
-}
 
 /* -------------------------------------------------------
    Overlay / split-screen header layout
@@ -1267,4 +1196,76 @@ html[data-layout-mode="overlay"]
 .markdown-page .footer-container {
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
+
+}
+
+
+.icon-button {
+  padding: 0rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 48em) {
+  .hide-md {
+    display: none !important;
+  }
+  .show-md {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 80em) {
+  .hide-base {
+    display: none !important;
+  }
+  .show-base {
+    display: inline-flex !important;
+  }
+}
+
+.header-toggle {
+  position: fixed;
+  top: calc(var(--navbar-height) + 19px);
+  right: 0;
+  left: 12px;
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24.615px;
+  height: 11.565px;
+  transform: scale(1.2);
+
+  color: var(--srch-brown, #531c00);
+  cursor: pointer;
+
+  /* 🔻 kill the circles */
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.header-toggle:hover {
+  transform: scale(1.25);
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* optional: remove the extra circular focus ring */
+.header-toggle:focus,
+.header-toggle:focus-visible {
+  outline: none;
+}
+
+.sidebar-toggle:focus,
+.sidebar-toggle:focus-visible {
+  outline: none;
 }

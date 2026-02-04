@@ -26,7 +26,7 @@ export default function About() {
 
       <div className="about-lower-content">
         <section className="about-section">
-          <h2>How to use the handbook</h2>
+          <h2 className="section-title" style={{ overflowWrap: "break-word" }}>How to use the handbook</h2>
 
           <p>
             Each section contains a series of primers that are loosely aligned
