@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -489,21 +489,6 @@ function MarkdownRenderer({
 
     return () => clearTimeout(timeout);
   }, [activeDrawerLink]);
-
-  useEffect(() => {
-    if (!activeDrawerTerm) {
-      setActiveDrawerLink(null);
-      return;
-    }
-    const key = String(activeDrawerTerm).toLowerCase();
-
-    const timer = setTimeout(() => {
-      const el = document.querySelector(`[data-term="${key}"]`);
-      setActiveDrawerLink(el || null);
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [activeDrawerTerm, content, sidebar]);
 
   const BetaTag = () => (
     <Box
