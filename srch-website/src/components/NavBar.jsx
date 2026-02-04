@@ -44,33 +44,21 @@ function NavBar({ className = "", layoutMode }) {
     const root = document.documentElement;
     if (!root) return;
 
-    console.log(
-      "[NavBar offset] layoutMode=",
-      layoutMode,
-      "isMenuOpen=",
-      isMenuOpen,
-      "isModulesExpanded=",
-      isModulesExpanded,
-    );
-
     // Only push content in overlay mode (mobile / narrow)
     if (layoutMode !== "overlay") {
       root.style.setProperty("--mobile-menu-offset", "0px");
-      console.log("[NavBar offset] set to 0px (not overlay)");
       return;
     }
 
     // Menu closed → no offset
     if (!isMenuOpen) {
       root.style.setProperty("--mobile-menu-offset", "0px");
-      console.log("[NavBar offset] set to 0px (menu closed)");
       return;
     }
 
     // Menu open → fixed height based on modules state
     const height = isModulesExpanded ? 300 : 200; // px
     root.style.setProperty("--mobile-menu-offset", `${height}px`);
-    console.log("[NavBar offset] set to", height, "px");
   }, [layoutMode, isMenuOpen, isModulesExpanded]);
 
   const toggleSection = (sectionKey, e) => {

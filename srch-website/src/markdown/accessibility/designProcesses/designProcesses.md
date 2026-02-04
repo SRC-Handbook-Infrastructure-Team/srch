@@ -18,7 +18,7 @@ The relationship between controls and their effects should be intuitive. Poorly 
 
 ## Design Processes
 
-![This is a flow chart showing the progression of design processes with increasing user consideration. From least to most user consideration, the design processes are "Abiding by Legal Requirements," "Following Standards and Best Practices," "Creating User Personas and Stories Based on Research," and "Engaging Users in Participatory Design Practices."](/srchets/primer-photos/flow.png)
+![This is a flow chart showing the progression of design processes with increasing user consideration. From least to most user consideration, the design processes are "Abiding by Legal Requirements," "Following Standards and Best Practices," "Creating User Personas and Stories Based on Research," and "Engaging Users in Participatory Design Practices."](/srch/assets/primer-photos/flow.png)
 To carry out the aforementioned design goals, specific design processes may be engaged with varying degrees of consideration for accessibility and usability. At a minimum, products must abide by legal requirements. In the US context, these may be requirements set by the [Button Americans with Disabilities Act](accStandards). Beyond legality, designers may abide by standards or best practices in their domains. For example, web accessibility standards are defined by the [Button Web Content Accessibility Guidelines](/srchessibility/accStandards).
 
 While following legal requirements and best practices is important, intentionally including target users in design processes has many benefits. Deep consideration of user needs can produce better-designed products and lead to greater buy-in from target markets.

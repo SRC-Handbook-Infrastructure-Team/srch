@@ -37,9 +37,9 @@ All the fairness criteria above seem desirable. However, it is mathematically im
 
 The **{mathematical-impossible-results}** generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of **{implementations}** that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
 
-![Pareto Front of Group Fairness Criteria](/srchets/primer-photos/fairness1.png)
+![Pareto Front of Group Fairness Criteria](/srch/assets/primer-photos/fairness1.png)
 
-![Parallel Coordinates Plot of Group Fairness Criteria](/srchets/primer-photos/fairness2.png)
+![Parallel Coordinates Plot of Group Fairness Criteria](/srch/assets/primer-photos/fairness2.png)
 
 A notable insight is that the data distributions capture _different beliefs_ about how skills are distributed in different populations. Therefore, the choice of an appropriate fairness measure relies on normative claims about the world in which the measure is applied.
 
@@ -92,7 +92,7 @@ Zhu, Linna, Michael Neal, and Caitlin Young. “Racial Disparities in Automated 
 ## Sidebar
 
 Systems-of-Oppression:
-Examples of systems of oppression include: racism, sexism, classism, ableism, ageism, homophobia, transphobia, xenophobia. 
+Examples of systems of oppression include: racism, sexism, classism, ableism, ageism, homophobia, transphobia, xenophobia.
 
 - [Social Identities and Systems of Oppression | National Museum of African American History and Culture](https://nmaahc.si.edu/learn/talking-about-race/topics/social-identities-and-systems-oppression)
 - [Why Is Oppression Wrong? | Philosophical Studies](https://link.springer.com/article/10.1007/s11098-023-02084-5#Sec2)
@@ -100,6 +100,7 @@ Examples of systems of oppression include: racism, sexism, classism, ableism, ag
 
 making-high-impact-decision:
 Heading: Examples of High-Impact Applications:
+
 - [Resume Screening](https://www.nature.com/articles/s41599-023-02079-x)
 - [Performance Assessment](https://www.tandfonline.com/doi/full/10.1080/07421222.2023.2267316)
 - [Tenant Screening](https://www.taylorfrancis.com/chapters/edit/10.4324/9781003365877-24/algorithms-racial-discrimination-us-housing-market-eva-rosen-philip-garboden)
@@ -117,23 +118,24 @@ For a deeper dive into equality vs. equity:
 
 three-criteria-for-group-fairness:
 Heading: Three Criteria for Group Fairness
-Let G be a variable denoting the group, Y a variable denoting the label for the training data (“true outcome”), and R the output of the procedure: 
+Let G be a variable denoting the group, Y a variable denoting the label for the training data (“true outcome”), and R the output of the procedure:
 
 ##### Independence
 
-<u>Formal Definition</u> R and G are independent, i.e. RG and P(R | G)=P(R) 
+<u>Formal Definition</u> R and G are independent, i.e. RG and P(R | G)=P(R)
 
-<u>Example</u> An individual’s gender should not affect their likelihood of being screened in for hiring. Notably, this measures the group-level statistical independence between group membership and outcome. It thus differs from individual fairness, which examines fairness on an instance level. 
+<u>Example</u> An individual’s gender should not affect their likelihood of being screened in for hiring. Notably, this measures the group-level statistical independence between group membership and outcome. It thus differs from individual fairness, which examines fairness on an instance level.
 
 ##### Separation
 
-<u>Formal Definition</u> R and G are independent, conditioned on Y, i.e. RG | Y and P(R | Y, G)=P(R | Y) 
+<u>Formal Definition</u> R and G are independent, conditioned on Y, i.e. RG | Y and P(R | Y, G)=P(R | Y)
 
 <u>Example</u> Applicants who are capable of succeeding in a job should be equally likely to be screened out (resulting in a false negative outcome) in the hiring process irrespective of their gender.
 
 ##### Sufficiency
-<u>Formal Definition</u>n Y and G are independent, conditioned on R, i.e. YG | R and P(Y | R, G)=P(Y | R) 
-<u>Example</u> A female applicant receiving a “7” should be equally capable of succeeding in a job as a male candidate with the same score. 
+
+<u>Formal Definition</u>n Y and G are independent, conditioned on R, i.e. YG | R and P(Y | R, G)=P(Y | R)
+<u>Example</u> A female applicant receiving a “7” should be equally capable of succeeding in a job as a male candidate with the same score.
 
 To learn more about technical definitions of fairness, see [Fairness and Machine Learning](https://fairmlbook.org/)
 
@@ -141,24 +143,25 @@ mathematical-impossible-results:
 Heading: Papers Explaining the Impossibility of Fairness
 
 ##### Theory-focused
-- *[The (Im)possibility of fairness: different value systems require different mechanisms for fair decision-making](http://dx.doi.org/10.1145/3433949)*: The impossibility of achieving all fairness criteria in one case; mechanisms must align with specific values
-- *[FACT Diagnostic: How to Better Understand Trade-offs Involving Group Fairness](https://arxiv.org/pdf/2004.03424)*: A framework to analyze trade-offs between fairness metrics
+
+- _[The (Im)possibility of fairness: different value systems require different mechanisms for fair decision-making](http://dx.doi.org/10.1145/3433949)_: The impossibility of achieving all fairness criteria in one case; mechanisms must align with specific values
+- _[FACT Diagnostic: How to Better Understand Trade-offs Involving Group Fairness](https://arxiv.org/pdf/2004.03424)_: A framework to analyze trade-offs between fairness metrics
 
 ##### Case-study-focused
-- *[Inherent Trade-Offs in the Fair Determination of Risk Scores](https://arxiv.org/pdf/1609.05807)*: Proves automated risk score calculation cannot satisfy multiple fairness criteria at once
-- *[Fair prediction with disparate impact](https://arxiv.org/pdf/1703.00056)*: Shows enforcing fairness metrics often reduces accuracy
-- *[Algorithmic decision making and the cost of fairness](https://arxiv.org/pdf/1701.08230)*: Quantifies efficiency losses when prioritizing fairness
+
+- _[Inherent Trade-Offs in the Fair Determination of Risk Scores](https://arxiv.org/pdf/1609.05807)_: Proves automated risk score calculation cannot satisfy multiple fairness criteria at once
+- _[Fair prediction with disparate impact](https://arxiv.org/pdf/1703.00056)_: Shows enforcing fairness metrics often reduces accuracy
+- _[Algorithmic decision making and the cost of fairness](https://arxiv.org/pdf/1701.08230)_: Quantifies efficiency losses when prioritizing fairness
 
 implementations:
 Heading: Papers Addressing the Impossibility of Fairness
 
 ##### Choosing One or Multiple Criteria over the Others
-- *[Equality of Opportunity in Supervised Learning](https://arxiv.org/pdf/1610.02413)*: Proposes a mechanism that prioritizes separation by equalizing odds across groups in supervised learning
-- *[Fairness and Risk: An Ethical Argument for a Group Fairness Definition Insurers Can Use](https://link.springer.com/article/10.1007/s13347-023-00624-9)*: Argued that sufficiency is the most applicable criterion for automated decision making in insurance premiums
 
+- _[Equality of Opportunity in Supervised Learning](https://arxiv.org/pdf/1610.02413)_: Proposes a mechanism that prioritizes separation by equalizing odds across groups in supervised learning
+- _[Fairness and Risk: An Ethical Argument for a Group Fairness Definition Insurers Can Use](https://link.springer.com/article/10.1007/s13347-023-00624-9)_: Argued that sufficiency is the most applicable criterion for automated decision making in insurance premiums
 
-##### Escaping the Impossibility of Fairness 
-- *[Escaping the Impossibility of Fairness: From Formal to Substantive Algorithmic Fairness](https://link.springer.com/article/10.1007/s13347-022-00584-6)* and *[The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice](https://dl.acm.org/doi/pdf/10.1145/3593013.3594007)*: Escaping the mathematical impossibility of fairness by considering social contexts, practices, and justice implications
-- *[Pushing the limits of fairness impossibility: Who’s the fairest of them all?](https://proceedings.neurips.cc/paper_files/paper/2022/file/d3222559698f41247261b7a6c2bbaedc-Paper-Conference.pdf)*: A post-processor that improves fairness across various definitions simultaneously 
+##### Escaping the Impossibility of Fairness
 
-
+- _[Escaping the Impossibility of Fairness: From Formal to Substantive Algorithmic Fairness](https://link.springer.com/article/10.1007/s13347-022-00584-6)_ and _[The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice](https://dl.acm.org/doi/pdf/10.1145/3593013.3594007)_: Escaping the mathematical impossibility of fairness by considering social contexts, practices, and justice implications
+- _[Pushing the limits of fairness impossibility: Who’s the fairest of them all?](https://proceedings.neurips.cc/paper_files/paper/2022/file/d3222559698f41247261b7a6c2bbaedc-Paper-Conference.pdf)_: A post-processor that improves fairness across various definitions simultaneously

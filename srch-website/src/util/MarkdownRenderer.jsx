@@ -60,6 +60,43 @@ export function highlightText(node, highlight) {
   return node;
 }
 
+/* ----------------------------- Footnote Renumbering ----------------------------- */
+
+function renumberFootnotes(markdown) {
+  if (!markdown || typeof markdown !== "string") return markdown;
+
+  // Match footnote references but not definitions (avoid trailing colon)
+  const refRegex = /\[\^([^\]]+)\](?!:)/g;
+  // Match footnote definitions at line start
+  const defRegex = /^\[\^([^\]]+)\]:/gm;
+
+  const map = new Map();
+  let counter = 0;
+  let match;
+
+  while ((match = refRegex.exec(markdown)) !== null) {
+    const key = match[1];
+    if (!map.has(key)) {
+      counter += 1;
+      map.set(key, String(counter));
+    }
+  }
+
+  if (map.size === 0) return markdown;
+
+  let updated = markdown.replace(refRegex, (_, key) => {
+    const mapped = map.get(key);
+    return mapped ? `[^${mapped}]` : `[^${key}]`;
+  });
+
+  updated = updated.replace(defRegex, (full, key) => {
+    const mapped = map.get(key);
+    return mapped ? `[^${mapped}]:` : full;
+  });
+
+  return updated;
+}
+
 /* ----------------------------- Utility Functions ----------------------------- */
 
 export function createIdFromHeading(text) {
@@ -350,6 +387,7 @@ function MarkdownRenderer({
     let processed =
       typeof content === "string" ? content : content.content || "";
     if (typeof processed === "string") {
+      processed = renumberFootnotes(processed);
       processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
         return `<sidebar-ref term="${term}"></sidebar-ref>`;
       });
@@ -408,23 +446,6 @@ function MarkdownRenderer({
       setActiveDrawerLinkState(null);
     };
   }, []);
-
-  const setActiveDrawerLink = (el) => {
-    try {
-      document
-        .querySelectorAll(".srch-drawer-link-active")
-        .forEach((n) => n.classList.remove("srch-drawer-link-active"));
-      if (el) {
-        el.classList.add("srch-drawer-link-active");
-        const term = el.dataset?.term || el.getAttribute?.("data-term") || null;
-        setActiveDrawerLinkState(term);
-      } else {
-        setActiveDrawerLinkState(null);
-      }
-    } catch (e) {
-      /* no-op */
-    }
-  };
 
   // Smooth, one-time focus for drawer chip when opening/closing
   function focusDrawerChip(term) {
@@ -565,6 +586,7 @@ function MarkdownRenderer({
 
         return (
           <Link
+            {...props}
             color={RED}
             fontWeight="500"
             textDecoration={isFootnoteRef ? "none" : "underline"}
@@ -575,7 +597,6 @@ function MarkdownRenderer({
             href={props.href}
             isExternal={isExternal}
             target={isExternal ? "_blank" : undefined}
-            {...props}
           >
             {childrenArray.map((child, index) =>
               typeof child === "string" ? (

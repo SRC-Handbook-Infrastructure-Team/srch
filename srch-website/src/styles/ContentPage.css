@@ -168,7 +168,6 @@ button:focus:not(:focus-visible) {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-
 /* ==========================================================================
    Markdown & Content
    ========================================================================== */
@@ -182,6 +181,11 @@ button:focus:not(:focus-visible) {
 .markdown-content {
   padding-bottom: 100px;
   background: white;
+}
+
+.markdown-page [id],
+.right-sidebar .drawer-content [id] {
+  scroll-margin-top: calc(var(--navbar-height) + 12px);
 }
 
 .markdown-margin {
@@ -594,7 +598,6 @@ p > .srch-drawer-link:first-child {
   overflow-wrap: break-word;
   word-wrap: break-word;
   transform: translateX(-10px);
-  
 }
 
 /* RIGHT SIDEBAR (Drawer) */
@@ -1011,7 +1014,6 @@ html[data-layout-mode="overlay"] body .main-content {
   pointer-events: none;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .left-sidebar,
   .right-sidebar,
@@ -1079,11 +1081,8 @@ html[data-layout-mode="overlay"] body .main-content {
 
 /* Mobile menu offset for ALL overlay widths, driven by JS */
 html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
-  margin-top: calc(
-    var(--navbar-height) + var(--mobile-menu-offset)
-  ) !important;
+  margin-top: calc(var(--navbar-height) + var(--mobile-menu-offset)) !important;
 }
-
 
 /* -------------------------------------------------------
    Overlay / split-screen header layout
@@ -1196,9 +1195,7 @@ html[data-layout-mode="overlay"]
 .markdown-page .footer-container {
   margin-left: calc(-1 * var(--page-pad));
   width: calc(100% + (var(--page-pad) * 2));
-
 }
-
 
 .icon-button {
   padding: 0rem;

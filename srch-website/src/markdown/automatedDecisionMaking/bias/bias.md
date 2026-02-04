@@ -50,7 +50,7 @@ This can occur in two ways:
 
 {Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores}
 
-![Summary of bias in the data generation pipeline](/srchets/primer-photos/dataGenerationBias.png)  
+![Summary of bias in the data generation pipeline](/srch/assets/primer-photos/dataGenerationBias.png)  
 Figure 1: Bias in Data Generation (Suresh et al.)
 
 ### Bias in Model Creation
@@ -81,7 +81,7 @@ Figure 1: Bias in Data Generation (Suresh et al.)
 
 {Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label}
 
-![Bias in model creation pipeline](/srchets/primer-photos/modelCreationBias.png)  
+![Bias in model creation pipeline](/srch/assets/primer-photos/modelCreationBias.png)  
 Figure 2: Bias in Model Creation (Suresh et al.)
 
 ## Impact of Bias
@@ -141,8 +141,11 @@ Yi, Sibo, Yule Liu, Zhen Sun, Tianshuo Cong, Xinlei He, Jiaxing Song, Ke Xu, and
 Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Research Topics in Self Supervised Learning. Lecture presented at the Research Topics in Self Supervised Learning, November 8, 2024\.
 
 [^1]: “Bias: The Basics”
+
 [^2]: Mehrabi, “A survey on bias and fairness in machine learning”
+
 [^3]: Suresh, “A Framework for Understanding Sources of Harm “
+
 [^4]: Suresh, “A Framework for Understanding Sources of Harm"
 
 ## Sidebar
@@ -161,6 +164,7 @@ In this phase, data is generated and a dataset is created. Data can be generated
 **Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^1] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^2]
 
 [^1]: Suresh, “A Framework for Understanding Sources of Harm"
+
 [^2]: “Memory and New Controls for ChatGPT”
 
 Data-Generation:
@@ -174,6 +178,7 @@ Heading: Understanding Model Creation Phase of AI Development
 **Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^1] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^2]
 
 [^1]: Suresh, “A Framework for Understanding Sources of Harm"
+
 [^2]: “Memory and New Controls for ChatGPT”
 
 Historical-Bias-Case-Study--Gender-Bias-in-Word-Embeddings:
@@ -181,6 +186,7 @@ Heading: Gender Bias in Word Embeddings
 Societal gender biases are widely reflected in media, which is used to train large language models (LLMs)**. Because the training data of LLMs contains societal biases, the model learns to reflect this bias.**[^1] As LLMs become increasingly integrated into automatic-decision making systems, this causes harm to women and other gender minorities. This is an open area of research, as LLMs are resilient to alignment techniques and vulnerable to jailbreaking.[^2]
 
 [^1]: Garg, _Word Embeddings_
+
 [^2]: Hoffman, _AI Generates Covertly Racist Decisions_; Yi, _Jailbreak Attacks_
 
 Representation-Bias-Case-Study--Underrepresentation-In-Automated-Mental-Illness-Detection:
@@ -212,7 +218,9 @@ Heading: AI Based Reading Assistants For Readers With Dyslexia
 AI-based reading assistants have been developed to aid reading comprehension by using eye-tracking to provide definitions when readers struggle to comprehend words.[^1] Research shows that people with dyslexia have different eye movements when reading than people who don’t have dyslexia.[^2] If a reading assistant uses an underlying eye-tracking model that processes dyslexic and non-dyslexic eye-movement reading patterns in aggregate, it may fail to represent the distinct reading patterns of either subgroup accurately. In addition to aggregation bias, representation bias can further exacerbate performance disparities. Since people with dyslexia make up 20% of the population, if dyslexic reading patterns are not oversampled to account for underrepresentation in the use population, the model will also suffer from representation bias, leading to even higher error rates for people with dyslexia.[^3]
 
 [^1]: Thaqi, “SARA: Smart AI Reading Assistant”
+
 [^2]: Nerušil, “Eye Tracking”
+
 [^3]: “Dyslexia FAQ”
 
 Learning-Bias-Case-Study-Distillation-In-Medical-Models-Misses-Rare-Cancers:
@@ -233,6 +241,7 @@ Criminal risk assessment tools are intended to model the risk of recidivism, the
 Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 [^1]: Angwin, _Machine Bias_
+
 [^2]: Collins, _Punishing Risk_
 
 Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
@@ -241,6 +250,7 @@ Criminal risk assessment tools are intended to model the risk of recidivism, the
 Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 [^1]: Angwin, _Machine Bias_
+
 [^2]: Collins, _Punishing Risk_
 
 here:
@@ -264,6 +274,7 @@ E.g: False arrests due to erroneous facial recognition make it difficult for peo
 **If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the \[drawer:Justice Primer\](justice).
 
 [^1]: Suresh, _A Framework for Understanding Sources of Harm_
-[^2]: _Facial Recognition And The Facial Difference Community_
-[^3]: MacMillan, _Police Ignore Standards_
 
+[^2]: _Facial Recognition And The Facial Difference Community_
+
+[^3]: MacMillan, _Police Ignore Standards_

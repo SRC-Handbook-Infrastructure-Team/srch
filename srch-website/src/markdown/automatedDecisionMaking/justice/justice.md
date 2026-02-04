@@ -76,7 +76,7 @@ Individuals’ perceptions of procedurally just encounters are based on four cen
 their interactions with any decision-maker, whether that be a legal authority, corporate system,
 community institution, or an algorithm: **neutrality**, **respect**, **voice**, and **trustworthiness**.
 
-![Procedural Justice Graphic](/srchets/primer-photos/yls_procedural_justice.png)
+![Procedural Justice Graphic](/srch/assets/primer-photos/yls_procedural_justice.png)
 _Figure from Yale Law School representing the four pillars of procedural justice._
 
 When considering the role of algorithms as automated decision-makers capable of making
@@ -244,7 +244,6 @@ Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14,
 
 Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
 
-
 ## Sidebar
 
 Case-Study-Annie-MOORE:
@@ -253,12 +252,11 @@ Annie MOORE is an AI-powered matching system that has been implemented by the U.
 
 [Further Reading](https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer?utm_source=chatgpt.com)
 
-
 Case-Study-SafeRent-Solutions-AI-Scoring-System:
 Heading: SafeRent Solutions AI Scoring System
-In Massachusetts, an AI-driven tenant screening system by SafeRent Solutions demonstrates how algorithmic practices may undermine justice as priority. Traditionally, AI scoring systems have maintained heavy reliance on credit history and non-rental debt without accounting for the mitigating benefit of housing vouchers. In this case, SafeRent’s algorithm generated a “SafeRent Score” that incurred frequent penalizations on low-income applicants using housing vouchers, many of whom were Black and Hispanic. 
+In Massachusetts, an AI-driven tenant screening system by SafeRent Solutions demonstrates how algorithmic practices may undermine justice as priority. Traditionally, AI scoring systems have maintained heavy reliance on credit history and non-rental debt without accounting for the mitigating benefit of housing vouchers. In this case, SafeRent’s algorithm generated a “SafeRent Score” that incurred frequent penalizations on low-income applicants using housing vouchers, many of whom were Black and Hispanic.
 
-The metric resulted in unfair rental application rejections despite exemplary records showing on-time rent payments. Rather than prioritizing the needs of applicants facing acute economic hardship, the system’s design treated voucher users as inherent risks due to lower traditional credit scores. As a result, landlords relying on the SafeRent Score denied housing opportunities to the very individuals who needed extra support. The subsequent lawsuit, filed in 2022 and settled for approximately $2.3 million in November 2024, forced SafeRent to suspend the SafeRent Score for voucher users for five years and mandated that property managers perform holistic assessments of these applicants. 
+The metric resulted in unfair rental application rejections despite exemplary records showing on-time rent payments. Rather than prioritizing the needs of applicants facing acute economic hardship, the system’s design treated voucher users as inherent risks due to lower traditional credit scores. As a result, landlords relying on the SafeRent Score denied housing opportunities to the very individuals who needed extra support. The subsequent lawsuit, filed in 2022 and settled for approximately $2.3 million in November 2024, forced SafeRent to suspend the SafeRent Score for voucher users for five years and mandated that property managers perform holistic assessments of these applicants.
 
 This case shows that a scoring system misaligned with the principle of justice as priority can exacerbate existing inequities by failing to recognize that those who rely on vouchers are in urgent need of stable housing.
 
@@ -270,14 +268,13 @@ In contrast to systems that penalize applicants by relying on traditional credit
 
 [Further Reading](https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai)
 
-
-Case-Study-Algorithmic-Justice-League: 
+Case-Study-Algorithmic-Justice-League:
 Heading: Algorithmic Justice League
 The Algorithmic Justice League (AJL), founded by Joy Buolawmwini, is dedicated to combating bias in AI systems to ensure equitable treatment across diverse populations. The documentary Coded Bias explores the AJL’s discovery that facial recognition technologies act on embedded biases in their training data when failing to accurately identify darker-skinned faces. The film also shows Buolawmwini’s advocacy for legislation to address algorithmic biases that undermine equality of opportunity.
+
 - [Gender Shades](http://gendershades.org/overview.html): an interactive evaluation of the accuracy of AI-powered gender classification products
 
 [Further Reading](https://www.ajl.org/)
-
 
 Case-Study-Shapley-Values-for-Credit-Scores:
 Heading: Shapley Values for Credit Scores
@@ -298,7 +295,6 @@ The Court determined that when credit scoring agencies create probability scores
 This case established that respect in algorithmic systems requires more than merely efficient processing; it demands treating individuals as autonomous agents who deserve explanations and recourse. The judgment forcefully rejected the notion that commercial interests in algorithmic secrecy outweigh individuals' rights to understand decisions that affect their lives. This respect manifests through both interface transparency (providing explanations) and substantive rights (offering meaningful recourse).
 
 [Further Reading](https://iapp.org/news/a/key-takeaways-from-the-cjeus-recent-automated-decision-making-rulings)
-
 
 Case-Study-Wikimedia-Value-Sensitive-Algorithm:
 Heading: Wikimedia Value-Sensitive Algorithm
@@ -331,4 +327,3 @@ Heading: Car Insurance Premiums in Michigan
 Insurance companies have increasingly adopted AI to optimize pricing for car insurance. These algorithms analyze vast amounts of data, including location, driving history, and demographic information, to determine premiums. While these systems offer efficiency and cost savings, they often perpetuate existing biases. For example, studies have shown that drivers in predominantly Black neighborhoods within regions like Michigan are charged higher premiums compared to those in predominantly White neighborhoods, despite similar accident risks. This bias reflects historical discrimination and can exacerbate economic inequalities by disproportionately affecting marginalized communities. To address these types of issues, it is crucial to implement mechanisms for accountability, like those mentioned in this primer, to ensure fairness and equity in automated decision-making processes.
 
 [Further Reading](https://www.governing.com/policy/michigans-fair-and-reasonable-reforms-allowed-car-insurers-to-charge-more-in-black-neighborhoods?utm_source=chatgpt.com)
-
