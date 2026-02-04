@@ -12,7 +12,6 @@ import "../styles/LandingPage.css";
 export default function About() {
   return (
     <>
-      {/* 1. FIXED HERO (same structure as Acknowledgements) */}
       <div className="upper-content">
         <div className="upper-text-section">
           <div className="website-title" id="about-title">
@@ -25,7 +24,6 @@ export default function About() {
         </div>
       </div>
 
-      {/* 2. LOWER CONTENT that scrolls above the hero */}
       <div className="about-lower-content">
         <section className="about-section">
           <h2>How to use the handbook</h2>

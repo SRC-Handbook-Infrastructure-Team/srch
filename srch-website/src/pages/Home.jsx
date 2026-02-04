@@ -51,7 +51,6 @@ function Home() {
             </div>
 
             <div className="card-grid">
-              {/* Privacy Curriculum Card */}
               <button
                 className="topic-card"
                 onClick={() => navigate(privacySlug)}
@@ -72,8 +71,6 @@ function Home() {
                   </div>
                 </div>
               </button>
-
-              {/* Accessibility Curriculum Card */}
               <button
                 className="topic-card"
                 onClick={() => navigate(accessibilitySlug)}
@@ -94,8 +91,6 @@ function Home() {
                   </div>
                 </div>
               </button>
-
-              {/* Decision-Making Curriculum Card */}
               <button
                 className="topic-card"
                 onClick={() => navigate(decisionSlug)}
@@ -116,8 +111,6 @@ function Home() {
                   </div>
                 </div>
               </button>
-
-              {/* Generative AI Curriculum Card */}
               <button className="topic-card" onClick={() => navigate(aiSlug)}>
                 <div className="outline-tip">
                   <img

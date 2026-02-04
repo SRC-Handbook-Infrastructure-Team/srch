@@ -65,15 +65,15 @@
   --content-width: 627px;
 
   /* Card + grid geometry */
-  --ack-card-width: 290px;      /* EXACT card width from Figma */
-  --ack-photo-width: 290px;     /* EXACT photo width */
-  --ack-photo-height: 302px;    /* EXACT photo height */
-  --ack-grid-col-gap: 10px;     /* column gap */
-  --ack-grid-row-gap: 10px;     /* row gap */
+  --ack-card-width: 290px; /* EXACT card width from Figma */
+  --ack-photo-width: 290px; /* EXACT photo width */
+  --ack-photo-height: 302px; /* EXACT photo height */
+  --ack-grid-col-gap: 10px; /* column gap */
+  --ack-grid-row-gap: 10px; /* row gap */
   --ack-radius: 6px;
 
   /* Typography + colors */
-  --ack-brand-brown: #531C00;
+  --ack-brand-brown: #531c00;
   --ack-text: #1a1a1a;
   --ack-muted: #00000085;
   --ack-divider: rgba(96, 70, 58, 1);
@@ -153,13 +153,10 @@ html {
   transition: background-image 0.3s ease;
 }
 
-
 .upper-content:hover {
   background-image: url("../assets/blurred-background.png");
   transition: background-image 0.3s ease-in-out;
 }
-
-
 
 .upper-content,
 .upper-text-section {
@@ -212,11 +209,6 @@ html {
 .upper-content.scrolled {
   opacity: 0.7;
 }
-
-
-
-
-
 
 .lower-content {
   margin-top: var(--upper-content-height);
@@ -290,28 +282,54 @@ html {
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: var(--color-bg);
+  background: linear-gradient(225deg, #fff 70.18%, #c90000 130.5%);
   border-radius: 16px;
   border: none;
-  outline: 1px solid #755543;
-  outline-offset: -1px;
+  outline: none;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0, 08);
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
   text-align: left;
   transition:
     transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background-color 0.3s ease;
+    box-shadow 0.3s ease;
+  position: relative;
+}
+
+.topic-card::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border: 1px solid #755543;
+  border-radius: 16px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.topic-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: white;
+  border-radius: 16px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.topic-card:hover::before {
+  opacity: 0;
 }
 
 .topic-card:hover {
-  background: linear-gradient(225deg, #fff 70.18%, #c90000 130.5%);
   box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.12);
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
 }
 
 .topic-card:focus {
@@ -350,6 +368,7 @@ html {
   height: 100px;
   position: relative;
   overflow: hidden;
+  z-index: 2;
 }
 
 .vector {
@@ -366,6 +385,8 @@ html {
   align-items: flex-start;
   padding: 0px;
   gap: 6px;
+  position: relative;
+  z-index: 2;
 }
 
 .topic-text {
@@ -406,8 +427,6 @@ html {
   height: 2px;
   background: rgba(90, 45, 0, 0.5);
 }
-
-
 
 .content-section {
   width: 100vw;
@@ -628,16 +647,14 @@ html {
   }
 }
 
-
 /* ==========================================================================
    PAGE: Acknowledgements
    ========================================================================== */
 
-   /* ============================================================================  
+/* ============================================================================  
    ACKNOWLEDGEMENTS — MERGED + SAFE VERSION  
    (No :root and No Footer Overrides)  
    ============================================================================ */
-
 
 /* ============================================================================  
    1. HERO BANNER  
@@ -664,11 +681,9 @@ html {
 
 .ack-hero:hover {
   background-image: url("../assets/blurred-background.png");
-
 }
 
 .ack-upper-text-section {
-
   width: 33vw;
   margin-top: 20vh;
   display: flex;
@@ -693,7 +708,6 @@ html {
   color: var(--ack-text);
 }
 
-
 /* ============================================================================  
    2. LOWER CONTENT (slides upward over hero)  
    ============================================================================ */
@@ -714,7 +728,6 @@ html {
   transform: scaleX(1.35);
   transform-origin: center;
 }
-
 
 /* ============================================================================  
    3. GRID LAYOUT  
@@ -742,7 +755,6 @@ html {
   }
 }
 
-
 /* ============================================================================  
    4. CARD CONTAINER  
    ============================================================================ */
@@ -754,7 +766,6 @@ html {
   font-family: "Be Vietnam Pro", sans-serif;
   box-sizing: border-box;
 }
-
 
 /* ============================================================================  
    5. PHOTO REGION WITH FIGMA MASK  
@@ -795,7 +806,6 @@ html {
   mask-position: center;
 }
 
-
 /* ============================================================================  
    6. CARD TYPOGRAPHY  
    ============================================================================ */
@@ -827,7 +837,6 @@ html {
   color: #000;
 }
 
-
 /* ============================================================================  
    7. ICON ROW  
    ============================================================================ */
@@ -853,7 +862,10 @@ html {
   cursor: pointer;
   text-decoration: none;
 
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.08s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.08s ease;
 }
 
 .ack-icon-btn:hover {
@@ -869,7 +881,6 @@ html {
   outline: none;
   box-shadow: 0 0 0 3px rgba(90, 45, 12, 0.35);
 }
-
 
 /* ============================================================================  
    8. RESPONSIVENESS  
@@ -893,12 +904,11 @@ html {
   }
 }
 
-
 /* ============================================================================  
    9. HOUSEKEEPING  
    ============================================================================ */
 
-.ack-card *, 
+.ack-card *,
 .ack-grid * {
   box-sizing: border-box;
 }
@@ -909,15 +919,11 @@ html {
   }
 }
 
-
-
-
-
 /* ==========================================================================
    PAGE: About
    ========================================================================== */
 
-   /* ============================================================================
+/* ============================================================================
    About.css
    ----------------------------------------------------------------------------
    Mirrors the hero + lower-content architecture used on Acknowledgements.
@@ -937,7 +943,7 @@ html {
   top: 0;
   left: 0;
   width: 100vw;
-  height: var(--ack-upper-height);   /* ← FIXED */
+  height: var(--ack-upper-height); /* ← FIXED */
   z-index: 0;
 
   background-image: url("../assets/landing-page-background-gradient.png");
@@ -1211,4 +1217,3 @@ html {
     font-size: 16px;
   }
 }
-
