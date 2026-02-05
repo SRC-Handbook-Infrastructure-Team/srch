@@ -1,7 +1,7 @@
 import "../styles/LandingPage.css";
 import "../styles/ContentPage.css";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import buttonArrow from "../assets/button-arrow.png";
 import targetIcon from "../assets/targetIcon.png";
 import bookIcon from "../assets/bookIcon.png";
@@ -24,7 +24,7 @@ function Home() {
   const decisionSlug = "/automatedDecisionMaking/fairness";
   const aiSlug = "/generativeAI/copyright";
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const curriculumTitleRef = useRef(null);
 
@@ -48,7 +48,7 @@ function Home() {
       const padding = 100;
       window.scrollTo({
         top: window.innerHeight - (navbarHeight + padding),
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
@@ -73,18 +73,24 @@ function Home() {
         <div className="lower-content">
           <div className="content-section">
             <div className="content-header">
-              <button 
+              <button
                 className="scroll-caret-button"
                 onClick={handleScrollClick}
-                aria-label={isScrolledDown ? "Scroll to top" : "Scroll to curriculum"}
+                aria-label={
+                  isScrolledDown ? "Scroll to top" : "Scroll to curriculum"
+                }
               >
-                <img 
-                  src={carotIcon} 
-                  alt="Scroll" 
-                  className={`scroll-caret-icon ${isScrolledDown ? 'hidden' : ''}`}
+                <img
+                  src={carotIcon}
+                  alt="Scroll"
+                  className={`scroll-caret-icon ${isScrolledDown ? "hidden" : ""}`}
                 />
               </button>
-              <div className="section-title curriculum-title" ref={curriculumTitleRef} style={{ overflowWrap: "break-word" }}>
+              <div
+                className="section-title curriculum-title"
+                ref={curriculumTitleRef}
+                style={{ overflowWrap: "break-word" }}
+              >
                 Check out our curriculum
               </div>
               <div className="curriculum-subtext">
@@ -177,7 +183,12 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Search for Content</h2>
+              <h2
+                className="section-title"
+                style={{ overflowWrap: "break-word" }}
+              >
+                Search for Content
+              </h2>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
@@ -285,7 +296,12 @@ function Home() {
 
           <div className="content-section connect-section">
             <div className="content-header">
-              <h2 className="section-title" style={{ overflowWrap: "break-word" }}>Connect with Us</h2>
+              <h2
+                className="section-title"
+                style={{ overflowWrap: "break-word" }}
+              >
+                Connect with Us
+              </h2>
               <p className="search-subtitle">
                 Follow us to receive CNTR news and updates!
               </p>
@@ -306,7 +322,7 @@ function Home() {
                   <p className="connect-text">
                     CNTR Website:
                     <br />
-                    <a className="connect-link">cntr.brown.edu</a>
+                    <span className="connect-link">cntr.brown.edu</span>
                   </p>
                 </div>
               </a>
@@ -330,13 +346,7 @@ function Home() {
                   <p className="connect-text">
                     CNTR Instagram:
                     <br />
-                    <a
-                      className="connect-link"
-                      href="https://www.instagram.com/brown_cntr/"
-                      target="blank"
-                    >
-                      @brown_cntr
-                    </a>
+                    <span className="connect-link">@brown_cntr</span>
                   </p>
                 </div>
               </a>
@@ -360,13 +370,9 @@ function Home() {
                   <p className="connect-text">
                     SRC@Brown Website:
                     <br />
-                    <a
-                      className="connect-link"
-                      href="https://responsible.cs.brown.edu/"
-                      target="blank"
-                    >
+                    <span className="connect-link">
                       responsible.cs.brown.edu
-                    </a>
+                    </span>
                   </p>
                 </div>
               </a>
