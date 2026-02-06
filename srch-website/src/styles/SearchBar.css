@@ -5,6 +5,7 @@
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  font-family: "Be Vietnam Pro", sans-serif;
 }
 
 .navsearchbar-input-container {
@@ -16,7 +17,7 @@
 }
 
 .navsearchbar-input::placeholder {
-  color: black;
+  color: black !important;
   opacity: 1;
 }
 
@@ -26,6 +27,7 @@
   transition: opacity 0.3s ease;
   background: transparent;
   border-width: 0 !important;
+  color: black !important;
   z-index: 9;
   opacity: 1;
   pointer-events: auto;

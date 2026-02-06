@@ -32,23 +32,12 @@
  * ============================================================================
  */
 
-
-import "../styles/LandingPage.css";
+import "../styles/Acknowledgments.css";
 
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading, Divider } from "@chakra-ui/react";
-import NavBar from "../components/NavBar";
-import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-
-// Footer assets (shared with Home)
-import logoImage from "../assets/logo.png";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
-// Data
+import { useState } from "react";
 import team from "../team.json";
 
 /* =============================================================================
@@ -75,10 +64,27 @@ function getMemberPhotoSrc(member) {
  * - All spacing, font sizes, and icon dims are handled via CSS classes.
  *
  * ===========================================================================*/
-function TeamGrid({ filteredTeam }) {
-  const sortedTeam = [...filteredTeam].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+function TeamGrid({ filteredTeam, teamName }) {
+  const isLeadership = String(teamName || "").toLowerCase() === "leadership";
+
+  const sortedTeam = [...filteredTeam].sort((a, b) => {
+    const aPosition = String(a.position || "").toLowerCase();
+    const bPosition = String(b.position || "").toLowerCase();
+
+    const aIsProjectDirector = aPosition.includes("project director");
+    const bIsProjectDirector = bPosition.includes("project director");
+
+    if (isLeadership && aIsProjectDirector !== bIsProjectDirector) {
+      return aIsProjectDirector ? -1 : 1;
+    }
+
+    const aIsLead = aPosition.includes("lead");
+    const bIsLead = bPosition.includes("lead");
+
+    if (aIsLead !== bIsLead) return aIsLead ? -1 : 1;
+
+    return a.name.localeCompare(b.name);
+  });
 
   return (
     <div className="ack-grid">
@@ -89,7 +95,6 @@ function TeamGrid({ filteredTeam }) {
 
         return (
           <div key={`${member.name}-${idx}`} className="ack-card">
-            {/* --- Photo (masked to 290×302 using ../src/assets/Photo.png) --- */}
             {photoSrc ? (
               <img
                 className="ack-card-photo"
@@ -105,7 +110,6 @@ function TeamGrid({ filteredTeam }) {
               />
             )}
 
-            {/* --- Name + Pronouns row --- */}
             <div className="ack-card-name">
               <span className="ack-card-fullname">{member.name}</span>
               {member.pronouns && member.pronouns.trim() !== "" && (
@@ -113,7 +117,6 @@ function TeamGrid({ filteredTeam }) {
               )}
             </div>
 
-            {/* --- Role | Degree, GradYear --- */}
             <div className="ack-card-subinfo">
               {member.position}
               {member.degree &&
@@ -124,7 +127,6 @@ function TeamGrid({ filteredTeam }) {
                 `, ${member.gradYear}`}
             </div>
 
-            {/* --- Icon row (conditionally renders each icon) --- */}
             <div className="ack-card-icons">
               {member.email && member.email.trim() !== "" && (
                 <a
@@ -181,37 +183,71 @@ function TeamGrid({ filteredTeam }) {
  * - The divider at the end visually separates sections.
  * ===========================================================================*/
 function TeamSection({ title, teamName }) {
-  const members = team.filter((m) => m.team === teamName);
+  const targetTeam = String(teamName || "").toLowerCase();
+  const members = team.filter(
+    (m) => String(m.team || "").toLowerCase() === targetTeam,
+  );
   if (members.length === 0) return null;
 
+  const [showPast, setShowPast] = useState(false);
+
   const active = members.filter(
-    (m) => String(m.active).toLowerCase() === "true"
+    (m) => String(m.active).toLowerCase() === "true",
   );
   const inactive = members.filter(
-    (m) => String(m.active).toLowerCase() === "false"
+    (m) => String(m.active).toLowerCase() === "false",
   );
 
   return (
-    <>
-      <Heading as="h2" size="xl" mt={14} mb={6}>
+    <div className="team-section">
+      <Heading
+        as="h2"
+        size="xl"
+        mt={14}
+        mb={6}
+        className="team-section-heading"
+      >
         {title}
       </Heading>
 
       {/* Active members */}
-      <TeamGrid filteredTeam={active.length > 0 ? active : members} />
+      <TeamGrid
+        filteredTeam={active.length > 0 ? active : members}
+        teamName={teamName}
+      />
 
-      {/* Past members (only if present and distinct) */}
       {inactive.length > 0 && (
         <>
-          <Heading as="h3" size="lg" mt={10} mb={4}>
-            Past Members
-          </Heading>
-          <TeamGrid filteredTeam={inactive} />
+          <button
+            type="button"
+            className="team-section-toggle"
+            onClick={() => setShowPast((prev) => !prev)}
+            aria-expanded={showPast}
+            aria-controls={`${targetTeam}-past-members`}
+          >
+            <span className={`team-section-caret ${showPast ? "open" : ""}`}>
+              ▸
+            </span>
+            {showPast ? "Hide past members" : "Show past members"}
+          </button>
+
+          {showPast && (
+            <div id={`${targetTeam}-past-members`}>
+              <Heading
+                as="h3"
+                size="lg"
+                mt={6}
+                mb={4}
+                className="team-section-heading"
+              >
+                Past Members
+              </Heading>
+              <TeamGrid filteredTeam={inactive} teamName={teamName} />
+            </div>
+          )}
         </>
       )}
-
-      <Divider my={12} />
-    </>
+    </div>
   );
 }
 
@@ -219,9 +255,8 @@ function TeamSection({ title, teamName }) {
  * Acknowledgements (Default Export)
  * -----------------------------------------------------------------------------
  * Assembles the page:
- *   1) NavBar
- *   2) Hero overlay
- *   3) Lower content that scrolls over hero:
+ *   1)  Hero overlay
+ *   2) Lower content that scrolls over hero:
  *        - All team sections (as card grids)
  *        - Two "Additional Contributors" sections as cards:
  *            • User Studies  (team === "additional")
@@ -232,18 +267,8 @@ function TeamSection({ title, teamName }) {
  * the same styling and placeholder behavior as core teams.
  * ===========================================================================*/
 export default function Acknowledgements() {
-  const navigate = useNavigate();
-
-  // Slugs borrowed from Home to keep navigation consistent
-  const privacySlug = "/privacy/whatIsPrivacy";
-  const accessibilitySlug = "/accessibility/whatIsAccessibility";
-  const decisionSlug = "/automatedDecisionMaking/fairness";
-  const aiSlug = "/generativeAI/copyright";
-
   return (
     <>
-      {/* Global site navigation */}
-      <NavBar />
 
       {/* Behavior matches Home’s upper-content.
           The actual size/scroll handoff is controlled in Acknowledgements.css:

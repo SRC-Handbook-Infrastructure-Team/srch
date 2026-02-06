@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
-import NavBar from "../components/NavBar";
 import ContentsSidebar from "../components/ContentsSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -20,8 +19,6 @@ function computeLayoutMode(viewportWidth) {
   return "wide";
 }
 
-
-
 /**
  * SidebarLayout
  * ---------------------------------------------------------------------------
@@ -36,18 +33,16 @@ export default function SidebarLayout({ children }) {
   const innerRef = useRef(null);
   const scrollPosRef = useRef(0);
   function getScrollContainer() {
-  if (typeof document !== "undefined") {
-    const main = document.getElementById("main");
-    if (main) return main;
+    if (typeof document !== "undefined") {
+      const main = document.getElementById("main");
+      if (main) return main;
+    }
+    return window;
   }
-  return window;
-}
-
-
 
   /** ---------------- VIEWPORT WIDTH + LAYOUT MODE ---------------- */
   const [viewportWidth, setViewportWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1440
+    typeof window !== "undefined" ? window.innerWidth : 1440,
   );
   const layoutMode = computeLayoutMode(viewportWidth);
 
@@ -57,13 +52,12 @@ export default function SidebarLayout({ children }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-    // Keep the <html> element in sync with React's layoutMode
+  // Keep the <html> element in sync with React's layoutMode
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.dataset.layoutMode = layoutMode;
     }
   }, [layoutMode]);
-
 
   /** ---------------- FREEZE / RELEASE MAIN CONTENT (wide only) ---------------- */
   const freezeMainContent = useCallback(() => {
@@ -148,7 +142,7 @@ export default function SidebarLayout({ children }) {
       // Wide desktop: preserve existing “protect main content” behavior.
       const availableForRight = Math.max(
         vw - MIN_MAIN_WIDTH - (leftSidebar?.width || 0),
-        0
+        0,
       );
       return {
         min: RIGHT_MIN_WIDTH,
@@ -191,7 +185,7 @@ export default function SidebarLayout({ children }) {
         setIsRightOpen(true);
       }
     },
-    [layoutMode, isRightOpen, leftSidebar]
+    [layoutMode, isRightOpen, leftSidebar],
   );
 
   const closePanel = useCallback(
@@ -207,7 +201,7 @@ export default function SidebarLayout({ children }) {
         }
       }
     },
-    [isRightOpen, leftSidebar]
+    [isRightOpen, leftSidebar],
   );
 
   const togglePanel = useCallback(
@@ -220,7 +214,7 @@ export default function SidebarLayout({ children }) {
         else openPanel("right");
       }
     },
-    [openPanel, closePanel, leftSidebar.collapsed, isRightOpen]
+    [openPanel, closePanel, leftSidebar.collapsed, isRightOpen],
   );
 
   /** Maintain original openRightDrawer / closeRightDrawer API
@@ -235,7 +229,7 @@ export default function SidebarLayout({ children }) {
       setRightContent(content);
       openPanel("right");
     },
-    [openPanel]
+    [openPanel],
   );
 
   /** When switching into overlay mode, enforce “only one panel open” */
@@ -272,7 +266,10 @@ export default function SidebarLayout({ children }) {
     } else {
       // OPENING (same for both modes)
       requestAnimationFrame(() => {
-        target.style.setProperty("--right-sidebar-width", `${rightSidebar.width}px`);
+        target.style.setProperty(
+          "--right-sidebar-width",
+          `${rightSidebar.width}px`,
+        );
         target.classList.add("right-open");
       });
     }
@@ -292,43 +289,38 @@ export default function SidebarLayout({ children }) {
   };
 
   /**
- * Close the right drawer AND normalize the URL back to the base
- * (/section/subsection). This keeps URL, CSS state, and drawer state in sync.
- */
-const closeRightDrawerAndResetUrl = useCallback(() => {
-  // 1. Save scroll BEFORE drawer closes
-  const sc = getScrollContainer();
-  const currentTop =
-    sc === window ? window.scrollY || 0 : sc.scrollTop || 0;
-  scrollPosRef.current = currentTop;
+   * Close the right drawer AND normalize the URL back to the base
+   * (/section/subsection). This keeps URL, CSS state, and drawer state in sync.
+   */
+  const closeRightDrawerAndResetUrl = useCallback(() => {
+    // 1. Save scroll BEFORE drawer closes
+    const sc = getScrollContainer();
+    const currentTop = sc === window ? window.scrollY || 0 : sc.scrollTop || 0;
+    scrollPosRef.current = currentTop;
 
-  // 2. Close the drawer
-  closeRightDrawer();
+    // 2. Close the drawer
+    closeRightDrawer();
 
-  // 3. Compute base path for removal of /:term
-  const basePath = getBasePath(location.pathname);
+    // 3. Compute base path for removal of /:term
+    const basePath = getBasePath(location.pathname);
 
-  // 4. Navigate without losing scroll
-  if (location.pathname !== basePath) {
-    navigate(basePath, { replace: true });
+    // 4. Navigate without losing scroll
+    if (location.pathname !== basePath) {
+      navigate(basePath, { replace: true });
 
-    // Restore AFTER router updates DOM
-    requestAnimationFrame(() => {
-      const sc2 = getScrollContainer();
-      const top = scrollPosRef.current || 0;
+      // Restore AFTER router updates DOM
+      requestAnimationFrame(() => {
+        const sc2 = getScrollContainer();
+        const top = scrollPosRef.current || 0;
 
-      if (sc2 === window) {
-        window.scrollTo({ top, behavior: "auto" });
-      } else {
-        sc2.scrollTo({ top, behavior: "auto" });
-      }
-    });
-  }
-}, [closeRightDrawer, location.pathname, navigate]);
-
-
-
-
+        if (sc2 === window) {
+          window.scrollTo({ top, behavior: "auto" });
+        } else {
+          sc2.scrollTo({ top, behavior: "auto" });
+        }
+      });
+    }
+  }, [closeRightDrawer, location.pathname, navigate]);
 
   const prevBasePathRef = useRef(getBasePath(location.pathname));
 
@@ -354,11 +346,11 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
     if (leftSidebar.width + rightSidebar.width > available) {
       if (leftSidebar.width > rightSidebar.width) {
         leftSidebar.setWidth(
-          Math.max(available - rightSidebar.width, leftSidebar.minWidth)
+          Math.max(available - rightSidebar.width, leftSidebar.minWidth),
         );
       } else {
         rightSidebar.setWidth(
-          Math.max(available - leftSidebar.width, rightSidebar.minWidth)
+          Math.max(available - leftSidebar.width, rightSidebar.minWidth),
         );
       }
     }
@@ -390,12 +382,12 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
       if (e.key === "[" && !leftSidebar.collapsed) {
         e.preventDefault();
         leftSidebar.setWidth(
-          Math.max(leftSidebar.width - 10, leftSidebar.minWidth)
+          Math.max(leftSidebar.width - 10, leftSidebar.minWidth),
         );
       } else if (e.key === "]" && !leftSidebar.collapsed) {
         e.preventDefault();
         leftSidebar.setWidth(
-          Math.min(leftSidebar.width + 10, leftSidebar.maxWidth)
+          Math.min(leftSidebar.width + 10, leftSidebar.maxWidth),
         );
       }
     };
@@ -444,13 +436,12 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
       leftSidebar.minWidth,
       leftSidebar.maxWidth,
       leftSidebar.collapsedWidth,
-    ]
+    ],
   );
 
   /** ---------------- DEV-ONLY MODE BADGE (remove if you want) ---------------- */
   const hasOverlayPanelOpen =
-    layoutMode === "overlay" &&
-    (!leftSidebar.collapsed || isRightOpen);
+    layoutMode === "overlay" && (!leftSidebar.collapsed || isRightOpen);
 
   /** ---------------- RENDER ---------------- */
   return (
@@ -461,11 +452,6 @@ const closeRightDrawerAndResetUrl = useCallback(() => {
         }
         data-layout-mode={layoutMode}
       >
-        <NavBar layoutMode={layoutMode} />
-
-
-        
-
         {/* Reserved flex rail under NavBar (unchanged) */}
         <div className="layout-rail" role="presentation" />
 

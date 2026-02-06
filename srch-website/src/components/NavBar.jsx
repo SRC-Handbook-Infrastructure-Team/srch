@@ -66,6 +66,14 @@ function NavBar({ className = "", layoutMode }) {
     setOpenSection((prev) => (prev === sectionKey ? null : sectionKey));
   };
 
+  const openSectionOnHover = (sectionKey) => {
+    setOpenSection(sectionKey);
+  };
+
+  const closeSectionOnLeave = (sectionKey) => {
+    setOpenSection((prev) => (prev === sectionKey ? null : prev));
+  };
+
   function forceSearchOpen() {
     setIsMenuOpen(false);
     setIsSearchOpen(true);
@@ -75,7 +83,6 @@ function NavBar({ className = "", layoutMode }) {
     setIsSearchOpen(false);
     setIsMenuOpen((prev) => {
       const next = !prev;
-      console.log("[NavBar] hamburger clicked, isMenuOpen ->", next);
       return next;
     });
   }
@@ -83,6 +90,27 @@ function NavBar({ className = "", layoutMode }) {
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 48em)");
+
+    const handleChange = (event) => {
+      if (event.matches) {
+        setIsMenuOpen(false);
+        setIsModulesExpanded(false);
+      }
+    };
+
+    handleChange(mediaQuery);
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
 
   useEffect(() => {
     if (hasLoadedData.current) return;
@@ -128,7 +156,7 @@ function NavBar({ className = "", layoutMode }) {
     }
     loadAllData();
   }, []);
-  
+
   useEffect(() => {
     if (
       currentSectionId &&
@@ -170,7 +198,11 @@ function NavBar({ className = "", layoutMode }) {
             </Box>
             <HStack className="right-hstack" spacing={"1rem"}>
               <Box className="hide-base show-md">
-                <Box className="nav-dropdown">
+                <Box
+                  className="nav-dropdown"
+                  onMouseEnter={() => openSectionOnHover("modules")}
+                  onMouseLeave={() => closeSectionOnLeave("modules")}
+                >
                   <Box
                     className="nav-dropdown-title"
                     onClick={(e) => toggleSection("modules", e)}
@@ -222,9 +254,7 @@ function NavBar({ className = "", layoutMode }) {
                               toggleSection(section.id, e);
                             }}
                           >
-                            <Text fontWeight="medium" whiteSpace="nowrap">
-                              {section.title}
-                            </Text>
+                            <Text whiteSpace="nowrap">{section.title}</Text>
                           </Box>
                         ))}
                       </VStack>
@@ -252,9 +282,9 @@ function NavBar({ className = "", layoutMode }) {
               >
                 <Text>Acknowledgements</Text>
               </Box>
-              <Box className="icon-button">
+              {/* <Box className="icon-button">
                 <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
-              </Box>
+              </Box> */}
               <Box
                 className="icon-button"
                 onClick={() => {
@@ -299,7 +329,7 @@ function NavBar({ className = "", layoutMode }) {
         in={isMenuOpen}
         animateOpacity
         transition={{
-          enter: { duration: 0.5 },
+          enter: { duration: 0.25 },
           exit: { duration: 0.25 },
         }}
       >

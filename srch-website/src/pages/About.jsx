@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-import "../styles/LandingPage.css";
+import "../styles/About.css";
 export default function About() {
   return (
     <>

@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import Acknowledgements from "./pages/Acknowledgements";
+import Acknowledgements from "./pages/Acknowledgments";
 import { SearchResults } from "./pages/SearchResults";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
@@ -26,7 +26,6 @@ function AppRoutes() {
 
       {isMarkdownPage ? (
         // 🔹 Markdown / handbook routes:
-        // SidebarLayout itself renders <NavBar layoutMode={layoutMode} />
         <SidebarLayout>
           <Routes>
             <Route path="/:sectionId" element={<MarkdownPage />} />
@@ -43,7 +42,6 @@ function AppRoutes() {
       ) : (
         // 🔹 Non-markdown routes: render a single NavBar here
         <>
-          <NavBar layoutMode="overlay" />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/acknowledgements" element={<Acknowledgements />} />
@@ -55,6 +53,7 @@ function AppRoutes() {
           <Footer />
         </>
       )}
+      <NavBar layoutMode="overlay" />
     </>
   );
 }

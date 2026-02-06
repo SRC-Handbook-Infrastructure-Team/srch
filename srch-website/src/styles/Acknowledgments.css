@@ -8,7 +8,7 @@
   /* Card + grid geometry */
   --ack-card-width: 290px; /* EXACT card width from Figma */
   --ack-photo-width: 290px; /* EXACT photo width */
-  --ack-photo-height: 302px; /* EXACT photo height */
+  --ack-photo-height: 290px; /* EXACT photo height */
   --ack-grid-col-gap: 10px; /* column gap */
   --ack-grid-row-gap: 10px; /* row gap */
   --ack-radius: 6px;
@@ -67,17 +67,14 @@
   z-index: 1;
 }
 
-
-
 /* Only on the Acknowledgements hero */
 .ack-hero .website-title {
-  position: relative;   /* keeps its original layout space */
-  left: -300px;          /* shift LEFT */
-  top: 70px;            /* shift DOWN */
+  position: relative; /* keeps its original layout space */
+  left: -300px; /* shift LEFT */
+  top: 70px; /* shift DOWN */
   font-size: 84px;
   line-height: 100px;
 }
-
 
 .ack-hero .info-section {
   font-family: "Be Vietnam Pro", sans-serif;
@@ -92,10 +89,11 @@
 
 .ack-lower-content {
   margin-top: calc(var(--ack-upper-height) - 5vh);
+  padding-top: 50px;
+  padding-bottom: 50px;
   position: relative;
   z-index: 1;
   background: #fff;
-  padding: 72px 200px;
 }
 
 .line-divider {
@@ -110,15 +108,64 @@
    3. GRID LAYOUT (4 columns desktop, 2 tablet, 1 phone)
    ============================================================================ */
 
+.team-section {
+  justify-items: center;
+  text-align: left;
+}
+
+.team-section-heading {
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  text-align: left;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  width: calc(4 * var(--ack-card-width) + 3 * var(--ack-grid-col-gap));
+  margin: 0 !important;
+}
+
+.team-section-toggle {
+  font-family: "Be Vietnam Pro", sans-serif;
+  width: calc(4 * var(--ack-card-width) + 3 * var(--ack-grid-col-gap));
+  padding-top: 20px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ack-brand-brown);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.team-section-caret {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.team-section-caret.open {
+  transform: rotate(90deg);
+}
+
 .ack-grid {
   display: grid;
+  width: min-content;
   grid-template-columns: repeat(4, var(--ack-card-width));
   column-gap: var(--ack-grid-col-gap);
   row-gap: var(--ack-grid-row-gap);
-  justify-content: space-between; /* full width, even gutters */
+  margin: 0 auto;
 }
 
 @media (max-width: 1199px) {
+  .team-section-heading {
+    width: calc(2 * var(--ack-card-width) + var(--ack-grid-col-gap));
+  }
+
+  .team-section-toggle {
+    width: calc(2 * var(--ack-card-width) + var(--ack-grid-col-gap));
+  }
+
   .ack-grid {
     grid-template-columns: repeat(2, var(--ack-card-width));
     justify-content: center;
@@ -126,6 +173,14 @@
 }
 
 @media (max-width: 700px) {
+  .team-section-heading {
+    width: var(--ack-card-width);
+  }
+
+  .team-section-toggle {
+    width: var(--ack-card-width);
+  }
+
   .ack-grid {
     grid-template-columns: repeat(1, var(--ack-card-width));
     justify-content: center;
@@ -154,6 +209,8 @@
 .ack-card-photo {
   width: var(--ack-photo-width);
   height: var(--ack-photo-height);
+  /* height: 10%;
+  width: 10%; */
   border-radius: var(--ack-radius);
 
   /* The image inside this box is hard-cropped, centered */
@@ -214,6 +271,7 @@
 .ack-card-pronouns {
   font-size: 15px;
   color: var(--ack-muted);
+  white-space: nowrap;
 }
 
 .ack-card-subinfo {
@@ -361,13 +419,15 @@
 
 @media (max-width: 1200px) {
   .ack-lower-content {
-    padding: 72px 120px;
+    padding-top: 72px;
+    padding-bottom: 72px;
   }
 }
 
 @media (max-width: 1024px) {
   .ack-lower-content {
-    padding: 72px 80px;
+    padding-top: 72px;
+    padding-bottom: 72px;
   }
   .link-section {
     flex-wrap: wrap;
@@ -377,7 +437,8 @@
 
 @media (max-width: 768px) {
   .ack-lower-content {
-    padding: 48px 24px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
   .link-section {
     flex-direction: column;
