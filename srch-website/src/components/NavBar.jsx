@@ -278,9 +278,9 @@ function NavBar({ className = "", layoutMode }) {
               </Box>
               <Box
                 className="nav-link-box hide-base show-md"
-                onClick={() => navigate("/acknowledgements")}
+                onClick={() => navigate("/acknowledgments")}
               >
-                <Text>Acknowledgements</Text>
+                <Text>Acknowledgments</Text>
               </Box>
               {/* <Box className="icon-button">
                 <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
@@ -354,10 +354,10 @@ function NavBar({ className = "", layoutMode }) {
               className="nav-link-box"
               onClick={() => {
                 setIsMenuOpen(false);
-                navigate("/acknowledgements");
+                navigate("/acknowledgments");
               }}
             >
-              Acknowledgements
+              Acknowledgments
             </Box>
             <Box
               className="mobile-modules-container"

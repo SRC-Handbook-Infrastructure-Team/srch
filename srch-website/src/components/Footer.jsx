@@ -15,8 +15,7 @@ function Footer() {
   const decisionSlug = "/automatedDecisionMaking/fairness";
   const aiSlug = "/generativeAI/copyright";
 
-  
-    return (
+  return (
     <Box className="footer-container">
       <div className="footer-line-divider"></div>
       <div className="footer-content">
@@ -126,10 +125,10 @@ function Footer() {
                   About
                 </button>
                 <button
-                  onClick={() => navigate("/acknowledgements")}
+                  onClick={() => navigate("/acknowledgments")}
                   className="module-link-primer-footer"
                 >
-                  Acknowledgements
+                  Acknowledgments
                 </button>
               </div>
               <div className="footer-links second-column show-narrow hide-wide">
@@ -154,7 +153,10 @@ function Footer() {
                 </a>
               </p>
               <p className="feedback-footer bug-form">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog" target="_blank">
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog"
+                  target="_blank"
+                >
                   Bug Report Form
                 </a>
               </p>

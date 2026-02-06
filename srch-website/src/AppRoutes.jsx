@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import Acknowledgements from "./pages/Acknowledgments";
+import Acknowledgments from "./pages/Acknowledgments";
 import { SearchResults } from "./pages/SearchResults";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
@@ -13,12 +13,12 @@ import About from "./pages/About";
 function AppRoutes() {
   const location = useLocation();
   const isSearchPage = location.pathname.startsWith("/search");
-  const isAcknowledgementsPage =
-    location.pathname.startsWith("/acknowledgements");
+  const isAcknowledgmentsPage =
+    location.pathname.startsWith("/acknowledgments");
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage = location.pathname === "/";
   const isMarkdownPage =
-    !isHomePage && !isSearchPage && !isAcknowledgementsPage && !isAboutPage;
+    !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
   return (
     <>
@@ -44,7 +44,7 @@ function AppRoutes() {
         <>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/acknowledgements" element={<Acknowledgements />} />
+            <Route path="/acknowledgments" element={<Acknowledgments />} />
             <Route path="/about" element={<About />} />
             <Route path="/search/:query/:page" element={<SearchResults />} />
             <Route path="/search/:query" element={<SearchResults />} />

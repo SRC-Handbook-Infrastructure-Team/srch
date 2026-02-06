@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * About.jsx — full-hero overlay version (matches Acknowledgements + Home)
+ * About.jsx — full-hero overlay version (matches Acknowledgments + Home)
  * ----------------------------------------------------------------------------
  * • Full-viewport fixed hero using SRC gradient image
  * • Text block overlays the hero background
@@ -26,7 +26,9 @@ export default function About() {
 
       <div className="about-lower-content">
         <section className="about-section">
-          <h2 className="section-title" style={{ overflowWrap: "break-word" }}>How to use the handbook</h2>
+          <h2 className="section-title" style={{ overflowWrap: "break-word" }}>
+            How to use the handbook
+          </h2>
 
           <p>
             Each section contains a series of primers that are loosely aligned

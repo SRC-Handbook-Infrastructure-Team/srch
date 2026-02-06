@@ -1,11 +1,11 @@
 /* ==========================================================================  
    Base Global Defaults
    --------------------------------------------------------------------------
-   These define app-wide rendering and color rules.
-   Combined index.css (old + new)
-   ========================================================================== */
+  PAGE: Acknowledgments
+  ACKNOWLEDGMENTS — MERGED + SAFE VERSION  
+  Mirrors the hero + lower-content architecture used on Acknowledgments.
 
-@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+/* Acknowledgments page–specific title offset */
 
 /* --------------------------------------------------------------------------
    Root Design Tokens & Theme Variables
@@ -47,7 +47,6 @@
   --x-large-text: 70px;
   --title-weight: 500;
   --sub-weight: 400;
-
 
   /* ------------------------------------------------------------------------
      🎨 Design Tokens —  Fonts
@@ -228,7 +227,6 @@ html {
   background: #fff;
   position: relative;
   z-index: 1;
-  
 }
 
 .section-divider {
@@ -256,7 +254,9 @@ html {
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,7 +282,6 @@ html {
 .scroll-caret-icon.hidden {
   opacity: 0;
 }
-
 
 .curriculum-title {
   color: var(--color-text);
@@ -673,7 +672,6 @@ html {
   .logo-area {
     padding-right: 50px;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -697,7 +695,7 @@ html {
 }
 
 /* ============================================================================
-   SHARED HERO LAYOUT (Home, Acknowledgements, About) --> #TODO: Clean up old CSS after migration
+  SHARED HERO LAYOUT (Home, Acknowledgments, About) --> #TODO: Clean up old CSS after migration
    ============================================================================ */
 
 /* 1. Shared hero shell: gradient background, fixed, full-width */
@@ -773,7 +771,7 @@ html {
   word-break: keep-all;
 }
 
-/* Kill the old Acknowledgements offsets that made things jumbled */
+/* Kill the old Acknowledgments offsets that made things jumbled */
 .ack-hero .website-title {
   position: static;
   left: auto;

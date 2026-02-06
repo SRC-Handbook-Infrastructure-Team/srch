@@ -67,7 +67,7 @@
   z-index: 1;
 }
 
-/* Only on the Acknowledgements hero */
+/* Only on the Acknowledgments hero */
 .ack-hero .website-title {
   position: relative; /* keeps its original layout space */
   left: -300px; /* shift LEFT */

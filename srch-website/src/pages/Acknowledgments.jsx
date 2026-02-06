@@ -1,9 +1,9 @@
 /**
  * ============================================================================
- * Acknowledgements.jsx (hero-as-overlay version, unified card layout)
+ * Acknowledgments.jsx (hero-as-overlay version, unified card layout)
  * ----------------------------------------------------------------------------
  * Purpose
- *   Renders the complete Acknowledgements page as a single-page layout with a
+ *   Renders the complete Acknowledgments page as a single-page layout with a
  *   hero section (fixed overlay) and a lower content container that slides
  *   over the hero as the user scrolls—mirroring the Home page feel.
  *
@@ -23,7 +23,7 @@
 
  *
  * Styling
- *   • All visual styling comes from Acknowledgements.css.
+ *   • All visual styling comes from Acknowledgments.css.
  *   • Critical classes: .ack-card, .ack-card-photo, .ack-photo-fallback,
  *     .ack-card-name, .ack-card-fullname, .ack-card-pronouns, .ack-card-subinfo,
  *     .ack-card-icons, .ack-icon-btn, .ack-hero, .ack-lower-content, .line-divider,
@@ -252,7 +252,7 @@ function TeamSection({ title, teamName }) {
 }
 
 /* =============================================================================
- * Acknowledgements (Default Export)
+ * Acknowledgments (Default Export)
  * -----------------------------------------------------------------------------
  * Assembles the page:
  *   1)  Hero overlay
@@ -266,12 +266,11 @@ function TeamSection({ title, teamName }) {
  * This implementation ensures “Additional” entries render as full cards using
  * the same styling and placeholder behavior as core teams.
  * ===========================================================================*/
-export default function Acknowledgements() {
+export default function Acknowledgments() {
   return (
     <>
-
       {/* Behavior matches Home’s upper-content.
-          The actual size/scroll handoff is controlled in Acknowledgements.css:
+          The actual size/scroll handoff is controlled in Acknowledgments.css:
           - .ack-hero (position: fixed; background image)
           - .ack-lower-content (margin-top: Nvh to start after the hero)
       */}
