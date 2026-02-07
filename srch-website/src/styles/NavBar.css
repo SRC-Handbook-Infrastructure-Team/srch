@@ -1,0 +1,253 @@
+.top-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  margin: 0;
+
+  height: auto;
+  min-height: 70px;
+
+  display: block;
+  background-color: var(--color-bg);
+  box-shadow: 2px 2px 5px var(--color-shadow);
+  z-index: 999999999999;
+}
+
+.top-navbar[data-menu-open="true"] {
+  box-shadow: none;
+}
+
+.top-navbar a:hover,
+.top-navbar a:button,
+.top-navbar .nav-link:hover,
+.top-navbar .nav-button:hover {
+  color: var(--color-text-hover);
+}
+
+.navbar-logo-container {
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.header-hstack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  overflow: visible;
+  width: 100%;
+  height: min-content;
+}
+
+.right-hstack {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nav-dropdown {
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.nav-dropdown-title {
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  user-select: none;
+  transition: color 0.2s;
+  font-family: var(--content-font);
+  color: var(--color-text) !important;
+}
+
+.nav-dropdown-title:hover {
+  color: var(--color-text-hover);
+}
+
+.nav-dropdown-title-text {
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+  margin-right: 0.25rem;
+}
+
+.nav-dropdown-title-text:hover {
+  color: var(--color-text-hover);
+}
+
+.nav-dropdown-chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+  user-select: none;
+}
+
+.navbar-padding {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 0.25rem;
+  background-color: var(--color-bg);
+  box-shadow: 0 4px 6px var(--color-shadow);
+  border-radius: 0.375rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+  justify-content: center;
+}
+
+.nav-dropdown-item {
+  font-family: var(--content-font);
+  color: var(--color-text);
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.nav-dropdown-item:hover {
+  color: var(--color-text-hover);
+}
+
+.nav-link-box {
+  color: var(--color-text);
+  font-family: var(--content-font);
+  height: min-content;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.nav-link-box:hover {
+  color: var(--color-text-hover);
+}
+
+.mobile-menu-vstack {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  width: 100%;
+}
+
+.mobile-modules-container {
+  position: relative;
+}
+
+.mobile-modules-toggle {
+  border-radius: 0.375rem;
+  font-family: var(--content-font);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  width: min-content;
+  white-space: nowrap;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.mobile-modules-toggle:hover {
+  color: var(--color-text-hover);
+}
+
+.mobile-modules-chevron {
+  transition: transform 0.3s;
+  width: 20px;
+  height: 20px;
+}
+
+.mobile-module-item {
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.2s;
+  margin-left: 10px;
+  font-family: var(--content-font);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.mobile-module-item:hover {
+  color: var(--color-text-hover);
+}
+
+.icon-button {
+  padding: 0rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 48em) {
+  .hide-md {
+    display: none !important;
+  }
+  .show-md {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 47.99em) {
+  .hide-base {
+    display: none !important;
+  }
+  .show-base {
+    display: inline-flex !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+    margin-left: 0;
+    margin-top: 60px;
+  }
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-text-hover));
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em var(--color-text-hover));
+}
+
+mark {
+  padding: 0 !important;
+}

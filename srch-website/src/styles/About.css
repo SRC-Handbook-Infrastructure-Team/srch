@@ -1,28 +1,12 @@
-/* ============================================================================
-   About.css
-   ----------------------------------------------------------------------------
-  Mirrors the hero + lower-content architecture used on Acknowledgments.
-   Includes:
-   • Full-viewport fixed hero using SRC gradient image assets
-   • Hover variant
-   • Slide-up lower content
-   • Typography + section layout
-   ============================================================================ */
-
-/* ============================================================================
-   2. LOWER CONTENT (slides upward over hero)
-   ============================================================================ */
-
 .about-lower-content {
   margin-top: 70vh;
   position: relative;
   z-index: 1;
 
-  background: white;
+  background: var(--color-bg);
   padding: 72px 200px;
 }
 
-/* Constrained text section — matches Figma + screenshot */
 .about-section {
   max-width: 720px;
   margin: 0 auto 48px auto;
@@ -31,17 +15,17 @@
 }
 
 .about-section h2 {
-  font-family: "Funnel Sans", sans-serif;
+  font-family: var(--title-font);
   font-weight: 900;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
-  color: rgba(0, 0, 0, 1);
+  color: var(--color-text);
 }
 
 .about-section p {
-  font-family: "Be Vietnam Pro", sans-serif;
-  color: rgba(0, 0, 0, 1);
+  font-family: var(--content-font);
+  color: var(--color-text);
   font-size: 20px;
   line-height: 1.6;
   max-width: 650px;
@@ -54,28 +38,23 @@
 }
 
 .about-section li {
-  font-family: "Be Vietnam Pro", sans-serif;
-  color: rgba(0, 0, 0, 1);
+  font-family: var(--content-font);
+  color: var(--color-text);
   font-size: 20px;
   line-height: 1.6;
   margin-bottom: 8px;
 }
 
-/* Divider matching new width + style */
 .about-divider {
   width: 90%;
   max-width: 900px;
   height: 2px;
-  background: rgba(90, 45, 0, 0.5);
+  background: var(--color-border);
   margin: 64px auto;
   position: relative;
   left: 0;
   transform: none;
 }
-
-/* ============================================================================
-   3. RESPONSIVENESS
-   ============================================================================ */
 
 @media (max-width: 1024px) {
   .about-lower-content {

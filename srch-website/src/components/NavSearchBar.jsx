@@ -63,9 +63,6 @@ function NavSearchBar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            _placeholder={{
-              color: "gray.500",
-            }}
             _focus={{
               boxShadow: "none",
               outline: "none",

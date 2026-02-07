@@ -18,7 +18,9 @@ import {
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
-import "../styles/ContentPage.css";
+import "../styles/NavBar.css";
+
+const themeStorageKey = "srch-theme";
 
 function NavBar({ className = "", layoutMode }) {
   const location = useLocation();
@@ -32,6 +34,7 @@ function NavBar({ className = "", layoutMode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
@@ -39,6 +42,25 @@ function NavBar({ className = "", layoutMode }) {
   const [openSection, setOpenSection] = useState(null);
 
   const hasLoadedData = useRef(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    const storedTheme = window.localStorage.getItem(themeStorageKey);
+    const prefersDark = window.matchMedia
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false;
+    const initialTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : prefersDark
+          ? "dark"
+          : "light";
+
+    setTheme(initialTheme);
+    root.setAttribute("data-theme", initialTheme);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -84,6 +106,18 @@ function NavBar({ className = "", layoutMode }) {
     setIsMenuOpen((prev) => {
       const next = !prev;
       return next;
+    });
+  }
+
+  function toggleTheme() {
+    setTheme((prevTheme) => {
+      const nextTheme = prevTheme === "dark" ? "light" : "dark";
+      const root = document.documentElement;
+      if (root) {
+        root.setAttribute("data-theme", nextTheme);
+      }
+      window.localStorage.setItem(themeStorageKey, nextTheme);
+      return nextTheme;
     });
   }
 
@@ -208,7 +242,7 @@ function NavBar({ className = "", layoutMode }) {
                     onClick={(e) => toggleSection("modules", e)}
                   >
                     <Text
-                      className="nav-dropdown-title-text"
+                      className="nav-dropdown-title-text nav-link-box"
                       color={openSection === "modules" ? "#9D0013" : "inherit"}
                     >
                       Modules
@@ -282,7 +316,23 @@ function NavBar({ className = "", layoutMode }) {
               >
                 <Text>Acknowledgments</Text>
               </Box>
-              {/* <Box className="icon-button">
+              {/* <Box
+                className="icon-button"
+                role="button"
+                tabIndex={0}
+                aria-label={
+                  theme === "dark"
+                    ? "Switch to light mode"
+                    : "Switch to dark mode"
+                }
+                onClick={toggleTheme}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    toggleTheme();
+                  }
+                }}
+              >
                 <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
               </Box> */}
               <Box
@@ -365,7 +415,7 @@ function NavBar({ className = "", layoutMode }) {
               onMouseLeave={() => setIsModulesExpanded(false)}
             >
               <Box
-                className="mobile-modules-toggle"
+                className="mobile-modules-toggle nav-link-box"
                 onClick={() => setIsModulesExpanded(!isModulesExpanded)}
               >
                 Modules

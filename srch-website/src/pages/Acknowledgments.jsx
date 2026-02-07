@@ -276,7 +276,7 @@ export default function Acknowledgments() {
       */}
       <div className="upper-content">
         <div className="upper-text-section">
-          <div className="website-title">Meet our Team!</div>
+          <div className="website-title">Meet our team!</div>
           {/* Optional supporting copy under the heading (kept empty for now) */}
           <div className="info-section"></div>
         </div>
@@ -286,10 +286,10 @@ export default function Acknowledgments() {
       <div className="ack-lower-content">
         {/* Core teams */}
         <TeamSection title="Leadership" teamName="leadership" />
+        <TeamSection title="Product Team" teamName="product" />
+        <TeamSection title="Accessibility Team" teamName="accessibility" />
         <TeamSection title="AI Team" teamName="ai" />
         <TeamSection title="Privacy Team" teamName="privacy" />
-        <TeamSection title="Accessibility Team" teamName="accessibility" />
-        <TeamSection title="Product Team" teamName="product" />
 
         {/* Additional Contributors — now as full cards (no longer plain text) */}
         <TeamSection

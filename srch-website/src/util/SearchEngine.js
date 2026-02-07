@@ -104,7 +104,7 @@ function getPlaintextFromMarkdown(content) {
 
   // Replace drawer links {text} with just 'text'
   content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
-    p1.replace(/-/g, " ")
+    p1.replace(/-/g, " "),
   );
 
   // Replace general links [text](url) with just 'text'
@@ -183,7 +183,7 @@ function extractBlocksFromContent(
   content,
   subsectionId = null,
   subsectionTitle = null,
-  defaultTitle = null
+  defaultTitle = null,
 ) {
   const lines = content.replace(/\r/g, "").split("\n");
   const blocks = [];
@@ -255,7 +255,7 @@ export async function initializeIndex() {
         section.title,
         subMain,
         subsection.id,
-        subsection.title
+        subsection.title,
       );
       contentArray.push(...subBlocks);
 
@@ -269,7 +269,7 @@ export async function initializeIndex() {
           subsectionTitle: subsection.title,
           anchor: key,
           title: getPlaintextFromMarkdown(
-            value.heading || key.replace(/-/g, " ")
+            value.heading || key.replace(/-/g, " "),
           ),
           content: value.content,
           sidebarKey: key,
@@ -290,12 +290,12 @@ function createSnippet(content, query) {
   const queryLower = query.toLowerCase();
   const regex = new RegExp(
     `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-    "gi"
+    "gi",
   );
   const paragraphs = content.split(/\n\s*\n/);
 
   const matchedParagraphs = paragraphs.filter((para) =>
-    para.toLowerCase().includes(queryLower)
+    para.toLowerCase().includes(queryLower),
   );
 
   if (matchedParagraphs.length === 0) {
@@ -320,10 +320,9 @@ export async function search(query, truncateSnippetFlag = true) {
 
   const allResults = results.reduce(
     (acc, fieldResults) => acc.concat(fieldResults.result),
-    []
+    [],
   );
 
-  console.log("All Results:", allResults);
   const snippetResults = [];
   const seenKeys = new Set();
 
@@ -332,7 +331,7 @@ export async function search(query, truncateSnippetFlag = true) {
     if (doc) {
       const regex = new RegExp(
         `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-        "gi"
+        "gi",
       );
 
       const cleanTitle = getPlaintextFromMarkdown(doc.title);

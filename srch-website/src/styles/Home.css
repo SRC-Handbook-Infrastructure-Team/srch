@@ -1,102 +1,3 @@
-/* ==========================================================================  
-   Base Global Defaults
-   --------------------------------------------------------------------------
-  PAGE: Acknowledgments
-  ACKNOWLEDGMENTS — MERGED + SAFE VERSION  
-  Mirrors the hero + lower-content architecture used on Acknowledgments.
-
-/* Acknowledgments page–specific title offset */
-
-/* --------------------------------------------------------------------------
-   Root Design Tokens & Theme Variables
-   -------------------------------------------------------------------------- */
-:root {
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  font-synthesis: none;
-  padding: 0rem;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  /* ------------------------------------------------------------------------
-     🎨 Design Tokens — Base Color System
-     ------------------------------------------------------------------------ */
-
-  --color-text: #1a1a1a;
-  --color-text-hover: #9d0013;
-  --color-text-accent: #7a000f;
-  --color-text-muted: #555;
-  --color-bg: #ffffff;
-  --sidebar-bg: #ffffff;
-  --color-bg-alt: #f8f9fa;
-  --color-border: #e0d7ce;
-  /* from new theme */
-  --color-accent: #7b4b24;
-  /* new accent color */
-  --color-accent-light: #f3ece6;
-
-  /* ------------------------------------------------------------------------
-    Design Tokens — Text Sizes and Weights
------------------------------------------------------------------------- */
-
-  --x-small-text: 16px;
-  --body-text: 18px;
-  --medium-text: 28px;
-  --large-text: 48px;
-  --x-large-text: 70px;
-  --title-weight: 500;
-  --sub-weight: 400;
-
-  /* ------------------------------------------------------------------------
-     🎨 Design Tokens —  Fonts
-     ------------------------------------------------------------------------ */
-  --content-font: "Be Vietnam Pro", sans-serif;
-  --title-font: "Funnel Sans", sans-serif;
-  --title-weight: 500;
-  --sub-weight: 400;
-
-  /* ------------------------------------------------------------------------
-    🎨 Design Tokens —  Spacing
-    ------------------------------------------------------------------------ */
-
-  --x-small-spacing: 6px;
-  --small-spacing: 12px;
-  --small-gap: 36px;
-  --medium-gap: 56px;
-  --section-spacing: 84px;
-  --space-none: 0;
-  --upper-content-height: 75vh;
-  --content-width: 627px;
-
-  /* Card + grid geometry */
-  --ack-card-width: 290px; /* EXACT card width from Figma */
-  --ack-photo-width: 290px; /* EXACT photo width */
-  --ack-photo-height: 302px; /* EXACT photo height */
-  --ack-grid-col-gap: 10px; /* column gap */
-  --ack-grid-row-gap: 10px; /* row gap */
-  --ack-radius: 6px;
-
-  /* Typography + colors */
-  --ack-brand-brown: #531c00;
-  --ack-text: #1a1a1a;
-  --ack-muted: #00000085;
-  --ack-divider: rgba(96, 70, 58, 1);
-
-  /* Icon buttons */
-  --ack-icon-size: 32px;
-  --ack-icon-ring: #5a2d0c;
-
-  /* Hero */
-  --ack-upper-height: 75vh;
-  --ack-hero-paddingX: 13.22vw;
-}
-
-body,
-html {
-  min-width: 772px;
-}
-
 #root {
   padding-left: var(--space-none);
   padding-right: var(--space-none);
@@ -126,43 +27,6 @@ html {
   word-break: keep-all;
 }
 
-.background-gradient {
-  background-image: url("../assets/landing-page-background-gradient.png");
-}
-
-.upper-content {
-  width: 100vw;
-  height: var(--ack-upper-height); /* exactly 75vh, no extra internal space */
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-
-  border-top: 1px solid white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  gap: var(--medium-gap);
-  z-index: 0;
-  background-image: url("../assets/landing-page-background-gradient.png");
-  background-size: cover;
-  background-position: left center;
-  background-repeat: no-repeat;
-
-  /* Remove artificial stretching */
-  padding: 0 var(--ack-hero-paddingX);
-
-  transition: background-image 0.3s ease;
-}
-
-.upper-content:hover {
-  background-image: url("../assets/blurred-background.png");
-  transition: background-image 0.3s ease-in-out;
-}
-
 .upper-content,
 .upper-text-section {
   transition:
@@ -189,10 +53,6 @@ html {
     width: 500px;
   }
 
-  .root {
-    --upper-content-height: 85vh;
-  }
-
   .upper-text-section {
     padding-left: calc((455 / 1512) * 100vw);
     padding-right: 18vw;
@@ -212,10 +72,6 @@ html {
   transition: opacity 0.6s ease;
 }
 
-.upper-content.scrolled {
-  opacity: 0.7;
-}
-
 .lower-content {
   margin-top: var(--upper-content-height);
   width: 100vw;
@@ -224,18 +80,9 @@ html {
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  background: #fff;
+  background: var(--color-bg);
   position: relative;
   z-index: 1;
-}
-
-.section-divider {
-  align-self: stretch;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 36px;
-  display: inline-flex;
 }
 
 .content-header {
@@ -303,14 +150,6 @@ html {
   word-wrap: break-word;
 }
 
-.card-section {
-  align-self: stretch;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  display: inline-flex;
-}
-
 .topic-card {
   width: auto;
   height: auto;
@@ -320,11 +159,15 @@ html {
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: linear-gradient(225deg, #fff 70.18%, #c90000 130.5%);
+  background: linear-gradient(
+    225deg,
+    var(--color-bg) 70.18%,
+    var(--color-red-gradient) 130.5%
+  );
   border-radius: 16px;
   border: none;
   outline: none;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0, 08);
+  box-shadow: 2px 2px 10px var(--color-shadow);
   overflow: visible;
   cursor: pointer;
   text-align: left;
@@ -341,7 +184,7 @@ html {
   left: -1px;
   right: -1px;
   bottom: -1px;
-  border: 1px solid #755543;
+  border: 1px solid var(--color-accent);
   border-radius: 16px;
   pointer-events: none;
   z-index: 3;
@@ -354,7 +197,7 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: white;
+  background: var(--color-bg);
   border-radius: 16px;
   opacity: 1;
   transition: opacity 0.3s ease;
@@ -367,15 +210,15 @@ html {
 }
 
 .topic-card:hover {
-  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 2px 2px 10px 0 var(--color-accent-light);
 }
 
 .topic-card:focus {
-  outline: 1.5px solid #3a251a;
+  outline: 1.5px solid var(--color-brown);
 }
 
 .topic-card:active {
-  outline: 1.5px solid #3a251a !important;
+  outline: 1.5px solid var(--color-brown) !important;
 }
 
 .topic-card img {
@@ -413,12 +256,6 @@ html {
   z-index: 2;
 }
 
-.vector {
-  left: 12.5px;
-  top: 4.17px;
-  position: absolute;
-}
-
 .card {
   flex: 1 1 0;
   align-self: center;
@@ -431,25 +268,20 @@ html {
   z-index: 2;
 }
 
-.topic-text {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  display: flex;
-}
-
 .card-heading {
   color: var(--color-text);
   font-size: var(--medium-text);
   font-family: var(--title-font);
   font-weight: 700;
+  line-height: normal;
+  padding-bottom: 5px;
   word-wrap: break-word;
 }
 
 .topic-subtext {
   align-self: stretch;
   color: var(--color-text);
+  line-height: normal;
   font-size: 16px;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
@@ -460,14 +292,9 @@ html {
   position: relative;
   width: 100vw !important;
   height: 2px;
-  background: rgba(90, 45, 0, 0.5);
+  background: var(--color-border);
   margin: 0 auto;
   z-index: -1;
-}
-
-.footer-divider {
-  height: 2px;
-  background: rgba(90, 45, 0, 0.5);
 }
 
 .content-section {
@@ -481,14 +308,6 @@ html {
   align-items: center;
   gap: var(--small-gap);
   display: flex;
-}
-
-.search-title {
-  color: var(--color-text);
-  font-family: var(--title-font);
-  font-weight: var(--title-weight);
-  font-size: var(--large-text);
-  word-wrap: break-word;
 }
 
 .search-subtitle {
@@ -510,6 +329,7 @@ html {
 .section-title {
   align-self: stretch;
   text-align: center;
+  line-height: var(--chakra-lineHeights-base);
   color: var(--color-text);
   font-size: var(--large-text);
   font-family: var(--title-font);
@@ -520,15 +340,6 @@ html {
 .how-to-section {
   padding-left: 10vw;
   padding-right: 10vw;
-}
-
-.how-to-info {
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  display: flex;
 }
 
 .info-list {
@@ -564,7 +375,6 @@ html {
   word-wrap: break-word;
 }
 
-/* Learn More Button*/
 .learn-more-container {
   display: flex;
   width: 80vw;
@@ -578,7 +388,7 @@ html {
 .learn-more-button {
   padding: 10px 20px;
   border-radius: 16px;
-  outline: 2px solid rgba(83, 28, 0, 0.25);
+  outline: 1px solid var(--color-accent);
   outline-offset: -2px;
   justify-content: right;
   align-items: right;
@@ -591,8 +401,7 @@ html {
 }
 
 .learn-more-button:hover {
-  background: rgba(83, 28, 0, 0.036);
-  outline-color: rgba(83, 28, 0, 0.4);
+  background: var(--color-bg-alt);
 }
 
 .learn-more-text {
@@ -612,7 +421,7 @@ html {
   align-self: center;
   justify-content: center;
   text-align: left;
-  color: black;
+  color: var(--color-text);
   font-size: var(--body-text);
   font-family: var(--content-font);
   font-weight: 400;
@@ -629,6 +438,10 @@ html {
   flex-wrap: wrap;
 }
 
+.connect-text {
+  color: var(--color-text);
+}
+
 .connect-cont {
   display: flex;
   flex-direction: row;
@@ -639,69 +452,10 @@ html {
 
 .connect-link {
   font-weight: 600;
-  color: #9d0013;
+  color: var(--color-text-hover);
 }
 
-/* Feedback Contact */
-.feedback-contact {
-  color: var(--color-text);
-  font-size: 18px;
-  font-family: var(--content-font);
-  font-weight: var(--sub-weight);
-  line-height: 28px;
-  word-wrap: break-word;
-}
-
-.feedback-contact a {
-  color: #9d0013;
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.feedback-contact a:hover {
-  color: #7a000f;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .link-area {
-    flex-wrap: wrap;
-    gap: 30px;
-  }
-
-  .logo-area {
-    padding-right: 50px;
-  }
-}
-
-@media (max-width: 768px) {
-  .link-area {
-    flex-direction: column;
-    gap: 40px;
-  }
-
-  .logo-area {
-    padding-right: 0;
-  }
-
-  .modules {
-    width: 100%;
-  }
-
-  .landing-search-container {
-    width: 80%;
-    transition: width 0.3s ease;
-  }
-}
-
-/* ============================================================================
-  SHARED HERO LAYOUT (Home, Acknowledgments, About) --> #TODO: Clean up old CSS after migration
-   ============================================================================ */
-
-/* 1. Shared hero shell: gradient background, fixed, full-width */
-.upper-content,
-.ack-hero,
-.about-hero {
+.upper-content {
   position: fixed;
   top: 0;
   left: 0;
@@ -718,6 +472,7 @@ html {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  gap: var(--medium-gap);
 
   padding: 0 var(--ack-hero-paddingX);
   border-top: 1px solid white;
@@ -725,17 +480,11 @@ html {
   transition: background-image 0.3s ease;
 }
 
-/* Shared hover state */
-.upper-content:hover,
-.ack-hero:hover,
-.about-hero:hover {
+.upper-content:hover {
   background-image: url("../assets/blurred-background.png");
 }
 
-/* 2. Shared hero text block (top div that holds title + subtitle) */
-.upper-text-section,
-.ack-upper-text-section,
-.about-upper-text {
+.upper-text-section {
   width: min(36rem, 80vw);
   margin-top: 20vh;
 
@@ -747,14 +496,11 @@ html {
   align-items: flex-start;
   text-align: left;
 
-  /* override older transforms / widths */
   padding-left: 0;
   transform: none;
 }
 
-/* 3. Shared title styles (Home uses .website-title, About uses .about-title) */
-.website-title,
-.about-title {
+.website-title {
   width: auto;
   max-width: 34rem;
   height: auto;
@@ -771,16 +517,7 @@ html {
   word-break: keep-all;
 }
 
-/* Kill the old Acknowledgments offsets that made things jumbled */
-.ack-hero .website-title {
-  position: static;
-  left: auto;
-  top: auto;
-}
-
-/* 4. Shared subtitle / body text under the hero title */
-.info-section,
-.about-sub {
+.info-section {
   width: auto;
   max-width: 34rem;
 
@@ -792,21 +529,12 @@ html {
   margin: 0;
 }
 
-/* ============================================================================
-   RESPONSIVE TWEAKS — keep layout clean as window shrinks
-   ============================================================================ */
-
-/* Medium: center text block horizontally, keep left-aligned text */
 @media (max-width: 1024px) {
-  .upper-content,
-  .ack-hero,
-  .about-hero {
+  .upper-content {
     align-items: center;
   }
 
-  .upper-text-section,
-  .ack-upper-text-section,
-  .about-upper-text {
+  .upper-text-section {
     width: min(90vw, 36rem);
     margin-top: 16vh;
     margin-left: auto;
@@ -814,23 +542,23 @@ html {
   }
 }
 
-/* Smaller: center text, slightly smaller headings, friendlier line lengths */
 @media (max-width: 768px) {
-  .upper-text-section,
-  .ack-upper-text-section,
-  .about-upper-text {
+  .upper-text-section {
     align-items: center;
     text-align: left;
     gap: 16px;
   }
 
-  .website-title,
-  .about-title {
+  .website-title {
     font-size: clamp(2.5rem, 7vw, 3.5rem);
   }
 
-  .info-section,
-  .about-sub {
+  .info-section {
     font-size: 16px;
+  }
+
+  .landing-search-container {
+    width: 80%;
+    transition: width 0.3s ease;
   }
 }

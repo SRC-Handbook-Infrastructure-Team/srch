@@ -1,5 +1,4 @@
-import "../styles/LandingPage.css";
-import "../styles/ContentPage.css";
+import "../styles/Home.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import buttonArrow from "../assets/button-arrow.png";

@@ -1,65 +1,3 @@
-/* --------------------------------------------------------------------------
-   Root Design Tokens & Theme Variables
-   -------------------------------------------------------------------------- */
-:root {
-  color-scheme: light;
-  color: rgba(255, 255, 255, 0.87);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Layout metrics */
-  --toolbar-height: 0px;
-  /* set >0 only if a toolbar is rendered */
-  --right-sidebar-width: 0px;
-  /* JS updates these */
-  --navbar-height: 70px;
-  /* unified baseline */
-  --left-sidebar-width: var(--left-sidebar-width, 250px);
-
-  /* Colors / theme */
-  --color-text: #1a1a1a;
-  --color-text-muted: #555;
-  --color-bg: #ffffff;
-  --color-bg-alt: #f8f9fa;
-  --color-border: #e0d7ce;
-  --color-accent: #7b4b24;
-  --color-accent-light: #f3ece6;
-
-  --space-lg: 400px;
-  --srch-brown: #531c00;
-  --sidebar-bg: rgba(251, 251, 250, 1);
-
-  /* Shared sidebar palette (Figma) */
-  --cs-brown: #531c00;
-  --cs-text: #4f3629;
-  --cs-bg: rgba(251, 251, 250, 1);
-  --cs-active: #e6e2dd;
-  --cs-divider: #c7beb5;
-
-  /* Motion */
-  --cs-ease: 180ms ease;
-
-  /* ------------------------------------------------------------------------
-     🎨 Design Tokens — Base Color System
-     ------------------------------------------------------------------------ */
-
-  --color-text: #1a1a1a;
-  --color-text-hover: #9d0013;
-  --color-text-accent: #7a000f;
-  --color-text-muted: #555;
-  --color-bg: #ffffff;
-  --sidebar-bg: #ffffff;
-  --color-bg-alt: #f8f9fa;
-  --color-border: #e0d7ce;
-  /* from new theme */
-  --color-accent: #7b4b24;
-  /* new accent color */
-  --color-accent-light: #f3ece6;
-}
-
 .footer-icon {
   width: 100px;
   object-fit: contain;
@@ -69,7 +7,7 @@
 .footer-line-divider {
   position: relative;
   margin: 0 auto;
-  background: var(--cs-divider);
+  background: var(--color-border);
   z-index: -1;
   width: 100vw;
   height: 1px;
@@ -80,9 +18,8 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  background: var(--cs-bg);
+  background: var(--color-bg);
 }
-
 
 .footer-content {
   display: flex;
@@ -193,7 +130,6 @@
   font-weight: var(--sub-weight);
   word-wrap: break-word;
 }
-
 
 @container (min-width: 49em) {
   .footer-content {

@@ -5,7 +5,7 @@
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--content-font);
 }
 
 .navsearchbar-input-container {
@@ -17,7 +17,7 @@
 }
 
 .navsearchbar-input::placeholder {
-  color: black !important;
+  color: var(--color-text) !important;
   opacity: 1;
 }
 
@@ -27,7 +27,7 @@
   transition: opacity 0.3s ease;
   background: transparent;
   border-width: 0 !important;
-  color: black !important;
+  color: var(--color-text) !important;
   z-index: 9;
   opacity: 1;
   pointer-events: auto;
@@ -41,34 +41,25 @@
 }
 
 .navsearchbar-button {
-  color: black;
+  color: var(--color-text);
 }
 
 .navsearchbar-button:hover {
-  color: #9d0013;
+  color: var(--color-text-hover);
 }
-
-/* ========================================================================== 
-   Search Bar
-   ========================================================================== */
 
 .searchbar-container {
   position: relative;
   display: flex;
   align-items: center;
   overflow: visible;
-  background: white;
+  background: var(--color-bg);
   border-radius: 9999999999px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--color-shadow);
+  font-family: var(--content-font);
   padding: 6px 8px;
   width: 100%;
   min-width: 400px;
-}
-
-.searchbar-border {
-  border-color: whitesmoke;
-  border-width: 3px;
-  border-radius: 6px;
 }
 
 .searchbar-input-container {
@@ -77,7 +68,8 @@
 }
 
 .searchbar-input::placeholder {
-  color: black;
+  color: var(--color-text) !important;
+  font-family: var(--content-font);
   opacity: 1;
 }
 
@@ -123,7 +115,7 @@
 .toggle-button {
   width: 0px;
   z-index: 9999999;
-  color: black !important;
+  color: var(--color-text) !important;
   outline: 0 !important;
   box-shadow: none !important;
   border: none !important;

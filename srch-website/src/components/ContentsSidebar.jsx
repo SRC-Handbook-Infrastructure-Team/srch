@@ -100,9 +100,6 @@ function parseSubsections(content) {
   }
   return headings;
 }
-
-const BetaTag = () => <Box className="beta-tag">BETA</Box>;
-
 /* =============================================================================
    Component: ContentsSidebar
    ---------------------------------------------------------------------------
@@ -464,7 +461,7 @@ useEffect(() => {
                 <Text className="sidebar-section-title">
                   {displayNumber}. {section.title}
                 </Text>
-                {section.final === false && <BetaTag />}
+                {section.final === false }
               </Box>
 
               {hasSubsections && (

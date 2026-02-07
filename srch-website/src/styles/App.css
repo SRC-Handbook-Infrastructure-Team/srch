@@ -1,7 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: light;
+  color: var(--color-white-87);
+
+  font-synthesis: none;
+  padding: 0rem;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --toolbar-height: 0px;
+  --right-sidebar-width: 0px;
+  --navbar-height: 70px;
+  --mobile-menu-height: 250px;
+  --mobile-menu-height-expanded: 350px;
+  --left-sidebar-width: var(--left-sidebar-width, 250px);
+
+  --color-text: #1a1a1a;
+  --color-text-hover: #9d0013;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f2eee9;
+  --color-border: #e0d7ce;
+  --color-accent: #7b4b24;
+  --color-accent-light: #f3ece6;
+  --color-shadow: rgba(0, 0, 0, 0.08);
+  --color-white-0: rgba(8, 8, 8, 0);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-black: #000000;
+  --color-red-gradient: #c90000;
+  --color-brown: #531c00;
+  --color-gray: #00000085;
+
+  --x-small-text: 16px;
+  --body-text: 18px;
+  --medium-text: 28px;
+  --large-text: 48px;
+  --x-large-text: 70px;
+  --title-weight: 500;
+  --sub-weight: 400;
+
+  --content-font: "Be Vietnam Pro", sans-serif;
+  --title-font: "Funnel Sans", sans-serif;
+
+  --x-small-spacing: 6px;
+  --small-spacing: 12px;
+  --small-gap: 36px;
+  --medium-gap: 56px;
+  --section-spacing: 84px;
+  --space-none: 0;
+  --upper-content-height: 75vh;
+  --content-width: 627px;
+
+  --space-lg: 400px;
+
+  --ack-card-width: 290px;
+  --ack-photo-width: 290px;
+  --ack-photo-height: 302px;
+  --ack-grid-col-gap: 10px;
+  --ack-grid-row-gap: 10px;
+  --ack-radius: 6px;
+
+  --ack-icon-size: 32px;
+
+  --ack-upper-height: 75vh;
+  --ack-hero-paddingX: 13.22vw;
+
+  --cs-ease: 180ms ease;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-text: #efe9e2;
+  --color-text-hover: #ff5a5a;
+  --color-bg: #12100f;
+  --color-bg-alt: #1a1715;
+  --color-border: #2f2a26;
+  --color-accent: #e0b189;
+  --color-accent-light: #2a231f;
+  --color-shadow: rgba(0, 0, 0, 0.35);
+  --color-white-0: rgba(255, 255, 255, 0);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-black: #000000;
+  --color-red-gradient: #ff3b3b;
+  --color-brown: #c48d5e;
+  --color-gray: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-text: #efe9e2;
+    --color-text-hover: #ff5a5a;
+    --color-bg: #12100f;
+    --color-bg-alt: #1a1715;
+    --color-border: #2f2a26;
+    --color-accent: #e0b189;
+    --color-accent-light: #2a231f;
+    --color-shadow: rgba(255, 255, 255, 0.35);
+    --color-white-0: rgba(255, 255, 255, 0);
+    --color-white-50: rgba(255, 255, 255, 0.5);
+    --color-black: #000000;
+    --color-red-gradient: #ff3b3b;
+    --color-brown: #c48d5e;
+    --color-gray: rgba(255, 255, 255, 0.55);
+  }
+}
+
 html {
   overflow-x: hidden;
-  font-family: "Be Vietnam Pro", sans-serif m !important;
 }
+
+body {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-size: 16px;
+  line-height: 28px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  max-width: 100vw;
+  word-break: keep-all;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  background-color: var(--color-bg);
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--button-bg);
+  color: var(--color-bg);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--button-hover-border);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px auto -webkit-focus-ring-color;
+}
+
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-accent);
+}
+
+mark {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+  border-radius: 3px;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -24,8 +199,4 @@ html {
 
 .card {
   padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
