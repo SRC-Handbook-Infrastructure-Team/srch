@@ -33,10 +33,9 @@
  */
 
 import "../styles/Acknowledgments.css";
-
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
-import { Heading, Divider } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import team from "../team.json";
 

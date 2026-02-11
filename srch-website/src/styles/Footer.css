@@ -118,7 +118,6 @@
 }
 
 .feedback-footer a:hover {
-  color: var(--color-text-accent);
   text-decoration: underline;
   background-color: transparent;
 }

@@ -9,7 +9,11 @@ function getBasePath(pathname = "") {
   const parts = pathname.split("/").filter(Boolean);
   const section = parts[0] || "";
   const subsection = parts[1] || "";
-  return subsection ? `/${section}/${subsection}` : (section ? `/${section}` : "/");
+  return subsection
+    ? `/${section}/${subsection}`
+    : section
+      ? `/${section}`
+      : "/";
 }
 
 /**
@@ -29,14 +33,14 @@ function getBasePath(pathname = "") {
 
 export function useDrawerScrollWatcher({ urlTerm, isReady }) {
   const location = useLocation();
-  
+
   const scrolledTermsRef = useRef(new Set());
   const lastBasePathRef = useRef(getBasePath(location.pathname));
 
   useEffect(() => {
     const currentBase = getBasePath(location.pathname);
     const prevBase = lastBasePathRef.current;
-    
+
     if (currentBase !== prevBase) {
       scrolledTermsRef.current.clear();
       lastBasePathRef.current = currentBase;
@@ -47,27 +51,26 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
     if (!urlTerm || !isReady) return;
 
     const term = String(urlTerm).toLowerCase();
-    
+
     // Skip scrolling if this is a user-initiated term change (chip click)
     if (location.state?.preserveScroll) {
       scrolledTermsRef.current.add(term);
       return;
     }
-    
+
     if (scrolledTermsRef.current.has(term)) {
       return;
     }
-
 
     // Small delay to ensure DOM is settled after React render
     const timeoutId = setTimeout(() => {
       const mainEl = document.getElementById("main");
       const scrollContainer = mainEl || window;
       const searchRoot = mainEl || document;
-      
+
       // Find the chip element
       const chip = searchRoot.querySelector(
-        `.srch-drawer-link[data-term="${term}"]`
+        `.srch-drawer-link[data-term="${term}"]`,
       );
 
       if (!chip) {
@@ -80,18 +83,19 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
       }
 
       // Calculate visibility
-      const containerRect = scrollContainer === window
-        ? { top: 0, bottom: window.innerHeight, height: window.innerHeight }
-        : scrollContainer.getBoundingClientRect();
+      const containerRect =
+        scrollContainer === window
+          ? { top: 0, bottom: window.innerHeight, height: window.innerHeight }
+          : scrollContainer.getBoundingClientRect();
 
       const chipRect = chip.getBoundingClientRect();
 
       // Get navbar height from CSS variable
       const navbarHeight = parseInt(
         getComputedStyle(document.documentElement)
-          .getPropertyValue('--navbar-height')
-          .trim() || '70',
-        10
+          .getPropertyValue("--nav-bar-height")
+          .trim() || "70",
+        10,
       );
 
       // Define visible area (accounting for navbar and some padding)
@@ -99,8 +103,8 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
       const visibleBottom = containerRect.bottom - 40;
 
       // Check if chip is reasonably visible (allow 50px tolerance)
-      const isVisible = 
-        chipRect.top >= visibleTop - 50 && 
+      const isVisible =
+        chipRect.top >= visibleTop - 50 &&
         chipRect.bottom <= visibleBottom + 50;
 
       if (isVisible) {
@@ -110,22 +114,26 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
         }
       } else {
         // Chip is not visible - this is likely direct URL navigation, scroll to it
-        const currentScroll = scrollContainer === window
-          ? window.scrollY
-          : scrollContainer.scrollTop;
+        const currentScroll =
+          scrollContainer === window
+            ? window.scrollY
+            : scrollContainer.scrollTop;
 
         // Calculate scroll position to center the chip
-        const chipCenterRelativeToContainer = 
+        const chipCenterRelativeToContainer =
           (chipRect.top + chipRect.bottom) / 2 - containerRect.top;
-        
-        const targetScroll = 
-          currentScroll + chipCenterRelativeToContainer - (containerRect.height / 2);
+
+        const targetScroll =
+          currentScroll +
+          chipCenterRelativeToContainer -
+          containerRect.height / 2;
 
         // Clamp to valid scroll range
-        const maxScroll = scrollContainer === window
-          ? document.documentElement.scrollHeight - window.innerHeight
-          : scrollContainer.scrollHeight - scrollContainer.clientHeight;
-        
+        const maxScroll =
+          scrollContainer === window
+            ? document.documentElement.scrollHeight - window.innerHeight
+            : scrollContainer.scrollHeight - scrollContainer.clientHeight;
+
         const clampedScroll = Math.max(0, Math.min(targetScroll, maxScroll));
 
         // Perform scroll

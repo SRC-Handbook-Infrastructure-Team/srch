@@ -1,11 +1,11 @@
-import "../styles/SearchResults.css";
+import "../styles/SearchResultsPage.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
-import { SearchBar } from "../components/SearchBar";
-import { ResultsPage } from "../components/ResultsPage";
+import SearchBar from "../components/SearchBar";
+import { SearchResults } from "../components/SearchResults";
 import { useState, useEffect } from "react";
 
-function SearchResults() {
+function SearchResultsPage() {
   const { query = "", page } = useParams();
   const decodedQuery = decodeURIComponent(query);
   const pageNum = page ? parseInt(page, 10) : 1;
@@ -20,7 +20,7 @@ function SearchResults() {
       <div className="background-gradient" />
       <div className="background-fade" />
       <div className="content">
-        <Heading as="h1" size="2xl" className="search-results-header">
+        <Heading className="website-title search-results-header">
           Search Results
         </Heading>
         <SearchBar
@@ -30,7 +30,7 @@ function SearchResults() {
           maxResults={0}
         />
         <br></br>
-        <ResultsPage
+        <SearchResults
           searchQuery={searchQuery}
           floating={false}
           truncateSnippet={true}
@@ -41,4 +41,4 @@ function SearchResults() {
   );
 }
 
-export { SearchResults };
+export default SearchResultsPage;

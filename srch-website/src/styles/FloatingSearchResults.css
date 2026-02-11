@@ -1,0 +1,105 @@
+.results-item-floating {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.results-item-floating:hover {
+  background-color: var(--color-accent-30);
+  transition: background-color 0.5s ease;
+}
+
+.results-section-floating {
+  background: var(--color-text-hover);
+  display: block;
+  color: var(--color-bg);
+  padding: 0rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: normal;
+  margin-right: 0.75rem;
+}
+
+.results-title-floating {
+  display: block;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.result-snippet-floating {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  padding-top: 0.25rem;
+}
+
+.result-snippet-text-floating {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-snippet-text-clamped-floating {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.results-view-all-floating {
+  padding-top: 0.75rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.results-window-floating {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--color-bg);
+  margin-top: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px var(--color-shadow);
+  padding: 0 1.25rem 0 1.25rem;
+}
+
+.results-list-floating {
+  overflow-y: auto;
+  padding-top: 0.5rem;
+}
+
+.results-header-floating {
+  display: flex;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.view-all-link-floating {
+  color: var(--color-text-hover);
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+.view-all-link-floating:hover,
+.view-all-link-floating:focus {
+  color: var(--color-text-hover);
+  outline: none;
+}
+
+.result-row-floating {
+  border-bottom: 1px solid var(--color-accent-light);
+}

@@ -1,9 +1,9 @@
+import "../styles/SearchBar.css";
 import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ResultsWindow } from "./ResultsWindow";
-import "../styles/SearchBar.css";
+import NavBarSearchResults from "./NavBarSearchResults";
 function NavSearchBar({
   searchQuery,
   setSearchQuery,
@@ -85,7 +85,7 @@ function NavSearchBar({
           exit: { duration: 0.25 },
         }}
       >
-        <ResultsWindow
+        <NavBarSearchResults
           searchQuery={searchQuery}
           maxResults={maxResults}
           setIsSearchOpen={setIsSearchOpen}

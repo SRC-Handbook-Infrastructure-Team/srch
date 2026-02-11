@@ -17,7 +17,6 @@
 
 .body {
   width: 100vw;
-  gap: var(--default-gap);
   align-self: stretch;
   overflow: hidden;
   flex-direction: column;
@@ -329,7 +328,6 @@
 .section-title {
   align-self: stretch;
   text-align: center;
-  line-height: var(--chakra-lineHeights-base);
   color: var(--color-text);
   font-size: var(--large-text);
   font-family: var(--title-font);

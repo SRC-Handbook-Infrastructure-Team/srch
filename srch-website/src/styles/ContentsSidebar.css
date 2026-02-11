@@ -9,7 +9,7 @@
 
 .content-toolbar {
   position: fixed;
-  top: var(--navbar-height);
+  top: var(--nav-bar-height);
   left: 0;
   right: 0;
   height: var(--toolbar-height);
@@ -43,11 +43,6 @@
   pointer-events: none;
 }
 
-.markdown-page {
-  padding-left: 100px;
-  padding-right: 100px;
-}
-
 .sidebar-link-active {
   color: var(--color-accent);
   color: var(--color-accent) !important;
@@ -64,20 +59,6 @@ h4 {
   color: var(--color-accent);
 }
 
-.beta-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--beta-bg);
-  color: var(--beta-text);
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  margin-left: 8px;
-  border-radius: var(--chakra-radii-md, 6px);
-  vertical-align: middle;
-}
-
 .nav-title {
   font-size: 1.25rem;
   font-weight: 700;
@@ -85,18 +66,13 @@ h4 {
 }
 
 .nav-section {
-  padding: var(--space-sm);
-  border-radius: var(--chakra-radii-md, 6px);
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: background-color 0.2s ease;
 }
-.nav-section:hover {
-  background-color: var(--nav-hover-bg);
-}
-
 .nav-section-title {
   display: flex;
   align-items: center;
@@ -133,7 +109,7 @@ html {
 
 html body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  margin-top: var(--navbar-height) !important;
+  margin-top: var(--nav-bar-height) !important;
   min-height: 100vh;
 
   transition:
@@ -141,14 +117,6 @@ html body .main-content {
     margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
   overflow: clip;
-}
-
-html.right-open body .main-content {
-  margin-right: var(--right-sidebar-width) !important;
-}
-
-html:not(.right-open) body .main-content {
-  margin-right: 0 !important;
 }
 
 .right-sidebar .drawer-content {
@@ -197,12 +165,12 @@ html:not(.right-open) body .main-content {
   color: var(--color-brown) !important;
   padding: 10px 12px !important;
   background: var(--color-bg) !important;
-  border-bottom: 1px solid var(--border-1) !important;
+  border-bottom: 1px solid !important;
 }
 
 .header-toggle {
   position: fixed;
-  top: calc(var(--navbar-height) + 19px);
+  top: calc(var(--nav-bar-height) + 19px);
   right: 0;
   z-index: 10;
   left: 12px;
@@ -226,13 +194,6 @@ html:not(.right-open) body .main-content {
 .header-toggle:hover {
   transform: scale(1.25);
 }
-
-.markdown-page {
-  --page-pad: 100px;
-  padding-left: var(--page-pad);
-  padding-right: var(--page-pad);
-}
-
 .page-divider {
   height: 2px;
   background: var(--color-brown);
@@ -413,9 +374,9 @@ p > .srch-drawer-link:first-child {
 
 .right-sidebar {
   position: fixed !important;
-  top: var(--navbar-height) !important;
+  top: var(--nav-bar-height) !important;
   right: 0 !important;
-  height: calc(100vh - var(--navbar-height)) !important;
+  height: calc(100vh - var(--nav-bar-height)) !important;
   width: var(--right-sidebar-width) !important;
   overflow: hidden auto;
 
@@ -433,11 +394,6 @@ p > .srch-drawer-link:first-child {
   z-index: 15;
 }
 
-html.right-open .right-sidebar {
-  transform: translateX(0);
-  opacity: 1;
-}
-
 .right-sidebar.closing {
   transform: translateX(100%) !important;
   opacity: 0 !important;
@@ -446,11 +402,12 @@ html.right-open .right-sidebar {
 .right-resizer {
   position: absolute !important;
   top: 0;
-  right: 0;
+  left: 0;
   bottom: 0;
   width: 6px !important;
   cursor: col-resize !important;
   background: transparent !important;
+  z-index: 2;
 }
 
 .right-resizer.is-resizing {
@@ -511,11 +468,11 @@ html.right-open .right-sidebar {
 
 .right-resize-hitbox {
   position: fixed !important;
-  top: var(--navbar-height) !important;
+  top: var(--nav-bar-height) !important;
   bottom: 0 !important;
-  right: var(--right-sidebar-width) !important;
-  width: 10px !important;
-  transform: translateX(-6px);
+  right: calc(var(--right-sidebar-width) - 6px) !important;
+  width: 6px !important;
+  transform: translateX(0);
   cursor: col-resize !important;
   pointer-events: auto;
   background: transparent !important;
@@ -532,9 +489,9 @@ html.right-open .right-sidebar {
 
 .left-sidebar {
   position: fixed !important;
-  top: var(--navbar-height) !important;
+  top: var(--nav-bar-height) !important;
   left: 0 !important;
-  height: calc(100vh - var(--navbar-height)) !important;
+  height: calc(100vh - var(--nav-bar-height)) !important;
   width: var(--left-sidebar-width) !important;
 
   background: var(--color-bg) !important;
@@ -652,7 +609,6 @@ html.right-open .right-sidebar {
 .sidebar-section-title {
   font: "Be Vietnam Pro";
   font-weight: 400 !important;
-
   font-size: 16px !important;
   color: var(--color-accent) !important;
 }
@@ -663,7 +619,6 @@ html.right-open .right-sidebar {
 
 .sidebar-subsection-container {
   padding-left: 22px;
-
   margin-top: 8px;
 }
 

@@ -4,10 +4,8 @@
   left: 0;
   width: 100vw;
   margin: 0;
-
   height: auto;
-  min-height: 70px;
-
+  min-height: var(--nav-bar-height);
   display: block;
   background-color: var(--color-bg);
   box-shadow: 2px 2px 5px var(--color-shadow);
@@ -96,7 +94,7 @@
 .navbar-padding {
   padding-left: 2rem;
   padding-right: 2rem;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
 }
 
 .nav-dropdown-menu {

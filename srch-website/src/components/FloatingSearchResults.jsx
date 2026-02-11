@@ -1,32 +1,28 @@
-import "../styles/ResultsWindow.css";
+import "../styles/FloatingSearchResults.css";
 import React, { useState, useEffect } from "react";
 import { Collapse, Box } from "@chakra-ui/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
 
-const classSuffix = (className, floating) =>
-  floating ? `${className}-floating` : className;
-
 const ResultSnippet = React.memo(({ snippet, maxResults }) => {
   if (!snippet) return null;
 
   return (
-    <div className="result-snippet">
+    <div className="result-snippet-floating">
       <span
-        className={`${maxResults != null ? "result-snippet-text" : "result-snippet-text-clamped"}`}
+        className={`${maxResults != null ? "result-snippet-text-floating" : "result-snippet-text-clamped-floating"}`}
         dangerouslySetInnerHTML={{ __html: snippet }}
       />
     </div>
   );
 });
 
-export const ResultsWindow = React.memo(
+export const FloatingSearchResults = React.memo(
   ({ searchQuery, maxResults = null, setIsSearchOpen = null }) => {
     const [searchResults, setSearchResults] = useState(null);
     const [isIndexInitialized, setIndexInitialized] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const floating = setIsSearchOpen == null;
 
     useEffect(() => {
       const init = async () => {
@@ -56,7 +52,7 @@ export const ResultsWindow = React.memo(
       <Box>
         {((maxResults == null && searchQuery.length > 0) ||
           maxResults != null) && (
-          <div className={classSuffix("results-window", floating)}>
+          <div className="results-window-floating">
             {searchResults != null && maxResults !== 0 && (
               <Collapse
                 in={searchQuery}
@@ -67,11 +63,11 @@ export const ResultsWindow = React.memo(
                 }}
               >
                 <div
-                  className={classSuffix("results-list", floating)}
+                  className={"results-list-floating"}
                   style={
                     maxResults != null
                       ? {
-                          maxHeight: `${123 * maxResults}px`,
+                          maxHeight: `${83 * maxResults}px`,
                           overflowY: "auto",
                         }
                       : { overflowY: "auto" }
@@ -87,9 +83,9 @@ export const ResultsWindow = React.memo(
                         }-${idx}`;
                       const snippetToRender = item.snippet;
                       return (
-                        <div className="result-row" key={key}>
+                        <div className="result-row-floating" key={key}>
                           <div
-                            className="results-item"
+                            className="results-item-floating"
                             role="link"
                             tabIndex={0}
                             onClick={() => {
@@ -134,13 +130,13 @@ export const ResultsWindow = React.memo(
                               }
                             }}
                           >
-                            <div className="results-header">
-                              <div className="results-section">
+                            <div className="results-header-floating">
+                              <div className="results-section-floating">
                                 {doc.sectionTitle ||
                                   doc.section ||
                                   "Unnamed Section"}
                               </div>
-                              <div className="results-title">
+                              <div className="results-title-floating">
                                 {doc.title ===
                                 snippetToRender.replace(/<[^>]*>/g, "")
                                   ? "Section Header"
@@ -156,19 +152,21 @@ export const ResultsWindow = React.memo(
                       );
                     })
                   ) : (
-                    <div className="results-view-all">No results found</div>
+                    <div className="results-view-all-floating">
+                      No results found
+                    </div>
                   )}
                 </div>
                 {maxResults != null && searchResults.length > 0 && (
-                  <div className="results-view-all">
-                    <div className="results-count">
+                  <div className="results-view-all-floating">
+                    <div className="results-count-floating">
                       {`Showing ${searchResults.length} result${
                         searchResults.length === 1 ? "" : "s"
                       }`}
                     </div>
                     <div>
                       <a
-                        className="view-all-link"
+                        className="view-all-link-floating"
                         onClick={() => handleViewAllClick()}
                         aria-label={`View all search results`}
                         role="button"
@@ -184,7 +182,7 @@ export const ResultsWindow = React.memo(
         )}
       </Box>
     );
-  }
+  },
 );
 
-export default ResultsWindow;
+export default FloatingSearchResults;

@@ -1,4 +1,4 @@
-import "../styles/ResultsWindow.css";
+import "../styles/SearchResults.css";
 import React, { useState, useEffect } from "react";
 import { Collapse, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ const WrapAwarePaginationRow = ({ children }) => {
     </div>
   );
 };
-export const ResultsPage = React.memo(
+export const SearchResults = React.memo(
   ({ floating = false, searchQuery, pageNumber }) => {
     const [searchResults, setSearchResults] = useState(null);
     const [isIndexInitialized, setIndexInitialized] = useState(false);
@@ -56,7 +56,7 @@ export const ResultsPage = React.memo(
     };
 
     const [resultsPerPage, setResultsPerPage] = useState(
-      getStoredResultsPerPage
+      getStoredResultsPerPage,
     );
 
     const [currentPage, setCurrentPage] = useState(pageNumber || 1);
@@ -74,7 +74,7 @@ export const ResultsPage = React.memo(
       paginated = paginated.slice(start, start + resultsPerPage);
     }
     const totalPages = Math.ceil(
-      (searchResults ? searchResults.length : 0) / resultsPerPage
+      (searchResults ? searchResults.length : 0) / resultsPerPage,
     );
 
     useEffect(() => {
@@ -110,7 +110,6 @@ export const ResultsPage = React.memo(
       }
     }, [currentPage, searchQuery, navigate]);
 
-    // Scroll to top when the current page changes so users land at top of results
     useEffect(() => {
       if (typeof window !== "undefined") {
         try {
@@ -120,11 +119,6 @@ export const ResultsPage = React.memo(
         }
       }
     }, [currentPage]);
-
-    function handleViewAllClick() {
-      navigate(`/search/${encodeURIComponent(searchQuery)}`);
-      if (setIsSearchOpen != null) setIsSearchOpen(false);
-    }
 
     function handleResultNumberClick(num) {
       setCurrentPage(1);
@@ -147,7 +141,7 @@ export const ResultsPage = React.memo(
                       {searchResults.length > 0
                         ? `${(currentPage - 1) * resultsPerPage + 1} - ${Math.min(
                             currentPage * resultsPerPage,
-                            searchResults.length
+                            searchResults.length,
                           )} of ${searchResults.length} documents found for "${searchQuery}"`
                         : `No documents found for ${searchQuery}`}
                     </div>
@@ -198,7 +192,7 @@ export const ResultsPage = React.memo(
                                     ? `/${doc.anchor}`
                                     : `#${doc.anchor}`
                                 }`,
-                                { state: { highlight: searchQuery } }
+                                { state: { highlight: searchQuery } },
                               );
                             }}
                             onKeyDown={(e) => {
@@ -209,7 +203,7 @@ export const ResultsPage = React.memo(
                                     doc.isDrawer
                                       ? `/${doc.anchor}`
                                       : `#${doc.anchor}`
-                                  }`
+                                  }`,
                                 );
                               }
                             }}
@@ -291,7 +285,7 @@ export const ResultsPage = React.memo(
                             if (e.key === "Enter" || e.key === " ") {
                               e.preventDefault();
                               setCurrentPage((p) =>
-                                Math.min(totalPages, p + 1)
+                                Math.min(totalPages, p + 1),
                               );
                             }
                           }}
@@ -307,7 +301,7 @@ export const ResultsPage = React.memo(
         )}
       </Box>
     );
-  }
+  },
 );
 
-export default ResultsPage;
+export default SearchResults;

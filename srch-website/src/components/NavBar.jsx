@@ -1,3 +1,4 @@
+import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -18,7 +19,6 @@ import {
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logo from "../assets/logo.png";
-import "../styles/NavBar.css";
 
 const themeStorageKey = "srch-theme";
 
@@ -61,27 +61,6 @@ function NavBar({ className = "", layoutMode }) {
     setTheme(initialTheme);
     root.setAttribute("data-theme", initialTheme);
   }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (!root) return;
-
-    // Only push content in overlay mode (mobile / narrow)
-    if (layoutMode !== "overlay") {
-      root.style.setProperty("--mobile-menu-offset", "0px");
-      return;
-    }
-
-    // Menu closed → no offset
-    if (!isMenuOpen) {
-      root.style.setProperty("--mobile-menu-offset", "0px");
-      return;
-    }
-
-    // Menu open → fixed height based on modules state
-    const height = isModulesExpanded ? 300 : 200; // px
-    root.style.setProperty("--mobile-menu-offset", `${height}px`);
-  }, [layoutMode, isMenuOpen, isModulesExpanded]);
 
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
@@ -362,7 +341,7 @@ function NavBar({ className = "", layoutMode }) {
               enter: { duration: 0.25 },
               exit: { duration: 0.15, delay: 0.1 },
             }}
-            startingHeight={"1rem"}
+            startingHeight={"0.75rem"}
           >
             <NavSearchBar
               searchQuery={searchQuery}

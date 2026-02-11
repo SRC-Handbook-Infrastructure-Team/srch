@@ -6,7 +6,7 @@ import Footer from "./components/Footer";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import Acknowledgments from "./pages/Acknowledgments";
-import { SearchResults } from "./pages/SearchResults";
+import SearchResultsPage from "./pages/SearchResultsPage";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
 
@@ -25,7 +25,6 @@ function AppRoutes() {
       <ScrollManager />
 
       {isMarkdownPage ? (
-        // 🔹 Markdown / handbook routes:
         <SidebarLayout>
           <Routes>
             <Route path="/:sectionId" element={<MarkdownPage />} />
@@ -40,15 +39,14 @@ function AppRoutes() {
           </Routes>
         </SidebarLayout>
       ) : (
-        // 🔹 Non-markdown routes: render a single NavBar here
         <>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/acknowledgments" element={<Acknowledgments />} />
             <Route path="/about" element={<About />} />
-            <Route path="/search/:query/:page" element={<SearchResults />} />
-            <Route path="/search/:query" element={<SearchResults />} />
-            <Route path="/search" element={<SearchResults />} />
+            <Route path="/search/:query/:page" element={<SearchResultsPage />} />
+            <Route path="/search/:query" element={<SearchResultsPage />} />
+            <Route path="/search" element={<SearchResultsPage />} />
           </Routes>
           <Footer />
         </>

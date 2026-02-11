@@ -54,7 +54,7 @@ Privacy may also {conflict-with-itself} in some scenarios, as two different part
 ## Sidebar
 
 goods:
-Heading: Goods Defintion
+Heading: Goods Definition
 A good, in this context, is any social or individual benefit or value. Goods may conflict with each other and are often non-universally experienced, typically coming with trade-offs.
 
 across-definitions:

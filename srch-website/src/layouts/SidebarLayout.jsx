@@ -65,9 +65,6 @@ export default function SidebarLayout({ children }) {
     const inner = innerRef.current;
     if (!main || !inner) return;
 
-    const w = `${inner.offsetWidth}px`;
-    document.documentElement.style.setProperty("--main-freeze-width", w);
-
     main.classList.add("main-frozen");
     inner.classList.add("frozen");
     inner.classList.remove("release");
@@ -259,18 +256,18 @@ export default function SidebarLayout({ children }) {
       } else {
         // Wide: immediate (unchanged behavior)
         requestAnimationFrame(() => {
-          target.style.setProperty("--right-sidebar-width", "0px");
           target.classList.remove("right-open");
+          target.style.setProperty("--right-sidebar-width", "0px");
         });
       }
     } else {
       // OPENING (same for both modes)
       requestAnimationFrame(() => {
+        target.classList.add("right-open");
         target.style.setProperty(
           "--right-sidebar-width",
           `${rightSidebar.width}px`,
         );
-        target.classList.add("right-open");
       });
     }
 
@@ -366,13 +363,6 @@ export default function SidebarLayout({ children }) {
     leftSidebar,
     rightSidebar,
   ]);
-
-  /** ---------------- NAVBAR HEIGHT SYNC ---------------- */
-  useEffect(() => {
-    const fixedHeight = "70px";
-    document.documentElement.style.setProperty("--navbar-height", fixedHeight);
-    document.documentElement.style.setProperty("--nav-bar-height", fixedHeight);
-  }, []);
 
   /** ---------------- KEYBOARD RESIZE SUPPORT (unchanged) ---------------- */
   useEffect(() => {
@@ -501,28 +491,25 @@ export default function SidebarLayout({ children }) {
               <div className="drawer-content scrollable-drawer">
                 {rightContent}
               </div>
+
+              <div
+                className={`right-resizer ${
+                  rightSidebar.isResizing ? "is-resizing" : ""
+                }`}
+                onMouseDown={rightSidebar.startResize}
+                onTouchStart={rightSidebar.startResize}
+                onKeyDown={rightSidebar.handleKeyDown}
+                role="separator"
+                tabIndex={0}
+                aria-orientation="vertical"
+                aria-label="Resize right sidebar"
+                aria-valuenow={rightSidebar.width}
+                aria-valuemin={rightSidebar.minWidth}
+                aria-valuemax={rightSidebar.maxWidth}
+              />
             </>
           )}
         </aside>
-
-        {/* RIGHT: External resize hitbox (unchanged) */}
-        {isRightOpen && (
-          <div
-            className={`right-resize-hitbox ${
-              rightSidebar.isResizing ? "is-resizing" : ""
-            }`}
-            onMouseDown={rightSidebar.startResize}
-            onTouchStart={rightSidebar.startResize}
-            onKeyDown={rightSidebar.handleKeyDown}
-            role="separator"
-            tabIndex={0}
-            aria-orientation="vertical"
-            aria-label="Resize right sidebar"
-            aria-valuenow={rightSidebar.width}
-            aria-valuemin={rightSidebar.minWidth}
-            aria-valuemax={rightSidebar.maxWidth}
-          />
-        )}
       </div>
     </LayoutContext.Provider>
   );

@@ -3,8 +3,6 @@
 
 :root {
   color-scheme: light;
-  color: var(--color-white-87);
-
   font-synthesis: none;
   padding: 0rem;
   text-rendering: optimizeLegibility;
@@ -13,7 +11,8 @@
 
   --toolbar-height: 0px;
   --right-sidebar-width: 0px;
-  --navbar-height: 70px;
+  --nav-bar-height: 62px;
+  --mobile-menu-offset: 0px;
   --mobile-menu-height: 250px;
   --mobile-menu-height-expanded: 350px;
   --left-sidebar-width: var(--left-sidebar-width, 250px);
@@ -24,6 +23,7 @@
   --color-bg-alt: #f2eee9;
   --color-border: #e0d7ce;
   --color-accent: #7b4b24;
+  --color-accent-30: rgba(123, 75, 36, 0.05);
   --color-accent-light: #f3ece6;
   --color-shadow: rgba(0, 0, 0, 0.08);
   --color-white-0: rgba(8, 8, 8, 0);
@@ -68,44 +68,7 @@
   --ack-hero-paddingX: 13.22vw;
 
   --cs-ease: 180ms ease;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --color-text: #efe9e2;
-  --color-text-hover: #ff5a5a;
-  --color-bg: #12100f;
-  --color-bg-alt: #1a1715;
-  --color-border: #2f2a26;
-  --color-accent: #e0b189;
-  --color-accent-light: #2a231f;
-  --color-shadow: rgba(0, 0, 0, 0.35);
-  --color-white-0: rgba(255, 255, 255, 0);
-  --color-white-50: rgba(255, 255, 255, 0.5);
-  --color-black: #000000;
-  --color-red-gradient: #ff3b3b;
-  --color-brown: #c48d5e;
-  --color-gray: rgba(255, 255, 255, 0.55);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    color-scheme: dark;
-    --color-text: #efe9e2;
-    --color-text-hover: #ff5a5a;
-    --color-bg: #12100f;
-    --color-bg-alt: #1a1715;
-    --color-border: #2f2a26;
-    --color-accent: #e0b189;
-    --color-accent-light: #2a231f;
-    --color-shadow: rgba(255, 255, 255, 0.35);
-    --color-white-0: rgba(255, 255, 255, 0);
-    --color-white-50: rgba(255, 255, 255, 0.5);
-    --color-black: #000000;
-    --color-red-gradient: #ff3b3b;
-    --color-brown: #c48d5e;
-    --color-gray: rgba(255, 255, 255, 0.55);
-  }
+  --page-pad: min(150px, 10vw);
 }
 
 html {
@@ -144,14 +107,9 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--button-bg);
   color: var(--color-bg);
   cursor: pointer;
   transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: var(--button-hover-border);
 }
 
 button:focus,
@@ -199,4 +157,17 @@ mark {
 
 .card {
   padding: 2em;
+}
+
+html.right-open body .main-content {
+  margin-right: var(--right-sidebar-width) !important;
+}
+
+html:not(.right-open) body .main-content {
+  margin-right: 0 !important;
+}
+
+html.right-open .right-sidebar {
+  transform: translateX(0);
+  opacity: 1;
 }

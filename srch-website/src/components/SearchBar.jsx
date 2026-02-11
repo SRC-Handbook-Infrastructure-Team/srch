@@ -1,9 +1,9 @@
+import "../styles/SearchBar.css";
 import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
 import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ResultsWindow } from "./ResultsWindow";
-import "../styles/ContentPage.css";
+import FloatingSearchResults from "./FloatingSearchResults";
 
 function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const containerRef = useRef(null);
@@ -66,7 +66,10 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
             exit: { duration: 0.25 },
           }}
         >
-          <ResultsWindow searchQuery={searchQuery} maxResults={maxResults} />
+          <FloatingSearchResults
+            searchQuery={searchQuery}
+            maxResults={maxResults}
+          />
         </Collapse>
       </Box>
       <Collapse
@@ -88,4 +91,4 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   );
 }
 
-export { SearchBar };
+export default SearchBar;

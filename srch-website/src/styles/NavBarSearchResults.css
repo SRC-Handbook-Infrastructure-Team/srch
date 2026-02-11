@@ -1,0 +1,100 @@
+.result-row-nav-bar {
+  border-bottom: 1px solid var(--color-accent-light);
+}
+
+.result-row-nav-bar:first-child {
+  border-top: 1px solid var(--color-accent-light);
+}
+
+.results-item-nav-bar {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.results-item-nav-bar:hover {
+  background-color: var(--color-accent-30);
+  transition: background-color 0.5s ease;
+}
+
+.results-section-nav-bar {
+  background: var(--color-text-hover);
+  display: block;
+  color: var(--color-bg);
+  padding: 0rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: normal;
+  margin-right: 0.75rem;
+}
+
+.results-title-nav-bar {
+  display: block;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.result-snippet-nav-bar {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  padding-top: 0.25rem;
+}
+
+.result-snippet-text-nav-bar {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-snippet-text-clamped-nav-bar {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.results-view-all-nav-bar {
+  padding-top: 0.75rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+.results-window-nav-bar {
+  padding: 0 1.25rem 0 1.25rem;
+  font-family: var(--content-font);
+}
+
+.results-list-nav-bar {
+  overflow-y: auto;
+  padding-top: 0.5rem;
+}
+
+.results-header-nav-bar {
+  display: flex;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.view-all-link-nav-bar {
+  color: var(--color-text-hover);
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+.view-all-link-nav-bar:hover,
+.view-all-link-nav-bar:focus {
+  color: var(--color-text-hover);
+  outline: none;
+}

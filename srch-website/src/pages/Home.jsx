@@ -14,7 +14,7 @@ import instaLogo from "../assets/instagram-logo.svg";
 import srcLogo from "../assets/src_logo.svg";
 import cntrLogo from "../assets/cntr-logo.png";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-import { SearchBar } from "../components/SearchBar";
+import SearchBar from "../components/SearchBar";
 
 function Home() {
   const navigate = useNavigate();

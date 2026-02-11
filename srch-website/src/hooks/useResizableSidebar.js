@@ -55,7 +55,7 @@ export default function useResizableSidebar({
   /** Safely clamps and updates width state */
   const setWidth = useCallback(
     (w) => setWidthState(() => clamp(Math.round(w), minWidth, maxWidth)),
-    [minWidth, maxWidth]
+    [minWidth, maxWidth],
   );
 
   /** Handles start of drag resize */
@@ -82,7 +82,7 @@ export default function useResizableSidebar({
         if (sidebarEl) sidebarEl.classList.add("resizing");
       }
     },
-    [width, side, onStartResize]
+    [width, side, onStartResize],
   );
 
   /** Stops resizing and commits final width */
@@ -144,12 +144,11 @@ export default function useResizableSidebar({
 
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        if (cssVarName) {
-          document.documentElement.style.setProperty(
-            cssVarName,
-            `${pendingWidth.current}px`
-          );
-        }
+        if (!cssVarName) return;
+        document.documentElement.style.setProperty(
+          cssVarName,
+          `${pendingWidth.current}px`,
+        );
       });
     };
 
@@ -206,7 +205,7 @@ export default function useResizableSidebar({
         } catch {}
       }
     },
-    [width, minWidth, maxWidth, side, setWidth, storageKey]
+    [width, minWidth, maxWidth, side, setWidth, storageKey],
   );
 
   /** Toggles collapsed state */
@@ -277,15 +276,24 @@ export default function useResizableSidebar({
 
     let timer;
 
-    // In overlay mode (when collapseAnimationDelay > 0), delay setting
-    // the CSS var to 0 so translateX(-100%) animates with the real width.
-    if (collapsed && collapseAnimationDelay > 0) {
-      timer = setTimeout(() => {
-        document.documentElement.style.setProperty(cssVarName, `${collapsedWidth}px`);
-      }, collapseAnimationDelay);
+    if (collapsed) {
+      // Collapsing: delay CSS var change to allow transition
+      if (collapseAnimationDelay > 0) {
+        timer = setTimeout(() => {
+          document.documentElement.style.setProperty(
+            cssVarName,
+            `${collapsedWidth}px`,
+          );
+        }, collapseAnimationDelay);
+      } else {
+        document.documentElement.style.setProperty(
+          cssVarName,
+          `${collapsedWidth}px`,
+        );
+      }
     } else {
-      const value = `${collapsed ? collapsedWidth : width}px`;
-      document.documentElement.style.setProperty(cssVarName, value);
+      // Expanding or normal width update
+      document.documentElement.style.setProperty(cssVarName, `${width}px`);
     }
 
     return () => {
