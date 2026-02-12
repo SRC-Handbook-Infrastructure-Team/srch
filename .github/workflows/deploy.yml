@@ -2,7 +2,7 @@ name: Deploy Vite React to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,8 @@ jobs:
       - name: Build
         working-directory: srch-website
         run: npm run build
+        env:
+          VITE_BASE: /srch/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
