@@ -1,5 +1,5 @@
 # srch
-The Spring '25 repository for the Socially Responsible Computing Curriculum Handbook
+The repository for the Socially Responsible Computing Curriculum Handbook
 
 # Project setup
 1. Clone the repository! Navigate to the Code tab of the repo and copy the URL to clone.
@@ -21,3 +21,14 @@ For example to clone using HTTPS, run
 8. Run `npm run deploy` from the `srch-website` directory to deploy your changes.
 
 9. You should automatically be able to view the deployed changes in our GitHub pages site: https://src-handbook-infrastructure-team.github.io/srch
+
+# Deployment Commands
+
+npm run build
+scp -r dist/* <your_username>@ssh.cs.brown.edu:/web/cs/web/sites/srch/
+ssh <your_username>@ssh.cs.brown.edu
+cd /web/cs/web/sites/srch
+chgrp -R cs-responsible .
+chmod 644 index.html
+chmod -R 755 assets
+exit

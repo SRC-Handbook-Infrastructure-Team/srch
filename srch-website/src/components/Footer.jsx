@@ -1,11 +1,11 @@
 import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
-import logoImage from "../assets/logo.png";
+import logo from "../assets/logo.png";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";
 import accessibilityIcon from "../assets/accessibility-icon.svg";
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 
 function Footer() {
   const navigate = useNavigate();
@@ -21,24 +21,20 @@ function Footer() {
       <div className="footer-content">
         <div className="footer-box">
           <div className="logo-container hide-wide show-narrow">
-            <img
-              src={logoImage}
-              className="logo-image-footer"
-              alt="SRC Handbook Logo"
-              width={100}
-              height={31.58}
-              onClick={() => navigate("/")}
+            <Image
+              src={logo}
+              alt="Socially Responsible Computing Handbook"
+              height={"30px"}
+              objectFit="contain"
             />
           </div>
           <div className="links-section">
             <div className="logo-container show-wide hide-narrow">
-              <img
-                src={logoImage}
-                className="logo-image-footer"
-                alt="SRC Handbook Logo"
-                width={100}
-                height={31.58}
-                onClick={() => navigate("/")}
+              <Image
+                src={logo}
+                alt="Socially Responsible Computing Handbook"
+                height={"30px"}
+                objectFit="contain"
               />
             </div>
             <div>
@@ -163,7 +159,7 @@ function Footer() {
             </div>
           </div>
           <p className="copyright">
-            © 2025 Brown University. All rights reserved.
+            © 2026 Brown University. All rights reserved.
           </p>
         </div>
       </div>

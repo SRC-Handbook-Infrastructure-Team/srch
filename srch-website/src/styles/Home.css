@@ -474,12 +474,6 @@
 
   padding: 0 var(--ack-hero-paddingX);
   border-top: 1px solid white;
-
-  transition: background-image 0.3s ease;
-}
-
-.upper-content:hover {
-  background-image: url("../assets/blurred-background.png");
 }
 
 .upper-text-section {
