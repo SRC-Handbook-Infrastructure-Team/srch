@@ -12,21 +12,9 @@ US Copyright law has been completely upended by the rise of claims using generat
 
 ## What is the difference between IP and Copyright?
 
-![Copyright bubble graph](/assets/primer-photos/Copyright.jpg)
+![Copyright bubble graph](/assets/primer-photos/intellectual_property.png)
 Intellectual Property (IP) is the broad legal category that protects the creations of the mind through patents, trademarks, copyrights, and trade secrets. Copyright is a specific type of IP that protects original creative works such as books, music, and art from unauthorized use.
-
-| **Copyright Rights**                           | **Copyright Protects**                      | **Copyright Does Not Protect** |
-| ---------------------------------------------- | ------------------------------------------- | ------------------------------ |
-| Right to reproduce the work                    | Literary works                              | Ideas                          |
-| Make derivative works                          | Musical Works                               | Procedures                     |
-| Perform a work publicly                        | Dramatic Works                              | Processes                      |
-| Display a work publicly                        | Pantomimes and Choreographic Works          | Systems                        |
-| Perform the work by digital audio transmission | Pictorial, Graphic and Sculptural Works     | Methods of Operation           |
-|                                                | Motion pictures and other Audiovisual works | Concepts                       |
-|                                                | Architectural works                         | Principles                     |
-|                                                |                                             | Names                          |
-|                                                |                                             | Titles                         |
-|                                                |                                             | Short phrases                  |
+![Copyright Rights: Right to reproduce the work, Make derivative works, Perform a work publicly, Display a work publicly, Perform the work by digital audio transmission. Copyright Protects:  Literary works, Musical Works, Dramatic Works, Pantomimes and Choreographic Works, Pictorial, Graphic and Sculptural Works, Motion pictures and other Audiovisual works, Architectural works. Copyright Does Not Protect:Ideas, Procedures, Processes, Systems, Methods of Operation, Concepts, Principles, Names, Titles, Short phrases.](/assets/primer-photos/copyright_rights.png)
 
 ## Copyright on inputs: what is the legality of training models on copyrighted data?
 
@@ -40,7 +28,7 @@ With the rise of multimodal artificial intelligence, AI models can now output va
 
 AI copyright issues related to inputs—particularly the use of copyrighted data for training AI models—are at the center of major legal and policy debates. These concerns primarily involve whether training AI models such as ChatGPT, Suno, Udio, Stability AI, and Midjourney on copyrighted materials constitutes copyright infringement or is valid under the Fair Use Doctrine. When developing AI models, especially ones at scale, developers will oftentimes scrape the internet to acquire enormous amounts of media that includes text, images, video, and art to train the model. As stated before, the items that have been scraped from the internet to train AI models are sometimes copyrighted, and owners are not given compensation or asked for consent for this training. This has resulted in copyright owners seeing their work resembles in AI outputs, negatively affecting their profits, copyrights, and artistic autonomy, potentially resulting in infringement.
 
-![Copyright bubble graph](/assets/primer-photos/copyright_graph.jpg)
+![Copyright bubble graph](/assets/primer-photos/generative_ai_figure.jpg)
 
 ### Current Legal Landscape
 
@@ -67,12 +55,7 @@ The Fair Use doctrine is one of the most critical components of copyright law th
 - The amount and substantiality of the portion used in relation to the copyrighted work as a whole (amount of the original work used, especially if it is the ‘heart’ of the work)
 - The effect of the use upon the potential market for or value of the copyrighted work (how the use will impact the market of the original work).
 
-| **Factor**                     | **Explanation**                                                              |
-| ------------------------------ | ---------------------------------------------------------------------------- |
-| Purpose and character of use   | Is the use transformative or merely a copy? Is it commercial or nonprofit?   |
-| Nature of the copyrighted work | Is the original work more factual or creative in nature?                     |
-| Amount and substantiality      | How much of the original work is used, and is the “heart” of the work taken? |
-| Effect on market               | Does the use harm the market or value of the original work?                  |
+![Factor/Explanation table: 1. Purpose and character of use, Is the use transformative or merely a copy? Is it commercial or nonprofit? 2. Nature of the copyrighted work. Is the original work more factual or creative in nature?  3. Amount and substantiality. How much of the original work is used, and is the “heart” of the work taken? 4. Effect on market. Does the use harm the market or value of the original work? ](/assets/primer-photos/generative_ai_table.png)
 
 For example, in Thomson Reuters v. Ross Intelligence, the judge ruled in favor of Reuters using factor one and factor four, in that when using Reuters data, Ross Intelligence was merely trying to create a product that was similar enough to Reuters AND most importantly that the use of the data would negatively impact the Reuter’s market and profits. Many AI developers have stated that using copyrighted work scraped from the internet is allowed under the Fair Use Doctrine, especially that the Fair Use Doctrine applies to AI models for scholarship and research purposes. Moreover, there are further arguments that AI developers should use copyrighted work to achieve AI dominance on the global scale, as well as create better represented datasets that will result in less bias and more fairness.
 

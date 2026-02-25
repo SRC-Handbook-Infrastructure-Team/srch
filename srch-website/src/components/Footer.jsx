@@ -1,6 +1,6 @@
 import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/srch_logo.svg";
 import privacyIcon from "../assets/privacy-icon.svg";
 import automatedIcon from "../assets/decision-icon.svg";
 import aiIcon from "../assets/ai-icon.svg";

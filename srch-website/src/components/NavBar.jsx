@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
-import logo from "../assets/logo.png";
+import logo from "../assets/srch_logo.svg";
 
 const themeStorageKey = "srch-theme";
 

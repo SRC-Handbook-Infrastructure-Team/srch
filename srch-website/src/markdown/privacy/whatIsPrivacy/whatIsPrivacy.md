@@ -46,8 +46,8 @@ A lens of privacy focused on the separation of public and private spheres is in 
 
 Some claim that privacy is about **moderating relationships between different entities by allowing disparate access to one's private sphere**. One recent way of representing this idea is a layered model of privacy (sometimes referred to as "the onion model of privacy"). The layered model presents privacy as nested, with personal and bodily intimacy and privacy at the center. The middle layers are personal relationships, and the outer layer is civil society more broadly. Privacy loss, analogous to removing layers and letting others in, makes us vulnerable. Voluntary disclosure can be viewed as "a gesture of trust that, when received with sensitivity and trustworthiness, strengthens relationships" (Véliz 2024, p. 83).
 
-**Figure:** The layered model of privacy depicted with matryoshki (Russian nesting dolls).
-![An illustration of three matryoshki (Russian nesting dolls) in descending size from left to right. An arrow pointing to the largest doll is labeled "Civil society (e.g., things shared with the government)." An arrow pointing to the medium-sized doll is labeled "Personal relationships (e.g., things shared with friends)." An arrow pointing to the smallest doll is labeled "Personal & bodily intimacy (e.g., things shared with life partner)."](/assets/primer-photos/layeredModelPrivacy.jpeg)
+**Figure:** The layered model of privacy.
+![An illustration of semi-circles in descending size from left to right. An arrow pointing to the largest semi-circle is labeled "Civil society (e.g., things shared with the government)." An arrow pointing to the medium-sized semi-circle is labeled "Personal relationships (e.g., things shared with friends)." An arrow pointing to the smallest semi-circle is labeled "Personal & bodily intimacy (e.g., things shared with life partner)."](/assets/primer-photos/layered_model_of_privacy.png)
 
 ### Spheres as action-based
 
@@ -70,13 +70,7 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 [Dwork, McSherry, Nissim, and Smith (2006)](https://link.springer.com/chapter/10.1007/11681878_14#Bib1) describes **differential privacy (DP)**, a {framework} used for privacy-preserving statistical analysis and machine learning. Differentially private algorithms rely on the careful introduction of statistical noise to obscure identity without meaningfully altering results. The inclusion or non-inclusion of a particular observation has no statistically significant impact on the outcome, so there is no way to prove a certain individual is represented in the data set. On this basis, a person can always plausibly deny contributing data.
 
 #### Figure: Table summarizing four views of privacy.
-
-| Privacy is about…                            | Someone has privacy if…                                                                        |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Access restriction                           | Their physical self and information about them is inaccessible to others                       |
-| Information flow control                     | They are empowered to control if and how information about them is collected, shared, and used |
-| The separation of public and private spheres | Their personal spaces, relationships, and actions are free from interference                   |
-| Plausible deniability                        | There is a mathematical guarantee their information or identity is unrecoverable               |
+![A table summarizing four views of privacy. It lists that privacy is about access restriction, information flow control, the separation of public and private spheres, and plausible deniability. It lists that someone has privacy if their physical self and information about them is inaccessible to others, they are empowered to control if and how information about them is collected, shared, and used, their personal spaces, relationships, and actions are free from interference, and there is a mathematical guarantee their information or identity is unrecoverable."](/assets/primer-photos/table_of_privacy.png)
 
 ## Privacy from whom?
 
