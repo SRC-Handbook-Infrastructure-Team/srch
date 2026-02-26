@@ -20,7 +20,9 @@
   --color-text: #1a1a1a;
   --color-text-hover: #9d0013;
   --color-bg: #ffffff;
+  --color-white-text: #ffffff;
   --color-bg-alt: #f2eee9;
+  --color-emphasis: #f2eee9;
   --color-border: #e0d7ce;
   --color-accent: #7b4b24;
   --color-accent-30: rgba(123, 75, 36, 0.05);
@@ -30,7 +32,8 @@
   --color-white-50: rgba(255, 255, 255, 0.5);
   --color-black: #000000;
   --color-red-gradient: #c90000;
-  --color-brown: #531c00;
+  --color-subtle-emphasis: #531c00;
+  --color-header: #531c00;
   --color-gray: #00000085;
 
   --x-small-text: 16px;
@@ -71,16 +74,38 @@
   --page-pad: min(150px, 10vw);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-text: #E0E0E0;
+  --color-white-text: #E0E0E0;
+  --color-text-hover: #a5d8ae;
+  --color-bg: #121212;
+  --color-bg-alt: #1E1E1E;
+  --color-emphasis: #244123;
+  --color-border: #333333;
+  --color-accent: #A5D8AE;
+  --color-accent-30: rgba(96, 255, 75, 0.05);
+  --color-accent-light: #2a2a2a;
+  --color-shadow: rgba(255, 255, 255, 0.211);
+  --color-white-0: rgba(255, 255, 255, 0);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-black: #ffffff;
+  --color-header: #E0E0E0;
+  --color-red-gradient: #A5D8AE;
+  --color-subtle-emphasis: #244123;
+  --color-gray: #fffbf6b1;
+}
+
 html {
   overflow-x: hidden;
 }
 
 body {
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 16px;
-  line-height: 28px;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-size: 16px !important;
+  line-height: 28px !important;
+  color: var(--color-text) !important;
+  background-color: var(--color-bg) !important;
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
@@ -89,15 +114,17 @@ body {
 }
 
 a {
-  font-weight: 500;
-  color: var(--color-accent);
+  font-weight: 500 !important;
+  color: var(--color-accent) !important;
   text-decoration: none;
+  font-family: "Be Vietnam Pro", sans-serif !important;
 }
 
 a:hover {
-  color: var(--color-accent);
+  color: var(--color-accent) !important;
   text-decoration: underline;
-  background-color: var(--color-bg);
+  background-color: var(--color-bg) !important;
+  font-family: "Be Vietnam Pro", sans-serif !important;
 }
 
 button {
@@ -106,7 +133,7 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
+  font-family: "Be Vietnam Pro", sans-serif !important;
   color: var(--color-bg);
   cursor: pointer;
   transition: border-color 0.25s;
@@ -121,18 +148,12 @@ button:focus:not(:focus-visible) {
   outline: none;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  color: var(--color-accent);
-}
-
 mark {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
-  font-weight: 600;
+  background-color: var(--color-accent-light) !important;
+  color: var(--color-accent) !important;
+  font-weight: 600 !important;
   border-radius: 3px;
+  font-family: "Be Vietnam Pro", sans-serif !important;
 }
 
 #root {

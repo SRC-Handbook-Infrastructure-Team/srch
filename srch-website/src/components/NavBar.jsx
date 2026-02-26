@@ -1,24 +1,18 @@
 import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Box,
-  HStack,
-  VStack,
-  Image,
-  Text,
-  Icon,
-  Collapse,
-} from "@chakra-ui/react";
+import { Box, HStack, VStack, Image, Icon, Collapse } from "@chakra-ui/react";
 import {
   HamburgerIcon,
   ChevronDownIcon,
   MoonIcon,
   SearchIcon,
+  SunIcon,
 } from "@chakra-ui/icons";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
-import logo from "../assets/srch_logo.svg";
+import logoLight from "../assets/srch_logo.svg";
+import logoDark from "../assets/srch_logo_white.svg";
 
 const themeStorageKey = "srch-theme";
 
@@ -35,6 +29,7 @@ function NavBar({ className = "", layoutMode }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
   const [theme, setTheme] = useState("light");
+  const getLogo = () => (theme === "dark" ? logoDark : logoLight);
 
   const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
@@ -201,12 +196,16 @@ function NavBar({ className = "", layoutMode }) {
               onClick={() => navigate("/")}
             >
               <HStack alignItems={"center"}>
-                <Image
-                  src={logo}
-                  alt="Socially Responsible Computing Handbook"
-                  height={"30px"}
-                  objectFit="contain"
-                />
+                <div className="logo-overlay-wrapper">
+                  <Image
+                    src={getLogo()}
+                    alt="Socially Responsible Computing Handbook"
+                    height={"30px"}
+                    objectFit="contain"
+                    className="navbar-logo-img"
+                  />
+                  <div className="logo-white-overlay"></div>
+                </div>
               </HStack>
             </Box>
             <HStack className="right-hstack" spacing={"1rem"}>
@@ -220,12 +219,17 @@ function NavBar({ className = "", layoutMode }) {
                     className="nav-dropdown-title"
                     onClick={(e) => toggleSection("modules", e)}
                   >
-                    <Text
+                    <span
                       className="nav-dropdown-title-text nav-link-box"
-                      color={openSection === "modules" ? "#9D0013" : "inherit"}
+                      style={{
+                        color:
+                          openSection === "modules"
+                            ? "var(--color-text-hover)"
+                            : "inherit",
+                      }}
                     >
                       Modules
-                    </Text>
+                    </span>
                     <Icon
                       as={ChevronDownIcon}
                       className="nav-dropdown-chevron"
@@ -267,7 +271,9 @@ function NavBar({ className = "", layoutMode }) {
                               toggleSection(section.id, e);
                             }}
                           >
-                            <Text whiteSpace="nowrap">{section.title}</Text>
+                            <span style={{ whiteSpace: "nowrap" }}>
+                              {section.title}
+                            </span>
                           </Box>
                         ))}
                       </VStack>
@@ -287,15 +293,15 @@ function NavBar({ className = "", layoutMode }) {
                   }
                 }}
               >
-                <Text>About</Text>
+                <span>About</span>
               </Box>
               <Box
                 className="nav-link-box hide-base show-md"
                 onClick={() => navigate("/acknowledgments")}
               >
-                <Text>Acknowledgments</Text>
+                <span>Acknowledgments</span>
               </Box>
-              {/* <Box
+              <Box
                 className="icon-button"
                 role="button"
                 tabIndex={0}
@@ -312,8 +318,12 @@ function NavBar({ className = "", layoutMode }) {
                   }
                 }}
               >
-                <MoonIcon className="navsearchbar-button" fontSize={"lg"} />
-              </Box> */}
+                {theme === "dark" ? (
+                  <SunIcon className="navsearchbar-button" fontSize="larger" />
+                ) : (
+                  <MoonIcon className="navsearchbar-button" fontSize="lg" />
+                )}
+              </Box>
               <Box
                 className="icon-button"
                 onClick={() => {
@@ -330,7 +340,10 @@ function NavBar({ className = "", layoutMode }) {
                 className="icon-button show-base hide-md"
                 onClick={toggleMenu}
               >
-                <HamburgerIcon color="black" fontSize={"x-large"} />
+                <HamburgerIcon
+                  color={theme === "dark" ? "white" : "black"}
+                  fontSize={"x-large"}
+                />
               </Box>
             </HStack>
           </HStack>

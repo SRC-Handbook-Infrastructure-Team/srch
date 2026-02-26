@@ -93,7 +93,7 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 8px;
-  border-bottom: 1px solid var(--color-brown);
+  border-bottom: 1px solid var(--color-subtle-emphasis);
 }
 
 .results-found-count {
@@ -158,7 +158,7 @@
 
 .page-number {
   cursor: pointer;
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   user-select: none;
   outline: none;
   font-size: 1rem;
@@ -178,7 +178,7 @@
 
 .page-nav {
   cursor: pointer;
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   height: 34px;
   text-align: center;
   font-size: 1rem;

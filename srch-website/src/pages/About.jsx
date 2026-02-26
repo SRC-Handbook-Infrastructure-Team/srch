@@ -26,33 +26,13 @@ export default function About() {
 
       <div className="about-lower-content">
         <section className="about-section">
-          <h2 className="section-title" style={{ overflowWrap: "break-word" }}>
+          <div className="section-title" style={{ overflowWrap: "break-word" }}>
             How to use the handbook
-          </h2>
-
+          </div>
           <p>
             Each section contains a series of primers that are loosely aligned
-            with learning objectives in the SRC curriculum. Use them to:
+            with learning objectives in the SRC curriculum. 
           </p>
-
-          <ul>
-            <li>
-              <strong>Structure your lesson or course</strong> with embedded
-              ethical modules
-            </li>
-            <li>
-              <strong>Give students real examples</strong> that connect tech to
-              society
-            </li>
-            <li>
-              <strong>Foster inclusive, critical thinking</strong> in the
-              classroom
-            </li>
-            <li>
-              <strong>Adapt and contribute content</strong> so it remains
-              relevant and impactful
-            </li>
-          </ul>
         </section>
       </div>
     </>

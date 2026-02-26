@@ -38,6 +38,14 @@ import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import team from "../team.json";
+import privacyIconLight from "../assets/privacy-icon.svg";
+import privacyIconDark from "../assets/privacy-icon_white.svg";
+import automatedIconLight from "../assets/decision-icon.svg";
+import automatedIconDark from "../assets/decision-icon_white.svg";
+import aiIconLight from "../assets/ai-icon.svg";
+import aiIconDark from "../assets/ai-icon_white.svg";
+import accessibilityIconLight from "../assets/accessibility-icon.svg";
+import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 
 /* =============================================================================
  * Utilities
@@ -302,4 +310,8 @@ export default function Acknowledgments() {
       </div>
     </>
   );
+}
+
+function getIconByTheme(theme, light, dark) {
+  return theme === "dark" ? dark : light;
 }

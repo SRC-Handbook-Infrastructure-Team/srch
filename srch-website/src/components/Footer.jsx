@@ -1,14 +1,48 @@
 import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/srch_logo.svg";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
+import logoLight from "../assets/srch_logo.svg";
+import logoDark from "../assets/srch_logo_white.svg";
+import privacyIconLight from "../assets/privacy-icon.svg";
+import privacyIconDark from "../assets/privacy-icon_white.svg";
+import automatedIconLight from "../assets/decision-icon.svg";
+import automatedIconDark from "../assets/decision-icon_white.svg";
+import aiIconLight from "../assets/ai-icon.svg";
+import aiIconDark from "../assets/ai-icon_white.svg";
+import accessibilityIconLight from "../assets/accessibility-icon.svg";
+import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import { Box, Image } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 
 function Footer() {
   const navigate = useNavigate();
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+    const getCurrentTheme = () => {
+      return root.getAttribute("data-theme") || "light";
+    };
+    setTheme(getCurrentTheme());
+
+    const observer = new MutationObserver(() => {
+      setTheme(getCurrentTheme());
+    });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const getLogo = () => (theme === "dark" ? logoDark : logoLight);
+  const getPrivacyIcon = () =>
+    theme === "dark" ? privacyIconDark : privacyIconLight;
+  const getAutomatedIcon = () =>
+    theme === "dark" ? automatedIconDark : automatedIconLight;
+  const getAiIcon = () => (theme === "dark" ? aiIconDark : aiIconLight);
+  const getAccessibilityIcon = () =>
+    theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
 
   const privacySlug = "/privacy/whatIsPrivacy";
   const accessibilitySlug = "/accessibility/whatIsAccessibility";
@@ -22,7 +56,7 @@ function Footer() {
         <div className="footer-box">
           <div className="logo-container hide-wide show-narrow">
             <Image
-              src={logo}
+              src={getLogo()}
               alt="Socially Responsible Computing Handbook"
               height={"30px"}
               objectFit="contain"
@@ -31,9 +65,9 @@ function Footer() {
           <div className="links-section">
             <div className="logo-container show-wide hide-narrow">
               <Image
-                src={logo}
+                src={getLogo()}
                 alt="Socially Responsible Computing Handbook"
-                height={"30px"}
+                height={"50px"}
                 objectFit="contain"
               />
             </div>
@@ -43,7 +77,7 @@ function Footer() {
                 <div className="primer-link-photo-primer-footer">
                   <img
                     className="footer-icon"
-                    src={privacyIcon}
+                    src={getPrivacyIcon()}
                     alt="Privacy Icon"
                     width={24}
                     height={24}
@@ -61,7 +95,7 @@ function Footer() {
                 <div className="primer-link-photo-primer-footer">
                   <img
                     className="footer-icon"
-                    src={accessibilityIcon}
+                    src={getAccessibilityIcon()}
                     alt="Accessibility Icon"
                     width={24}
                     height={24}
@@ -79,7 +113,7 @@ function Footer() {
                 <div className="primer-link-photo-primer-footer">
                   <img
                     className="footer-icon"
-                    src={automatedIcon}
+                    src={getAutomatedIcon()}
                     alt="Automated Decision Making Icon"
                     width={24}
                     height={24}
@@ -97,7 +131,7 @@ function Footer() {
                 <div className="primer-link-photo-primer-footer">
                   <img
                     className="footer-icon"
-                    src={aiIcon}
+                    src={getAiIcon()}
                     alt="Generative AI Icon"
                     width={24}
                     height={24}

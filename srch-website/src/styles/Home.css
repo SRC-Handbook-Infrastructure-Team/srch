@@ -160,7 +160,7 @@
   padding: 24px;
   background: linear-gradient(
     225deg,
-    var(--color-bg) 70.18%,
+    var(--color-bg-alt) 70.18%,
     var(--color-red-gradient) 130.5%
   );
   border-radius: 16px;
@@ -196,7 +196,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-bg);
+  background: var(--color-bg-alt);
   border-radius: 16px;
   opacity: 1;
   transition: opacity 0.3s ease;
@@ -213,11 +213,11 @@
 }
 
 .topic-card:focus {
-  outline: 1.5px solid var(--color-brown);
+  outline: 1.5px solid var(--color-subtle-emphasis);
 }
 
 .topic-card:active {
-  outline: 1.5px solid var(--color-brown) !important;
+  outline: 1.5px solid var(--color-subtle-emphasis) !important;
 }
 
 .topic-card img {
@@ -333,6 +333,8 @@
   font-family: var(--title-font);
   font-weight: var(--title-weight);
   word-wrap: break-word;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .how-to-section {
@@ -413,6 +415,7 @@
 .button-icon {
   width: 28px;
   height: 28px;
+  transform: rotate(-90deg);
 }
 
 .intro-text {
@@ -474,6 +477,10 @@
 
   padding: 0 var(--ack-hero-paddingX);
   border-top: 1px solid white;
+}
+
+:root[data-theme="dark"] .upper-content {
+  background-image: url("../assets/landing_page_background_gradient_dark.png");
 }
 
 .upper-text-section {

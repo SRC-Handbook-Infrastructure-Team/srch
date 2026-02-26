@@ -195,7 +195,7 @@ html body .main-content {
   font-weight: 600;
   font-size: 35px;
   line-height: 40px;
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   margin: 0;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -205,7 +205,7 @@ html body .main-content {
   font-family: var(--content-font) !important;
   font-weight: 600 !important;
   font-size: 16px !important;
-  color: var(--color-brown) !important;
+  color: var(--color-subtle-emphasis) !important;
   padding: 10px 12px !important;
   background: var(--color-bg) !important;
   border-bottom: 1px solid var(--border-1) !important;
@@ -226,7 +226,7 @@ html body .main-content {
   height: 12px;
   transform: scale(1.2);
 
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   cursor: pointer;
   transition: transform 0.06s ease;
 }
@@ -243,16 +243,8 @@ html body .main-content {
 
 .page-divider {
   height: 2px;
-  background: var(--color-brown);
+  background: var(--color-subtle-emphasis);
   border: 0;
-
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-}
-
-.page-divider--fullbleed {
-  width: 100vw !important;
-  margin-left: calc(-50vw + 50%) !important;
 }
 
 .page-divider-margin {
@@ -307,7 +299,7 @@ html body .main-content {
 
   letter-spacing: 0.02em;
 
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   margin: 0 0 4px 0;
 
   text-transform: uppercase;
@@ -375,20 +367,6 @@ p > .srch-drawer-link:first-child {
   color: currentColor;
 }
 
-.page-last-updated {
-  font-family: var(--content-font);
-  font-size: 13px;
-  line-height: 20px;
-  font-weight: 400;
-  color: var(--color-brown);
-  margin-left: 16px;
-  left: -40px;
-  margin-top: 12px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  transform: translateX(-10px);
-}
-
 .right-sidebar {
   position: fixed !important;
   top: var(--nav-bar-height) !important;
@@ -443,7 +421,7 @@ p > .srch-drawer-link:first-child {
   line-height: 40px;
   font-weight: 600;
   margin: 8px 0 4px;
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   padding-bottom: 12px;
 }
 
@@ -461,7 +439,7 @@ p > .srch-drawer-link:first-child {
   font-weight: 700 !important;
   line-height: 32px;
   font-size: 25px !important;
-  color: var(--color-brown) !important;
+  color: var(--color-subtle-emphasis) !important;
   margin: 0 0 12px 0 !important;
   padding-top: 15px;
   padding-bottom: 10px;
@@ -475,7 +453,7 @@ p > .srch-drawer-link:first-child {
   border: none !important;
   padding: 4px !important;
   cursor: pointer !important;
-  color: var(--color-brown) !important;
+  color: var(--color-subtle-emphasis) !important;
 }
 
 .left-sidebar.resizing,
@@ -660,7 +638,7 @@ p > .srch-drawer-link:first-child {
 }
 
 .sidebar-sub-row.is-active {
-  background: var(--color-brown);
+  background: var(--color-subtle-emphasis);
 }
 
 .sidebar-subsection {
@@ -785,7 +763,6 @@ html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
   font-size: 12px;
   line-height: 1.4;
   max-width: 18rem;
-  text-align: right;
 }
 
 .sidebar-layout[data-layout-mode="overlay"]
@@ -881,7 +858,7 @@ html[data-layout-mode="overlay"]
   height: 11.565px;
   transform: scale(1.2);
 
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   cursor: pointer;
 
   background: transparent !important;

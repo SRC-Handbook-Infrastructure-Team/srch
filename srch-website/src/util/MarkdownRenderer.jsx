@@ -398,9 +398,9 @@ function MarkdownRenderer({
   /* ------------------------------------------------------------------------
    * Styling tokens used inside the components map
    * --------------------------------------------------------------------- */
-  const RED = "#9D0013";
-  const RED_DARK = "#7a000f"; // hover shade (kept for compatibility; not used on chips)
-  const BLACK = "#000000";
+  const RED = "var(--color-accent)";
+  const RED_DARK = "var(--color-accent)";
+  const BLACK = "var(--color-text)";
 
   /* ------------------------------------------------------------------------
    * Active drawer link state handling (no external integration required)
@@ -533,7 +533,16 @@ function MarkdownRenderer({
   const components = useMemo(
     () => ({
       h1: (props) => (
-        <Heading as="h1" size="xl" mt={10} mb={3} {...props}>
+        <h1
+          style={{
+            marginTop: "2.5rem",
+            marginBottom: "1rem",
+            color: "var(--color-header)",
+            fontFamily: "Funnel Sans, sans-serif",
+            fontWeight: 700,
+          }}
+          {...props}
+        >
           {Array.isArray(props.children)
             ? props.children.map((child) =>
                 typeof child === "string"
@@ -541,33 +550,41 @@ function MarkdownRenderer({
                   : child,
               )
             : props.children}
-          {isFinal === false && <BetaTag />}
-        </Heading>
+          {isFinal === false && <span className="beta-tag">BETA</span>}
+        </h1>
       ),
       h2: ({ children, ...props }) => {
         const id = createIdFromHeading(children);
         const childrenArray = Array.isArray(children) ? children : [children];
         return (
-          <Heading
-            as="h2"
+          <h2
             id={id}
-            size="md"
-            mt={4}
-            mb={2}
-            lineHeight="1.3"
-            scrollMarginTop="20px"
-            color="var(--color-accent)"
+            style={{
+              marginTop: "1.5rem",
+              marginBottom: "1.5rem",
+              fontSize: "1.5em",
+              color: "var(--color-header)",
+              fontFamily: "Be Vietnam Pro, sans-serif",
+              fontWeight: 600,
+            }}
             {...props}
           >
             {highlightText(childrenArray, highlight)}
-          </Heading>
+          </h2>
         );
       },
       p: ({ children }) => {
         return (
-          <Text mb={3} lineHeight="1.6" color={BLACK}>
+          <p
+            style={{
+              color: BLACK,
+              fontFamily: "Be Vietnam Pro, sans-serif",
+              lineHeight: "1.6",
+              marginBottom: "1em",
+            }}
+          >
             {highlightText(children, highlight)}
-          </Text>
+          </p>
         );
       },
 
@@ -576,26 +593,23 @@ function MarkdownRenderer({
        * ---------------------------------------------------------------- */
       a: (props) => {
         if ("data-footnote-backref" in props) return null;
-
         const isFootnoteRef = "data-footnote-ref" in props;
         const isExternal =
-          props.href.startsWith("http://") || props.href.startsWith("https://");
+          props.href &&
+          (props.href.startsWith("http://") ||
+            props.href.startsWith("https://"));
         const childrenArray = Array.isArray(props.children)
           ? props.children
           : [props.children];
-
         return (
-          <Link
+          <a
             {...props}
-            color={RED}
-            fontWeight="500"
-            textDecoration={isFootnoteRef ? "none" : "underline"}
-            _hover={{
-              color: RED_DARK,
+            style={{
+              color: RED,
+              fontWeight: 500,
               textDecoration: isFootnoteRef ? "none" : "underline",
             }}
             href={props.href}
-            isExternal={isExternal}
             target={isExternal ? "_blank" : undefined}
           >
             {childrenArray.map((child, index) =>
@@ -605,60 +619,49 @@ function MarkdownRenderer({
                 <span key={index}>{child}</span>
               ),
             )}
-            {isExternal && (
-              <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
-            )}
-          </Link>
+            {isExternal && <span style={{ marginLeft: "0.2em" }}>↗</span>}
+          </a>
         );
       },
       li: (props) => {
         const { id, children, ...rest } = props;
         const childrenArray = Array.isArray(children) ? children : [children];
-
         let number = null;
         if (id && id.startsWith("user-content-fn-")) {
           const match = id.match(/\d+/);
           if (match) number = match[0];
         }
-
         return (
-          <ListItem
-            color={BLACK}
+          <li
             id={id}
-            {...rest}
-            sx={
-              number
-                ? {
-                    listStyleType: "none",
-                    "::marker": {
-                      display: "none",
-                    },
-                  }
-                : {}
-            }
             style={{
+              color: BLACK,
+              fontFamily: "Be Vietnam Pro, sans-serif",
               position: "relative",
               paddingLeft: number ? "1.5rem" : "0",
+              listStyleType: number ? "none" : undefined,
             }}
+            {...rest}
           >
             {number && (
-              <Link
+              <a
                 href={`#user-content-fnref-${number}`}
-                as="a"
-                position="absolute"
-                left={0}
-                top="50%"
-                transform="translateY(-50%)"
-                color={RED}
-                fontWeight="bold"
-                textDecoration="none"
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: RED,
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                }}
                 aria-label={`Back to reference ${number}`}
               >
                 {number}.
-              </Link>
+              </a>
             )}
             {highlightText(childrenArray, highlight)}
-          </ListItem>
+          </li>
         );
       },
       sup: (props) => {
@@ -669,66 +672,122 @@ function MarkdownRenderer({
             : Array.isArray(child) && typeof child[0] === "string"
               ? child[0]
               : null;
-
         if (number && /^\d+$/.test(number)) {
           return (
             <sup>
-              <Link
-                as="a"
+              <a
                 href={`#user-content-fnref-${number}`}
-                color="#9D0013"
-                fontWeight="bold"
-                textDecoration="none"
+                style={{
+                  color: RED,
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                }}
                 aria-label={`Back to reference ${number}`}
               >
                 {number}
-              </Link>
+              </a>
             </sup>
           );
         }
-
         return <sup {...props}>{props.children}</sup>;
       },
 
-      ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
-      ol: (props) => <OrderedList pl={4} mb={3} {...props} />,
+      ul: (props) => (
+        <ul
+          style={{
+            paddingLeft: "1.5em",
+            marginBottom: "1em",
+            color: BLACK,
+            fontFamily: "Be Vietnam Pro, sans-serif",
+          }}
+          {...props}
+        />
+      ),
+      ol: (props) => (
+        <ol
+          style={{
+            paddingLeft: "1.5em",
+            marginBottom: "1em",
+            color: BLACK,
+            fontFamily: "Be Vietnam Pro, sans-serif",
+          }}
+          {...props}
+        />
+      ),
       code: ({ inline, ...props }) =>
         inline ? (
-          <Code {...props} />
+          <code
+            style={{
+              background: "#f3ece6",
+              color: BLACK,
+              fontFamily: "Funnel Sans, sans-serif",
+              borderRadius: "3px",
+              padding: "2px 4px",
+            }}
+            {...props}
+          />
         ) : (
-          <Box
-            as="pre"
-            p={2}
-            bg="gray.100"
-            borderRadius="md"
-            overflowX="auto"
+          <pre
+            style={{
+              background: "#f3ece6",
+              color: BLACK,
+              fontFamily: "Funnel Sans, sans-serif",
+              borderRadius: "6px",
+              padding: "1em",
+              overflowX: "auto",
+            }}
             {...props}
           />
         ),
       table: (props) => (
-        <Box overflowX="auto" my={4}>
-          <Table variant="simple" {...props}>
+        <div style={{ overflowX: "auto", margin: "1em 0" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              color: BLACK,
+              fontFamily: "Be Vietnam Pro, sans-serif",
+            }}
+            {...props}
+          >
             {props.children}
-          </Table>
-        </Box>
+          </table>
+        </div>
       ),
       th: (props) => (
-        <Th border="1px solid" borderColor="gray.300" {...props} />
+        <th
+          style={{
+            border: "1px solid #e0d7ce",
+            color: BLACK,
+            fontFamily: "Be Vietnam Pro, sans-serif",
+            padding: "0.5em",
+          }}
+          {...props}
+        />
       ),
       td: (props) => (
-        <Td border="1px solid" borderColor="gray.300" {...props} />
+        <td
+          style={{
+            border: "1px solid #e0d7ce",
+            color: BLACK,
+            fontFamily: "Be Vietnam Pro, sans-serif",
+            padding: "0.5em",
+          }}
+          {...props}
+        />
       ),
       img: (props) => (
-        <Image
+        <img
           src={props.src}
           alt={props.alt || ""}
-          maxW="80%"
-          maxH="500px"
-          objectFit="contain"
-          borderRadius="md"
-          mx="auto"
-          my={6}
-          display="block"
+          style={{
+            maxWidth: "80%",
+            maxHeight: "500px",
+            objectFit: "contain",
+            borderRadius: "6px",
+            margin: "1.5em auto",
+            display: "block",
+          }}
         />
       ),
 

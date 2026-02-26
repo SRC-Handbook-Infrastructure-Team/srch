@@ -51,23 +51,24 @@ export const FloatingSearchResults = React.memo(
     return (
       <Box>
         {((maxResults == null && searchQuery.length > 0) ||
-          maxResults != null) && (
-          <div className="results-window-floating">
-            {searchResults != null && maxResults !== 0 && (
-              <Collapse
-                in={searchQuery}
-                animateOpacity
-                transition={{
-                  enter: { duration: 0.5 },
-                  exit: { duration: 0.25 },
-                }}
-              >
+          maxResults != null) &&
+          searchResults != null &&
+          maxResults !== 0 && (
+            <Collapse
+              in={searchQuery}
+              animateOpacity
+              transition={{
+                enter: { duration: 0.5 },
+                exit: { duration: 0.25 },
+              }}
+            >
+              <div className="results-window-floating">
                 <div
                   className={"results-list-floating"}
                   style={
                     maxResults != null
                       ? {
-                          maxHeight: `${83 * maxResults}px`,
+                          maxHeight: `${97 * maxResults}px`,
                           overflowY: "auto",
                         }
                       : { overflowY: "auto" }
@@ -176,10 +177,9 @@ export const FloatingSearchResults = React.memo(
                     </div>
                   </div>
                 )}
-              </Collapse>
-            )}
-          </div>
-        )}
+              </div>
+            </Collapse>
+          )}
       </Box>
     );
   },

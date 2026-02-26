@@ -20,9 +20,9 @@ function SearchResultsPage() {
       <div className="background-gradient" />
       <div className="background-fade" />
       <div className="content">
-        <Heading className="website-title search-results-header">
+        <div className="website-title search-results-header">
           Search Results
-        </Heading>
+        </div>
         <SearchBar
           className="results-autofill"
           setSearchQuery={setSearchQuery}

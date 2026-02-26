@@ -1,19 +1,29 @@
 import "../styles/Home.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import buttonArrow from "../assets/button-arrow.png";
-import targetIcon from "../assets/targetIcon.png";
-import bookIcon from "../assets/bookIcon.png";
-import lightbulbIcon from "../assets/lightbulbIcon.png";
-import peopleIcon from "../assets/peopleIcon.png";
-import privacyIcon from "../assets/privacy-icon.svg";
-import automatedIcon from "../assets/decision-icon.svg";
-import aiIcon from "../assets/ai-icon.svg";
-import carotIcon from "../assets/carot-icon.svg";
-import instaLogo from "../assets/instagram-logo.svg";
-import srcLogo from "../assets/src_logo.svg";
+import targetIconLight from "../assets/targetIcon.svg";
+import targetIconDark from "../assets/targetIcon_white.svg";
+import bookIconLight from "../assets/bookIcon.svg";
+import bookIconDark from "../assets/bookIcon_white.svg";
+import lightbulbIconLight from "../assets/lightbulbIcon.svg";
+import lightbulbIconDark from "../assets/lightbulbIcon_white.svg";
+import peopleIconLight from "../assets/peopleIcon.svg";
+import peopleIconDark from "../assets/peopleIcon_white.svg";
+import privacyIconLight from "../assets/privacy-icon.svg";
+import privacyIconDark from "../assets/privacy-icon_white.svg";
+import automatedIconLight from "../assets/decision-icon.svg";
+import automatedIconDark from "../assets/decision-icon_white.svg";
+import aiIconLight from "../assets/ai-icon.svg";
+import aiIconDark from "../assets/ai-icon_white.svg";
+import carotIconLight from "../assets/carot-icon.svg";
+import carotIconDark from "../assets/carot-icon_white.svg";
+import instaLogoLight from "../assets/instagram-logo.svg";
+import instaLogoDark from "../assets/instagram-logo_white.svg";
+import srcLogoLight from "../assets/src_logo.svg";
+import srcLogoDark from "../assets/src_logo_white.svg";
 import cntrLogo from "../assets/cntr-logo.png";
-import accessibilityIcon from "../assets/accessibility-icon.svg";
+import accessibilityIconLight from "../assets/accessibility-icon.svg";
+import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import SearchBar from "../components/SearchBar";
 
 function Home() {
@@ -26,6 +36,56 @@ function Home() {
 
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const curriculumTitleRef = useRef(null);
+
+  const [theme, setTheme] = useState("light");
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+    const storedTheme = window.localStorage.getItem("srch-theme");
+    const prefersDark = window.matchMedia
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false;
+    const initialTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : prefersDark
+          ? "dark"
+          : "light";
+    setTheme(initialTheme);
+
+    const observer = new MutationObserver(() => {
+      const currentTheme = root.getAttribute("data-theme");
+      if (currentTheme && currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
+    });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, [theme]);
+
+  const getPrivacyIcon = () =>
+    theme === "dark" ? privacyIconDark : privacyIconLight;
+  const getAutomatedIcon = () =>
+    theme === "dark" ? automatedIconDark : automatedIconLight;
+  const getAiIcon = () => (theme === "dark" ? aiIconDark : aiIconLight);
+  const getCarotIcon = () =>
+    theme === "dark" ? carotIconDark : carotIconLight;
+  const getInstaLogo = () =>
+    theme === "dark" ? instaLogoDark : instaLogoLight;
+  const getSrcLogo = () => (theme === "dark" ? srcLogoDark : srcLogoLight);
+  const getAccessibilityIcon = () =>
+    theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
+
+  const getTargetIcon = () =>
+    theme === "dark" ? targetIconDark : targetIconLight;
+  const getBookIcon = () => (theme === "dark" ? bookIconDark : bookIconLight);
+  const getLightbulbIcon = () =>
+    theme === "dark" ? lightbulbIconDark : lightbulbIconLight;
+  const getPeopleIcon = () =>
+    theme === "dark" ? peopleIconDark : peopleIconLight;
 
   // Track scroll position
   useEffect(() => {
@@ -80,7 +140,7 @@ function Home() {
                 }
               >
                 <img
-                  src={carotIcon}
+                  src={getCarotIcon()}
                   alt="Scroll"
                   className={`scroll-caret-icon ${isScrolledDown ? "hidden" : ""}`}
                 />
@@ -90,7 +150,7 @@ function Home() {
                 ref={curriculumTitleRef}
                 style={{ overflowWrap: "break-word" }}
               >
-                Check out our curriculum
+                Check out Our Curriculum
               </div>
               <div className="curriculum-subtext">
                 Explore our focus areas of socially responsible computing
@@ -104,7 +164,7 @@ function Home() {
               >
                 <div className="outline-tip">
                   <img
-                    src={privacyIcon}
+                    src={getPrivacyIcon()}
                     alt="Privacy Icon"
                     width={75}
                     height={92}
@@ -124,7 +184,7 @@ function Home() {
               >
                 <div className="outline-tip">
                   <img
-                    src={accessibilityIcon}
+                    src={getAccessibilityIcon()}
                     alt="Accessibility Icon"
                     width={75}
                     height={92}
@@ -144,7 +204,7 @@ function Home() {
               >
                 <div className="outline-tip">
                   <img
-                    src={automatedIcon}
+                    src={getAutomatedIcon()}
                     alt="Automated Decision Making Icon"
                     width={75}
                     height={92}
@@ -161,7 +221,7 @@ function Home() {
               <button className="topic-card" onClick={() => navigate(aiSlug)}>
                 <div className="outline-tip">
                   <img
-                    src={aiIcon}
+                    src={getAiIcon()}
                     alt="Generative AI Icon"
                     width={75}
                     height={92}
@@ -182,12 +242,12 @@ function Home() {
 
           <div className="content-section">
             <div className="content-header">
-              <h2
-                className="section-title"
+              <div
+                className="section-title curriculum-title"
                 style={{ overflowWrap: "break-word" }}
               >
                 Search for Content
-              </h2>
+              </div>
               <p className="search-subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
@@ -205,12 +265,12 @@ function Home() {
           <div className="line-divider"></div>
 
           <div className="content-section">
-            <h2
-              className="section-title"
+            <div
+              className="section-title curriculum-title"
               style={{ overflowWrap: "break-word" }}
             >
-              How to use the Handbook
-            </h2>
+              How to Use the Handbook
+            </div>
             <div className="how-to-section">
               <p className="intro-text">
                 Each section contains a series of primers that are loosely
@@ -221,7 +281,7 @@ function Home() {
               <div className="info-list">
                 <div className="list-item">
                   <img
-                    src={targetIcon}
+                    src={getTargetIcon()}
                     className="list-icon"
                     alt="Target Icon"
                     width={24}
@@ -235,7 +295,7 @@ function Home() {
 
                 <div className="list-item">
                   <img
-                    src={peopleIcon}
+                    src={getPeopleIcon()}
                     className="list-icon"
                     alt="People Icon"
                     width={24}
@@ -248,7 +308,7 @@ function Home() {
 
                 <div className="list-item">
                   <img
-                    src={lightbulbIcon}
+                    src={getLightbulbIcon()}
                     className="list-icon"
                     alt="Lightbulb Icon"
                     width={24}
@@ -261,7 +321,7 @@ function Home() {
 
                 <div className="list-item">
                   <img
-                    src={bookIcon}
+                    src={getBookIcon()}
                     className="list-icon"
                     alt="Book Icon"
                     width={24}
@@ -281,7 +341,7 @@ function Home() {
               >
                 <span className="learn-more-text">Learn more</span>
                 <img
-                  src={buttonArrow}
+                  src={getCarotIcon()}
                   className="button-icon"
                   alt="Arrow for the Learn More Button"
                   width={24}
@@ -295,12 +355,12 @@ function Home() {
 
           <div className="content-section connect-section">
             <div className="content-header">
-              <h2
-                className="section-title"
+              <div
+                className="section-title curriculum-title"
                 style={{ overflowWrap: "break-word" }}
               >
                 Connect with Us
-              </h2>
+              </div>
               <p className="search-subtitle">
                 Follow us to receive CNTR news and updates!
               </p>
@@ -337,7 +397,7 @@ function Home() {
               >
                 <div className="connect-cont">
                   <img
-                    src={instaLogo}
+                    src={getInstaLogo()}
                     alt="instagram logo"
                     width={52}
                     height={52}
@@ -349,7 +409,7 @@ function Home() {
                   </p>
                 </div>
               </a>
-              <a
+              {/* <a
                 className="connect-link"
                 href="https://responsible.cs.brown.edu/"
                 target="blank"
@@ -361,7 +421,7 @@ function Home() {
               >
                 <div className="connect-cont">
                   <img
-                    src={srcLogo}
+                    src={getSrcLogo()}
                     alt="src@Brown logo"
                     width={56}
                     height={56}
@@ -374,7 +434,7 @@ function Home() {
                     </span>
                   </p>
                 </div>
-              </a>
+              </a> */}
             </div>
           </div>
         </div>

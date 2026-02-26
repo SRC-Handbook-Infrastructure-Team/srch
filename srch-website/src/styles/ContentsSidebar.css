@@ -54,10 +54,17 @@
 
 h1,
 h2,
-h3,
 h4 {
-  color: var(--color-accent);
+  color: var(--color-header);
 }
+
+h3 {
+  color: var(--color-header);
+  font-size: large;
+  margin-bottom: 10px;
+  font-weight:500
+}
+
 
 .nav-title {
   font-size: 1.25rem;
@@ -152,7 +159,7 @@ html body .main-content {
   font-weight: 600;
   font-size: 35px;
   line-height: 40px;
-  color: var(--color-brown);
+  color: var(--color-header);
   margin: 0;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -162,7 +169,7 @@ html body .main-content {
   font-family: var(--content-font) !important;
   font-weight: 600 !important;
   font-size: 16px !important;
-  color: var(--color-brown) !important;
+  color: var(--color-header) !important;
   padding: 10px 12px !important;
   background: var(--color-bg) !important;
   border-bottom: 1px solid !important;
@@ -182,7 +189,7 @@ html body .main-content {
   height: 11.565px;
   transform: scale(1.2);
 
-  color: var(--color-brown);
+  color: var(--color-header);
   cursor: pointer;
   transition: transform 0.06s ease;
 }
@@ -196,12 +203,9 @@ html body .main-content {
 }
 .page-divider {
   height: 2px;
-  background: var(--color-brown);
+  background: var(--color-subtle-emphasis);
   border: 0;
   margin: 12px 0 24px;
-
-  margin-left: calc(-1 * var(--page-pad));
-  width: calc(100% + (var(--page-pad) * 2));
 }
 
 .page-divider--fullbleed {
@@ -294,7 +298,7 @@ html body .main-content {
   line-height: 24px;
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: var(--color-brown);
+  color: var(--color-header);
   margin: 0 0 4px 0;
   text-transform: uppercase;
 }
@@ -365,11 +369,7 @@ p > .srch-drawer-link:first-child {
   font-size: 13px;
   line-height: 20px;
   font-weight: 400;
-  color: var(--color-brown);
-  margin-left: 16px;
-  left: -40px;
-  margin-top: 12px;
-  transform: translateX(12px);
+  color: var(--color-header);
 }
 
 .right-sidebar {
@@ -426,7 +426,7 @@ p > .srch-drawer-link:first-child {
   line-height: 40px;
   font-weight: 600;
   margin: 8px 0 4px;
-  color: var(--color-brown);
+  color: var(--color-subtle-emphasis);
   padding-bottom: 12px;
 }
 
@@ -444,7 +444,7 @@ p > .srch-drawer-link:first-child {
   font-weight: 700 !important;
   line-height: 32px;
   font-size: 25px !important;
-  color: var(--color-brown) !important;
+  color: var(--color-subtle-emphasis) !important;
   margin: 0 0 12px 0 !important;
   padding-top: 15px;
   padding-bottom: 10px;
@@ -458,7 +458,7 @@ p > .srch-drawer-link:first-child {
   border: none !important;
   padding: 4px !important;
   cursor: pointer !important;
-  color: var(--color-brown) !important;
+  color: var(--color-subtle-emphasis) !important;
 }
 
 .left-sidebar.resizing,
@@ -553,7 +553,7 @@ p > .srch-drawer-link:first-child {
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
-  color: var(--color-accent);
+  color: var(--color-header);
 }
 
 .sidebar-toggle:hover {
@@ -601,7 +601,6 @@ p > .srch-drawer-link:first-child {
 
 .sidebar-section-header.is-active {
   background: var(--color-bg-alt) !important;
-
   border-color: var(--color-bg-alt) !important;
   border-radius: 0 !important;
 }
@@ -610,7 +609,7 @@ p > .srch-drawer-link:first-child {
   font: "Be Vietnam Pro";
   font-weight: 400 !important;
   font-size: 16px !important;
-  color: var(--color-accent) !important;
+  color: var(--color-header) !important;
 }
 
 .sidebar-section-header.is-active .sidebar-section-title {
@@ -636,18 +635,18 @@ p > .srch-drawer-link:first-child {
 }
 
 .sidebar-sub-row.is-active {
-  background: var(--color-brown);
+  background: var(--color-subtle-emphasis);
 }
 
 .sidebar-subsection {
   font-family: var(--content-font) !important;
   font-weight: 400 !important;
   font-size: 14px !important;
-  color: var(--color-accent) !important;
+  color: var(--color-header) !important;
 }
 
 .sidebar-sub-row.is-active .sidebar-subsection {
-  color: var(--color-bg) !important;
+  color: var(--color-white-text) !important;
 
   font-weight: 600 !important;
 }

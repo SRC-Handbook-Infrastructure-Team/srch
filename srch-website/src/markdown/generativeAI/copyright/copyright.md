@@ -28,7 +28,7 @@ With the rise of multimodal artificial intelligence, AI models can now output va
 
 AI copyright issues related to inputs—particularly the use of copyrighted data for training AI models—are at the center of major legal and policy debates. These concerns primarily involve whether training AI models such as ChatGPT, Suno, Udio, Stability AI, and Midjourney on copyrighted materials constitutes copyright infringement or is valid under the Fair Use Doctrine. When developing AI models, especially ones at scale, developers will oftentimes scrape the internet to acquire enormous amounts of media that includes text, images, video, and art to train the model. As stated before, the items that have been scraped from the internet to train AI models are sometimes copyrighted, and owners are not given compensation or asked for consent for this training. This has resulted in copyright owners seeing their work resembles in AI outputs, negatively affecting their profits, copyrights, and artistic autonomy, potentially resulting in infringement.
 
-![Copyright bubble graph](/assets/primer-photos/generative_ai_figure.jpg)
+![Copyright bubble graph](/assets/primer-photos/generative_ai_figure.png)
 
 ### Current Legal Landscape
 

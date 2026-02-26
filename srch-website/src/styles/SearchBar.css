@@ -55,7 +55,7 @@
   overflow: visible;
   background: var(--color-bg);
   border-radius: 9999999999px;
-  box-shadow: 0 4px 8px var(--color-shadow);
+  border: 1.5px solid var(--color-text);
   font-family: var(--content-font);
   padding: 6px 8px;
   width: 100%;

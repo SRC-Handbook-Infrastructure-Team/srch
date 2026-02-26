@@ -67,7 +67,7 @@ export const NavBarSearchResults = React.memo(
                   style={
                     maxResults != null
                       ? {
-                          maxHeight: `${83 * maxResults}px`,
+                          maxHeight: `${98 * maxResults}px`,
                           overflowY: "auto",
                         }
                       : { overflowY: "auto" }

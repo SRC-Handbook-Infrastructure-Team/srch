@@ -611,12 +611,6 @@ function MarkdownPage() {
           <div className="page-header-row">
             <h1 className="page-title">{formattedTitle}</h1>
 
-            {lastUpdated && (
-              <div className="page-last-updated">
-                Last updated on {formatDate(lastUpdated)}
-              </div>
-            )}
-
             <button
               className="header-toggle"
               onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
@@ -630,8 +624,13 @@ function MarkdownPage() {
               {leftSidebar?.collapsed ? ">" : "<"}
             </button>
           </div>
+         {lastUpdated && (
+              <div className="page-last-updated">
+                Last updated on {formatDate(lastUpdated)}
+              </div>
+            )}
+          <div className="page-divider markdown-margin" />
         </div>
-        <div className="page-divider page-divider--fullbleed page-divider-margin" />
 
         {mainContent && (
           <Box className="markdown-margin" ref={contentRef}>
