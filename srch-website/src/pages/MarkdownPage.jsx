@@ -12,6 +12,19 @@ import MarkdownRenderer, {
 import Footer from "../components/Footer";
 
 function MarkdownPage() {
+  // Prevent auto-open sidebar in overlay mode
+  useEffect(() => {
+    if (
+      leftSidebar &&
+      typeof leftSidebar.collapsed !== "undefined" &&
+      leftSidebar.toggle
+    ) {
+      const layoutMode = document.documentElement.dataset.layoutMode;
+      if (layoutMode === "overlay" && !leftSidebar.collapsed) {
+        leftSidebar.toggle();
+      }
+    }
+  }, []);
   // Get parameters from URL and location for hash
 
   /*
@@ -624,11 +637,11 @@ function MarkdownPage() {
               {leftSidebar?.collapsed ? ">" : "<"}
             </button>
           </div>
-         {lastUpdated && (
-              <div className="page-last-updated">
-                Last updated on {formatDate(lastUpdated)}
-              </div>
-            )}
+          {lastUpdated && (
+            <div className="page-last-updated">
+              Last updated on {formatDate(lastUpdated)}
+            </div>
+          )}
           <div className="page-divider markdown-margin" />
         </div>
 

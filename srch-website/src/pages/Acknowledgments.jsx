@@ -53,9 +53,9 @@ import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
  * Centralize how we compute an image src so it’s easy to swap storage paths.
  * ===========================================================================*/
 function getMemberPhotoSrc(member) {
-  // Current convention: files isrch/srch/assets/member-photos
-  // Examplsrchsh.jpg" -> "/srch/assets/member-photos/suresh.jpg"
-  return `assets/member-photos/${member.photo}`;
+  // Current convention: files in public/assets/member-photos
+  // Example: suresh.jpg -> "/assets/member-photos/suresh.jpg"
+  return `/assets/member-photos/${member.photo}`;
 }
 
 /* =============================================================================
@@ -107,7 +107,6 @@ function TeamGrid({ filteredTeam, teamName }) {
                 className="ack-card-photo"
                 src={photoSrc}
                 alt={member.name}
-                loading="lazy"
                 decoding="async"
               />
             ) : (
