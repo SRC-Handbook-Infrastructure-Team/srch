@@ -12,7 +12,24 @@ import MarkdownRenderer, {
 import Footer from "../components/Footer";
 
 function MarkdownPage() {
-  // Prevent auto-open sidebar in overlay mode
+  // Hide header toggle button if window width <= 875px
+  const [showHeaderToggle, setShowHeaderToggle] = useState(() => {
+    if (typeof window !== "undefined" && window.innerWidth) {
+      return window.innerWidth > 875;
+    }
+    return true;
+  });
+  const layout = useLayout() || {};
+  const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
+  useEffect(() => {
+    function handleResize() {
+      setShowHeaderToggle(window.innerWidth > 875);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     if (
       leftSidebar &&
@@ -24,7 +41,7 @@ function MarkdownPage() {
         leftSidebar.toggle();
       }
     }
-  }, []);
+  }, [leftSidebar]);
   // Get parameters from URL and location for hash
 
   /*
@@ -166,9 +183,6 @@ function MarkdownPage() {
   const toast = useToast();
   const cachedContent = useRef({});
   const windowScrollRef = useRef(0);
-
-  const layout = useLayout() || {};
-  const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
 
   const highlight = useMemo(() => {
     let hl = location.state?.highlight;
@@ -624,18 +638,20 @@ function MarkdownPage() {
           <div className="page-header-row">
             <h1 className="page-title">{formattedTitle}</h1>
 
-            <button
-              className="header-toggle"
-              onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
-              aria-label={
-                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
-              }
-              title={
-                leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
-              }
-            >
-              {leftSidebar?.collapsed ? ">" : "<"}
-            </button>
+            {showHeaderToggle && (
+              <button
+                className="header-toggle"
+                onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
+                aria-label={
+                  leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+                }
+                title={
+                  leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+                }
+              >
+                {leftSidebar?.collapsed ? ">" : "<"}
+              </button>
+            )}
           </div>
           {lastUpdated && (
             <div className="page-last-updated">

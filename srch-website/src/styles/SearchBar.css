@@ -41,7 +41,7 @@
 }
 
 .navsearchbar-button {
-  color: var(--color-text);
+  color: var(--color-header) !important;
 }
 
 .navsearchbar-button:hover {
@@ -115,7 +115,7 @@
 .toggle-button {
   width: 0px;
   z-index: 9999999;
-  color: var(--color-text) !important;
+  color: var(--color-header) !important;
   outline: 0 !important;
   box-shadow: none !important;
   border: none !important;

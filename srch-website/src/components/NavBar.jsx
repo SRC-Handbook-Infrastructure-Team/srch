@@ -43,16 +43,15 @@ function NavBar({ className = "", layoutMode }) {
     if (!root) return;
 
     const storedTheme = window.localStorage.getItem(themeStorageKey);
-    const prefersDark = window.matchMedia
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-      : false;
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
     const initialTheme =
       storedTheme === "light" || storedTheme === "dark"
         ? storedTheme
         : prefersDark
           ? "dark"
           : "light";
-
     setTheme(initialTheme);
     root.setAttribute("data-theme", initialTheme);
   }, []);

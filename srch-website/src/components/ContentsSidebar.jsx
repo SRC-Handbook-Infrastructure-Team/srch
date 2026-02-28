@@ -1,4 +1,4 @@
-import "../styles/ContentsSidebar.css";
+import "../styles/MarkdownPage.css";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, VStack, Icon } from "@chakra-ui/react";
@@ -115,15 +115,19 @@ export default function ContentsSidebar({
   onStartResize = () => {},
   onHandleKeyDown = () => {},
 }) {
-  const [isAnimatingClose, setIsAnimatingClose] = useState(false);
-
+  // Track window width for responsive header toggle visibility
+  // Use matchMedia for reliable initial value and resize detection
+  const [showHeaderToggle, setShowHeaderToggle] = useState(
+    () => window.matchMedia("(min-width: 876px)").matches,
+  );
   useEffect(() => {
-    if (collapsed) {
-      setIsAnimatingClose(true);
-      const t = setTimeout(() => setIsAnimatingClose(false), 350);
-      return () => clearTimeout(t);
-    }
-  }, [collapsed]);
+    const mediaQuery = window.matchMedia("(min-width: 876px)");
+    const handler = (e) => setShowHeaderToggle(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    setShowHeaderToggle(mediaQuery.matches);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+  const [isAnimatingClose, setIsAnimatingClose] = useState(false);
 
   /* ----------------------------- Environment ------------------------------ */
 
@@ -139,6 +143,14 @@ export default function ContentsSidebar({
   );
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+
+  useEffect(() => {
+    if (collapsed) {
+      setIsAnimatingClose(true);
+      const t = setTimeout(() => setIsAnimatingClose(false), 350);
+      return () => clearTimeout(t);
+    }
+  }, [collapsed]);
 
   /* ----------------------------- Data State ------------------------------- */
   const [sections, setSections] = useState([]);
@@ -448,7 +460,6 @@ export default function ContentsSidebar({
           return (
             <Box key={section.id} mb={2} className={`sidebar-section`}>
               <Box
-                /* Title Row = EXPAND/COLLAPSE */
                 className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
                 cursor="pointer"
                 onClick={() => toggleSection(section.id)}
@@ -477,7 +488,6 @@ export default function ContentsSidebar({
                   h={5}
                   color="currentColor"
                   onClick={(e) => {
-                    // WHY: Prevent the title-row navigation from also firing.
                     e.stopPropagation();
                     toggleSection(section.id);
                   }}
@@ -505,11 +515,11 @@ export default function ContentsSidebar({
                     return (
                       <Box key={sub.id} mb={1}>
                         <Link to={`/${section.id}/${sub.id}`}>
-                          {/* Use classes so CSS drives bg/text; no inline bg/color */}
-                          <Box
-                            className={`sidebar-sub-row ${isSubActive ? "is-active" : ""}`}
-                          >
-                            <Text className="sidebar-subsection">
+                          {" "}
+                          <Box className={`sidebar-sub-row`}>
+                            <Text
+                              className={`sidebar-subsection ${isSubActive ? "is-active" : ""}`}
+                            >
                               {subPrefix} {sub.title}
                             </Text>
                           </Box>
@@ -557,43 +567,47 @@ export default function ContentsSidebar({
       aria-label="Primary navigation"
       aria-expanded={!collapsed}
     >
-      {/* Header Controls */}
       <div className="sidebar-header-controls">
-        <div
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 20,
-            background: "var(--cs-bg)", // match rail background
-            padding: "8px 0px 4px 0px",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <button
-            className="sidebar-toggle"
-            onClick={toggleExpandCollapse}
-            aria-pressed={allExpanded}
+        {showHeaderToggle && (
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 20,
+              background: "var(--cs-bg)", // match rail background
+              padding: "8px 0px 4px 0px",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
           >
-            {allExpanded ? "Collapse all" : "Expand all"}
-            <span
-              className="icon-double-chevron"
-              aria-hidden="true"
-              style={{
-                marginLeft: 6,
-                transform: allExpanded ? "rotate(180deg)" : "none",
-              }}
+            <button
+              className="sidebar-toggle"
+              onClick={toggleExpandCollapse}
+              aria-pressed={allExpanded}
             >
-              {/* up/down naturally flip with CSS rotate depending on state */}
-              <svg viewBox="0 0 10 6">
-                <path d="M1 5l4-4 4 4" />
-              </svg>
-              <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
-                <path d="M1 5l4-4 4 4" />
-              </svg>
-            </span>
-          </button>
-        </div>
+              {allExpanded ? "Collapse all" : "Expand all"}
+              <span
+                className="icon-double-chevron"
+                aria-hidden="true"
+                style={{
+                  marginLeft: 6,
+                  transform: allExpanded ? "rotate(180deg)" : "none",
+                }}
+              >
+                {/* up/down naturally flip with CSS rotate depending on state */}
+                <svg viewBox="0 0 10 6">
+                  <path d="M1 5l4-4 4 4" />
+                </svg>
+                <svg
+                  viewBox="0 0 10 6"
+                  style={{ transform: "translateY(-2px)" }}
+                >
+                  <path d="M1 5l4-4 4 4" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        )}
       </div>
 
       <Box p={4}>

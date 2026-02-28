@@ -1,16 +1,15 @@
 /**
  * ============================================================================
- * Acknowledgments.jsx (hero-as-overlay version, unified card layout)
+ * Acknowledgments.jsx 
  * ----------------------------------------------------------------------------
  * Purpose
  *   Renders the complete Acknowledgments page as a single-page layout with a
  *   hero section (fixed overlay) and a lower content container that slides
  *   over the hero as the user scrolls—mirroring the Home page feel.
- *
- * What’s in this file
- *   • Hero banner
- *   • Team member grids for:
- *        - Leadership
+
+function getIconByTheme(theme, light, dark) {
+  return theme === "dark" ? dark : light;
+
  *        - AI
  *        - Privacy
  *        - Accessibility
@@ -36,7 +35,7 @@ import "../styles/Acknowledgments.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import team from "../team.json";
 import privacyIconLight from "../assets/privacy-icon.svg";
 import privacyIconDark from "../assets/privacy-icon_white.svg";
@@ -272,32 +271,40 @@ function TeamSection({ title, teamName }) {
  * This implementation ensures “Additional” entries render as full cards using
  * the same styling and placeholder behavior as core teams.
  * ===========================================================================*/
-export default function Acknowledgments() {
+
+function Acknowledgments() {
+  const [theme, setTheme] = useState("light");
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+    const storedTheme = window.localStorage.getItem("srch-theme");
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : prefersDark
+          ? "dark"
+          : "light";
+    setTheme(initialTheme);
+    root.setAttribute("data-theme", initialTheme);
+  }, []);
+
   return (
     <>
-      {/* Behavior matches Home’s upper-content.
-          The actual size/scroll handoff is controlled in Acknowledgments.css:
-          - .ack-hero (position: fixed; background image)
-          - .ack-lower-content (margin-top: Nvh to start after the hero)
-      */}
       <div className="upper-content">
         <div className="upper-text-section">
           <div className="website-title">Meet our team!</div>
-          {/* Optional supporting copy under the heading (kept empty for now) */}
           <div className="info-section"></div>
         </div>
       </div>
-
-      {/* 2) Lower content that “slides” over the hero */}
       <div className="ack-lower-content">
-        {/* Core teams */}
         <TeamSection title="Leadership" teamName="leadership" />
         <TeamSection title="Product Team" teamName="product" />
         <TeamSection title="Accessibility Team" teamName="accessibility" />
         <TeamSection title="AI Team" teamName="ai" />
         <TeamSection title="Privacy Team" teamName="privacy" />
-
-        {/* Additional Contributors — now as full cards (no longer plain text) */}
         <TeamSection
           title="Additional Contributors — User Studies"
           teamName="additional"
@@ -310,6 +317,8 @@ export default function Acknowledgments() {
     </>
   );
 }
+
+export default Acknowledgments;
 
 function getIconByTheme(theme, light, dark) {
   return theme === "dark" ? dark : light;

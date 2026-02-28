@@ -42,9 +42,9 @@ function Home() {
     const root = document.documentElement;
     if (!root) return;
     const storedTheme = window.localStorage.getItem("srch-theme");
-    const prefersDark = window.matchMedia
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-      : false;
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
     const initialTheme =
       storedTheme === "light" || storedTheme === "dark"
         ? storedTheme
@@ -52,6 +52,7 @@ function Home() {
           ? "dark"
           : "light";
     setTheme(initialTheme);
+    root.setAttribute("data-theme", initialTheme);
 
     const observer = new MutationObserver(() => {
       const currentTheme = root.getAttribute("data-theme");

@@ -14,26 +14,8 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
 import { remarkHighlight } from "./remarkHighlight";
-import {
-  Text,
-  Heading,
-  Link,
-  UnorderedList,
-  OrderedList,
-  ListItem,
-  Box,
-  Code,
-  Image,
-  Table,
-  Th,
-  Thead,
-  Tr,
-  Tbody,
-  Td,
-  HStack,
-  Icon,
-} from "@chakra-ui/react";
-import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { Text, Link, Box, HStack, Icon } from "@chakra-ui/react";
+import { InfoIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
@@ -573,6 +555,25 @@ function MarkdownRenderer({
           </h2>
         );
       },
+      h3: ({ children, ...props }) => {
+        const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
+        return (
+          <h3
+            id={id}
+            style={{
+              marginBottom: ".5rem",
+              fontSize: "1em",
+              color: "var(--color-header)",
+              fontFamily: "Be Vietnam Pro, sans-serif",
+              fontWeight: 600,
+            }}
+            {...props}
+          >
+            {highlightText(childrenArray, highlight)}
+          </h3>
+        );
+      },
       p: ({ children }) => {
         return (
           <p
@@ -580,7 +581,7 @@ function MarkdownRenderer({
               color: BLACK,
               fontFamily: "Be Vietnam Pro, sans-serif",
               lineHeight: "1.6",
-              marginBottom: "1em",
+              marginBottom: ".5em",
             }}
           >
             {highlightText(children, highlight)}

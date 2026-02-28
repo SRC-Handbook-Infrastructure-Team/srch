@@ -14,11 +14,6 @@ const SPLITSCREEN_BREAKPOINT = 1280;
 const RIGHT_MIN_WIDTH = 375;
 const RIGHT_MAX_WIDTH = 700;
 
-function computeLayoutMode(viewportWidth) {
-  if (viewportWidth <= SPLITSCREEN_BREAKPOINT) return "overlay"; // split-screen / narrow desktop
-  return "wide";
-}
-
 /**
  * SidebarLayout
  * ---------------------------------------------------------------------------
@@ -44,7 +39,22 @@ export default function SidebarLayout({ children }) {
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1440,
   );
-  const layoutMode = computeLayoutMode(viewportWidth);
+  // Track sidebar widths for layout calculation
+  const [leftWidth, setLeftWidth] = useState(250);
+  const [rightWidth, setRightWidth] = useState(0);
+
+  function computeLayoutMode(viewportWidth, leftWidth, rightWidth) {
+    // Calculate available main content width
+    const mainWidth = viewportWidth - (leftWidth || 0) - (rightWidth || 0);
+    // If main content is less than 410px, switch to overlay mode
+    if (mainWidth < 410) return "overlay";
+    return "wide";
+  }
+
+  const layoutMode = useMemo(
+    () => computeLayoutMode(viewportWidth, leftWidth, rightWidth),
+    [viewportWidth, leftWidth, rightWidth],
+  );
 
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
@@ -127,6 +137,11 @@ export default function SidebarLayout({ children }) {
       const vw =
         typeof window !== "undefined" ? window.innerWidth : viewportWidth;
 
+      useEffect(() => {
+        setLeftWidth(leftSidebar.width || 0);
+        setRightWidth(rightSidebar.width || 0);
+      }, [leftSidebar.width, rightSidebar.width]);
+
       if (layoutMode === "overlay") {
         // Overlay: main content doesn’t need a strict MIN_MAIN_WIDTH.
         const maxByPercent = Math.floor(vw * 0.75);
@@ -148,6 +163,19 @@ export default function SidebarLayout({ children }) {
     },
   });
 
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (
+        leftSidebar.width > 0 &&
+        !leftSidebar.collapsed &&
+        layoutMode === "wide"
+      ) {
+        document.documentElement.classList.add("left-open");
+      } else {
+        document.documentElement.classList.remove("left-open");
+      }
+    }
+  }, [leftSidebar.width, leftSidebar.collapsed, layoutMode]);
   /** ---------------- RIGHT DRAWER CONTENT STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
@@ -184,6 +212,16 @@ export default function SidebarLayout({ children }) {
     },
     [layoutMode, isRightOpen, leftSidebar],
   );
+
+  // Auto-close left sidebar if page header < 500px
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const header = document.querySelector(".page-header-row");
+      if (header && header.offsetWidth < 500 && !leftSidebar.collapsed) {
+        leftSidebar.toggleCollapsed();
+      }
+    }
+  }, [viewportWidth, leftSidebar.collapsed, leftSidebar]);
 
   const closePanel = useCallback(
     (id) => {
