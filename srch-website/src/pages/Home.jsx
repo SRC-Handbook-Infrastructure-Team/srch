@@ -147,7 +147,7 @@ function Home() {
                 />
               </button>
               <div
-                className="section-title curriculum-title"
+                className="section-title"
                 ref={curriculumTitleRef}
                 style={{ overflowWrap: "break-word" }}
               >
@@ -244,7 +244,7 @@ function Home() {
           <div className="content-section">
             <div className="content-header">
               <div
-                className="section-title curriculum-title"
+                className="section-title"
                 style={{ overflowWrap: "break-word" }}
               >
                 Search for Content
@@ -267,7 +267,7 @@ function Home() {
 
           <div className="content-section">
             <div
-              className="section-title curriculum-title"
+              className="section-title"
               style={{ overflowWrap: "break-word" }}
             >
               How to Use the Handbook
@@ -357,7 +357,7 @@ function Home() {
           <div className="content-section connect-section">
             <div className="content-header">
               <div
-                className="section-title curriculum-title"
+                className="section-title"
                 style={{ overflowWrap: "break-word" }}
               >
                 Connect with Us

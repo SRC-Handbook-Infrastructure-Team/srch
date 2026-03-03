@@ -119,6 +119,13 @@
   justify-content: center;
 }
 
+:root[data-theme="dark"] .nav-dropdown-menu {
+  box-shadow: none;
+  border-bottom: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+
 .nav-dropdown-item {
   font-family: var(--content-font);
   color: var(--color-header);

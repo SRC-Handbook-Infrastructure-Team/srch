@@ -319,7 +319,3 @@ function Acknowledgments() {
 }
 
 export default Acknowledgments;
-
-function getIconByTheme(theme, light, dark) {
-  return theme === "dark" ? dark : light;
-}

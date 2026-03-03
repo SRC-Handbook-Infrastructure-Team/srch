@@ -109,24 +109,13 @@ function parseSubsections(content) {
    ========================================================================== */
 export default function ContentsSidebar({
   className = "",
-  width = 250,
-  collapsed = false,
+  width,
+  collapsed,
   isResizing = false,
+  onToggleSidebar = () => {},
   onStartResize = () => {},
   onHandleKeyDown = () => {},
 }) {
-  // Track window width for responsive header toggle visibility
-  // Use matchMedia for reliable initial value and resize detection
-  const [showHeaderToggle, setShowHeaderToggle] = useState(
-    () => window.matchMedia("(min-width: 876px)").matches,
-  );
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 876px)");
-    const handler = (e) => setShowHeaderToggle(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    setShowHeaderToggle(mediaQuery.matches);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
   const [isAnimatingClose, setIsAnimatingClose] = useState(false);
 
   /* ----------------------------- Environment ------------------------------ */
@@ -135,7 +124,6 @@ export default function ContentsSidebar({
   const navigate = useNavigate();
 
   /* ---------------------------- URL Derivations --------------------------- */
-  // WHY: These are derived from the URL and treated as the source of truth for navigation.
   const currentPath = location.pathname;
   const pathParts = useMemo(
     () => currentPath.split("/").filter(Boolean),
@@ -158,7 +146,6 @@ export default function ContentsSidebar({
   const [hasFetchedData, setHasFetchedData] = useState(false);
 
   /* ----------------------------- UI State --------------------------------- */
-  // WHY: UI-only state for expand/collapse, not tied to routing.
   const [expandedSections, setExpandedSections] = useState({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -553,13 +540,12 @@ export default function ContentsSidebar({
   return (
     <Box
       as="aside"
-      className={`left-sidebar
-         ${!collapsed ? "open" : ""}
-         ${collapsed && isAnimatingClose ? "closing" : ""} 
-          ${className}`.trim()}
+      className={`left-sidebar ${!collapsed ? "open" : ""} ${collapsed && isAnimatingClose ? "closing" : ""} ${className}`.trim()}
       position="fixed"
       left={0}
-      /* IMPORTANT: do not set bg here; CSS file owns sidebar background */
+      style={{
+        width: width,
+      }}
       overflowY="auto"
       overflowX="hidden"
       p={0}
@@ -568,53 +554,34 @@ export default function ContentsSidebar({
       aria-expanded={!collapsed}
     >
       <div className="sidebar-header-controls">
-        {showHeaderToggle && (
-          <div
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 20,
-              background: "var(--cs-bg)", // match rail background
-              padding: "8px 0px 4px 0px",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
+        <div>
+          <button
+            className="sidebar-expand-toggle"
+            onClick={toggleExpandCollapse}
+            aria-pressed={allExpanded}
           >
-            <button
-              className="sidebar-toggle"
-              onClick={toggleExpandCollapse}
-              aria-pressed={allExpanded}
+            {allExpanded ? "Collapse all" : "Expand all"}
+            <span
+              className="icon-double-chevron"
+              aria-hidden="true"
+              style={{
+                marginLeft: 6,
+                transform: allExpanded ? "rotate(180deg)" : "none",
+              }}
             >
-              {allExpanded ? "Collapse all" : "Expand all"}
-              <span
-                className="icon-double-chevron"
-                aria-hidden="true"
-                style={{
-                  marginLeft: 6,
-                  transform: allExpanded ? "rotate(180deg)" : "none",
-                }}
-              >
-                {/* up/down naturally flip with CSS rotate depending on state */}
-                <svg viewBox="0 0 10 6">
-                  <path d="M1 5l4-4 4 4" />
-                </svg>
-                <svg
-                  viewBox="0 0 10 6"
-                  style={{ transform: "translateY(-2px)" }}
-                >
-                  <path d="M1 5l4-4 4 4" />
-                </svg>
-              </span>
-            </button>
-          </div>
-        )}
+              <svg viewBox="0 0 10 6">
+                <path d="M1 5l4-4 4 4" />
+              </svg>
+              <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
+                <path d="M1 5l4-4 4 4" />
+              </svg>
+            </span>
+          </button>
+        </div>
       </div>
-
       <Box p={4}>
         <NavContent />
       </Box>
-
-      {/* Resize handle */}
       <Box
         className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
         width={collapsed ? "60px" : "6px"}
@@ -626,6 +593,7 @@ export default function ContentsSidebar({
         aria-orientation="vertical"
         aria-label="Resize navigation pane"
         aria-hidden={collapsed}
+        onDoubleClick={onToggleSidebar}
       />
     </Box>
   );

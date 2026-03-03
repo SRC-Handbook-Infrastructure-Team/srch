@@ -55,11 +55,22 @@
   overflow: visible;
   background: var(--color-bg);
   border-radius: 9999999999px;
-  border: 1.5px solid var(--color-text);
   font-family: var(--content-font);
   padding: 6px 8px;
   width: 100%;
   min-width: 400px;
+}
+
+html[data-theme="dark"] .searchbar-container {
+  border: 1.5px solid var(--color-border);
+  box-shadow: none;
+}
+
+html[data-theme="light"] .searchbar-container {
+  border: 1.5px solid var(--color-border);
+  box-shadow:
+    0 2px 12px 0 var(--color-shadow),
+    0 1.5px 6px 0 var(--color-shadow);
 }
 
 .searchbar-input-container {
@@ -68,7 +79,7 @@
 }
 
 .searchbar-input::placeholder {
-  color: var(--color-text) !important;
+  color: var(--color-text-gray) !important;
   font-family: var(--content-font);
   opacity: 1;
 }

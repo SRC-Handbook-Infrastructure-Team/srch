@@ -229,7 +229,7 @@
   align-items: center;
   justify-content: center;
 
-  color: var(--color-subtle-emphasis);
+  color: var(--color-accent);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -242,7 +242,6 @@
 
 .ack-icon-btn:hover {
   background-color: var(--color-subtle-emphasis);
-  color: var(--color-bg);
 }
 
 .ack-icon-btn:active {

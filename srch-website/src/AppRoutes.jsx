@@ -16,7 +16,8 @@ function AppRoutes() {
   const isAcknowledgmentsPage =
     location.pathname.startsWith("/acknowledgments");
   const isAboutPage = location.pathname.startsWith("/about");
-  const isHomePage = location.pathname === "/" | location.pathname === "/srch/";
+  const isHomePage =
+    (location.pathname === "/") | (location.pathname === "/srch/");
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
@@ -45,7 +46,10 @@ function AppRoutes() {
             <Route path="/srch/" element={<Home />} />
             <Route path="/acknowledgments" element={<Acknowledgments />} />
             <Route path="/about" element={<About />} />
-            <Route path="/search/:query/:page" element={<SearchResultsPage />} />
+            <Route
+              path="/search/:query/:page"
+              element={<SearchResultsPage />}
+            />
             <Route path="/search/:query" element={<SearchResultsPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
           </Routes>

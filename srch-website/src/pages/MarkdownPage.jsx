@@ -12,38 +12,6 @@ import MarkdownRenderer, {
 import Footer from "../components/Footer";
 
 function MarkdownPage() {
-  // Hide header toggle button if window width <= 875px
-  const [showHeaderToggle, setShowHeaderToggle] = useState(() => {
-    if (typeof window !== "undefined" && window.innerWidth) {
-      return window.innerWidth > 875;
-    }
-    return true;
-  });
-  const layout = useLayout() || {};
-  const { leftSidebar = {}, openRightDrawer, closeRightDrawer } = layout;
-  useEffect(() => {
-    function handleResize() {
-      setShowHeaderToggle(window.innerWidth > 875);
-    }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (
-      leftSidebar &&
-      typeof leftSidebar.collapsed !== "undefined" &&
-      leftSidebar.toggle
-    ) {
-      const layoutMode = document.documentElement.dataset.layoutMode;
-      if (layoutMode === "overlay" && !leftSidebar.collapsed) {
-        leftSidebar.toggle();
-      }
-    }
-  }, [leftSidebar]);
-  // Get parameters from URL and location for hash
-
   /*
 
   Hook Explanation: 
@@ -193,10 +161,9 @@ function MarkdownPage() {
     return hl;
   }, [location.state, location.search]);
 
+  const layout = useLayout() || {};
+  const { closeRightDrawer, openRightDrawer } = layout;
   const [sidebar, setSidebar] = useState({});
-  const [drawerTerm, setDrawerTerm] = useState("");
-  const [drawerActiveKey, setDrawerActiveKey] = useState(null);
-
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
@@ -204,15 +171,10 @@ function MarkdownPage() {
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("");
-
   const contentRef = useRef(null);
-  // store the scroll position to prevent jumps when drawer opens/closes
   const scrollPosRef = useRef(0);
-
   const formattedTitle = useMemo(() => {
-    //  Prefer cached fast subsections (metadata) BEFORE slow markdown subsections
     const fastSubs = getFastCachedSubsections(sectionId);
-
     return getFormattedTitle(
       sectionId,
       subsectionId,
@@ -310,7 +272,6 @@ function MarkdownPage() {
       </>
     );
 
-    setDrawerActiveKey(key);
     openRightDrawer(node);
   }
 
@@ -479,7 +440,6 @@ function MarkdownPage() {
     // No term → close drawer and clear active state
     if (!urlTerm) {
       closeRightDrawer();
-      setDrawerActiveKey(null);
       return;
     }
 
@@ -573,7 +533,6 @@ function MarkdownPage() {
     if (!term) {
       // 1) Close the drawer immediately
       closeRightDrawer();
-      setDrawerActiveKey(null);
 
       // 2) Strip /:term from URL if present
       if (location.pathname !== basePath) {
@@ -586,11 +545,9 @@ function MarkdownPage() {
       return;
     }
 
-    // 🔺 Open: chip told us which term to show
     const key = String(term).toLowerCase();
     const targetPath = `${basePath}/${key}`;
 
-    // Ensure URL includes the term so it’s shareable/deep-linkable
     if (location.pathname !== targetPath) {
       navigate(targetPath);
 
@@ -599,8 +556,7 @@ function MarkdownPage() {
       });
     }
 
-    // Open the drawer UI *right now* for this term
-    openGlobalDrawerForTerm(key, { silent: true });
+    openGlobalDrawerForTerm(key, { silent: false });
   }
 
   function handleNavigation(targetId) {
@@ -634,24 +590,8 @@ function MarkdownPage() {
           <p className="page-section-label">
             {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
           </p>
-
           <div className="page-header-row">
             <h1 className="page-title">{formattedTitle}</h1>
-
-            {showHeaderToggle && (
-              <button
-                className="header-toggle"
-                onClick={() => leftSidebar?.toggle && leftSidebar.toggle()}
-                aria-label={
-                  leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
-                }
-                title={
-                  leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
-                }
-              >
-                {leftSidebar?.collapsed ? ">" : "<"}
-              </button>
-            )}
           </div>
           {lastUpdated && (
             <div className="page-last-updated">
@@ -660,7 +600,6 @@ function MarkdownPage() {
           )}
           <div className="page-divider markdown-margin" />
         </div>
-
         {mainContent && (
           <Box className="markdown-margin" ref={contentRef}>
             <MarkdownRenderer

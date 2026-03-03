@@ -1,18 +1,9 @@
+import "../styles/MarkdownPage.css";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import ContentsSidebar from "../components/ContentsSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-
-/**
- * Layout constants
- * --------------------------------------------------------------------------
- * These give us a single place to reason about layout modes and constraints.
- */
-const MIN_MAIN_WIDTH = 700;
-const SPLITSCREEN_BREAKPOINT = 1280;
-const RIGHT_MIN_WIDTH = 375;
-const RIGHT_MAX_WIDTH = 700;
 
 /**
  * SidebarLayout
@@ -41,20 +32,28 @@ export default function SidebarLayout({ children }) {
   );
   // Track sidebar widths for layout calculation
   const [leftWidth, setLeftWidth] = useState(250);
-  const [rightWidth, setRightWidth] = useState(0);
+  const rightWidth = 300;
 
-  function computeLayoutMode(viewportWidth, leftWidth, rightWidth) {
-    // Calculate available main content width
+  // --- Layout mode logic: returns "wide" or "overlay" ---
+  function computeLayoutMode() {
     const mainWidth = viewportWidth - (leftWidth || 0) - (rightWidth || 0);
-    // If main content is less than 410px, switch to overlay mode
     if (mainWidth < 410) return "overlay";
     return "wide";
   }
+  const [showHeaderToggle, setShowHeaderToggle] = useState(true);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(true);
 
   const layoutMode = useMemo(
-    () => computeLayoutMode(viewportWidth, leftWidth, rightWidth),
+    () => computeLayoutMode(),
     [viewportWidth, leftWidth, rightWidth],
   );
+
+  useEffect(() => {
+    const handleResize = () => setShowHeaderToggle(layoutMode === "wide");
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [layoutMode]);
 
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
@@ -112,62 +111,46 @@ export default function SidebarLayout({ children }) {
   /** ---------------- LEFT SIDEBAR CONFIG ---------------- */
   const leftSidebar = useResizableSidebar({
     storageKey: "leftSidebarWidth",
-    defaultWidth: 250,
-    minWidth: 200,
-    maxWidth: 400,
     collapsedWidth: 0,
     side: "left",
-    cssVarName: "--left-sidebar-width",
+    collapsed: leftSidebarCollapsed,
+    setCollapsed: setLeftSidebarCollapsed,
     onStartResize: freezeForSidebars,
     onStopResize: releaseForSidebars,
-    collapseAnimationDelay: layoutMode === "overlay" ? 350 : 0, // NEW
+    collapseAnimationDelay: layoutMode === "overlay" ? 350 : 0,
   });
 
   /** ---------------- RIGHT SIDEBAR CONFIG ---------------- */
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
-    defaultWidth: 400,
-    minWidth: RIGHT_MIN_WIDTH,
-    maxWidth: RIGHT_MAX_WIDTH,
     side: "right",
-    cssVarName: "--right-sidebar-width",
     onStartResize: freezeForSidebars,
     onStopResize: releaseForSidebars,
     getDynamicBounds: () => {
-      const vw =
-        typeof window !== "undefined" ? window.innerWidth : viewportWidth;
-
       useEffect(() => {
         setLeftWidth(leftSidebar.width || 0);
-        setRightWidth(rightSidebar.width || 0);
-      }, [leftSidebar.width, rightSidebar.width]);
-
-      if (layoutMode === "overlay") {
-        // Overlay: main content doesn’t need a strict MIN_MAIN_WIDTH.
-        const maxByPercent = Math.floor(vw * 0.75);
-        return {
-          min: RIGHT_MIN_WIDTH,
-          max: Math.min(maxByPercent, RIGHT_MAX_WIDTH),
-        };
-      }
-
-      // Wide desktop: preserve existing “protect main content” behavior.
-      const availableForRight = Math.max(
-        vw - MIN_MAIN_WIDTH - (leftSidebar?.width || 0),
-        0,
-      );
-      return {
-        min: RIGHT_MIN_WIDTH,
-        max: Math.min(availableForRight, RIGHT_MAX_WIDTH),
-      };
+      }, [leftSidebar.width]);
     },
   });
+
+  // Only auto-collapse left sidebar when transitioning into overlay mode
+  const prevLayoutMode = useRef(layoutMode);
+  useEffect(() => {
+    if (
+      layoutMode === "overlay" &&
+      prevLayoutMode.current !== "overlay" &&
+      !leftSidebarCollapsed
+    ) {
+      leftSidebar.toggleCollapsed();
+    }
+    prevLayoutMode.current = layoutMode;
+  }, [layoutMode, leftSidebarCollapsed, leftSidebar]);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
       if (
         leftSidebar.width > 0 &&
-        !leftSidebar.collapsed &&
+        !leftSidebarCollapsed &&
         layoutMode === "wide"
       ) {
         document.documentElement.classList.add("left-open");
@@ -175,7 +158,7 @@ export default function SidebarLayout({ children }) {
         document.documentElement.classList.remove("left-open");
       }
     }
-  }, [leftSidebar.width, leftSidebar.collapsed, layoutMode]);
+  }, [leftSidebar.width, leftSidebarCollapsed, layoutMode]);
   /** ---------------- RIGHT DRAWER CONTENT STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
@@ -199,7 +182,7 @@ export default function SidebarLayout({ children }) {
           setIsRightOpen(false);
           setRightContent(null);
         }
-        if (leftSidebar.collapsed) {
+        if (leftSidebarCollapsed) {
           leftSidebar.toggleCollapsed();
         }
       } else if (id === "right") {
@@ -213,20 +196,46 @@ export default function SidebarLayout({ children }) {
     [layoutMode, isRightOpen, leftSidebar],
   );
 
-  // Auto-close left sidebar if page header < 500px
   useEffect(() => {
     if (typeof document !== "undefined") {
-      const header = document.querySelector(".page-header-row");
-      if (header && header.offsetWidth < 500 && !leftSidebar.collapsed) {
-        leftSidebar.toggleCollapsed();
+      const header = document.querySelector(".main-shift");
+      const leftSidebarWidth = document.querySelector(".left-sidebar");
+      const rightSidebarWidth = document.querySelector(".right-sidebar");
+      if (!rightSidebarWidth) {
+        if (
+          header &&
+          leftSidebarWidth &&
+          header.offsetWidth + leftSidebarWidth.offsetWidth < 700 &&
+          !leftSidebarCollapsed
+        ) {
+          leftSidebar.toggleCollapsed();
+        }
+      } else {
+        if (computeLayoutMode == "overlay") {
+          if (!leftSidebarCollapsed) {
+            leftSidebar.toggleCollapsed();
+          }
+        } else {
+          if (
+            header &&
+            leftSidebarWidth &&
+            header.offsetWidth +
+              leftSidebarWidth.offsetWidth +
+              rightSidebarWidth.offsetWidth <
+              700 &&
+            !leftSidebarCollapsed
+          ) {
+            leftSidebar.toggleCollapsed();
+          }
+        }
       }
     }
-  }, [viewportWidth, leftSidebar.collapsed, leftSidebar]);
+  }, [viewportWidth, leftSidebarCollapsed, leftSidebar]);
 
   const closePanel = useCallback(
     (id) => {
       if (id === "left") {
-        if (!leftSidebar.collapsed) {
+        if (!leftSidebarCollapsed) {
           leftSidebar.toggleCollapsed();
         }
       } else if (id === "right") {
@@ -242,14 +251,14 @@ export default function SidebarLayout({ children }) {
   const togglePanel = useCallback(
     (id) => {
       if (id === "left") {
-        if (leftSidebar.collapsed) openPanel("left");
+        if (leftSidebarCollapsed) openPanel("left");
         else closePanel("left");
       } else if (id === "right") {
         if (isRightOpen) closePanel("right");
         else openPanel("right");
       }
     },
-    [openPanel, closePanel, leftSidebar.collapsed, isRightOpen],
+    [openPanel, closePanel, leftSidebarCollapsed, isRightOpen],
   );
 
   /** Maintain original openRightDrawer / closeRightDrawer API
@@ -270,49 +279,11 @@ export default function SidebarLayout({ children }) {
   /** When switching into overlay mode, enforce “only one panel open” */
   useEffect(() => {
     if (layoutMode !== "overlay") return;
-    if (!leftSidebar.collapsed && isRightOpen) {
+    if (!leftSidebarCollapsed && isRightOpen) {
       // Prefer keeping the nav (left), so close right.
       closePanel("left");
     }
-  }, [layoutMode, leftSidebar.collapsed, isRightOpen, closePanel]);
-
-  /** ---------------- SYNC RIGHT WIDTH TO CSS VAR + HTML CLASS ---------------- */
-  useEffect(() => {
-    const target = document.documentElement;
-    let timer;
-
-    if (!isRightOpen) {
-      // CLOSING
-      if (layoutMode === "overlay") {
-        // Overlay: remove class immediately (triggers slide-out), delay width change
-        requestAnimationFrame(() => {
-          target.classList.remove("right-open");
-        });
-        timer = setTimeout(() => {
-          target.style.setProperty("--right-sidebar-width", "0px");
-        }, 350);
-      } else {
-        // Wide: immediate (unchanged behavior)
-        requestAnimationFrame(() => {
-          target.classList.remove("right-open");
-          target.style.setProperty("--right-sidebar-width", "0px");
-        });
-      }
-    } else {
-      // OPENING (same for both modes)
-      requestAnimationFrame(() => {
-        target.classList.add("right-open");
-        target.style.setProperty(
-          "--right-sidebar-width",
-          `${rightSidebar.width}px`,
-        );
-      });
-    }
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [isRightOpen, rightSidebar.width, layoutMode]);
+  }, [layoutMode, leftSidebarCollapsed, isRightOpen, closePanel]);
 
   /** ---------------- AUTO-CLOSE DRAWER ON PAGE CHANGE ---------------- */
   const location = useLocation();
@@ -370,49 +341,17 @@ export default function SidebarLayout({ children }) {
     prevBasePathRef.current = nextBase;
   }, [location.pathname, isRightOpen, closeRightDrawer]);
 
-  /** ---------------- WIDE-MODE SAFEGUARD (two panels push main) ---------------- */
-  useEffect(() => {
-    if (layoutMode !== "wide" || leftSidebar.collapsed || !isRightOpen) {
-      return;
-    }
-
-    const available = Math.max(viewportWidth - MIN_MAIN_WIDTH, 0);
-
-    if (leftSidebar.width + rightSidebar.width > available) {
-      if (leftSidebar.width > rightSidebar.width) {
-        leftSidebar.setWidth(
-          Math.max(available - rightSidebar.width, leftSidebar.minWidth),
-        );
-      } else {
-        rightSidebar.setWidth(
-          Math.max(available - leftSidebar.width, rightSidebar.minWidth),
-        );
-      }
-    }
-  }, [
-    layoutMode,
-    viewportWidth,
-    leftSidebar.width,
-    rightSidebar.width,
-    leftSidebar.minWidth,
-    rightSidebar.minWidth,
-    leftSidebar.collapsed,
-    isRightOpen,
-    leftSidebar,
-    rightSidebar,
-  ]);
-
   /** ---------------- KEYBOARD RESIZE SUPPORT (unchanged) ---------------- */
   useEffect(() => {
     const handleKeyResize = (e) => {
       if (e.altKey || e.metaKey || e.ctrlKey) return;
 
-      if (e.key === "[" && !leftSidebar.collapsed) {
+      if (e.key === "[" && !leftSidebarCollapsed) {
         e.preventDefault();
         leftSidebar.setWidth(
           Math.max(leftSidebar.width - 10, leftSidebar.minWidth),
         );
-      } else if (e.key === "]" && !leftSidebar.collapsed) {
+      } else if (e.key === "]" && !leftSidebarCollapsed) {
         e.preventDefault();
         leftSidebar.setWidth(
           Math.min(leftSidebar.width + 10, leftSidebar.maxWidth),
@@ -433,20 +372,14 @@ export default function SidebarLayout({ children }) {
         closePanel,
         togglePanel,
       },
-
       rightSidebar,
       rightContent,
       isRightOpen,
       openRightDrawer,
       closeRightDrawer,
-
       leftSidebar: {
-        width: leftSidebar.width,
-        collapsed: leftSidebar.collapsed,
-        minWidth: leftSidebar.minWidth,
-        maxWidth: leftSidebar.maxWidth,
-        collapsedWidth: leftSidebar.collapsedWidth,
-        toggle: () => togglePanel("left"),
+        ...leftSidebar,
+        collapsed: leftSidebarCollapsed,
       },
     }),
     [
@@ -460,50 +393,58 @@ export default function SidebarLayout({ children }) {
       openRightDrawer,
       closeRightDrawer,
       leftSidebar.width,
-      leftSidebar.collapsed,
+      leftSidebarCollapsed,
       leftSidebar.minWidth,
       leftSidebar.maxWidth,
       leftSidebar.collapsedWidth,
+      leftSidebar.toggleCollapsed,
     ],
   );
 
-  /** ---------------- DEV-ONLY MODE BADGE (remove if you want) ---------------- */
-  const hasOverlayPanelOpen =
-    layoutMode === "overlay" && (!leftSidebar.collapsed || isRightOpen);
-
-  /** ---------------- RENDER ---------------- */
   return (
     <LayoutContext.Provider value={layoutValue}>
-      <div
-        className={
-          "sidebar-layout" + (hasOverlayPanelOpen ? " has-panel-open" : "")
-        }
-        data-layout-mode={layoutMode}
-      >
-        {/* Reserved flex rail under NavBar (unchanged) */}
-        <div className="layout-rail" role="presentation" />
-
-        {/* LEFT: Contents sidebar (hidden on /search) */}
-        {!window.location.pathname.startsWith("/search") && (
-          <ContentsSidebar
-            className={!leftSidebar.collapsed ? "open" : ""}
-            width={leftSidebar.width}
-            collapsed={!!leftSidebar.collapsed}
-            isResizing={leftSidebar.isResizing}
-            onToggleSidebar={() => togglePanel("left")}
-            onStartResize={leftSidebar.startResize}
-            onHandleKeyDown={leftSidebar.handleKeyDown}
-          />
+      <div className={"sidebar-layout"} data-layout-mode={layoutMode}>
+        <ContentsSidebar
+          className={!leftSidebarCollapsed ? "open" : ""}
+          width={leftSidebar.width}
+          collapsed={leftSidebarCollapsed}
+          setCollapsed={setLeftSidebarCollapsed}
+          isResizing={leftSidebar.isResizing}
+          onToggleSidebar={leftSidebar.toggleCollapsed}
+          onStartResize={leftSidebar.startResize}
+          onHandleKeyDown={leftSidebar.handleKeyDown}
+        />
+        {showHeaderToggle && (
+          <button
+            className="header-toggle"
+            onClick={() => {
+              if (typeof leftSidebar?.toggleCollapsed === "function") {
+                leftSidebar.toggleCollapsed();
+              }
+            }}
+            aria-label={
+              leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+            }
+            title={
+              leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+            }
+          >
+            {leftSidebar?.collapsed ? ">" : "<"}
+          </button>
         )}
-
-        {/* MAIN CONTENT */}
-        <main id="main" className="main-content" ref={mainRef}>
+        <main
+          id="main"
+          className="main-content"
+          ref={mainRef}
+          style={{
+            marginLeft: leftSidebarCollapsed ? 0 : leftSidebar.width,
+            marginRight: isRightOpen ? 300 : 0,
+          }}
+        >
           <div className="main-shift" ref={innerRef}>
             {children}
           </div>
         </main>
-
-        {/* RIGHT: Drawer (content only) */}
         <aside
           className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
           aria-label="Right sidebar drawer"
@@ -525,26 +466,9 @@ export default function SidebarLayout({ children }) {
               >
                 ✕
               </button>
-
               <div className="drawer-content scrollable-drawer">
                 {rightContent}
               </div>
-
-              <div
-                className={`right-resizer ${
-                  rightSidebar.isResizing ? "is-resizing" : ""
-                }`}
-                onMouseDown={rightSidebar.startResize}
-                onTouchStart={rightSidebar.startResize}
-                onKeyDown={rightSidebar.handleKeyDown}
-                role="separator"
-                tabIndex={0}
-                aria-orientation="vertical"
-                aria-label="Resize right sidebar"
-                aria-valuenow={rightSidebar.width}
-                aria-valuemin={rightSidebar.minWidth}
-                aria-valuemax={rightSidebar.maxWidth}
-              />
             </>
           )}
         </aside>

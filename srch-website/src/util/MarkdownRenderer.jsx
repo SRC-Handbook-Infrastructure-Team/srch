@@ -15,7 +15,7 @@ import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
 import { remarkHighlight } from "./remarkHighlight";
 import { Text, Link, Box, HStack, Icon } from "@chakra-ui/react";
-import { InfoIcon } from "@chakra-ui/icons";
+import { InfoIcon, ExternalLinkIcon, LinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
@@ -380,8 +380,7 @@ function MarkdownRenderer({
   /* ------------------------------------------------------------------------
    * Styling tokens used inside the components map
    * --------------------------------------------------------------------- */
-  const RED = "var(--color-accent)";
-  const RED_DARK = "var(--color-accent)";
+  const RED = "var(--color-text-hover)";
   const BLACK = "var(--color-text)";
 
   /* ------------------------------------------------------------------------
@@ -493,25 +492,6 @@ function MarkdownRenderer({
     return () => clearTimeout(timeout);
   }, [activeDrawerLink]);
 
-  const BetaTag = () => (
-    <Box
-      display="inline-flex"
-      alignItems="center"
-      justifyContent="center"
-      bg="blue.100"
-      color="blue.700"
-      fontWeight="bold"
-      fontSize="xs"
-      px={2}
-      py={0.5}
-      borderRadius="md"
-      ml={2}
-      verticalAlign="middle"
-    >
-      BETA
-    </Box>
-  );
-
   const components = useMemo(
     () => ({
       h1: (props) => (
@@ -606,9 +586,8 @@ function MarkdownRenderer({
           <a
             {...props}
             style={{
-              color: RED,
-              fontWeight: 500,
               textDecoration: isFootnoteRef ? "none" : "underline",
+              color: "var(--color-text-hover)",
             }}
             href={props.href}
             target={isExternal ? "_blank" : undefined}
@@ -620,7 +599,11 @@ function MarkdownRenderer({
                 <span key={index}>{child}</span>
               ),
             )}
-            {isExternal && <span style={{ marginLeft: "0.2em" }}>↗</span>}
+            {isExternal && (
+              <span style={{ marginLeft: "0.2em" }}>
+                <ExternalLinkIcon></ExternalLinkIcon>
+              </span>
+            )}
           </a>
         );
       },
@@ -848,15 +831,6 @@ function MarkdownRenderer({
             display="inline-flex"
             verticalAlign="baseline"
             alignItems="center"
-            gap="6px"
-            px="10px"
-            py="4px"
-            mx="0"
-            my="2px"
-            borderRadius="999px"
-            color={RED}
-            textDecoration="none"
-            border="1px solid transparent"
             whiteSpace="normal"
             flexShrink={1}
             maxW="100%"
@@ -864,7 +838,6 @@ function MarkdownRenderer({
           >
             <Text
               as="span"
-              fontWeight="700"
               fontSize="inherit"
               lineHeight="inherit"
               sx={{
@@ -875,7 +848,7 @@ function MarkdownRenderer({
             >
               {highlightText(toShow, highlight)}
             </Text>
-            <Icon as={InfoIcon} boxSize="0.9em" flexShrink={0} />
+            <Icon as={InfoIcon} flexShrink={0} />
           </Box>
         );
       },
@@ -913,7 +886,6 @@ function MarkdownRenderer({
     ],
   );
 
-  // Add near the top of your component (inside the component)
   return (
     <div>
       <ReactMarkdown

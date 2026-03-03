@@ -146,21 +146,19 @@ function Footer() {
               </div>
             </div>
             <div className="footer-links">
-              <div className="footer-links">
-                <div className="heading-footer">Quick Links</div>
-                <button
-                  onClick={() => navigate("/about")}
-                  className="module-link-primer-footer"
-                >
-                  About
-                </button>
-                <button
-                  onClick={() => navigate("/acknowledgments")}
-                  className="module-link-primer-footer"
-                >
-                  Acknowledgments
-                </button>
-              </div>
+              <div className="heading-footer">Quick Links</div>
+              <button
+                onClick={() => navigate("/about")}
+                className="module-link-primer-footer"
+              >
+                About
+              </button>
+              <button
+                onClick={() => navigate("/acknowledgments")}
+                className="module-link-primer-footer"
+              >
+                Acknowledgments
+              </button>
               <div className="footer-links second-column show-narrow hide-wide">
                 <div className="heading-footer">Have Feedback?</div>
                 <p className="feedback-footer">
@@ -170,7 +168,9 @@ function Footer() {
                   </a>
                 </p>
                 <p className="feedback-footer">
-                  <a href="?">Bug Report Form</a>
+                  <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
+                    Bug Report Form
+                  </a>
                 </p>
               </div>
             </div>
@@ -182,11 +182,8 @@ function Footer() {
                   src_handbook@brown.edu
                 </a>
               </p>
-              <p className="feedback-footer bug-form">
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog"
-                  target="_blank"
-                >
+              <p className="feedback-footer">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSex69OXWeME_pnC5IOYB754xsxmu8SH7rdV_LF-k7Q_TefHaA/viewform?usp=dialog">
                   Bug Report Form
                 </a>
               </p>

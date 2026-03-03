@@ -6,7 +6,7 @@ final: false
 
 # Algorithmic Fairness
 
-When machines replace humans in **{making-high-impact-decision}**, it is important for their outcomes to remain fair. But what is algorithmic fairness?
+When machines replace humans in {making-high-impact-decision}, it is important for their outcomes to remain fair. But what is algorithmic fairness?
 
 ## Definitions of Fairness
 
@@ -14,9 +14,9 @@ One common criterion for fairness within the CS community is procedural equality
 
 - **Procedural Equality**: Everyone is subject to the same decision-making process. For example, ATS, or applicant tracking systems, are automated decision-making systems that employers use to screen resumes in hiring processes. Procedural equality is achieved when the system runs every application in the same way.
 
-However, decision-making does not happen in a vacuum. Rather, it exists within a societal context defined by **{Systems-of-Oppression}**, such as racism and sexism, that form an unequal baseline ‘procedurally fair’ algorithm that falsely assumes that every applicant starts from the same point and, as a result, can replicate pre-existing inequalities.
+However, decision-making does not happen in a vacuum. Rather, it exists within a societal context defined by {Systems-of-Oppression}, such as racism and sexism, that form an unequal baseline ‘procedurally fair’ algorithm that falsely assumes that every applicant starts from the same point and, as a result, can replicate pre-existing inequalities.
 
-The limitations of procedural equality lead us to the concept of **{equity}**.
+The limitations of procedural equality lead us to the concept of {equity}.
 
 - **Equity**: Everyone is subject to a process that recognizes differences in opportunities and allocates outcomes accordingly.
 
@@ -26,7 +26,7 @@ Within equity, there is a technical distinction between individual and group fai
 
 An example of individual fairness would be in a resume screening system, individuals who have similar qualifications, including equivalent degrees, experience, and technical skills, should be ranked similarly.
 
-- **Group Fairness**: Groups should be viewed as similar and be treated similarly, acknowledging that historically groups might have been treated differently and thus have different opportunities. Here are **{three-criteria-for-group-fairness}**:
+- **Group Fairness**: Groups should be viewed as similar and be treated similarly, acknowledging that historically groups might have been treated differently and thus have different opportunities. Here are {three-criteria-for-group-fairness}:
   - **Independence**: A person’s group membership should not affect their outcome.
   - **Separation**: An individual’s group should not impact their outcomes depending on the “true outcome.”
   - **Sufficiency**: The output predictor means the same thing regardless of which group an individual is from.
@@ -35,7 +35,7 @@ An example of individual fairness would be in a resume screening system, individ
 
 All the fairness criteria above seem desirable. However, it is mathematically impossible to achieve both individual and group fairness. Within group fairness, it is also mathematically impossible to simultaneously achieve independence, separation, and sufficiency.
 
-The **{mathematical-impossible-results}** generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of **{implementations}** that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
+The {mathematical-impossible-results} generally follow this pattern: (a) construct a particular data distribution, and (b) demonstrate that any method that satisfies one form of fairness cannot satisfy another simultaneously. Thus , there exists a range of {implementations} that either prioritize certain fairness criteria over others or try to fulfill multiple criteria with minor violations and contextual adjustments.
 
 ![Pareto Front of Group Fairness Criteria](/assets/primer-photos/fairness1.png)
 
