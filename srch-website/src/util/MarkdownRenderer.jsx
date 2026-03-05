@@ -1186,7 +1186,7 @@ function MarkdownRenderer({
           >
             ▸
           </span>
-          {"Footnotes"}
+          {"References"}
           {}{" "}
         </button>
         {showFootnotes && (
@@ -1307,7 +1307,7 @@ function MarkdownRenderer({
           >
             ▸
           </span>
-          {"References"}
+          {"Further Reading"}
         </button>
         {showReferences && (
           <div id="references-list">
