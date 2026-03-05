@@ -10,12 +10,12 @@
   -moz-osx-font-smoothing: grayscale;
 
   --toolbar-height: 0px;
-  --right-sidebar-width: 300px;
   --nav-bar-height: 62px;
   --mobile-menu-offset: 0px;
   --mobile-menu-height: 250px;
   --mobile-menu-height-expanded: 350px;
-  --left-sidebar-width: var(--left-sidebar-width, 250px);
+  --left-sidebar-width: 300px;
+  --right-sidebar-width: 300px;
 
   --color-text: #343434;
   --color-text-hover: #9d0013;
@@ -144,6 +144,10 @@ mark {
 #root {
   max-width: 1280px;
   margin: 0 auto;
+}
+
+[id] {
+  scroll-margin-top: var(--nav-bar-height);
 }
 
 @keyframes logo-spin {

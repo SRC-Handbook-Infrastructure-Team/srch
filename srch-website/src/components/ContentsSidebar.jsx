@@ -582,7 +582,7 @@ export default function ContentsSidebar({
       <Box p={4}>
         <NavContent />
       </Box>
-      <Box
+      {/* <Box
         className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
         width={collapsed ? "60px" : "6px"}
         onMouseDown={onStartResize}
@@ -594,7 +594,7 @@ export default function ContentsSidebar({
         aria-label="Resize navigation pane"
         aria-hidden={collapsed}
         onDoubleClick={onToggleSidebar}
-      />
+      /> */}
     </Box>
   );
 }

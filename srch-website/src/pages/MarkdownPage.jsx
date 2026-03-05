@@ -140,7 +140,7 @@ export function buildFootnoteOriginMap(mainMarkdown, sidebarMap = {}) {
       currentSlug = slugMatch[1].toLowerCase();
       continue;
     }
-    if (!currentSlug) continue; 
+    if (!currentSlug) continue;
     let m;
     const rx = defRegex();
     while ((m = rx.exec(line)) !== null) {
@@ -333,6 +333,7 @@ function MarkdownPage() {
   const [mainFootnotes, setMainFootnotes] = useState([]);
   const [allDefinitions, setAllDefinitions] = useState({});
   const [rawMainMarkdown, setRawMainMarkdown] = useState("");
+  const [referencesBlock, setReferencesBlock] = useState(null);
 
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);
@@ -488,7 +489,6 @@ function MarkdownPage() {
           highlight={highlight}
           urlTerm={urlTerm}
           mergedSidebar={allPageFootnotes}
-          // Drawer content renders in isolation — pass the drawer's own footnote origin map
           footnoteOriginMap={drawerFootnoteOriginMap}
         />
       </>
@@ -510,6 +510,7 @@ function MarkdownPage() {
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
+      setReferencesBlock(null);
 
       if (!sectionId) {
         const sections = await getSections();
@@ -530,6 +531,7 @@ function MarkdownPage() {
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
           setAllDefinitions(result.allDefinitions || {});
+          setReferencesBlock(result.referencesBlock || null);
 
           //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
           let lu = result.frontmatter?.lastUpdated || "";
@@ -599,6 +601,7 @@ function MarkdownPage() {
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
           setAllDefinitions(result.allDefinitions || {});
+          setReferencesBlock(result.referencesBlock || null);
 
           let lu = result.frontmatter?.lastUpdated || "";
 
@@ -815,7 +818,8 @@ function MarkdownPage() {
           const containerRect = scrollContainer.getBoundingClientRect();
           const elRect = el.getBoundingClientRect();
           scrollContainer.scrollTo({
-            top: scrollContainer.scrollTop + (elRect.top - containerRect.top) - 24,
+            top:
+              scrollContainer.scrollTop + (elRect.top - containerRect.top) - 24,
             behavior: "smooth",
           });
           return;
@@ -858,8 +862,8 @@ function MarkdownPage() {
               allDefinitions={allDefinitions}
               onFootnotesReady={stableOnFootnotesReady}
               extraFootnotes={allPageFootnotes.slice(mainFootnotes.length)}
-              // ── NEW: pass the pre-computed origin map into the renderer ──
               footnoteOriginMap={footnoteOriginMap}
+              referencesBlock={referencesBlock}
             />
           </Box>
         )}

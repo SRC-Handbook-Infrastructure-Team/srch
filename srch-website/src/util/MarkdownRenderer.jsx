@@ -237,12 +237,9 @@ export const getSubsections = async (sectionId) => {
  */
 export function extractFootnotes(markdown) {
   if (!markdown || typeof markdown !== "string") {
-    return { stripped: markdown, footnotes: [] };
+    return { stripped: markdown, footnotes: [], referencesBlock: null };
   }
 
-  // FIX: New definition regex — continuation lines are any line that does NOT
-  // start a new [^key]: definition and is not a blank line.
-  // This correctly captures the last definition in a block.
   const defRegex = /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
   const definitions = {};
   let match;
@@ -250,7 +247,6 @@ export function extractFootnotes(markdown) {
     definitions[match[1]] = match[2].trim();
   }
 
-  // Order footnotes by first reference appearance in the text
   const refRegex = /\[\^([^\]]+)\](?!:)/g;
   const ordered = [];
   const seen = new Set();
@@ -262,17 +258,19 @@ export function extractFootnotes(markdown) {
     }
   }
 
-  // FIX: Strip ## References and ## Footnotes section headings + their content.
-  // These sections always appear at the tail of the document (before ## Sidebar),
-  // so stripping to end-of-string is safe and removes stray citation text too.
-  // Also strip any remaining bare [^key]: definition lines.
+  const referencesMatch = markdown.match(
+    /^##\s+References\s*\n([\s\S]*?)(?=^##\s)/m,
+  );
+
+  const referencesBlock = referencesMatch ? referencesMatch[1].trim() : null;
+
   const stripped = markdown
-    .replace(/^##\s+References\b[\s\S]*/m, "")
+    .replace(/^##\s+References\s*\n[\s\S]*?(?=^##\s)/m, "")
     .replace(/^##\s+Footnotes\b[\s\S]*/m, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  return { stripped, footnotes: ordered, definitions };
+  return { stripped, footnotes: ordered, definitions, referencesBlock };
 }
 
 /**
@@ -354,8 +352,6 @@ export const getContent = async (sectionId, subsectionId) => {
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
 
-        const { definitions: allDefinitions } = extractFootnotes(cleanContent);
-
         // allow either of these headings as the sidebar divider
         const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
         const dividerMatch = dividerRegex.exec(cleanContent);
@@ -373,6 +369,9 @@ export const getContent = async (sectionId, subsectionId) => {
           );
           sidebarRaw = afterDivider.trim();
         }
+
+        const { definitions: allDefinitions, referencesBlock } =
+          extractFootnotes(mainContent);
 
         const sidebar = {};
         if (sidebarRaw) {
@@ -431,6 +430,7 @@ export const getContent = async (sectionId, subsectionId) => {
           content: parsedContent,
           sidebar,
           allDefinitions,
+          referencesBlock,
           frontmatter: { ...frontmatter, lastUpdated },
         };
       }
@@ -479,17 +479,7 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
-  mergedSidebar,
-  onFootnotesReady,
-  extraFootnotes = [],
-  allDefinitions = {},
-  // ── NEW prop ──────────────────────────────────────────────────────────────
-  // Pre-computed map of footnoteKey → "main" | sidebarSlug.
-  // Built by buildFootnoteOriginMap() in MarkdownPage and passed down.
-  // When provided it replaces the internal re-derivation that only saw the
-  // raw content string and missed sidebar-only definitions.
-  // Falls back to {} so the renderer stays self-contained when used standalone
-  // (e.g. inside a drawer where footnotes are always local).
+  referencesBlock = null,
   footnoteOriginMap: externalOriginMap = {},
 }) {
   const processed = useMemo(() => {
@@ -568,6 +558,7 @@ function MarkdownRenderer({
       footnotesSectionRegex,
       () => "[[CUSTOM_FOOTNOTES_SECTION]]",
     );
+
     const refRegex = /\[\^([0-9]+)\]/g;
     replaced = replaced.replace(refRegex, (m, n) => {
       const origin = mergedOriginMap[n];
@@ -575,8 +566,12 @@ function MarkdownRenderer({
       if (origin && origin !== "main" && sectionId && subsectionId) {
         href = `/${sectionId}/${subsectionId}/${origin}#user-content-fn-${n}`;
       }
-      return `<sup id=\"user-content-fnref-${n}\"><a href=\"${href}\" style=\"color: var(--color-text-hover); font-weight: bold; text-decoration: none;\">${n}</a></sup>`;
+      return `<sup id="user-content-fnref-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
     });
+
+    if (referencesBlock) {
+      replaced += "\n\n[[CUSTOM_REFERENCES_SECTION]]";
+    }
 
     return {
       main: replaced,
@@ -584,7 +579,7 @@ function MarkdownRenderer({
       footnotes,
       footnoteOriginMap: mergedOriginMap,
     };
-  }, [content, externalOriginMap, sectionId, subsectionId]);
+  }, [content, externalOriginMap, sectionId, subsectionId, referencesBlock]);
 
   /* ------------------------------------------------------------------------
    * Styling tokens used inside the components map
@@ -1123,33 +1118,42 @@ function MarkdownRenderer({
    *                          a data-sidebar attribute so the click handler above
    *                          can intercept it and open the drawer directly.
    * ───────────────────────────────────────────────────────────────────────── */
-  function CustomFootnotesSection() {
-    const [showFootnotes, setShowFootnotes] = useState(false);
-    useEffect(() => {
-      function handleFootnoteClick(e) {
-        const a = e.target.closest('a[href^="#user-content-fn-"]');
-        if (a) {
-          const href = a.getAttribute("href");
-          if (href && href.startsWith("#user-content-fn-")) {
-            setShowFootnotes(true);
-            setTimeout(() => {
-              const id = href.slice(1);
-              const el = document.getElementById(id);
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "center" });
-                el.classList.add("footnote-highlight");
-                setTimeout(
-                  () => el.classList.remove("footnote-highlight"),
-                  1200,
-                );
-              }
-            }, 100);
-          }
+  const [showFootnotes, setShowFootnotes] = useState(false);
+  const pendingScrollId = useRef(null);
+
+  useEffect(() => {
+    function handleFootnoteClick(e) {
+      const a = e.target.closest('a[href^="#user-content-fn-"]');
+      if (a) {
+        const href = a.getAttribute("href");
+        if (href && href.startsWith("#user-content-fn-")) {
+          const id = href.slice(1);
+          pendingScrollId.current = id;
+          setShowFootnotes(true); // triggers re-render → list mounts
         }
       }
-      document.addEventListener("click", handleFootnoteClick);
-      return () => document.removeEventListener("click", handleFootnoteClick);
-    }, []);
+    }
+    document.addEventListener("click", handleFootnoteClick);
+    return () => document.removeEventListener("click", handleFootnoteClick);
+  }, []);
+
+  // Runs after showFootnotes → true causes the <ol> to mount
+  useEffect(() => {
+    if (!showFootnotes || !pendingScrollId.current) return;
+    const id = pendingScrollId.current;
+    pendingScrollId.current = null;
+    requestAnimationFrame(() => {
+      // wait one paint for the list to appear
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("footnote-highlight");
+        setTimeout(() => el.classList.remove("footnote-highlight"), 1200);
+      }
+    });
+  }, [showFootnotes]);
+
+  function CustomFootnotesSection() {
     if (!processed.footnotes.length) return null;
     return (
       <section data-footnotes className="footnotes">
@@ -1167,7 +1171,7 @@ function MarkdownRenderer({
             color: "var(--color-header)",
             fontFamily: "Be Vietnam Pro, sans-serif",
             fontWeight: 600,
-            fontSize: "1.1em",
+            fontSize: "1.5em",
             cursor: "pointer",
             marginTop: "1.5rem",
             marginBottom: "1.5rem",
@@ -1175,11 +1179,15 @@ function MarkdownRenderer({
         >
           <span
             className={`footnotes-caret${showFootnotes ? " open" : ""}`}
-            style={{ marginRight: 8 }}
+            style={{
+              marginRight: 8,
+              transform: showFootnotes ? "rotate(90deg)" : "none",
+            }}
           >
             ▸
           </span>
-          {showFootnotes ? "Hide footnotes" : "Show footnotes"}
+          {"Footnotes"}
+          {}{" "}
         </button>
         {showFootnotes && (
           <ol
@@ -1257,49 +1265,90 @@ function MarkdownRenderer({
     );
   }
 
-  // Render markdown, replacing placeholder with custom footnotes section
-  function renderWithFootnotes(main) {
-    const parts = main.split("[[CUSTOM_FOOTNOTES_SECTION]]");
-    if (parts.length === 1) {
-      return (
-        <ReactMarkdown
-          components={components}
-          remarkPlugins={[
-            remarkGfm,
-            [remarkHighlight, highlight],
-            remarkSidebarRef,
-          ]}
-          rehypePlugins={[rehypeRaw]}
+  const [showReferences, setShowReferences] = useState(false);
+  const referencesScrollRef = useRef(0);
+  useEffect(() => {
+    if (!showReferences) return;
+    requestAnimationFrame(() => {
+      window.scrollTo(0, referencesScrollRef.current);
+    });
+  }, [showReferences]);
+  function CustomReferencesSection() {
+    if (!referencesBlock) return null;
+    return (
+      <section data-references>
+        <button
+          type="button"
+          onClick={() => {
+            referencesScrollRef.current = window.scrollY;
+            setShowReferences((prev) => !prev);
+          }}
+          aria-expanded={showReferences}
+          aria-controls="references-list"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            background: "none",
+            border: "none",
+            color: "var(--color-header)",
+            fontFamily: "Be Vietnam Pro, sans-serif",
+            fontWeight: 600,
+            fontSize: "1.5em",
+            cursor: "pointer",
+            marginTop: "1.5rem",
+            marginBottom: "1.5rem",
+          }}
         >
-          {main}
-        </ReactMarkdown>
-      );
-    }
+          <span
+            style={{
+              marginRight: 8,
+              transform: showReferences ? "rotate(90deg)" : "none",
+            }}
+          >
+            ▸
+          </span>
+          {"References"}
+        </button>
+        {showReferences && (
+          <div id="references-list">
+            <ReactMarkdown
+              components={components}
+              remarkPlugins={[
+                remarkGfm,
+                [remarkHighlight, highlight],
+                remarkSidebarRef,
+              ]}
+              rehypePlugins={[rehypeRaw]}
+            >
+              {referencesBlock}
+            </ReactMarkdown>
+          </div>
+        )}
+      </section>
+    );
+  }
+
+  function renderWithFootnotes(main) {
+    const [part0, rest = ""] = main.split("[[CUSTOM_FOOTNOTES_SECTION]]");
+    const [part1, part2 = ""] = rest.split("[[CUSTOM_REFERENCES_SECTION]]");
+
+    const mdProps = {
+      components,
+      remarkPlugins: [
+        remarkGfm,
+        [remarkHighlight, highlight],
+        remarkSidebarRef,
+      ],
+      rehypePlugins: [rehypeRaw],
+    };
+
     return (
       <>
-        <ReactMarkdown
-          components={components}
-          remarkPlugins={[
-            remarkGfm,
-            [remarkHighlight, highlight],
-            remarkSidebarRef,
-          ]}
-          rehypePlugins={[rehypeRaw]}
-        >
-          {parts[0]}
-        </ReactMarkdown>
+        <ReactMarkdown {...mdProps}>{part0}</ReactMarkdown>
         <CustomFootnotesSection />
-        <ReactMarkdown
-          components={components}
-          remarkPlugins={[
-            remarkGfm,
-            [remarkHighlight, highlight],
-            remarkSidebarRef,
-          ]}
-          rehypePlugins={[rehypeRaw]}
-        >
-          {parts[1]}
-        </ReactMarkdown>
+        <ReactMarkdown {...mdProps}>{part1}</ReactMarkdown>
+        {part2 !== undefined && <CustomReferencesSection />}
+        <ReactMarkdown {...mdProps}>{part2}</ReactMarkdown>
       </>
     );
   }

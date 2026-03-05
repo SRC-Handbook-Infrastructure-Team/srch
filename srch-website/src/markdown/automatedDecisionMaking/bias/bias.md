@@ -140,13 +140,55 @@ Yi, Sibo, Yule Liu, Zhen Sun, Tianshuo Cong, Xinlei He, Jiaxing Song, Ke Xu, and
 
 Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Research Topics in Self Supervised Learning. Lecture presented at the Research Topics in Self Supervised Learning, November 8, 2024\.
 
+## Footnotes
+
 [^1]: “Bias: The Basics”
 
 [^2]: Mehrabi, “A survey on bias and fairness in machine learning”
 
-[^3]: Suresh, “A Framework for Understanding Sources of Harm “
+[^3]: Suresh, “A Framework for Understanding Sources of Harm”
 
-[^4]: Suresh, “A Framework for Understanding Sources of Harm"
+[^4]: Suresh, “A Framework for Understanding Sources of Harm”
+
+[^5]: Suresh, “A Framework for Understanding Sources of Harm"
+
+[^6]: “Memory and New Controls for ChatGPT”
+
+[^7]: Suresh, “A Framework for Understanding Sources of Harm"
+
+[^8]: “Memory and New Controls for ChatGPT”
+
+[^9]: Garg, _Word Embeddings_
+
+[^10]: Hoffman, _AI Generates Covertly Racist Decisions_; Yi, _Jailbreak Attacks_
+
+[^11]: Buolamwini, “Gender Shades”
+
+[^12]: Obermeyer, “Dissecting Racial Bias”
+
+[^13]: Thaqi, “SARA: Smart AI Reading Assistant”
+
+[^14]: Nerušil, “Eye Tracking”
+
+[^15]: “Dyslexia FAQ”
+
+[^16]: Zimmerman, _Self Supervised Learning_
+
+[^17]: Babisha, _Advancements in Facial Expression Recognition;_ Roy, _ResEmoteNet_
+
+[^18]: Angwin, _Machine Bias_
+
+[^19]: Collins, _Punishing Risk_
+
+[^20]: Angwin, _Machine Bias_
+
+[^21]: Collins, _Punishing Risk_
+
+[^22]: Suresh, _A Framework for Understanding Sources of Harm_
+
+[^23]: _Facial Recognition And The Facial Difference Community_
+
+[^24]: MacMillan, _Police Ignore Standards_
 
 ## Sidebar
 
@@ -161,11 +203,7 @@ In this phase, data is generated and a dataset is created. Data can be generated
 
 ### Understanding Model Creation Phase of AI Development
 
-**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^1] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^2]
-
-[^1]: Suresh, “A Framework for Understanding Sources of Harm"
-
-[^2]: “Memory and New Controls for ChatGPT”
+**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^5] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^6]
 
 Data-Generation:
 Heading: Understanding Data Generation Phase of AI Development
@@ -175,19 +213,11 @@ In this phase, data is generated and a dataset is created. Data can be generated
 Model-Creation:
 Heading: Understanding Model Creation Phase of AI Development
 
-**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^1] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^2]
-
-[^1]: Suresh, “A Framework for Understanding Sources of Harm"
-
-[^2]: “Memory and New Controls for ChatGPT”
+**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^7] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^8]
 
 Historical-Bias-Case-Study--Gender-Bias-in-Word-Embeddings:
 Heading: Gender Bias in Word Embeddings
-Societal gender biases are widely reflected in media, which is used to train large language models (LLMs)**. Because the training data of LLMs contains societal biases, the model learns to reflect this bias.**[^1] As LLMs become increasingly integrated into automatic-decision making systems, this causes harm to women and other gender minorities. This is an open area of research, as LLMs are resilient to alignment techniques and vulnerable to jailbreaking.[^2]
-
-[^1]: Garg, _Word Embeddings_
-
-[^2]: Hoffman, _AI Generates Covertly Racist Decisions_; Yi, _Jailbreak Attacks_
+Societal gender biases are widely reflected in media, which is used to train large language models (LLMs)**. Because the training data of LLMs contains societal biases, the model learns to reflect this bias.**[^9] As LLMs become increasingly integrated into automatic-decision making systems, this causes harm to women and other gender minorities. This is an open area of research, as LLMs are resilient to alignment techniques and vulnerable to jailbreaking.[^10]
 
 Representation-Bias-Case-Study--Underrepresentation-In-Automated-Mental-Illness-Detection:
 Heading: Underrepresentation in Automated Mental Illness Detection
@@ -199,15 +229,11 @@ There are two unique ways that representation bias in AI is different from repre
 1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.
 2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias.
 
-In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^1]) and regulated via governance structures. For more information on AI governance \[check out this primer\](governance).
-
-[^1]: Buolamwini, “Gender Shades”
+In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^11]) and regulated via governance structures. For more information on AI governance \[check out this primer\](governance).
 
 Oversimplification-Case-Study-Healthcare-Proxies-In-High-Risk-Care-Management:
 Heading: Healthcare Proxies In High Risk Care Management
-Predictive algorithms used to approve high risk care management programs in healthcare screen 200 million people in the US each year. Algorithms produce risk scores to identify patients who will benefit most from these programs. However, healthcare spending was used as a proxy for health issues. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients, with an average of 26.3% more chronic illnesses. As a result, measurement bias leads to higher need Black patients being denied access to high risk care management programs compared with lower need White patients with equivalent healthcare spending. In response, the healthcare company worked with researchers to develop a better proxy that combined health prediction with cost prediction, leading to an 84% reduction in bias.[^1]
-
-[^1]: Obermeyer, “Dissecting Racial Bias”
+Predictive algorithms used to approve high risk care management programs in healthcare screen 200 million people in the US each year. Algorithms produce risk scores to identify patients who will benefit most from these programs. However, healthcare spending was used as a proxy for health issues. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients, with an average of 26.3% more chronic illnesses. As a result, measurement bias leads to higher need Black patients being denied access to high risk care management programs compared with lower need White patients with equivalent healthcare spending. In response, the healthcare company worked with researchers to develop a better proxy that combined health prediction with cost prediction, leading to an 84% reduction in bias.[^12]
 
 Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores:
 Heading: Impact Of Over Policing-On Recidivism Scores
@@ -215,66 +241,42 @@ Criminal justice risk assessment models determine someone’s risk to re-offend 
 
 Aggregation-Bias-Case-Study-AI-Based-Reading-Assistants-For-Readers-With-Dyslexia:
 Heading: AI Based Reading Assistants For Readers With Dyslexia
-AI-based reading assistants have been developed to aid reading comprehension by using eye-tracking to provide definitions when readers struggle to comprehend words.[^1] Research shows that people with dyslexia have different eye movements when reading than people who don’t have dyslexia.[^2] If a reading assistant uses an underlying eye-tracking model that processes dyslexic and non-dyslexic eye-movement reading patterns in aggregate, it may fail to represent the distinct reading patterns of either subgroup accurately. In addition to aggregation bias, representation bias can further exacerbate performance disparities. Since people with dyslexia make up 20% of the population, if dyslexic reading patterns are not oversampled to account for underrepresentation in the use population, the model will also suffer from representation bias, leading to even higher error rates for people with dyslexia.[^3]
-
-[^1]: Thaqi, “SARA: Smart AI Reading Assistant”
-
-[^2]: Nerušil, “Eye Tracking”
-
-[^3]: “Dyslexia FAQ”
+AI-based reading assistants have been developed to aid reading comprehension by using eye-tracking to provide definitions when readers struggle to comprehend words.[^13] Research shows that people with dyslexia have different eye movements when reading than people who don’t have dyslexia.[^14] If a reading assistant uses an underlying eye-tracking model that processes dyslexic and non-dyslexic eye-movement reading patterns in aggregate, it may fail to represent the distinct reading patterns of either subgroup accurately. In addition to aggregation bias, representation bias can further exacerbate performance disparities. Since people with dyslexia make up 20% of the population, if dyslexic reading patterns are not oversampled to account for underrepresentation in the use population, the model will also suffer from representation bias, leading to even higher error rates for people with dyslexia.[^15]
 
 Learning-Bias-Case-Study-Distillation-In-Medical-Models-Misses-Rare-Cancers:
 Heading: Distillation In Medical Models Misses Rare Cancers
-When AI models are distilled to be more compact, they lose the nuance necessary to capture under-represented features in the data. For example, **in AI-based breast cancer screening**, **rare cancers are under-represented in medical images.** If a breast cancer detection model is distilled, performance disparities for under-represented cancers will increase because the distilled model has fewer parameters with which it can learn complex underrepresented features in the data.[^1]
-
-[^1]: Zimmerman, _Self Supervised Learning_
+When AI models are distilled to be more compact, they lose the nuance necessary to capture under-represented features in the data. For example, **in AI-based breast cancer screening**, **rare cancers are under-represented in medical images.** If a breast cancer detection model is distilled, performance disparities for under-represented cancers will increase because the distilled model has fewer parameters with which it can learn complex underrepresented features in the data.[^16]
 
 Evaluation-Bias-Case-Study-Facial-Expression-Recognition-In-The-Wild:
 Heading: Facial Expression Recognition In The Wild
-Evaluation bias is present in facial expression recognition datasets. Common benchmarks like AffectNet and FER2013 contain images taken in controlled settings and processed to account for crops, rotation, and more. **In a model that seeks to predict facial expressions in naturalistic settings, benchmarking against these datasets would introduce evaluation bias by failing to reflect the use population**. Indeed, many facial expression recognition models report up to 95% accuracy, but state-of-the-art expression recognition “in the wild” is only 72%.[^1]
-
-[^1]: Babisha, _Advancements in Facial Expression Recognition;_ Roy, _ResEmoteNet_
+Evaluation bias is present in facial expression recognition datasets. Common benchmarks like AffectNet and FER2013 contain images taken in controlled settings and processed to account for crops, rotation, and more. **In a model that seeks to predict facial expressions in naturalistic settings, benchmarking against these datasets would introduce evaluation bias by failing to reflect the use population**. Indeed, many facial expression recognition models report up to 95% accuracy, but state-of-the-art expression recognition “in the wild” is only 72%.[^17]
 
 Benefits-and-Risks-of-Benchmark-Datasets:
-Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^1]
+Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^18]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
-
-[^1]: Angwin, _Machine Bias_
-
-[^2]: Collins, _Punishing Risk_
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^19] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
-Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^1]
+Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^20]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^2] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
-
-[^1]: Angwin, _Machine Bias_
-
-[^2]: Collins, _Punishing Risk_
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^21] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
 
 here:
 Heading: Types of Harm in Automated-Decision Making Systems
 **Allocative Harm**  
 When opportunities are withheld from certain people or groups  
-E.g: Racial bias in loan-worthiness systems lead to race-based loan denial.[^1]
+E.g: Racial bias in loan-worthiness systems lead to race-based loan denial.[^22]
 
 **Representational Harm**  
 When certain people or groups are stigmatized or stereotyped18  
 E.g: LLMs disproportionately feature marginalized groups as victims in stories.
 
 **Quality of Service Harms**  
-When the quality of service an individual or group receives is diminished due to bias in AI systems[^2]  
+When the quality of service an individual or group receives is diminished due to bias in AI systems[^23]  
 E.g: People with facial differences have to wait longer for manual processing at airport security checkpoints.
 
 **Interpersonal and Social System Harms**  
 When an individual experiences interpersonal harm or societal harm due to bias in AI systems  
-E.g: False arrests due to erroneous facial recognition make it difficult for people to clear their names and cause emotional injury to children traumatized by watching their parents getting arrested.[^3]
+E.g: False arrests due to erroneous facial recognition make it difficult for people to clear their names and cause emotional injury to children traumatized by watching their parents getting arrested.[^24]
 
 **If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the \[drawer:Justice Primer\](justice).
-
-[^1]: Suresh, _A Framework for Understanding Sources of Harm_
-
-[^2]: _Facial Recognition And The Facial Difference Community_
-
-[^3]: MacMillan, _Police Ignore Standards_

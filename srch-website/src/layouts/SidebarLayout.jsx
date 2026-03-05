@@ -32,7 +32,8 @@ export default function SidebarLayout({ children }) {
     typeof window !== "undefined" ? window.innerWidth : 1440,
   );
   // Track sidebar widths for layout calculation
-  const [leftWidth, setLeftWidth] = useState(300);
+  // const [leftWidth, setLeftWidth] = useState(300);
+  const leftWidth = 300;
   const rightWidth = 300;
 
   // --- Layout mode logic: returns "wide" or "overlay" ---
@@ -128,11 +129,6 @@ export default function SidebarLayout({ children }) {
     side: "right",
     onStartResize: freezeForSidebars,
     onStopResize: releaseForSidebars,
-    getDynamicBounds: () => {
-      useEffect(() => {
-        setLeftWidth(leftSidebar.width || 0);
-      }, [leftSidebar.width]);
-    },
   });
 
   // Only auto-collapse left sidebar when transitioning into overlay mode

@@ -19,16 +19,16 @@ export default function useResizableSidebar({
   const defaultWidth = 300;
   const minWidth = 300;
   const [maxWidth, setMaxWidthState] = useState(calculateMax());
-  const initial = () => {
-    if (!isBrowser()) return defaultWidth;
-    try {
-      const saved = window.localStorage.getItem(storageKey);
-      return saved ? parseInt(saved, 10) : defaultWidth;
-    } catch {
-      return defaultWidth;
-    }
-  };
-  const [width, setWidthState] = useState(initial);
+  // const initial = () => {
+  //   if (!isBrowser()) return defaultWidth;
+  //   try {
+  //     const saved = window.localStorage.getItem(storageKey);
+  //     return saved ? parseInt(saved, 10) : defaultWidth;
+  //   } catch {
+  //     return defaultWidth;
+  //   }
+  // };
+  const [width, setWidthState] = useState(defaultWidth);
   const [isResizing, setIsResizing] = useState(false);
   function calculateMax() {
     if (window.innerWidth > 1000) {
