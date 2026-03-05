@@ -215,7 +215,6 @@ function TeamSection({ title, teamName }) {
         {title}
       </Heading>
 
-      {/* Active members */}
       <TeamGrid
         filteredTeam={active.length > 0 ? active : members}
         teamName={teamName}

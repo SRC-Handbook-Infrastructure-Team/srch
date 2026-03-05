@@ -1,3 +1,35 @@
+/**
+ * Builds a footnote origin map for all sidebar drawers on the page.
+ * For each sidebar slug, fetches the drawer content and maps footnotes to that slug.
+ * Returns: { [footnoteKey: string]: sidebarSlug }
+ */
+async function buildSidebarDrawersFootnoteOriginMap(
+  sectionId,
+  subsectionId,
+  sidebar,
+  getDrawerFile,
+) {
+  const originMap = {};
+  if (!sidebar || typeof sidebar !== "object") return originMap;
+  const slugs = Object.keys(sidebar);
+  for (const slug of slugs) {
+    let drawerFile = null;
+    try {
+      drawerFile = await getDrawerFile(sectionId, subsectionId, slug);
+    } catch (_) {}
+    const entry = sidebar[slug];
+    const contentToShow =
+      drawerFile?.content ||
+      (typeof entry === "string" ? entry : entry?.content) ||
+      "";
+    // Use buildFootnoteOriginMap on this drawer's content, mapping all found footnotes to this slug
+    const localMap = buildFootnoteOriginMap(contentToShow, {});
+    for (const key of Object.keys(localMap)) {
+      if (!originMap[key]) originMap[key] = slug;
+    }
+  }
+  return originMap;
+}
 import "../styles/MarkdownPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -9,7 +41,136 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-import Footer from "../components/Footer";
+async function getDrawerFile(sectionId, subsectionId, slug) {
+  if (!sectionId || !subsectionId || !slug) return null;
+  const path = `../markdown/${sectionId}/${subsectionId}/drawer/${slug}.md`;
+  try {
+    const mod = await import(/* @vite-ignore */ path);
+    return { content: mod.default || "" };
+  } catch (e) {
+    return null;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * buildFootnoteOriginMap
+ *
+ * Walks the raw main-page markdown AND every sidebar entry to build a complete
+ * map of  footnoteKey → "main" | sidebarSlug.
+ *
+ * Algorithm
+ * ─────────
+ * 1. Extract every [^key]: definition from mainMarkdown → mark origin "main".
+ * 2. For each sidebar entry, extract every [^key]: definition → mark origin
+ *    with the sidebar's slug (the key in the sidebarMap object).
+ * 3. Second pass: scan for [^key] *references* in both main and sidebar text.
+ *    If a reference appears but has no definition anywhere, it is still
+ *    recorded so links can gracefully degrade.
+ *
+ * Returns:  { [footnoteKey: string]: "main" | sidebarSlug }
+ *
+ * @param {string}  mainMarkdown  - Raw markdown for the main page body.
+ * @param {Object}  sidebarMap    - { [slug: string]: { content: string, heading: string } }
+ * ─────────────────────────────────────────────────────────────────────────── */
+export function buildFootnoteOriginMap(mainMarkdown, sidebarMap = {}) {
+  const originMap = {};
+  const defRegex = () => /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
+  const refRegex = () => /\[\^([^\]]+)\](?!:)/g;
+  if (!mainMarkdown || typeof mainMarkdown !== "string") return originMap;
+  const lines = mainMarkdown.split(/\r?\n/);
+  let currentSlug = null;
+  const sidebarSlugs = Object.keys(sidebarMap).map((s) => s.toLowerCase());
+  let sidebarStartIdx = lines.findIndex((line) =>
+    /^##\s+Sidebar\s*$/i.test(line),
+  );
+  if (sidebarStartIdx === -1) {
+    let m;
+    const rx = defRegex();
+    while ((m = rx.exec(mainMarkdown)) !== null) {
+      const key = m[1];
+      if (!originMap[key]) originMap[key] = "main";
+    }
+    for (const [slug, entry] of Object.entries(sidebarMap)) {
+      const text = typeof entry === "string" ? entry : (entry?.content ?? "");
+      if (!text) continue;
+      let m2;
+      const rx2 = defRegex();
+      while ((m2 = rx2.exec(text)) !== null) {
+        const key = m2[1];
+        if (!originMap[key]) originMap[key] = slug;
+      }
+    }
+    function scanRefs(text, fallbackOrigin) {
+      if (!text || typeof text !== "string") return;
+      let m;
+      const rx = refRegex();
+      while ((m = rx.exec(text)) !== null) {
+        const key = m[1];
+        if (!originMap[key]) originMap[key] = fallbackOrigin;
+      }
+    }
+    scanRefs(mainMarkdown, "main");
+    for (const [slug, entry] of Object.entries(sidebarMap)) {
+      const text = typeof entry === "string" ? entry : (entry?.content ?? "");
+      scanRefs(text, slug);
+    }
+    return originMap;
+  }
+
+  for (let i = 0; i < sidebarStartIdx; ++i) {
+    let m;
+    const rx = defRegex();
+    while ((m = rx.exec(lines[i])) !== null) {
+      const key = m[1];
+      if (!originMap[key]) originMap[key] = "main";
+    }
+    let ref;
+    const rxRef = refRegex();
+    while ((ref = rxRef.exec(lines[i])) !== null) {
+      const key = ref[1];
+      if (!originMap[key]) originMap[key] = "main";
+    }
+  }
+
+  currentSlug = null;
+  for (let i = sidebarStartIdx + 1; i < lines.length; ++i) {
+    const line = lines[i];
+    const slugMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+    if (slugMatch && sidebarSlugs.includes(slugMatch[1].toLowerCase())) {
+      currentSlug = slugMatch[1].toLowerCase();
+      continue;
+    }
+    if (!currentSlug) continue; 
+    let m;
+    const rx = defRegex();
+    while ((m = rx.exec(line)) !== null) {
+      const key = m[1];
+      if (!originMap[key]) originMap[key] = currentSlug;
+    }
+    const refRegexSimple = /\[\^([0-9]+)\]/g;
+    let refMatch;
+    let foundRef = false;
+    while ((refMatch = refRegexSimple.exec(line)) !== null) {
+      const key = refMatch[1];
+      if (!originMap[key]) originMap[key] = currentSlug;
+      foundRef = true;
+    }
+  }
+  let m;
+  const rx = defRegex();
+  while ((m = rx.exec(mainMarkdown)) !== null) {
+    const key = m[1];
+    if (!originMap[key]) originMap[key] = "main";
+  }
+  let ref;
+  const rxRef = refRegex();
+  while ((ref = rxRef.exec(mainMarkdown)) !== null) {
+    const key = ref[1];
+    if (!originMap[key]) originMap[key] = "main";
+  }
+
+  return originMap;
+}
 
 function MarkdownPage() {
   /*
@@ -49,7 +210,6 @@ function MarkdownPage() {
     generativeai: "4",
   };
 
-  // convert 0 -> 'a', 1 -> 'b', etc.
   function indexToLetter(index) {
     let s = "";
     let i = index;
@@ -83,7 +243,6 @@ function MarkdownPage() {
     );
   }
 
-  // normalize 'automated-decision-making' -> 'automateddecisionmaking' (map key)
   function normalizeSectionKey(id) {
     return String(id || "")
       .replace(/[^a-z]/gi, "")
@@ -142,7 +301,7 @@ function MarkdownPage() {
         });
       }
     } catch (e) {}
-    return dateString; // fallback: show raw
+    return dateString;
   }
 
   const { sectionId, subsectionId, term: urlTerm } = useParams();
@@ -171,8 +330,13 @@ function MarkdownPage() {
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("");
+  const [mainFootnotes, setMainFootnotes] = useState([]);
+  const [allDefinitions, setAllDefinitions] = useState({});
+  const [rawMainMarkdown, setRawMainMarkdown] = useState("");
+
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);
+  const mergedFootnotesRef = useRef([]);
   const formattedTitle = useMemo(() => {
     const fastSubs = getFastCachedSubsections(sectionId);
     return getFormattedTitle(
@@ -183,10 +347,54 @@ function MarkdownPage() {
     );
   }, [sectionId, subsectionId, pageTitle, subsections]);
 
+  /*
+   * footnoteOriginMap
+   *
+   * Combines main markdown footnotes and all sidebar drawer footnotes.
+   * This ensures all footnotes are mapped to their correct origin (main or sidebar slug).
+   */
+  const [sidebarFootnoteOriginMap, setSidebarFootnoteOriginMap] = useState({});
+  useEffect(() => {
+    let cancelled = false;
+    async function buildAllSidebarFootnotes() {
+      if (!sidebar || Object.keys(sidebar).length === 0) {
+        setSidebarFootnoteOriginMap({});
+        return;
+      }
+      const map = await buildSidebarDrawersFootnoteOriginMap(
+        sectionId,
+        subsectionId,
+        sidebar,
+        getDrawerFile,
+      );
+      if (!cancelled) setSidebarFootnoteOriginMap(map);
+    }
+    buildAllSidebarFootnotes();
+    return () => {
+      cancelled = true;
+    };
+  }, [sectionId, subsectionId, sidebar]);
+
+  // Merge main markdown footnotes and sidebar drawer footnotes
+  const footnoteOriginMap = useMemo(() => {
+    const mainMap = buildFootnoteOriginMap(rawMainMarkdown, sidebar);
+    // Sidebar map takes precedence for keys it defines
+    return { ...mainMap, ...sidebarFootnoteOriginMap };
+  }, [rawMainMarkdown, sidebar, sidebarFootnoteOriginMap]);
+
   function getCacheKey(section, subsection = null) {
     return subsection ? `${section}/${subsection}` : section;
   }
+  const stableOnFootnotesReady = useCallback(
+    (fns) => onFootnotesReadyRef.current(fns),
+    [],
+  );
 
+  const onFootnotesReadyRef = useRef(null);
+  onFootnotesReadyRef.current = (fns) => {
+    mergedFootnotesRef.current = fns;
+    setMainFootnotes(fns);
+  };
   async function getCachedContent(section, subsection = null) {
     const cacheKey = getCacheKey(section, subsection);
     if (cachedContent.current[cacheKey]) return cachedContent.current[cacheKey];
@@ -210,6 +418,15 @@ function MarkdownPage() {
     }
     return null;
   }
+
+  const allPageFootnotes = useMemo(() => {
+    if (!allDefinitions || Object.keys(allDefinitions).length === 0) return [];
+    return Object.entries(allDefinitions).map(([key, content], i) => ({
+      key,
+      content,
+      number: i + 1,
+    }));
+  }, [allDefinitions]);
 
   /**
    * Pure UI helper: given a term key, render its content into the right drawer.
@@ -248,6 +465,9 @@ function MarkdownPage() {
         : sidebarEntry.content) ||
       "";
 
+    // Build the footnote origin map for this drawer's content only
+    const drawerFootnoteOriginMap = buildFootnoteOriginMap(contentToShow, {});
+
     const heading =
       (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
       String(term).replace(/-/g, " ");
@@ -258,16 +478,18 @@ function MarkdownPage() {
           {highlightText(heading, highlight)}
         </div>
         <div className="drawer-meta-divider" />
-
         <MarkdownRenderer
           content={contentToShow}
-          sidebar={sidebar}
+          sidebar={{}}
           sectionId={sectionId}
           subsectionId={subsectionId}
           onDrawerOpen={handleDrawerOpen}
           onNavigation={handleNavigation}
           highlight={highlight}
           urlTerm={urlTerm}
+          mergedSidebar={allPageFootnotes}
+          // Drawer content renders in isolation — pass the drawer's own footnote origin map
+          footnoteOriginMap={drawerFootnoteOriginMap}
         />
       </>
     );
@@ -302,9 +524,12 @@ function MarkdownPage() {
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
+          // ── Store raw markdown for footnote origin parsing ──
+          setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
+          setAllDefinitions(result.allDefinitions || {});
 
           //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
           let lu = result.frontmatter?.lastUpdated || "";
@@ -369,11 +594,12 @@ function MarkdownPage() {
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
+          setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
           setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
+          setAllDefinitions(result.allDefinitions || {});
 
-          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
           let lu = result.frontmatter?.lastUpdated || "";
 
           if (!lu) {
@@ -437,7 +663,6 @@ function MarkdownPage() {
   }, [sectionId]);
 
   useEffect(() => {
-    // No term → close drawer and clear active state
     if (!urlTerm) {
       closeRightDrawer();
       return;
@@ -445,19 +670,15 @@ function MarkdownPage() {
 
     const key = String(urlTerm).toLowerCase();
 
-    // Wait until sidebar is actually loaded before trying to open the drawer
     if (!sidebar || Object.keys(sidebar).length === 0) {
-      return; // sidebar not ready yet → we'll re-run when sidebar updates
-    }
-
-    // Optionally guard: only auto-open if the entry really exists
-    const sidebarEntry = getSidebarContent(key);
-    if (!sidebarEntry) {
-      // You can choose to silently ignore here, or log/track if you want
       return;
     }
 
-    // URL-driven open: pure UI call, no nav/toggle
+    const sidebarEntry = getSidebarContent(key);
+    if (!sidebarEntry) {
+      return;
+    }
+
     openGlobalDrawerForTerm(key, {
       silent: true,
     });
@@ -522,19 +743,14 @@ function MarkdownPage() {
    * - ONLY updates the URL.
    * - UI changes are handled by the URL-driven controller effect below.
    */
-  function handleDrawerOpen(term) {
+  function handleDrawerOpen(term, hash = "") {
     saveScrollPosition();
-
     windowScrollRef.current = window.scrollY || 0;
 
     const basePath = `/${sectionId}/${subsectionId}`;
 
-    // 🔻 Close: chip told us "I'm already active, please close"
     if (!term) {
-      // 1) Close the drawer immediately
       closeRightDrawer();
-
-      // 2) Strip /:term from URL if present
       if (location.pathname !== basePath) {
         navigate(basePath, { replace: true });
 
@@ -548,8 +764,8 @@ function MarkdownPage() {
     const key = String(term).toLowerCase();
     const targetPath = `${basePath}/${key}`;
 
-    if (location.pathname !== targetPath) {
-      navigate(targetPath);
+    if (location.pathname !== targetPath || hash) {
+      navigate({ pathname: targetPath, hash });
 
       requestAnimationFrame(() => {
         window.scrollTo(0, windowScrollRef.current);
@@ -577,10 +793,37 @@ function MarkdownPage() {
     if (!location.hash) return;
 
     const id = location.hash.replace("#", "");
-    const el = document.getElementById(id);
-    if (!el) return;
 
-    el.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      // If the element is inside the drawer, scroll the drawer's scroll container
+      const drawer = document.querySelector(".right-sidebar");
+      if (drawer && drawer.contains(el)) {
+        let scrollContainer = null;
+        let node = el.parentElement;
+        while (node && node !== document.body) {
+          const { overflowY } = window.getComputedStyle(node);
+          if (overflowY === "auto" || overflowY === "scroll") {
+            scrollContainer = node;
+            break;
+          }
+          node = node.parentElement;
+        }
+        if (scrollContainer) {
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          scrollContainer.scrollTo({
+            top: scrollContainer.scrollTop + (elRect.top - containerRect.top) - 24,
+            behavior: "smooth",
+          });
+          return;
+        }
+      }
+
+      el.scrollIntoView({ behavior: "smooth" });
+    }, 350);
   }, [location.hash]);
 
   return (
@@ -612,12 +855,16 @@ function MarkdownPage() {
               isFinal={contentFinal}
               highlight={highlight}
               urlTerm={urlTerm}
+              allDefinitions={allDefinitions}
+              onFootnotesReady={stableOnFootnotesReady}
+              extraFootnotes={allPageFootnotes.slice(mainFootnotes.length)}
+              // ── NEW: pass the pre-computed origin map into the renderer ──
+              footnoteOriginMap={footnoteOriginMap}
             />
           </Box>
         )}
       </Box>
       <div className="page-height"></div>
-      <Footer />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import ContentsSidebar from "../components/ContentsSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 /**
  * SidebarLayout
@@ -31,7 +32,7 @@ export default function SidebarLayout({ children }) {
     typeof window !== "undefined" ? window.innerWidth : 1440,
   );
   // Track sidebar widths for layout calculation
-  const [leftWidth, setLeftWidth] = useState(250);
+  const [leftWidth, setLeftWidth] = useState(300);
   const rightWidth = 300;
 
   // --- Layout mode logic: returns "wide" or "overlay" ---
@@ -41,7 +42,9 @@ export default function SidebarLayout({ children }) {
     return "wide";
   }
   const [showHeaderToggle, setShowHeaderToggle] = useState(true);
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(true);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(
+    computeLayoutMode() != "wide",
+  );
 
   const layoutMode = useMemo(
     () => computeLayoutMode(),
@@ -61,7 +64,6 @@ export default function SidebarLayout({ children }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Keep the <html> element in sync with React's layoutMode
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.dataset.layoutMode = layoutMode;
@@ -159,9 +161,21 @@ export default function SidebarLayout({ children }) {
       }
     }
   }, [leftSidebar.width, leftSidebarCollapsed, layoutMode]);
+
   /** ---------------- RIGHT DRAWER CONTENT STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
+
+  // Manage 'right-open' class on <html> when right sidebar is open in wide mode
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (isRightOpen && layoutMode === "wide") {
+        document.documentElement.classList.add("right-open");
+      } else {
+        document.documentElement.classList.remove("right-open");
+      }
+    }
+  }, [isRightOpen, layoutMode]);
 
   /** ---------------- PANEL MANAGER (tiny state machine) ----------------
    *
@@ -187,7 +201,7 @@ export default function SidebarLayout({ children }) {
         }
       } else if (id === "right") {
         // In overlay mode, collapse left before opening right.
-        if (layoutMode === "overlay" && !leftSidebar.collapsed) {
+        if (layoutMode === "overlay" && !leftSidebarCollapsed) {
           leftSidebar.toggleCollapsed();
         }
         setIsRightOpen(true);
@@ -423,24 +437,14 @@ export default function SidebarLayout({ children }) {
               }
             }}
             aria-label={
-              leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
+              leftSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
             }
-            title={
-              leftSidebar?.collapsed ? "Expand sidebar" : "Collapse sidebar"
-            }
+            title={leftSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {leftSidebar?.collapsed ? ">" : "<"}
+            {leftSidebarCollapsed ? ">" : "<"}
           </button>
         )}
-        <main
-          id="main"
-          className="main-content"
-          ref={mainRef}
-          style={{
-            marginLeft: leftSidebarCollapsed ? 0 : leftSidebar.width,
-            marginRight: isRightOpen ? 300 : 0,
-          }}
-        >
+        <main id="main" className="main-content" ref={mainRef}>
           <div className="main-shift" ref={innerRef}>
             {children}
           </div>
@@ -472,6 +476,12 @@ export default function SidebarLayout({ children }) {
             </>
           )}
         </aside>
+        <Footer
+          isLeftOpen={!leftSidebarCollapsed}
+          leftWidth={leftWidth}
+          isRightOpen={isRightOpen}
+          rightWidth={rightWidth}
+        />
       </div>
     </LayoutContext.Provider>
   );

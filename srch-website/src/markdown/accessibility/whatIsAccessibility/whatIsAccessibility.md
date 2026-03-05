@@ -56,19 +56,31 @@ Ganti, Akhilesh. "Unified Payments Interface (UPI)." Investopedia, March 7, 2024
 
 Broverman, Neal. "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That's Unacceptable." Mashable, February 23, 2025. https://mashable.com/article/black-girls-who-code-representation
 
+## Footnotes
+
 [^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
-[^2]: "Definition and Overview of Universal Design (UD),", Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
-[^3]: "An Introduction to Digital Accessibility,", Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
+
+[^2]: “Definition and Overview of Universal Design (UD),” Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
+
+[^3]: “An Introduction to Digital Accessibility,” Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
+
 [^4]: Aimi Hamraie and Kelly Fritsch, "Crip technoscience manifesto," _Catalyst: Feminism, Theory, Technoscience_ 5, no. 1 (2019): 4.
-[^5]: "What Is Digital Equity?", Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
+
+[^5]: “What Is Digital Equity?” Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
+
 [^6]: UN-Habitat, _Addressing the Digital Divide: Taking Action Towards Digital Inclusion_, United Nations Human Settlements Programme, accessed April 14, 2025, https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf.
-[^7]: Divyam Raj Meng, "India's Unified Payments Interface Has Revolutionized Its Digital Payments Market,", Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
-[^8]: Akhilesh Ganti, "Unified Payments Interface (UPI),", Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
-[^9]: Neal Broverman, "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That's Unacceptable,", _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
+
+[^7]: Divyam Raj Meng, “India’s Unified Payments Interface Has Revolutionized Its Digital Payments Market,” Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
+
+[^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
+
+[^9]: Neal Broverman, “Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That’s Unacceptable,” _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
 
 ## Sidebar
-we-are-familiar-with: 
+
+we-are-familiar-with:
 Heading: Familiar Case Studies
+
 ## Case Study: WCAG 1.2.1 Audio-only and Video-only (Pre-recorded)
 
 “A transcript is provided for audio-only content and a transcript or audio description is provided for video-only content.”[^1]
@@ -79,50 +91,23 @@ While this feature undoubtedly aids users with visual or hearing impairment, it 
 
 The option to change one’s screen to high contrast is available on many of the most common operating systems—i.e. Linux, MacOS, and Windows. Students themselves use this feature since it is a default when they work on IDEs such as VSCode. While we may not think of high contrast as an explicit accessibility feature, it is built to make character distinction easier and less visually taxing than standard white or light screens with dark text.
 
-[^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
-[^2]: “Definition and Overview of Universal Design (UD),” Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
-[^3]: “An Introduction to Digital Accessibility,” Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
-[^4]: Aimi Hamraie and Kelly Fritsch, "Crip technoscience manifesto," _Catalyst: Feminism, Theory, Technoscience_ 5, no. 1 (2019): 4.
-[^5]: “What Is Digital Equity?” Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
-[^6]: UN-Habitat, _Addressing the Digital Divide: Taking Action Towards Digital Inclusion_, United Nations Human Settlements Programme, accessed April 14, 2025, https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf.
-[^7]: Divyam Raj Meng, “India’s Unified Payments Interface Has Revolutionized Its Digital Payments Market,” Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
-[^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
-
-
-
 In-practice:
 Heading: Universal Design Case Study
+
 ## Case Study: iPhone Home Screens
 
 iPhone home screens are both easy to navigate (they are compatible with screen readers and other assistive technology) and customizable. That way, there exists a convention users are familiar with (icons corresponding to apps that are clickable), while giving agency to users to format their device as they best see fit.
 
-[^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
-[^2]: “Definition and Overview of Universal Design (UD),” Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
-[^3]: “An Introduction to Digital Accessibility,” Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
-[^4]: Aimi Hamraie and Kelly Fritsch, "Crip technoscience manifesto," _Catalyst: Feminism, Theory, Technoscience_ 5, no. 1 (2019): 4.
-[^5]: “What Is Digital Equity?” Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
-[^6]: UN-Habitat, _Addressing the Digital Divide: Taking Action Towards Digital Inclusion_, United Nations Human Settlements Programme, accessed April 14, 2025, https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf.
-[^7]: Divyam Raj Meng, “India’s Unified Payments Interface Has Revolutionized Its Digital Payments Market,” Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
-[^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
-
 perspectives:
 Heading: Disability Case Study
+
 ## Case Study: Hackathons[^4]
 
 Hackathons hosted by organizations where the prompt is a well-intentioned call to create some technology meant to aid disabled people can be more harmful than helpful. These events often frame the users of this technology as fixed and separate from those designing the technology. Further, by framing the invention of assistive technology (or otherwise) in the brief span of a Hackathon, these events hide the extended, exhaustive process that goes into creating technology by and for disabled people.
 
-[^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
-[^2]: “Definition and Overview of Universal Design (UD),” Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
-[^3]: “An Introduction to Digital Accessibility,” Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
-[^4]: Aimi Hamraie and Kelly Fritsch, "Crip technoscience manifesto," _Catalyst: Feminism, Theory, Technoscience_ 5, no. 1 (2019): 4.
-[^5]: “What Is Digital Equity?” Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
-[^6]: UN-Habitat, _Addressing the Digital Divide: Taking Action Towards Digital Inclusion_, United Nations Human Settlements Programme, accessed April 14, 2025, https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf.
-[^7]: Divyam Raj Meng, “India’s Unified Payments Interface Has Revolutionized Its Digital Payments Market,” Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
-[^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
-
-
 can-be-addressed:
 Heading: Equity Case Study
+
 ## Case Study: Unified Payments Interface[^7] [^8]
 
 In 2016, the National Payments Corporation of India established the Unified Payments Interface (UPI), a single page mobile application that facilitates payment between parties in an efficient, accessible manner. UPI is managed by the Reserve Bank of India and partners with a variety of banks to allow users to access the service. UPI has been credited for including marginalized parties in a digital landscape with its ease and convenience of use, bolstering the Indian economy and reducing the cash-digital divide.
@@ -130,14 +115,3 @@ In 2016, the National Payments Corporation of India established the Unified Paym
 ## Case Study: Black Girls Code [^9]
 
 Black Girls Code is an organization that promotes the education of Black girls and young women in computation and technology. They recognize that only 2% of jobs in the tech sector are held by Black women and aim to improve those numbers.
-
-[^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
-[^2]: “Definition and Overview of Universal Design (UD),” Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
-[^3]: “An Introduction to Digital Accessibility,” Mass.gov, accessed April 14, 2025, https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?.
-[^4]: Aimi Hamraie and Kelly Fritsch, "Crip technoscience manifesto," _Catalyst: Feminism, Theory, Technoscience_ 5, no. 1 (2019): 4.
-[^5]: “What Is Digital Equity?” Internet Society Foundation, June 26, 2023, https://www.isocfoundation.org/2023/06/what-is-digital-equity/.
-[^6]: UN-Habitat, _Addressing the Digital Divide: Taking Action Towards Digital Inclusion_, United Nations Human Settlements Programme, accessed April 14, 2025, https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf.
-[^7]: Divyam Raj Meng, “India’s Unified Payments Interface Has Revolutionized Its Digital Payments Market,” Cornell SC Johnson College of Business, December 20, 2024, https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/.
-[^8]: Akhilesh Ganti, “Unified Payments Interface (UPI),” Investopedia, March 7, 2024, https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp.
-[^9]: Neal Broverman, “Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That’s Unacceptable,” _Mashable_, February 23, 2025, https://mashable.com/article/black-girls-who-code-representation.
-

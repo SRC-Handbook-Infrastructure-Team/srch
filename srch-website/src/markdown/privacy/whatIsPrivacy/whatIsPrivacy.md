@@ -70,6 +70,7 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 [Dwork, McSherry, Nissim, and Smith (2006)](https://link.springer.com/chapter/10.1007/11681878_14#Bib1) describes **differential privacy (DP)**, a {framework} used for privacy-preserving statistical analysis and machine learning. Differentially private algorithms rely on the careful introduction of statistical noise to obscure identity without meaningfully altering results. The inclusion or non-inclusion of a particular observation has no statistically significant impact on the outcome, so there is no way to prove a certain individual is represented in the data set. On this basis, a person can always plausibly deny contributing data.
 
 #### Figure: Table summarizing four views of privacy.
+
 ![A table summarizing four views of privacy. It lists that privacy is about access restriction, information flow control, the separation of public and private spheres, and plausible deniability. It lists that someone has privacy if their physical self and information about them is inaccessible to others, they are empowered to control if and how information about them is collected, shared, and used, their personal spaces, relationships, and actions are free from interference, and there is a mathematical guarantee their information or identity is unrecoverable."](/assets/primer-photos/table_of_privacy.png)
 
 ## Privacy from whom?
@@ -163,6 +164,12 @@ Wheeler, Evan. _Security Risk Management: Building an Information Security Risk 
 gate-we-can-open-close-to-others:
 Heading:Case Study:
 The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [_Van Buren v. United States_](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
+
+## References
+
+Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
+
+"Definition and Overview of Universal Design (UD)." Centre for Excellence in Universal Design. Accessed April 14, 2025. https://universaldesign.ie/about-universal-design/definition-and-overview
 
 man-in-the-middle-attack:
 For more details on man-in-the-middle (MITM) attacks, see [“What is a man-in-the-middle (MITM) attack?”](https://www.ibm.com/think/topics/man-in-the-middle) from IBM.

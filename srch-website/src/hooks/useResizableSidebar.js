@@ -17,7 +17,7 @@ export default function useResizableSidebar({
   getDynamicBounds,
 } = {}) {
   const defaultWidth = 300;
-  const minWidth = 225;
+  const minWidth = 300;
   const [maxWidth, setMaxWidthState] = useState(calculateMax());
   const initial = () => {
     if (!isBrowser()) return defaultWidth;
@@ -52,13 +52,13 @@ export default function useResizableSidebar({
     }
   }, [maxWidth, width]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setMaxWidthState(calculateMax());
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setMaxWidthState(calculateMax());
+  //   };
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   const setWidth = useCallback(
     (w) => setWidthState(() => clamp(Math.round(w), minWidth, maxWidth)),
@@ -111,64 +111,64 @@ export default function useResizableSidebar({
     }
     if (typeof onStopResize === "function") onStopResize();
   }, [isResizing, saveOnEnd, setWidth, storageKey, side, onStopResize]);
-  useEffect(() => {
-    if (!isBrowser()) return;
+  // useEffect(() => {
+  //   if (!isBrowser()) return;
 
-    const onMove = (e) => {
-      if (!isResizing) return;
+  //   const onMove = (e) => {
+  //     if (!isResizing) return;
 
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  //     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
-      const delta = clientX - ref.current.startX;
+  //     const delta = clientX - ref.current.startX;
 
-      const rawNext =
-        side === "left"
-          ? ref.current.startWidth + delta
-          : ref.current.startWidth - delta;
+  //     const rawNext =
+  //       side === "left"
+  //         ? ref.current.startWidth + delta
+  //         : ref.current.startWidth - delta;
 
-      let dynMin = minWidth,
-        dynMax = maxWidth;
-      if (typeof getDynamicBounds === "function") {
-        const b = getDynamicBounds();
-        if (b && Number.isFinite(b.min)) dynMin = b.min;
-        if (b && Number.isFinite(b.max)) dynMax = b.max;
-      }
-      const clampedNext = clamp(rawNext, dynMin, dynMax);
-      pendingWidth.current = clampedNext;
-      setWidth(clampedNext);
+  //     let dynMin = minWidth,
+  //       dynMax = maxWidth;
+  //     if (typeof getDynamicBounds === "function") {
+  //       const b = getDynamicBounds();
+  //       if (b && Number.isFinite(b.min)) dynMin = b.min;
+  //       if (b && Number.isFinite(b.max)) dynMax = b.max;
+  //     }
+  //     const clampedNext = clamp(rawNext, dynMin, dynMax);
+  //     pendingWidth.current = clampedNext;
+  //     setWidth(clampedNext);
 
-      if (cssVarName) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = requestAnimationFrame(() => {
-          document.documentElement.style.setProperty(
-            cssVarName,
-            `${pendingWidth.current}px`,
-          );
-        });
-      }
-    };
+  //     if (cssVarName) {
+  //       cancelAnimationFrame(rafRef.current);
+  //       rafRef.current = requestAnimationFrame(() => {
+  //         document.documentElement.style.setProperty(
+  //           cssVarName,
+  //           `${pendingWidth.current}px`,
+  //         );
+  //       });
+  //     }
+  //   };
 
-    const onUp = () => stopResize();
+  //   const onUp = () => stopResize();
 
-    if (isResizing) {
-      window.addEventListener("mousemove", onMove, { passive: false });
-      window.addEventListener("mouseup", onUp, { passive: true });
-      window.addEventListener("touchmove", onMove, { passive: false });
-      window.addEventListener("touchend", onUp);
-    }
+  //   if (isResizing) {
+  //     window.addEventListener("mousemove", onMove, { passive: false });
+  //     window.addEventListener("mouseup", onUp, { passive: true });
+  //     window.addEventListener("touchmove", onMove, { passive: false });
+  //     window.addEventListener("touchend", onUp);
+  //   }
 
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-      window.removeEventListener("touchmove", onMove);
-      window.removeEventListener("touchend", onUp);
-      cancelAnimationFrame(rafRef.current);
-      if (isBrowser()) {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      }
-    };
-  }, [isResizing, setWidth, side, minWidth, maxWidth, cssVarName, stopResize]);
+  //   return () => {
+  //     window.removeEventListener("mousemove", onMove);
+  //     window.removeEventListener("mouseup", onUp);
+  //     window.removeEventListener("touchmove", onMove);
+  //     window.removeEventListener("touchend", onUp);
+  //     cancelAnimationFrame(rafRef.current);
+  //     if (isBrowser()) {
+  //       document.body.style.cursor = "";
+  //       document.body.style.userSelect = "";
+  //     }
+  //   };
+  // }, [isResizing, setWidth, side, minWidth, maxWidth, cssVarName, stopResize]);
 
   const handleKeyDown = useCallback(
     (e) => {

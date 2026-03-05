@@ -31,6 +31,34 @@
   width: 100%;
 }
 
+html:not(.left-open) .footer-content {
+  padding-left: 0;
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.left-open .footer-content {
+  padding-left: 300px;
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:not(.right-open) .footer-content {
+  padding-right: 0;
+  transition:
+    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.right-open .footer-content {
+  padding-right: 300px;
+  transition:
+    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .logo-container {
   align-items: flex-start;
 }

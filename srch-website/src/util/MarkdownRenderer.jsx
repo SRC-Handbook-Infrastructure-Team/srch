@@ -44,7 +44,7 @@ export function highlightText(node, highlight) {
 
 /* ----------------------------- Footnote Renumbering ----------------------------- */
 
-function renumberFootnotes(markdown) {
+export function renumberFootnotes(markdown) {
   if (!markdown || typeof markdown !== "string") return markdown;
 
   // Match footnote references but not definitions (avoid trailing colon)
@@ -216,6 +216,119 @@ export const getSubsections = async (sectionId) => {
 
 /* ----------------------------- Content Loader ----------------------------- */
 
+/**
+ * Extracts footnote definitions from a markdown string.
+ *
+ * FIX: Replaced broken lookahead regex (?=^\[\^|\n\n|\Z) — \Z is not valid
+ * in JavaScript RegExp. The old regex silently failed to capture the LAST
+ * footnote definition in a block (no trailing \n\n after it), so e.g. [^9]
+ * was always dropped. The new regex uses a negative lookahead on each
+ * continuation line instead, which correctly captures every definition
+ * including the last one.
+ *
+ * FIX: The stripped output now also removes the ## References and
+ * ## Footnotes section headings (and all content under ## References), which
+ * previously leaked into the rendered page as visible headings and plain text.
+ *
+ * Returns { stripped, footnotes } where:
+ *   - stripped: markdown with footnote definitions AND reference/footnotes
+ *               section headings removed
+ *   - footnotes: array of { key, content } in order of first reference
+ */
+export function extractFootnotes(markdown) {
+  if (!markdown || typeof markdown !== "string") {
+    return { stripped: markdown, footnotes: [] };
+  }
+
+  // FIX: New definition regex — continuation lines are any line that does NOT
+  // start a new [^key]: definition and is not a blank line.
+  // This correctly captures the last definition in a block.
+  const defRegex = /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
+  const definitions = {};
+  let match;
+  while ((match = defRegex.exec(markdown)) !== null) {
+    definitions[match[1]] = match[2].trim();
+  }
+
+  // Order footnotes by first reference appearance in the text
+  const refRegex = /\[\^([^\]]+)\](?!:)/g;
+  const ordered = [];
+  const seen = new Set();
+  while ((match = refRegex.exec(markdown)) !== null) {
+    const key = match[1];
+    if (!seen.has(key) && definitions[key] !== undefined) {
+      seen.add(key);
+      ordered.push({ key, content: definitions[key] });
+    }
+  }
+
+  // FIX: Strip ## References and ## Footnotes section headings + their content.
+  // These sections always appear at the tail of the document (before ## Sidebar),
+  // so stripping to end-of-string is safe and removes stray citation text too.
+  // Also strip any remaining bare [^key]: definition lines.
+  const stripped = markdown
+    .replace(/^##\s+References\b[\s\S]*/m, "")
+    .replace(/^##\s+Footnotes\b[\s\S]*/m, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return { stripped, footnotes: ordered, definitions };
+}
+
+/**
+ * Merges footnotes from main content and multiple sidebar entries.
+ * Re-numbers all references consistently and returns:
+ *   - updatedMain: main markdown with refs renumbered
+ *   - updatedSidebarMap: { [termKey]: markdown with defs stripped + refs renumbered }
+ *   - mergedFootnotes: array of { number, content } for the unified section
+ */
+export function mergeFootnotes(mainMarkdown, sidebarMap, allDefinitions = {}) {
+  const { stripped: mainStripped, definitions: mainOnlyDefs } =
+    extractFootnotes(mainMarkdown);
+
+  const allDefs = { ...allDefinitions, ...mainOnlyDefs };
+
+  let counter = 0;
+  const keyToNumber = new Map();
+  const mergedFootnotes = [];
+
+  function assignNumber(key) {
+    if (keyToNumber.has(key)) return keyToNumber.get(key);
+    const def = allDefs[key];
+    if (def === undefined) return null;
+    counter += 1;
+    keyToNumber.set(key, counter);
+    mergedFootnotes.push({ number: counter, content: def, key });
+    return counter;
+  }
+
+  function renumberText(text) {
+    return text.replace(/\[\^([^\]]+)\](?!:)/g, (_, key) => {
+      const num = assignNumber(key);
+      return num !== null ? `[^${num}]` : `[^${key}]`;
+    });
+  }
+
+  // 1. Walk main body first — assigns numbers in reading order
+  const updatedMain = renumberText(mainStripped);
+
+  // 2. Walk every sidebar entry — assigns numbers to sidebar-only refs
+  const updatedSidebarMap = {};
+  for (const [termKey, entry] of Object.entries(sidebarMap || {})) {
+    const { stripped: sidebarStripped } = extractFootnotes(entry.content);
+    const renumbered = renumberText(sidebarStripped);
+    updatedSidebarMap[termKey] = { ...entry, content: renumbered };
+  }
+
+  // 3. Any definition in allDefs not yet referenced gets appended at the end
+  //    so all 9 footnotes always appear in the main footnote list.
+  for (const key of Object.keys(allDefs)) {
+    assignNumber(key); // no-op if already assigned
+  }
+
+  return { updatedMain, updatedSidebarMap, mergedFootnotes };
+}
+
 export const getContent = async (sectionId, subsectionId) => {
   try {
     let path;
@@ -240,6 +353,8 @@ export const getContent = async (sectionId, subsectionId) => {
         const content = await allMarkdownFiles[filePath]();
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
+
+        const { definitions: allDefinitions } = extractFootnotes(cleanContent);
 
         // allow either of these headings as the sidebar divider
         const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
@@ -315,6 +430,7 @@ export const getContent = async (sectionId, subsectionId) => {
         return {
           content: parsedContent,
           sidebar,
+          allDefinitions,
           frontmatter: { ...frontmatter, lastUpdated },
         };
       }
@@ -363,19 +479,112 @@ function MarkdownRenderer({
   isFinal,
   highlight,
   urlTerm,
+  mergedSidebar,
+  onFootnotesReady,
+  extraFootnotes = [],
+  allDefinitions = {},
+  // ── NEW prop ──────────────────────────────────────────────────────────────
+  // Pre-computed map of footnoteKey → "main" | sidebarSlug.
+  // Built by buildFootnoteOriginMap() in MarkdownPage and passed down.
+  // When provided it replaces the internal re-derivation that only saw the
+  // raw content string and missed sidebar-only definitions.
+  // Falls back to {} so the renderer stays self-contained when used standalone
+  // (e.g. inside a drawer where footnotes are always local).
+  footnoteOriginMap: externalOriginMap = {},
 }) {
-  const processedContent = useMemo(() => {
-    if (!content) return "";
-    let processed =
-      typeof content === "string" ? content : content.content || "";
-    if (typeof processed === "string") {
-      processed = renumberFootnotes(processed);
-      processed = processed.replace(/\{([^}]+)\}/g, (match, term) => {
-        return `<sidebar-ref term="${term}"></sidebar-ref>`;
-      });
+  const processed = useMemo(() => {
+    if (!content)
+      return { main: "", sidebar: {}, footnotes: [], footnoteOriginMap: {} };
+
+    let raw = typeof content === "string" ? content : content.content || "";
+
+    const sidebarRegex = /^##\s+Sidebar\s*$/im;
+    const sidebarMatch = raw.match(sidebarRegex);
+    let mainContent = raw;
+    let sidebarContent = "";
+    if (sidebarMatch) {
+      mainContent = raw.slice(0, sidebarMatch.index).trim();
+      sidebarContent = raw
+        .slice(sidebarMatch.index + sidebarMatch[0].length)
+        .trim();
     }
-    return processed;
-  }, [content]);
+
+    const footnoteDefRegex = /^\[\^([0-9]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
+    const footnotesMap = new Map();
+    const localOriginMap = {};
+    let match;
+
+    while ((match = footnoteDefRegex.exec(mainContent)) !== null) {
+      footnotesMap.set(match[1], {
+        num: match[1],
+        content: match[2].trim(),
+        from: "main",
+      });
+      localOriginMap[match[1]] = "main";
+    }
+
+    if (sidebarContent) {
+      const lines = sidebarContent.split(/\r?\n/);
+      let currentSlug = null;
+      for (let i = 0; i < lines.length; ++i) {
+        const line = lines[i];
+        const slugMatch = line.match(/^(\w[\w-]*):\s*$/);
+        if (slugMatch) {
+          currentSlug = slugMatch[1];
+          continue;
+        }
+        const refMatch = line.match(/\[\^([0-9]+)\]/);
+        if (refMatch && currentSlug) {
+          if (!footnotesMap.has(refMatch[1])) {
+            localOriginMap[refMatch[1]] = currentSlug;
+          }
+        }
+        let m;
+        while ((m = footnoteDefRegex.exec(line)) !== null) {
+          footnotesMap.set(m[1], {
+            num: m[1],
+            content: m[2].trim(),
+            from: currentSlug || "main",
+          });
+          localOriginMap[m[1]] = currentSlug || "main";
+        }
+      }
+    }
+
+    const mergedOriginMap = { ...localOriginMap, ...externalOriginMap };
+
+    const footnotes = Array.from(footnotesMap.values()).sort(
+      (a, b) => Number(a.num) - Number(b.num),
+    );
+
+    let contentWithoutDefs = mainContent;
+    contentWithoutDefs = contentWithoutDefs.replace(footnoteDefRegex, "");
+    if (sidebarContent) {
+      contentWithoutDefs += "\n" + sidebarContent.replace(footnoteDefRegex, "");
+    }
+
+    const footnotesSectionRegex = /^##\s+Footnotes[\s\S]*?(?=^##\s|\n*$)/gim;
+    let replaced = contentWithoutDefs.replace(
+      footnotesSectionRegex,
+      () => "[[CUSTOM_FOOTNOTES_SECTION]]",
+    );
+    const refRegex = /\[\^([0-9]+)\]/g;
+    replaced = replaced.replace(refRegex, (m, n) => {
+      const origin = mergedOriginMap[n];
+      let href = `#user-content-fn-${n}`;
+      if (origin && origin !== "main" && sectionId && subsectionId) {
+        href = `/${sectionId}/${subsectionId}/${origin}#user-content-fn-${n}`;
+      }
+      return `<sup id=\"user-content-fnref-${n}\"><a href=\"${href}\" style=\"color: var(--color-text-hover); font-weight: bold; text-decoration: none;\">${n}</a></sup>`;
+    });
+
+    return {
+      main: replaced,
+      sidebar: {},
+      footnotes,
+      footnoteOriginMap: mergedOriginMap,
+    };
+  }, [content, externalOriginMap, sectionId, subsectionId]);
 
   /* ------------------------------------------------------------------------
    * Styling tokens used inside the components map
@@ -384,14 +593,9 @@ function MarkdownRenderer({
   const BLACK = "var(--color-text)";
 
   /* ------------------------------------------------------------------------
-   * Active drawer link state handling (no external integration required)
-   *
-   *  - We add 'srch-drawer-link-active' to the clicked <sidebar-ref>.
-   *  - A MutationObserver watches '.right-sidebar' for '.open'.
-   *    When it closes, we remove the active class from all sidebar-ref pills.
+   * Active drawer link state handling
    * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
-
   const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
   useEffect(() => {
@@ -420,7 +624,6 @@ function MarkdownRenderer({
         observerRef.current.disconnect();
         observerRef.current = null;
       }
-      // Safety cleanup on unmount
       document
         .querySelectorAll(".srch-drawer-link-active")
         .forEach((el) => el.classList.remove("srch-drawer-link-active"));
@@ -428,7 +631,6 @@ function MarkdownRenderer({
     };
   }, []);
 
-  // Smooth, one-time focus for drawer chip when opening/closing
   function focusDrawerChip(term) {
     if (!term) return;
 
@@ -438,7 +640,6 @@ function MarkdownRenderer({
       );
       if (!el) return;
 
-      // Find nearest scroll container
       let container = el.parentElement;
       while (container && container !== document.body) {
         const style = window.getComputedStyle(container);
@@ -446,7 +647,6 @@ function MarkdownRenderer({
         container = container.parentElement;
       }
 
-      // Default to window scroll
       if (!container || container === document.body) {
         el.scrollIntoView({
           behavior: "smooth",
@@ -463,7 +663,7 @@ function MarkdownRenderer({
       const isAbove = eRect.top < cRect.top + margin;
       const isBelow = eRect.bottom > cRect.bottom - margin;
 
-      if (!isAbove && !isBelow) return; // already visible → no movement
+      if (!isAbove && !isBelow) return;
 
       const delta = isAbove
         ? eRect.top - cRect.top - margin
@@ -476,21 +676,26 @@ function MarkdownRenderer({
     });
   }
 
-  // After drawer link becomes active, wait for the drawer animation
-  // to finish and then gently scroll it into view.
   useEffect(() => {
     if (!activeDrawerLink) return;
 
     const drawer = document.querySelector(".right-sidebar");
     if (!drawer) return;
 
-    // Match the CSS transition on .right-sidebar (0.35s)
     const timeout = setTimeout(() => {
       focusDrawerChip(activeDrawerLink);
     }, 350);
 
     return () => clearTimeout(timeout);
   }, [activeDrawerLink]);
+
+  const footnoteSourceMap = useMemo(() => {
+    const map = new Map();
+    for (const f of processed.footnotes) {
+      map.set(f.num, f.from);
+    }
+    return map;
+  }, [processed.footnotes]);
 
   const components = useMemo(
     () => ({
@@ -569,12 +774,11 @@ function MarkdownRenderer({
         );
       },
 
-      /* ------------------------------------------------------------------
-       * Standard Markdown links (NOT sidebar-ref chips)
-       * ---------------------------------------------------------------- */
       a: (props) => {
         if ("data-footnote-backref" in props) return null;
-        const isFootnoteRef = "data-footnote-ref" in props;
+        const isFootnoteLink =
+          props.href?.startsWith("#user-content-fn") ||
+          props.href?.includes("#user-content-fn");
         const isExternal =
           props.href &&
           (props.href.startsWith("http://") ||
@@ -586,7 +790,7 @@ function MarkdownRenderer({
           <a
             {...props}
             style={{
-              textDecoration: isFootnoteRef ? "none" : "underline",
+              textDecoration: isFootnoteLink ? "none" : "underline",
               color: "var(--color-text-hover)",
             }}
             href={props.href}
@@ -615,6 +819,13 @@ function MarkdownRenderer({
           const match = id.match(/\d+/);
           if (match) number = match[0];
         }
+        let backHref = number ? `#user-content-fnref-${number}` : null;
+        if (number) {
+          const origin = processed.footnoteOriginMap[number];
+          if (origin && origin !== "main" && sectionId && subsectionId) {
+            backHref = `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${number}`;
+          }
+        }
         return (
           <li
             id={id}
@@ -629,12 +840,10 @@ function MarkdownRenderer({
           >
             {number && (
               <a
-                href={`#user-content-fnref-${number}`}
+                href={backHref}
                 style={{
                   position: "absolute",
                   left: 0,
-                  top: "50%",
-                  transform: "translateY(-50%)",
                   color: RED,
                   fontWeight: "bold",
                   textDecoration: "none",
@@ -775,20 +984,11 @@ function MarkdownRenderer({
         />
       ),
 
-      /**
-       * sidebar-ref chip (inserted by {term} syntax in Markdown)
-       * Visual spec:
-       * - Base: red text (#9D0013), NO underline, transparent bg
-       * - Hover: red 1px border appears + scale up slightly; color stays #9D0013
-       * - Active: white text on filled red pill, red border; Info icon inherits white
-       * - Shape: radius 17px, height 32px, variable width
-       */
       "sidebar-ref": ({ node }) => {
         let raw = node.properties?.["term"] || "";
         let term = raw;
         let label = null;
 
-        // Support alias syntax {term|Custom Label}
         if (raw.includes("|")) {
           const [keyPart, labelPart] = raw.split("|");
           term = keyPart.trim();
@@ -798,7 +998,6 @@ function MarkdownRenderer({
         const termKey = term.toLowerCase();
         const value = sidebar?.[termKey];
 
-        // 🔑 Active state is derived purely from the URL param
         const isActive = urlTerm && urlTerm.toLowerCase() === termKey;
 
         const toShow = value
@@ -811,10 +1010,8 @@ function MarkdownRenderer({
           if (!value) return;
 
           if (isActive) {
-            // Clicking the active chip closes the drawer
             onDrawerOpen && onDrawerOpen(null);
           } else {
-            // Clicking an inactive chip opens that term
             onDrawerOpen && onDrawerOpen(termKey);
           }
         };
@@ -873,6 +1070,13 @@ function MarkdownRenderer({
           </HStack>
         );
       },
+      section: ({ node, children, ...props }) => {
+        const isDrawerMode = sidebar && Object.keys(sidebar).length === 0;
+        if (isDrawerMode && node?.properties?.dataFootnotes != null) {
+          return null;
+        }
+        return <section {...props}>{children}</section>;
+      },
     }),
     [
       onDrawerOpen,
@@ -883,24 +1087,224 @@ function MarkdownRenderer({
       sidebar,
       highlight,
       urlTerm,
+      footnoteSourceMap,
+      processed.footnoteOriginMap,
     ],
   );
 
-  return (
-    <div>
-      <ReactMarkdown
-        components={components}
-        remarkPlugins={[
-          remarkGfm,
-          [remarkHighlight, highlight],
-          remarkSidebarRef,
-        ]}
-        rehypePlugins={[rehypeRaw]}
-      >
-        {processedContent}
-      </ReactMarkdown>
-    </div>
-  );
+  useEffect(() => {
+    const handler = (e) => {
+      const a = e.target.closest("a[data-sidebar]");
+      if (a) {
+        e.preventDefault();
+        const sidebarKey = a.getAttribute("data-sidebar");
+        if (onDrawerOpen && sidebarKey) {
+          const href = a.getAttribute("href") || "";
+          const hashIndex = href.lastIndexOf("#");
+          const hash = hashIndex !== -1 ? href.slice(hashIndex) : "";
+          onDrawerOpen(sidebarKey, hash);
+        }
+      }
+    };
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [onDrawerOpen]);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * CustomFootnotesSection
+   *
+   * Renders the unified footnote list at the bottom of the page.
+   *
+   * For each footnote, it looks up the origin in processed.footnoteOriginMap
+   * (which already merges the external map from MarkdownPage with the locally
+   * derived map):
+   *   - origin === "main"  → back-link is a local anchor (#user-content-fnref-N)
+   *   - origin === slug    → back-link navigates to the drawer URL and includes
+   *                          a data-sidebar attribute so the click handler above
+   *                          can intercept it and open the drawer directly.
+   * ───────────────────────────────────────────────────────────────────────── */
+  function CustomFootnotesSection() {
+    const [showFootnotes, setShowFootnotes] = useState(false);
+    useEffect(() => {
+      function handleFootnoteClick(e) {
+        const a = e.target.closest('a[href^="#user-content-fn-"]');
+        if (a) {
+          const href = a.getAttribute("href");
+          if (href && href.startsWith("#user-content-fn-")) {
+            setShowFootnotes(true);
+            setTimeout(() => {
+              const id = href.slice(1);
+              const el = document.getElementById(id);
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                el.classList.add("footnote-highlight");
+                setTimeout(
+                  () => el.classList.remove("footnote-highlight"),
+                  1200,
+                );
+              }
+            }, 100);
+          }
+        }
+      }
+      document.addEventListener("click", handleFootnoteClick);
+      return () => document.removeEventListener("click", handleFootnoteClick);
+    }, []);
+    if (!processed.footnotes.length) return null;
+    return (
+      <section data-footnotes className="footnotes">
+        <button
+          type="button"
+          className="footnotes-toggle"
+          onClick={() => setShowFootnotes((prev) => !prev)}
+          aria-expanded={showFootnotes}
+          aria-controls="footnotes-list"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            background: "none",
+            border: "none",
+            color: "var(--color-header)",
+            fontFamily: "Be Vietnam Pro, sans-serif",
+            fontWeight: 600,
+            fontSize: "1.1em",
+            cursor: "pointer",
+            marginTop: "1.5rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <span
+            className={`footnotes-caret${showFootnotes ? " open" : ""}`}
+            style={{ marginRight: 8 }}
+          >
+            ▸
+          </span>
+          {showFootnotes ? "Hide footnotes" : "Show footnotes"}
+        </button>
+        {showFootnotes && (
+          <ol
+            id="footnotes-list"
+            style={{
+              paddingLeft: "1.5em",
+              marginBottom: "1em",
+              color: "var(--color-text)",
+              fontFamily: "Be Vietnam Pro, sans-serif",
+            }}
+          >
+            {processed.footnotes.map((f) => {
+              const origin = processed.footnoteOriginMap[f.num];
+              const isSidebarLinked =
+                origin && origin !== "main" && sectionId && subsectionId;
+              const backHref = isSidebarLinked
+                ? `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${f.num}`
+                : `#user-content-fnref-${f.num}`;
+              const localAnchor = `user-content-fnref-${f.num}`;
+              return (
+                <li
+                  key={f.num}
+                  id={`user-content-fn-${f.num}`}
+                  style={{
+                    color: "var(--color-text)",
+                    fontFamily: "Be Vietnam Pro, sans-serif",
+                    position: "relative",
+                    paddingBottom: "0.5rem",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    paddingLeft: "1.5rem",
+                    listStyleType: "none",
+                  }}
+                >
+                  <a
+                    href={backHref}
+                    id={isSidebarLinked ? localAnchor : undefined}
+                    aria-label={`Back to reference ${f.num}`}
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      color: "var(--color-text-hover)",
+                      fontWeight: "bold",
+                      textDecoration: "none",
+                    }}
+                    {...(isSidebarLinked ? { "data-sidebar": origin } : {})}
+                  >
+                    {f.num}
+                  </a>
+                  <span
+                    style={{
+                      marginLeft: 8,
+                      verticalAlign: "top",
+                      paddingTop: 1.5,
+                    }}
+                  >
+                    <ReactMarkdown
+                      components={components}
+                      remarkPlugins={[
+                        remarkGfm,
+                        [remarkHighlight, highlight],
+                        remarkSidebarRef,
+                      ]}
+                      rehypePlugins={[rehypeRaw]}
+                    >
+                      {f.content}
+                    </ReactMarkdown>
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </section>
+    );
+  }
+
+  // Render markdown, replacing placeholder with custom footnotes section
+  function renderWithFootnotes(main) {
+    const parts = main.split("[[CUSTOM_FOOTNOTES_SECTION]]");
+    if (parts.length === 1) {
+      return (
+        <ReactMarkdown
+          components={components}
+          remarkPlugins={[
+            remarkGfm,
+            [remarkHighlight, highlight],
+            remarkSidebarRef,
+          ]}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {main}
+        </ReactMarkdown>
+      );
+    }
+    return (
+      <>
+        <ReactMarkdown
+          components={components}
+          remarkPlugins={[
+            remarkGfm,
+            [remarkHighlight, highlight],
+            remarkSidebarRef,
+          ]}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {parts[0]}
+        </ReactMarkdown>
+        <CustomFootnotesSection />
+        <ReactMarkdown
+          components={components}
+          remarkPlugins={[
+            remarkGfm,
+            [remarkHighlight, highlight],
+            remarkSidebarRef,
+          ]}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {parts[1]}
+        </ReactMarkdown>
+      </>
+    );
+  }
+
+  return <div>{renderWithFootnotes(processed.main)}</div>;
 }
 
 export default MarkdownRenderer;

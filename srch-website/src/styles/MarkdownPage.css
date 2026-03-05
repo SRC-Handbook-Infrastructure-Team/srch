@@ -98,12 +98,8 @@
 }
 .markdown-content {
   padding-top: 20px;
-  padding-bottom: 50px;
+  padding-bottom: 10px;
   background: var(--color-bg);
-}
-.markdown-margin {
-  padding-left: 10%;
-  padding-right: 10%;
 }
 .markdown-page {
   background: var(--color-bg);
@@ -233,6 +229,34 @@ html[data-layout-mode="overlay"].right-open body .main-content {
 
 html:not(.left-open) body .main-content {
   margin-left: 0 !important;
+  padding-left: 8vw;
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.left-open body .main-content {
+  margin-left: 300px !important;
+  padding-left: 4vw;
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:not(.right-open) body .main-content {
+  margin-right: 0 !important;
+  padding-right: 8vw;
+  transition:
+    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.right-open body .main-content {
+  margin-right: 300px !important;
+  padding-right: 4vw;
+  transition:
+    margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html[data-layout-mode="mobile"].right-open body .main-content {
@@ -580,25 +604,6 @@ html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
   .markdown-page
   .page-divider.page-divider-margin {
   margin-bottom: 24px;
-}
-
-.mobile-menu-panel {
-  position: fixed;
-  top: var(--nav-bar-height);
-  left: 0;
-  right: 0;
-
-  z-index: 19;
-  background: var(--color-bg);
-
-  padding: 0 2rem 0;
-  box-shadow: 2px 2px 5px var(--color-shadow);
-
-  transform: translateY(-12px);
-  opacity: 0;
-  transition:
-    transform 0.22s cubic-bezier(0.22, 0.7, 0.36, 0.7),
-    opacity 0.18s ease-out;
 }
 
 .top-navbar[data-menu-open="true"] + .chakra-collapse .mobile-menu-panel {
