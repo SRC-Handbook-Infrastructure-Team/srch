@@ -309,7 +309,7 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const cachedContent = useRef({});
-  const windowScrollRef = useRef(0);
+  const pageScrollRef = useRef(0);
 
   const highlight = useMemo(() => {
     let hl = location.state?.highlight;
@@ -337,6 +337,7 @@ function MarkdownPage() {
 
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);
+  const pendingScrollRestoreRef = useRef(null);
   const mergedFootnotesRef = useRef([]);
   const formattedTitle = useMemo(() => {
     const fastSubs = getFastCachedSubsections(sectionId);
@@ -347,6 +348,47 @@ function MarkdownPage() {
       fastSubs || subsections,
     );
   }, [sectionId, subsectionId, pageTitle, subsections]);
+
+  function getPageScrollContainer() {
+    if (typeof document !== "undefined") {
+      const main = document.getElementById("main");
+      if (main) return main;
+    }
+    return window;
+  }
+
+  function getPageScrollTop() {
+    const container = getPageScrollContainer();
+    return container === window
+      ? window.scrollY || 0
+      : container.scrollTop || 0;
+  }
+
+  function restorePageScroll(top) {
+    const container = getPageScrollContainer();
+    if (container === window) {
+      window.scrollTo({ top, behavior: "auto" });
+      return;
+    }
+    container.scrollTo({ top, behavior: "auto" });
+  }
+
+  function schedulePageScrollRestore(top) {
+    restorePageScroll(top);
+
+    requestAnimationFrame(() => {
+      restorePageScroll(top);
+    });
+
+    if (pendingScrollRestoreRef.current) {
+      window.clearTimeout(pendingScrollRestoreRef.current);
+    }
+
+    pendingScrollRestoreRef.current = window.setTimeout(() => {
+      restorePageScroll(top);
+      pendingScrollRestoreRef.current = null;
+    }, 400);
+  }
 
   /*
    * footnoteOriginMap
@@ -736,9 +778,7 @@ function MarkdownPage() {
 
   // Save scroll BEFORE drawer changes cause any re-renders
   function saveScrollPosition() {
-    if (contentRef.current) {
-      scrollPosRef.current = contentRef.current.scrollTop;
-    }
+    scrollPosRef.current = getPageScrollTop();
   }
 
   /**
@@ -748,7 +788,7 @@ function MarkdownPage() {
    */
   function handleDrawerOpen(term, hash = "") {
     saveScrollPosition();
-    windowScrollRef.current = window.scrollY || 0;
+    pageScrollRef.current = scrollPosRef.current;
 
     const basePath = `/${sectionId}/${subsectionId}`;
 
@@ -758,7 +798,7 @@ function MarkdownPage() {
         navigate(basePath, { replace: true });
 
         requestAnimationFrame(() => {
-          window.scrollTo(0, windowScrollRef.current);
+          schedulePageScrollRestore(pageScrollRef.current);
         });
       }
       return;
@@ -771,7 +811,7 @@ function MarkdownPage() {
       navigate({ pathname: targetPath, hash });
 
       requestAnimationFrame(() => {
-        window.scrollTo(0, windowScrollRef.current);
+        schedulePageScrollRestore(pageScrollRef.current);
       });
     }
 
@@ -829,6 +869,14 @@ function MarkdownPage() {
       el.scrollIntoView({ behavior: "smooth" });
     }, 350);
   }, [location.hash]);
+
+  useEffect(() => {
+    return () => {
+      if (pendingScrollRestoreRef.current) {
+        window.clearTimeout(pendingScrollRestoreRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="markdown-page">

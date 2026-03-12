@@ -1002,6 +1002,9 @@ function MarkdownRenderer({
 
         const handleClick = (e) => {
           e.preventDefault();
+          if (e.currentTarget instanceof HTMLElement) {
+            e.currentTarget.blur();
+          }
           if (!value) return;
 
           if (isActive) {
@@ -1015,6 +1018,9 @@ function MarkdownRenderer({
           <Box
             as={RouterLink}
             to={`/${sectionId}/${subsectionId}/${termKey}`}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
             onClick={handleClick}
             className={`srch-drawer-link ${
               isActive ? "srch-drawer-link-active" : ""
