@@ -1,14 +1,8 @@
 import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Image, Icon, Collapse } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  ChevronDownIcon,
-  MoonIcon,
-  SearchIcon,
-  SunIcon,
-} from "@chakra-ui/icons";
+import { Box, Image, Icon, Collapsible } from "@chakra-ui/react";
+import { LuMenu, LuChevronDown, LuMoon, LuSearch, LuSun } from "react-icons/lu";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import logoLight from "../assets/srch_logo.svg";
@@ -197,7 +191,7 @@ function NavBar({ className = "", layoutMode }) {
           <Box
             as="button"
             type="button"
-            className="navbar-logo-container show-base hide-md"
+            className="navbar-logo-container nav-link-box show-base hide-md"
             aria-label="Go to home page"
             onClick={() => navigate("/")}
           >
@@ -214,7 +208,7 @@ function NavBar({ className = "", layoutMode }) {
             <Box
               as="button"
               type="button"
-              className="navbar-logo-container"
+              className="navbar-logo-container nav-link-box"
               aria-label="Go to home page"
               onClick={() => navigate("/")}
             >
@@ -234,11 +228,11 @@ function NavBar({ className = "", layoutMode }) {
               <Box
                 as="button"
                 type="button"
-                className="nav-dropdown-title"
+                className="nav-dropdown-title nav-link-box"
                 onClick={(e) => toggleSection("modules", e)}
               >
                 <span
-                  className="nav-dropdown-title-text nav-link-box"
+                  className="nav-dropdown-title-text"
                   style={{
                     color:
                       openSection === "modules"
@@ -287,7 +281,7 @@ function NavBar({ className = "", layoutMode }) {
                 }
               }}
             >
-              <SearchIcon className="navsearchbar-button" fontSize={"lg"} />
+              <LuSearch className="navsearchbar-button" size="1.25em" />
             </Box>
             <Box
               as="button"
@@ -301,9 +295,9 @@ function NavBar({ className = "", layoutMode }) {
               onClick={toggleTheme}
             >
               {theme === "dark" ? (
-                <SunIcon className="navsearchbar-button" fontSize="larger" />
+                <LuSun className="navsearchbar-button" size="1.25em" />
               ) : (
-                <MoonIcon className="navsearchbar-button" fontSize="lg" />
+                <LuMoon className="navsearchbar-button" size="1.25em" />
               )}
             </Box>
           </Box>
@@ -321,7 +315,7 @@ function NavBar({ className = "", layoutMode }) {
                 }
               }}
             >
-              <SearchIcon className="navsearchbar-button" fontSize={"lg"} />
+              <LuSearch className="navsearchbar-button" size="1.25em" />
             </Box>
             <Box
               as="button"
@@ -335,9 +329,9 @@ function NavBar({ className = "", layoutMode }) {
               onClick={toggleTheme}
             >
               {theme === "dark" ? (
-                <SunIcon className="navsearchbar-button" fontSize="larger" />
+                <LuSun className="navsearchbar-button" size="1.25em" />
               ) : (
-                <MoonIcon className="navsearchbar-button" fontSize="lg" />
+                <LuMoon className="navsearchbar-button" size="1.25em" />
               )}
             </Box>
             <Box
@@ -347,182 +341,181 @@ function NavBar({ className = "", layoutMode }) {
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               onClick={toggleMenu}
             >
-              <HamburgerIcon
+              <LuMenu
                 color={theme === "dark" ? "white" : "black"}
-                fontSize={"x-large"}
+                size="1.5em"
               />
             </Box>
           </Box>
         </Box>
-        <Collapse
-          in={isSearchOpen}
-          unmountOnExit
-          animateOpacity
-          transition={{
-            enter: { duration: 0.25 },
-            exit: { duration: 0.15, delay: 0.1 },
-          }}
-          startingHeight={"0.75rem"}
-        >
-          <NavSearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setIsSearchOpen={setIsSearchOpen}
-            isSearchOpen={isSearchOpen}
-            maxResults={2}
-            align="stretch"
-          />
-        </Collapse>
-        <Collapse
-          in={openSection === "modules"}
-          unmountOnExit
-          animateOpacity
-          transition={{
-            enter: { duration: 0.5 },
-            exit: { duration: 0.25 },
-          }}
-          style={{ overflow: "visible" }}
-        >
-          <Box className="nav-dropdown-menu">
-            {sections.slice(1).map((section) => (
-              <Box
-                as="button"
-                type="button"
-                key={section.id}
-                className="nav-dropdown-item nav-button"
-                tabIndex={openSection === "modules" ? 0 : -1}
-                onClick={(e) => {
-                  const sectionSubsections = subsections[section.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${section.id}`);
-                  }
-                  toggleSection(section.id, e);
-                }}
-              >
-                <span>{section.title}</span>
-              </Box>
-            ))}
-          </Box>
-        </Collapse>
-      </Box>
-      <Collapse
-        in={isMenuOpen}
-        unmountOnExit
-        animateOpacity
-        transition={{
-          enter: { duration: 0.25 },
-          exit: { duration: 0.5 },
-        }}
-      >
-        <Box className="mobile-menu-panel show-base hide-md">
-          <Box
-            className="mobile-menu-vstack"
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            gap={7}
+        <Collapsible.Root open={openSection === "modules"} unmountOnExit>
+          <Collapsible.Content
+            style={{ overflow: "visible" }}
+            animationName={{
+              _open: "expand-height",
+              _closed: "collapse-height",
+            }}
           >
-            <Box
-              as="button"
-              type="button"
-              className="nav-link-box nav-button"
-              onClick={() => {
-                setIsMenuOpen(false);
-                const firstSection = sections[0];
-                const sectionSubsections = subsections[firstSection.id];
-                if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-                } else {
-                  navigate(`/${firstSection.id}`);
-                }
-              }}
-            >
-              About
+            <Box className="nav-dropdown-menu">
+              {sections.slice(1).map((section) => (
+                <Box
+                  as="button"
+                  type="button"
+                  key={section.id}
+                  className="nav-dropdown-item nav-button"
+                  tabIndex={openSection === "modules" ? 0 : -1}
+                  onClick={(e) => {
+                    const sectionSubsections = subsections[section.id];
+                    if (sectionSubsections && sectionSubsections.length > 0) {
+                      navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                    } else {
+                      navigate(`/${section.id}`);
+                    }
+                    toggleSection(section.id, e);
+                  }}
+                >
+                  <span>{section.title}</span>
+                </Box>
+              ))}
             </Box>
+          </Collapsible.Content>
+        </Collapsible.Root>
+        <Collapsible.Root open={isSearchOpen} unmountOnExit>
+          <Collapsible.Content
+            animationName={{
+              _open: "expand-height",
+              _closed: "collapse-height",
+            }}
+          >
+            <NavSearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setIsSearchOpen={setIsSearchOpen}
+              isSearchOpen={isSearchOpen}
+              maxResults={2}
+              align="stretch"
+            />
+          </Collapsible.Content>
+        </Collapsible.Root>
+      </Box>
+      <Collapsible.Root
+        open={isMenuOpen}
+        unmountOnExit
+        className="mobile-menu-collapsible"
+      >
+        <Collapsible.Content
+          animationName={{
+            _open: "expand-height",
+            _closed: "collapse-height",
+          }}
+        >
+          <Box className="mobile-menu-panel show-base hide-md">
             <Box
-              as="button"
-              type="button"
-              className="nav-link-box nav-button"
-              onClick={() => {
-                setIsMenuOpen(false);
-                navigate("/acknowledgments");
-              }}
-            >
-              Acknowledgments
-            </Box>
-            <Box
-              className="mobile-modules-container"
-              onMouseEnter={() => setIsModulesExpanded(true)}
-              onMouseLeave={() => setIsModulesExpanded(false)}
+              className="mobile-menu-vstack"
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-start"
+              gap={7}
             >
               <Box
                 as="button"
                 type="button"
-                className="mobile-modules-toggle nav-link-box nav-button"
-                onClick={() => setIsModulesExpanded(!isModulesExpanded)}
-              >
-                Modules
-                <Icon
-                  as={ChevronDownIcon}
-                  className="mobile-modules-chevron"
-                  style={{
-                    transform: isModulesExpanded
-                      ? "rotate(180deg)"
-                      : "rotate(0deg)",
-                  }}
-                />
-              </Box>
-              <Collapse
-                in={isModulesExpanded}
-                unmountOnExit
-                animateOpacity={true}
-                style={{ overflow: "visible", width: "min-content" }}
-                transition={{
-                  enter: { duration: 0.25 },
-                  exit: { duration: 0.25 },
+                className="nav-link-box nav-button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  const firstSection = sections[0];
+                  const sectionSubsections = subsections[firstSection.id];
+                  if (sectionSubsections && sectionSubsections.length > 0) {
+                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                  } else {
+                    navigate(`/${firstSection.id}`);
+                  }
                 }}
+              >
+                About
+              </Box>
+              <Box
+                as="button"
+                type="button"
+                className="nav-link-box nav-button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/acknowledgments");
+                }}
+              >
+                Acknowledgments
+              </Box>
+              <Box
+                className="mobile-modules-container"
+                onMouseEnter={() => setIsModulesExpanded(true)}
+                onMouseLeave={() => setIsModulesExpanded(false)}
               >
                 <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="stretch"
-                  paddingLeft={"1rem"}
-                  gap={1}
+                  as="button"
+                  type="button"
+                  className="mobile-modules-toggle nav-link-box nav-button"
+                  onClick={() => setIsModulesExpanded(!isModulesExpanded)}
                 >
-                  {sections.slice(1).map((section) => (
-                    <Box
-                      as="button"
-                      type="button"
-                      key={section.id}
-                      className="nav-dropdown-item nav-button"
-                      tabIndex={isModulesExpanded ? 0 : -1}
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        const sectionSubsections = subsections[section.id];
-                        if (
-                          sectionSubsections &&
-                          sectionSubsections.length > 0
-                        ) {
-                          navigate(
-                            `/${section.id}/${sectionSubsections[0].id}`,
-                          );
-                        } else {
-                          navigate(`/${section.id}`);
-                        }
-                        toggleSection(section.id, null);
-                      }}
-                    >
-                      {section.title}
-                    </Box>
-                  ))}
+                  Modules
+                  <Icon
+                    as={LuChevronDown}
+                    className="mobile-modules-chevron"
+                    style={{
+                      transform: isModulesExpanded
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
+                  />
                 </Box>
-              </Collapse>
+                <Collapsible.Root open={isModulesExpanded} unmountOnExit>
+                  <Collapsible.Content
+                    style={{ overflow: "visible", width: "min-content" }}
+                    animationName={{
+                      _open: "expand-height",
+                      _closed: "collapse-height",
+                    }}
+                  >
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="stretch"
+                      paddingLeft={"1rem"}
+                      gap={1}
+                    >
+                      {sections.slice(1).map((section) => (
+                        <Box
+                          as="button"
+                          type="button"
+                          key={section.id}
+                          className="nav-dropdown-item nav-button"
+                          tabIndex={isModulesExpanded ? 0 : -1}
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            const sectionSubsections = subsections[section.id];
+                            if (
+                              sectionSubsections &&
+                              sectionSubsections.length > 0
+                            ) {
+                              navigate(
+                                `/${section.id}/${sectionSubsections[0].id}`,
+                              );
+                            } else {
+                              navigate(`/${section.id}`);
+                            }
+                            toggleSection(section.id, null);
+                          }}
+                        >
+                          {section.title}
+                        </Box>
+                      ))}
+                    </Box>
+                  </Collapsible.Content>
+                </Collapsible.Root>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Collapse>
+        </Collapsible.Content>
+      </Collapsible.Root>
     </Box>
   );
 }

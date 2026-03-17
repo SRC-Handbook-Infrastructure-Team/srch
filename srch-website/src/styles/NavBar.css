@@ -152,6 +152,7 @@ html[data-theme="dark"] .nav-dropdown-menu {
   user-select: none;
   transition: color 0.2s;
   white-space: nowrap;
+  padding: 0 !important;
 }
 
 .nav-link-box:hover {

@@ -33,7 +33,7 @@ async function buildSidebarDrawersFootnoteOriginMap(
 import "../styles/MarkdownPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useToast, Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useLayout } from "../layouts/LayoutContext";
 import MarkdownRenderer, {
   getSections,
@@ -307,9 +307,11 @@ function MarkdownPage() {
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const toast = useToast();
   const cachedContent = useRef({});
   const pageScrollRef = useRef(0);
+  const notifyError = useCallback((title, description) => {
+    console.error(`${title}: ${description}`);
+  }, []);
 
   const highlight = useMemo(() => {
     let hl = location.state?.highlight;
@@ -484,14 +486,10 @@ function MarkdownPage() {
     const sidebarEntry = getSidebarContent(key);
     if (!sidebarEntry) {
       if (!silent) {
-        toast({
-          title: "Sidebar Entry Not Found",
-          description: `The sidebar entry "${term}" could not be found in this subsection.`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom-right",
-        });
+        notifyError(
+          "Sidebar Entry Not Found",
+          `The sidebar entry "${term}" could not be found in this subsection.`,
+        );
       }
       return;
     }
@@ -589,14 +587,10 @@ function MarkdownPage() {
 
           setLastUpdated(lu);
         } else {
-          toast({
-            title: "Subsection Not Found",
-            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
+          notifyError(
+            "Subsection Not Found",
+            `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+          );
           navigate(previousPath, { replace: true });
         }
 
@@ -658,14 +652,10 @@ function MarkdownPage() {
 
           setLastUpdated(lu);
         } else {
-          toast({
-            title: "Subsection Not Found",
-            description: `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
+          notifyError(
+            "Subsection Not Found",
+            `The subsection "${subsectionId}" in section "${sectionId}" could not be found.`,
+          );
           navigate(previousPath, { replace: true });
         }
       }
@@ -673,7 +663,7 @@ function MarkdownPage() {
     }
 
     loadContent();
-  }, [sectionId, subsectionId, navigate, toast, previousPath]);
+  }, [sectionId, subsectionId, navigate, notifyError, previousPath]);
 
   useEffect(() => {
     if (!sectionId) return;
@@ -748,32 +738,22 @@ function MarkdownPage() {
         }
         if (contentExists) navigate(`/${path}`);
         else {
-          toast({
-            title: targetSubsectionId
-              ? "Subsection Not Found"
-              : "Section Not Found",
-            description: targetSubsectionId
+          notifyError(
+            targetSubsectionId ? "Subsection Not Found" : "Section Not Found",
+            targetSubsectionId
               ? `The subsection "${targetSubsectionId}" in section "${targetSectionId}" could not be found.`
               : `The section "${targetSectionId}" could not be found.`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom-right",
-          });
+          );
         }
       } catch (error) {
         console.error("Error checking content:", error);
-        toast({
-          title: "Navigation Error",
-          description: "An error occurred while trying to navigate.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom-right",
-        });
+        notifyError(
+          "Navigation Error",
+          "An error occurred while trying to navigate.",
+        );
       }
     },
-    [isLoading, navigate, toast],
+    [isLoading, navigate, notifyError],
   );
 
   // Save scroll BEFORE drawer changes cause any re-renders

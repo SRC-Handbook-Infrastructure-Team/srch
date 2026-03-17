@@ -86,7 +86,7 @@ html[data-theme="light"] .searchbar-container {
 }
 
 .searchbar-input {
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: opacity 0.3s ease;
   background: transparent;
   z-index: 9;

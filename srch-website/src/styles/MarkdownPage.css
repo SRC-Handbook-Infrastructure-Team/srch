@@ -606,7 +606,9 @@ html[data-layout-mode="overlay"] .top-navbar ~ .main-content {
   margin-bottom: 24px;
 }
 
-.top-navbar[data-menu-open="true"] + .chakra-collapse .mobile-menu-panel {
+.top-navbar[data-menu-open="true"]
+  + .mobile-menu-collapsible
+  .mobile-menu-panel {
   transform: translateY(0);
   opacity: 1;
 }

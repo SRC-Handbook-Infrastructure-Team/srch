@@ -15,8 +15,8 @@ import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
 import { remarkHighlight } from "./remarkHighlight";
 import { Text, Link, Box, HStack, Icon } from "@chakra-ui/react";
-import { InfoIcon, ExternalLinkIcon, LinkIcon } from "@chakra-ui/icons";
 import { BsFileEarmarkText } from "react-icons/bs";
+import { LuInfo, LuExternalLink } from "react-icons/lu";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
@@ -800,7 +800,7 @@ function MarkdownRenderer({
             )}
             {isExternal && (
               <span style={{ marginLeft: "0.2em" }}>
-                <ExternalLinkIcon></ExternalLinkIcon>
+                <Icon as={LuExternalLink} boxSize="0.9em" />
               </span>
             )}
           </a>
@@ -1046,7 +1046,7 @@ function MarkdownRenderer({
             >
               {highlightText(toShow, highlight)}
             </Text>
-            <Icon as={InfoIcon} flexShrink={0} />
+            <Icon as={LuInfo} flexShrink={0} />
           </Box>
         );
       },

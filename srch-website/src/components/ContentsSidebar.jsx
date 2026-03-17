@@ -2,7 +2,7 @@ import "../styles/MarkdownPage.css";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, VStack, Icon } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { LuChevronDown } from "react-icons/lu";
 import {
   getSections,
   getSubsections,
@@ -468,7 +468,7 @@ export default function ContentsSidebar({
                 </Box>
 
                 <Icon
-                  as={ChevronDownIcon}
+                  as={LuChevronDown}
                   transform={isExpanded ? "rotate(180deg)" : undefined}
                   transition="transform 0.2s"
                   w={5}

@@ -1,8 +1,7 @@
 // src/App.jsx
 import "./styles/App.css";
 
-import { ChakraProvider } from "@chakra-ui/react";
-import theme from "./theme";
+import { Provider } from "./components/ui/provider"
 import { useEffect } from "react";
 import AppRoutes from "./AppRoutes";
 
@@ -19,9 +18,9 @@ function App() {
     }
   }, []);
   return (
-    <ChakraProvider theme={theme}>
+    <Provider>
       <AppRoutes />
-    </ChakraProvider>
+    </Provider>
   );
 }
 

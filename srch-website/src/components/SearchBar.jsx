@@ -1,6 +1,6 @@
 import "../styles/SearchBar.css";
-import { Box, Input, IconButton, Collapse } from "@chakra-ui/react";
-import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
+import { Box, Input, IconButton, Collapsible } from "@chakra-ui/react";
+import { LuSearch, LuX } from "react-icons/lu";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FloatingSearchResults from "./FloatingSearchResults";
@@ -43,10 +43,11 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
     >
       <IconButton
         aria-label="Toggle search bar"
-        icon={<SearchIcon fontSize={"md"} />}
         className="searchbar-toggle-button toggle-button"
         onClick={() => navigate(`/search/${encodeURIComponent(searchQuery)}`)}
-      />
+      >
+        <LuSearch size="1em" />
+      </IconButton>
       <Box className="searchbar-input-container">
         <Input
           ref={inputRef}
@@ -58,35 +59,36 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
         />
-        <Collapse
-          in={showResults}
-          animateOpacity
-          transition={{
-            enter: { duration: 0.5 },
-            exit: { duration: 0.25 },
+        <Collapsible.Root open={showResults}>
+          <Collapsible.Content
+            animationName={{
+              _open: "expand-height",
+              _closed: "collapse-height",
+            }}
+          >
+            <FloatingSearchResults
+              searchQuery={searchQuery}
+              maxResults={maxResults}
+            />
+          </Collapsible.Content>
+        </Collapsible.Root>
+      </Box>
+      <Collapsible.Root open={Boolean(searchQuery)}>
+        <Collapsible.Content
+          animationName={{
+            _open: "expand-height",
+            _closed: "collapse-height",
           }}
         >
-          <FloatingSearchResults
-            searchQuery={searchQuery}
-            maxResults={maxResults}
-          />
-        </Collapse>
-      </Box>
-      <Collapse
-        in={searchQuery}
-        animateOpacity
-        transition={{
-          enter: { duration: 0.5 },
-          exit: { duration: 0.25 },
-        }}
-      >
-        <IconButton
-          aria-label="Toggle search bar"
-          icon={<CloseIcon fontSize={"x-small"} />}
-          className="searchbar-toggle-button toggle-button"
-          onClick={() => setSearchQuery("")}
-        />
-      </Collapse>
+          <IconButton
+            aria-label="Toggle search bar"
+            className="searchbar-toggle-button toggle-button"
+            onClick={() => setSearchQuery("")}
+          >
+            <LuX size="0.8em" />
+          </IconButton>
+        </Collapsible.Content>
+      </Collapsible.Root>
     </Box>
   );
 }
