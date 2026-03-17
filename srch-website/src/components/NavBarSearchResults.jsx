@@ -56,6 +56,7 @@ export const NavBarSearchResults = React.memo(
             {searchResults != null && maxResults !== 0 && (
               <Collapse
                 in={searchQuery}
+                unmountOnExit
                 animateOpacity
                 transition={{
                   enter: { duration: 0.5 },
@@ -87,7 +88,7 @@ export const NavBarSearchResults = React.memo(
                           <div
                             className="results-item-nav-bar"
                             role="link"
-                            tabIndex={0}
+                            tabIndex={searchQuery.length > 0 ? 0 : -1}
                             onClick={() => {
                               const targetPath = `/${doc.section}/${doc.subsection || ""}${
                                 doc.isDrawer
@@ -165,14 +166,14 @@ export const NavBarSearchResults = React.memo(
                       }`}
                     </div>
                     <div>
-                      <a
+                      <button
+                        type="button"
                         className="view-all-link-nav-bar"
                         onClick={() => handleViewAllClick()}
                         aria-label={`View all search results`}
-                        role="button"
                       >
                         {`See full result${searchResults.length === 1 ? "" : "s"}`}
-                      </a>
+                      </button>
                     </div>
                   </div>
                 )}

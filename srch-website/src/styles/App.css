@@ -10,7 +10,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --toolbar-height: 0px;
-  --nav-bar-height: 62px;
+  --nav-bar-height: 64px;
   --mobile-menu-offset: 0px;
   --mobile-menu-height: 250px;
   --mobile-menu-height-expanded: 350px;
@@ -19,6 +19,8 @@
 
   --color-text: #343434;
   --color-text-hover: #9d0013;
+  --color-focus-ring: #9d0013;
+  --focus-ring-radius: 8px;
   --color-text-gray: #656565;
   --color-bg: #fafafa;
   --color-white-text: #fafafa;
@@ -80,6 +82,7 @@
   --color-text: #cecece;
   --color-white-text: #e0e0e0;
   --color-text-hover: #a9ceaf;
+  --color-focus-ring: #a9ceaf;
   --color-bg: #141414;
   --color-bg-alt: #1f1f1f;
   --color-border: #474747;
@@ -126,11 +129,27 @@ button {
 
 button:focus,
 button:focus-visible {
-  outline: 2px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 button:focus:not(:focus-visible) {
   outline: none;
+}
+
+:where(
+  a,
+  button,
+  textarea,
+  select,
+  summary,
+  [role="button"],
+  [role="link"],
+  [tabindex]:not([tabindex="-1"])
+):focus-visible {
+  outline: 2px solid var(--color-focus-ring) !important;
+  outline-offset: 2px;
+  border-radius: var(--focus-ring-radius);
 }
 
 mark {

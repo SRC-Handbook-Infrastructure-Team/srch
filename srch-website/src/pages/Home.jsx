@@ -410,32 +410,6 @@ function Home() {
                   </p>
                 </div>
               </a>
-              {/* <a
-                className="connect-link"
-                href="https://responsible.cs.brown.edu/"
-                target="blank"
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  fontWeight: 400,
-                }}
-              >
-                <div className="connect-cont">
-                  <img
-                    src={getSrcLogo()}
-                    alt="src@Brown logo"
-                    width={56}
-                    height={56}
-                  />
-                  <p className="connect-text">
-                    SRC@Brown Website:
-                    <br />
-                    <span className="connect-link">
-                      responsible.cs.brown.edu
-                    </span>
-                  </p>
-                </div>
-              </a> */}
             </div>
           </div>
         </div>

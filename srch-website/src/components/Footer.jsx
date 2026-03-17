@@ -90,7 +90,6 @@ function Footer() {
                   Privacy
                 </button>
               </div>
-
               <div className="primer-link-primer-footer">
                 <div className="primer-link-photo-primer-footer">
                   <img
@@ -108,7 +107,6 @@ function Footer() {
                   Accessibility
                 </button>
               </div>
-
               <div className="primer-link-primer-footer">
                 <div className="primer-link-photo-primer-footer">
                   <img
@@ -126,7 +124,6 @@ function Footer() {
                   Automated Decision Making
                 </button>
               </div>
-
               <div className="primer-link-primer-footer">
                 <div className="primer-link-photo-primer-footer">
                   <img

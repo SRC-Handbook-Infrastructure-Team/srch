@@ -152,6 +152,9 @@ html.right-open .footer-content {
 }
 
 .feedback-footer a {
+  display: inline-block;
+  border-radius: var(--focus-ring-radius);
+  padding: 0 2px;
   color: var(--color-text-hover);
   transition: color 0.2s;
   word-wrap: break-word !important;
@@ -160,6 +163,10 @@ html.right-open .footer-content {
 .feedback-footer a:hover {
   text-decoration: underline;
   background-color: transparent;
+}
+
+.feedback-footer a:focus-visible {
+  text-decoration: underline;
 }
 
 .copyright {

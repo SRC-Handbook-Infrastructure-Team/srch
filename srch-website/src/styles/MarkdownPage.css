@@ -642,7 +642,7 @@ html[data-layout-mode="overlay"]
   justify-content: center;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 45em) {
   .hide-md {
     display: none !important;
   }
@@ -651,7 +651,7 @@ html[data-layout-mode="overlay"]
   }
 }
 
-@media (max-width: 80em) {
+@media (max-width: 44.99em) {
   .hide-base {
     display: none !important;
   }

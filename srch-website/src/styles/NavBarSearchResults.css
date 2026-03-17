@@ -46,6 +46,7 @@
 
 .result-snippet-text-nav-bar {
   display: -webkit-box;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -54,6 +55,7 @@
 
 .result-snippet-text-clamped-nav-bar {
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -87,6 +89,11 @@
 }
 
 .view-all-link-nav-bar {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
   color: var(--color-text-hover);
   cursor: pointer;
   user-select: none;
@@ -94,7 +101,8 @@
 }
 
 .view-all-link-nav-bar:hover,
-.view-all-link-nav-bar:focus {
+.view-all-link-nav-bar:focus-visible {
   color: var(--color-text-hover);
-  outline: none;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }

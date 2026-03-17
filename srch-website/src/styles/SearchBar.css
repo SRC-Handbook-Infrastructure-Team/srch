@@ -2,15 +2,16 @@
   position: relative;
   align-items: center;
   overflow: visible;
+  padding-left: 2rem;
+  padding-right: 2rem;
   width: 100%;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
   font-family: var(--content-font);
 }
 
 .navsearchbar-input-container {
-  position: fixed;
-  width: calc(100% - 4rem);
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
   overflow: visible;
@@ -36,8 +37,9 @@
 .navsearchbar-input:focus,
 .navsearchbar-input:focus-visible {
   box-shadow: none;
-  outline: none;
-  border-color: inherit;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-color: transparent;
 }
 
 .navsearchbar-button {
@@ -58,7 +60,6 @@
   font-family: var(--content-font);
   padding: 6px 8px;
   width: 100%;
-  min-width: 400px;
 }
 
 html[data-theme="dark"] .searchbar-container {
@@ -94,16 +95,11 @@ html[data-theme="light"] .searchbar-container {
   opacity: 1;
   pointer-events: auto;
 }
-
-.searchbar-input:focus,
-.searchbar-input:focus-visible,
-.searchbar-input:active,
-.searchbar-input:focus,
-.searchbar-input:focus-within,
-.searchbar-input:hover {
+.searchbar-input:focus-visible {
   border-width: 0 !important;
   box-shadow: none !important;
-  outline: none !important;
+  outline: 0px solid var(--color-focus-ring) !important;
+  outline-offset: 0px;
 }
 
 .searchbar-toggle-button:hover {
@@ -117,7 +113,8 @@ html[data-theme="light"] .searchbar-container {
 .searchbar-toggle-button:focus,
 .searchbar-toggle-button:focus-visible,
 .searchbar-toggle-button:active {
-  outline: 0 !important;
+  outline: 2px solid var(--color-focus-ring) !important;
+  outline-offset: 2px;
   box-shadow: none !important;
   border: none !important;
   background: transparent !important;
@@ -143,7 +140,8 @@ html[data-theme="light"] .searchbar-container {
 .searchbar-toggle-button:focus,
 .searchbar-toggle-button:focus-visible,
 .searchbar-toggle-button:active {
-  outline: 0 !important;
+  outline: 2px solid var(--color-focus-ring) !important;
+  outline-offset: 2px;
   box-shadow: none !important;
   border: none !important;
   background: transparent !important;

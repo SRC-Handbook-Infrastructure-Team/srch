@@ -40,6 +40,7 @@ function NavSearchBar({
     <Box ref={containerRef} className={`navsearchbar-container`}>
       <Collapse
         in={isSearchOpen}
+        unmountOnExit
         animateOpacity
         transition={{
           enter: { duration: 0.1, delay: 0.15 },
@@ -76,9 +77,9 @@ function NavSearchBar({
           />
         </Box>
       </Collapse>
-      <Box height={"40px"}></Box>
       <Collapse
         in={searchQuery}
+        unmountOnExit
         animateOpacity
         transition={{
           enter: { duration: 0.25 },
