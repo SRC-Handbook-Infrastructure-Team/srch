@@ -26,6 +26,12 @@
   transition: background-color 0.5s ease;
 }
 
+.results-item:focus,
+.results-item:focus-visible {
+  background-color: var(--color-accent-30);
+  outline: none !important;
+}
+
 .results-section {
   background: var(--color-text-hover);
   display: block;

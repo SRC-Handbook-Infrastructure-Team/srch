@@ -53,10 +53,15 @@ function NavBar() {
 
   const toggleSection = (sectionKey, e) => {
     e?.stopPropagation();
-    setOpenSection((prev) => (prev === sectionKey ? null : sectionKey));
+    const willOpen = openSection !== sectionKey;
+    if (willOpen) {
+      setIsSearchOpen(false);
+    }
+    setOpenSection(willOpen ? sectionKey : null);
   };
 
   const openSectionOnHover = (sectionKey) => {
+    setIsSearchOpen(false);
     setOpenSection(sectionKey);
   };
 
@@ -66,6 +71,8 @@ function NavBar() {
 
   function forceSearchOpen() {
     setIsMenuOpen(false);
+    setOpenSection(null);
+    setIsModulesExpanded(false);
     setIsSearchOpen(true);
   }
 
@@ -176,6 +183,8 @@ function NavBar() {
 
   return (
     <Box
+      as="header"
+      className="navbar"
       onMouseLeave={() => {
         setIsSearchOpen(false);
         closeSectionOnLeave("modules");
@@ -183,7 +192,6 @@ function NavBar() {
       }}
     >
       <Box
-        as="header"
         className={`top-navbar`}
         data-menu-open={isMenuOpen ? "true" : "false"}
         data-modules-expanded={isModulesExpanded ? "true" : "false"}
@@ -416,15 +424,12 @@ function NavBar() {
             />
           </Collapsible.Content>
         </Collapsible.Root>
-        <Collapsible.Root open={isSearchOpen && Boolean(searchQuery)}>
-          <Collapsible.Content>
-            <NavBarSearchResults
-              searchQuery={searchQuery}
-              maxResults={2}
-              setIsSearchOpen={setIsSearchOpen}
-            />
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <NavBarSearchResults
+          show={isSearchOpen && Boolean(searchQuery)}
+          searchQuery={searchQuery}
+          maxResults={2}
+          setIsSearchOpen={setIsSearchOpen}
+        />
       </Box>
       <Collapsible.Root
         open={isMenuOpen}
@@ -470,14 +475,23 @@ function NavBar() {
               </Box>
               <Box
                 className="mobile-modules-container"
-                onMouseEnter={() => setIsModulesExpanded(true)}
+                onMouseEnter={() => {
+                  setIsSearchOpen(false);
+                  setIsModulesExpanded(true);
+                }}
                 onMouseLeave={() => setIsModulesExpanded(false)}
               >
                 <Box
                   as="button"
                   type="button"
                   className="mobile-modules-toggle nav-link-box nav-button"
-                  onClick={() => setIsModulesExpanded(!isModulesExpanded)}
+                  onClick={() => {
+                    const willOpen = !isModulesExpanded;
+                    if (willOpen) {
+                      setIsSearchOpen(false);
+                    }
+                    setIsModulesExpanded(willOpen);
+                  }}
                 >
                   Modules
                   <Icon

@@ -24,6 +24,7 @@ function AppRoutes() {
   return (
     <>
       <ScrollManager />
+      <NavBar layoutMode="overlay" />
 
       {isMarkdownPage ? (
         <SidebarLayout>
@@ -56,7 +57,6 @@ function AppRoutes() {
           <Footer />
         </>
       )}
-      <NavBar layoutMode="overlay" />
     </>
   );
 }

@@ -8,6 +8,13 @@
   transition: background-color 0.5s ease;
 }
 
+.results-item-floating:focus,
+.results-item-floating:focus-visible {
+  background-color: var(--color-accent-30);
+  outline: none !important;
+}
+
+
 .results-section-floating {
   background: var(--color-text-hover);
   display: block;
