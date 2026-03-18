@@ -55,12 +55,7 @@ export const FloatingSearchResults = React.memo(
           searchResults != null &&
           maxResults !== 0 && (
             <Collapsible.Root open={Boolean(searchQuery)}>
-              <Collapsible.Content
-                animationName={{
-                  _open: "expand-height",
-                  _closed: "collapse-height",
-                }}
-              >
+              <Collapsible.Content>
                 <div className="results-window-floating">
                   <div
                     className={"results-list-floating"}

@@ -75,6 +75,12 @@
   padding: 0 1.25rem 0 1.25rem;
 }
 
+html[data-theme="light"] .results-window-floating {
+  box-shadow:
+    0 2px 12px 0 var(--color-shadow),
+    0 1.5px 6px 0 var(--color-shadow);
+}
+
 .results-list-floating {
   overflow-y: auto;
   padding-top: 0.5rem;

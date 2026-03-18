@@ -60,12 +60,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onKeyDown={handleKeyDown}
         />
         <Collapsible.Root open={showResults}>
-          <Collapsible.Content
-            animationName={{
-              _open: "expand-height",
-              _closed: "collapse-height",
-            }}
-          >
+          <Collapsible.Content>
             <FloatingSearchResults
               searchQuery={searchQuery}
               maxResults={maxResults}
@@ -74,12 +69,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
         </Collapsible.Root>
       </Box>
       <Collapsible.Root open={Boolean(searchQuery)}>
-        <Collapsible.Content
-          animationName={{
-            _open: "expand-height",
-            _closed: "collapse-height",
-          }}
-        >
+        <Collapsible.Content>
           <IconButton
             aria-label="Toggle search bar"
             className="searchbar-toggle-button toggle-button"

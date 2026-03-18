@@ -132,12 +132,7 @@ export const SearchResults = React.memo(
           <div className={classSuffix("results-window", floating)}>
             {searchResults != null && (
               <Collapsible.Root open={Boolean(searchQuery)}>
-                <Collapsible.Content
-                  animationName={{
-                    _open: "expand-height",
-                    _closed: "collapse-height",
-                  }}
-                >
+                <Collapsible.Content>
                   <div
                     className={classSuffix("results-list", floating)}
                     style={{ overflowY: "auto" }}

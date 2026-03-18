@@ -5,12 +5,13 @@ import { Box, Image, Icon, Collapsible } from "@chakra-ui/react";
 import { LuMenu, LuChevronDown, LuMoon, LuSearch, LuSun } from "react-icons/lu";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
+import NavBarSearchResults from "./NavBarSearchResults";
 import logoLight from "../assets/srch_logo.svg";
 import logoDark from "../assets/srch_logo_white.svg";
 
 const themeStorageKey = "srch-theme";
 
-function NavBar({ className = "", layoutMode }) {
+function NavBar() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -183,7 +184,7 @@ function NavBar({ className = "", layoutMode }) {
     >
       <Box
         as="header"
-        className={`top-navbar ${className}`.trim()}
+        className={`top-navbar`}
         data-menu-open={isMenuOpen ? "true" : "false"}
         data-modules-expanded={isModulesExpanded ? "true" : "false"}
       >
@@ -349,51 +350,78 @@ function NavBar({ className = "", layoutMode }) {
           </Box>
         </Box>
         <Collapsible.Root open={openSection === "modules"} unmountOnExit>
-          <Collapsible.Content
-            style={{ overflow: "visible" }}
-            animationName={{
-              _open: "expand-height",
-              _closed: "collapse-height",
-            }}
-          >
+          <Collapsible.Content style={{ overflow: "visible" }}>
             <Box className="nav-dropdown-menu">
-              {sections.slice(1).map((section) => (
-                <Box
-                  as="button"
-                  type="button"
-                  key={section.id}
-                  className="nav-dropdown-item nav-button"
-                  tabIndex={openSection === "modules" ? 0 : -1}
-                  onClick={(e) => {
-                    const sectionSubsections = subsections[section.id];
-                    if (sectionSubsections && sectionSubsections.length > 0) {
-                      navigate(`/${section.id}/${sectionSubsections[0].id}`);
-                    } else {
-                      navigate(`/${section.id}`);
-                    }
-                    toggleSection(section.id, e);
-                  }}
-                >
-                  <span>{section.title}</span>
-                </Box>
-              ))}
+              <Box className="nav-dropdown-sections-grid">
+                {sections.slice(1).map((section) => {
+                  const sectionSubsections = subsections[section.id] || [];
+                  return (
+                    <Box
+                      key={section.id}
+                      className="nav-dropdown-section-column"
+                    >
+                      <Box
+                        as="button"
+                        type="button"
+                        className="nav-dropdown-item nav-dropdown-section-title nav-button"
+                        tabIndex={openSection === "modules" ? 0 : -1}
+                        onClick={() => {
+                          if (
+                            sectionSubsections &&
+                            sectionSubsections.length > 0
+                          ) {
+                            navigate(
+                              `/${section.id}/${sectionSubsections[0].id}`,
+                            );
+                          } else {
+                            navigate(`/${section.id}`);
+                          }
+                          setOpenSection(null);
+                        }}
+                      >
+                        <span>{section.title}</span>
+                      </Box>
+                      <Box className="nav-dropdown-subsections">
+                        {sectionSubsections.map((subsection) => (
+                          <Box
+                            as="button"
+                            type="button"
+                            key={`${section.id}-${subsection.id}`}
+                            className="nav-dropdown-item nav-dropdown-subsection-item nav-button"
+                            tabIndex={openSection === "modules" ? 0 : -1}
+                            onClick={() => {
+                              navigate(`/${section.id}/${subsection.id}`);
+                              setOpenSection(null);
+                            }}
+                          >
+                            <span>{subsection.title}</span>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Box>
             </Box>
           </Collapsible.Content>
         </Collapsible.Root>
-        <Collapsible.Root open={isSearchOpen} unmountOnExit>
-          <Collapsible.Content
-            animationName={{
-              _open: "expand-height",
-              _closed: "collapse-height",
-            }}
-          >
+        <Collapsible.Root open={isSearchOpen}>
+          <Collapsible.Content>
             <NavSearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               setIsSearchOpen={setIsSearchOpen}
               isSearchOpen={isSearchOpen}
-              maxResults={2}
               align="stretch"
+            />
+          </Collapsible.Content>
+        </Collapsible.Root>
+        <Collapsible.Root open={isSearchOpen && Boolean(searchQuery)}>
+          <Collapsible.Content>
+            <NavBarSearchResults
+              searchQuery={searchQuery}
+              maxResults={2}
+              setIsSearchOpen={setIsSearchOpen}
             />
           </Collapsible.Content>
         </Collapsible.Root>
@@ -403,12 +431,7 @@ function NavBar({ className = "", layoutMode }) {
         unmountOnExit
         className="mobile-menu-collapsible"
       >
-        <Collapsible.Content
-          animationName={{
-            _open: "expand-height",
-            _closed: "collapse-height",
-          }}
-        >
+        <Collapsible.Content>
           <Box className="mobile-menu-panel show-base hide-md">
             <Box
               className="mobile-menu-vstack"
@@ -468,13 +491,7 @@ function NavBar({ className = "", layoutMode }) {
                   />
                 </Box>
                 <Collapsible.Root open={isModulesExpanded} unmountOnExit>
-                  <Collapsible.Content
-                    style={{ overflow: "visible", width: "min-content" }}
-                    animationName={{
-                      _open: "expand-height",
-                      _closed: "collapse-height",
-                    }}
-                  >
+                  <Collapsible.Content style={{ overflow: "visible" }}>
                     <Box
                       display="flex"
                       flexDirection="column"

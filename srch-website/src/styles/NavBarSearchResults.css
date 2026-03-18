@@ -64,7 +64,6 @@
 
 .results-view-all-nav-bar {
   padding-top: 0.75rem;
-  padding-bottom: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,4 +104,8 @@
   color: var(--color-text-hover);
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
+}
+
+.skeleton-window {
+  gap: 10px;
 }

@@ -481,6 +481,7 @@ html[data-theme="light"] .topic-card {
 
 :root[data-theme="dark"] .upper-content {
   background-image: url("../assets/landing_page_background_gradient_dark.png");
+  background-color: var(--color-bg);
 }
 
 .upper-text-section {

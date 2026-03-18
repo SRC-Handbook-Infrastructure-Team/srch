@@ -5,10 +5,11 @@
   width: 100vw;
   margin: 0;
   height: auto;
-  min-height: var(--nav-bar-height);
   display: block;
   padding-left: 2rem;
   padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   overflow: visible;
   background-color: var(--color-bg);
   z-index: 50;
@@ -102,8 +103,6 @@ html[data-theme="dark"] .top-navbar {
 
 .main-navbar {
   position: relative;
-  min-height: var(--nav-bar-height);
-  padding-top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,12 +111,43 @@ html[data-theme="dark"] .top-navbar {
 .nav-dropdown-menu {
   position: relative;
   border-radius: 0.375rem;
-  justify-items: center;
-  padding-bottom: 1.5rem;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+  width: min(60rem, 100%);
+  margin-inline: auto;
+}
+
+.nav-dropdown-sections-grid {
+  gap: 1rem;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+}
+
+.nav-dropdown-section-column {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0;
+  align-items: flex-start;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.nav-dropdown-section-title {
+  padding: 0 !important;
+  font-weight: 600;
+  line-height: 1rem;
+}
+
+.nav-dropdown-subsections {
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
 }
 
 html[data-theme="dark"] .nav-dropdown-menu {
@@ -125,16 +155,25 @@ html[data-theme="dark"] .nav-dropdown-menu {
 }
 
 .nav-dropdown-item {
+  padding: 0;
   font-family: var(--content-font);
-  font-size: 90%;
+  font-size: 0.9rem;
   color: var(--color-header);
-  font-weight: 400;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   user-select: none;
   transition: color 0.2s;
-  white-space: nowrap;
-  width: min-content;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  width: 100%;
+}
+
+.nav-dropdown-subsection-item {
+  padding: 0 !important;
+  font-size: 0.75rem;
+  line-break: normal;
+  font-weight: 400;
+  line-height: 1rem;
 }
 
 .nav-dropdown-item:hover {
@@ -174,13 +213,18 @@ html[data-theme="dark"] .nav-dropdown-menu {
   color: var(--color-header);
   cursor: pointer;
   text-align: left;
-  width: min-content;
+  width: 100%;
   white-space: nowrap;
   user-select: none;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 10px;
   transition: color 0.3s;
+}
+
+.mobile-modules-container {
+  width: 100%;
 }
 
 .mobile-modules-toggle:hover {
