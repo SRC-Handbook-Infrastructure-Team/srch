@@ -14,7 +14,8 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
 import { remarkHighlight } from "./remarkHighlight";
-import { Text, Link, Box, HStack, Icon } from "@chakra-ui/react";
+import { Text, Link, Box, HStack, Icon, Collapsible } from "@chakra-ui/react";
+import { LuChevronRight } from "react-icons/lu";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { LuInfo, LuExternalLink } from "react-icons/lu";
 
@@ -213,6 +214,101 @@ export const getSubsections = async (sectionId) => {
     return [];
   }
 };
+
+let preloadedNavigationData = null;
+let preloadNavigationPromise = null;
+
+function getAllowedNavigationSections(sections = []) {
+  const ALLOWED_SECTION_IDS = new Set([
+    "privacy",
+    "accessibility",
+    "automatedDecisionMaking",
+    "generativeAI",
+  ]);
+
+  return sections.filter((s) => s && ALLOWED_SECTION_IDS.has(s.id));
+}
+
+function sanitizeSubsections(rawSubsections = []) {
+  return rawSubsections
+    .filter((s) => s && typeof s.id === "string" && s.id.trim())
+    .filter((s) => {
+      const id = (s.id || "").toLowerCase();
+      return !id.startsWith(".") && id !== "drawer" && id !== "_drawer";
+    })
+    .map((s) => ({
+      ...s,
+      title:
+        (s.title && String(s.title).trim()) ||
+        String(s.id || "")
+          .replace(/([A-Z])/g, " $1")
+          .replace(/[-_]/g, " ")
+          .replace(/\b\w/g, (m) => m.toUpperCase()),
+      headings: null,
+      order: typeof s.order === "number" ? s.order : 999,
+    }))
+    .sort((a, b) => (a.order || 999) - (b.order || 999));
+}
+
+export async function preloadNavigationData() {
+  if (preloadedNavigationData) return preloadedNavigationData;
+  if (preloadNavigationPromise) return preloadNavigationPromise;
+
+  preloadNavigationPromise = (async () => {
+    const sectionsData = await getSections();
+    const sortedSections = Array.isArray(sectionsData)
+      ? [...sectionsData].sort((a, b) => (a.order || 999) - (b.order || 999))
+      : [];
+
+    const subFetches = sortedSections.map((section) =>
+      getSubsections(section.id),
+    );
+    const subResults = await Promise.all(subFetches);
+
+    const allSubsectionsMap = {};
+    sortedSections.forEach((section, idx) => {
+      const sanitized = sanitizeSubsections(subResults[idx] || []);
+      if (sanitized.length > 0) {
+        allSubsectionsMap[section.id] = sanitized;
+      }
+    });
+
+    const filteredSections = getAllowedNavigationSections(sortedSections);
+    const subsectionsMap = {};
+    filteredSections.forEach((section) => {
+      if (allSubsectionsMap[section.id]) {
+        subsectionsMap[section.id] = allSubsectionsMap[section.id];
+      }
+    });
+
+    if (typeof window !== "undefined") {
+      window.__SRCH_SUBSECTIONS_CACHE__ =
+        window.__SRCH_SUBSECTIONS_CACHE__ || {};
+
+      for (const [sec, subs] of Object.entries(subsectionsMap)) {
+        window.__SRCH_SUBSECTIONS_CACHE__[sec] = subs.map((s) => ({
+          id: s.id,
+          title: s.title,
+        }));
+      }
+    }
+
+    preloadedNavigationData = {
+      sections: filteredSections,
+      subsections: subsectionsMap,
+      navSections: sortedSections,
+      navSubsections: allSubsectionsMap,
+    };
+
+    return preloadedNavigationData;
+  })();
+
+  return preloadNavigationPromise;
+}
+
+export function getPreloadedNavigationData() {
+  return preloadedNavigationData;
+}
 
 /* ----------------------------- Content Loader ----------------------------- */
 
@@ -1190,83 +1286,85 @@ function MarkdownRenderer({
               transform: showFootnotes ? "rotate(90deg)" : "none",
             }}
           >
-            ▸
+            <Icon as={LuChevronRight} boxSize="0.9em" />
           </span>
           {"References"}
           {}{" "}
         </button>
-        {showFootnotes && (
-          <ol
-            id="footnotes-list"
-            style={{
-              paddingLeft: "1.5em",
-              marginBottom: "1em",
-              color: "var(--color-text)",
-              fontFamily: "Be Vietnam Pro, sans-serif",
-            }}
-          >
-            {processed.footnotes.map((f) => {
-              const origin = processed.footnoteOriginMap[f.num];
-              const isSidebarLinked =
-                origin && origin !== "main" && sectionId && subsectionId;
-              const backHref = isSidebarLinked
-                ? `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${f.num}`
-                : `#user-content-fnref-${f.num}`;
-              const localAnchor = `user-content-fnref-${f.num}`;
-              return (
-                <li
-                  key={f.num}
-                  id={`user-content-fn-${f.num}`}
-                  style={{
-                    color: "var(--color-text)",
-                    fontFamily: "Be Vietnam Pro, sans-serif",
-                    position: "relative",
-                    paddingBottom: "0.5rem",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    paddingLeft: "1.5rem",
-                    listStyleType: "none",
-                  }}
-                >
-                  <a
-                    href={backHref}
-                    id={isSidebarLinked ? localAnchor : undefined}
-                    aria-label={`Back to reference ${f.num}`}
+        <Collapsible.Root open={showFootnotes}>
+          <Collapsible.Content>
+            <ol
+              id="footnotes-list"
+              style={{
+                paddingLeft: "1.5em",
+                marginBottom: "1em",
+                color: "var(--color-text)",
+                fontFamily: "Be Vietnam Pro, sans-serif",
+              }}
+            >
+              {processed.footnotes.map((f) => {
+                const origin = processed.footnoteOriginMap[f.num];
+                const isSidebarLinked =
+                  origin && origin !== "main" && sectionId && subsectionId;
+                const backHref = isSidebarLinked
+                  ? `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${f.num}`
+                  : `#user-content-fnref-${f.num}`;
+                const localAnchor = `user-content-fnref-${f.num}`;
+                return (
+                  <li
+                    key={f.num}
+                    id={`user-content-fn-${f.num}`}
                     style={{
-                      position: "absolute",
-                      left: 0,
-                      color: "var(--color-text-hover)",
-                      fontWeight: "bold",
-                      textDecoration: "none",
-                    }}
-                    {...(isSidebarLinked ? { "data-sidebar": origin } : {})}
-                  >
-                    {f.num}
-                  </a>
-                  <span
-                    style={{
-                      marginLeft: 8,
-                      verticalAlign: "top",
-                      paddingTop: 1.5,
+                      color: "var(--color-text)",
+                      fontFamily: "Be Vietnam Pro, sans-serif",
+                      position: "relative",
+                      paddingBottom: "0.5rem",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      paddingLeft: "1.5rem",
+                      listStyleType: "none",
                     }}
                   >
-                    <ReactMarkdown
-                      components={components}
-                      remarkPlugins={[
-                        remarkGfm,
-                        [remarkHighlight, highlight],
-                        remarkSidebarRef,
-                      ]}
-                      rehypePlugins={[rehypeRaw]}
+                    <a
+                      href={backHref}
+                      id={isSidebarLinked ? localAnchor : undefined}
+                      aria-label={`Back to reference ${f.num}`}
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        color: "var(--color-text-hover)",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                      }}
+                      {...(isSidebarLinked ? { "data-sidebar": origin } : {})}
                     >
-                      {f.content}
-                    </ReactMarkdown>
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
-        )}
+                      {f.num}
+                    </a>
+                    <span
+                      style={{
+                        marginLeft: 8,
+                        verticalAlign: "top",
+                        paddingTop: 1.5,
+                      }}
+                    >
+                      <ReactMarkdown
+                        components={components}
+                        remarkPlugins={[
+                          remarkGfm,
+                          [remarkHighlight, highlight],
+                          remarkSidebarRef,
+                        ]}
+                        rehypePlugins={[rehypeRaw]}
+                      >
+                        {f.content}
+                      </ReactMarkdown>
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </Collapsible.Content>
+        </Collapsible.Root>
       </section>
     );
   }
@@ -1311,25 +1409,27 @@ function MarkdownRenderer({
               transform: showReferences ? "rotate(90deg)" : "none",
             }}
           >
-            ▸
+            <Icon as={LuChevronRight} boxSize="0.9em" />
           </span>
           {"Further Reading"}
         </button>
-        {showReferences && (
-          <div id="references-list">
-            <ReactMarkdown
-              components={components}
-              remarkPlugins={[
-                remarkGfm,
-                [remarkHighlight, highlight],
-                remarkSidebarRef,
-              ]}
-              rehypePlugins={[rehypeRaw]}
-            >
-              {referencesBlock}
-            </ReactMarkdown>
-          </div>
-        )}
+        <Collapsible.Root open={showReferences}>
+          <Collapsible.Content>
+            <div id="references-list">
+              <ReactMarkdown
+                components={components}
+                remarkPlugins={[
+                  remarkGfm,
+                  [remarkHighlight, highlight],
+                  remarkSidebarRef,
+                ]}
+                rehypePlugins={[rehypeRaw]}
+              >
+                {referencesBlock}
+              </ReactMarkdown>
+            </div>
+          </Collapsible.Content>
+        </Collapsible.Root>
       </section>
     );
   }

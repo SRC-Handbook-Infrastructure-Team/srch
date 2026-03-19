@@ -3,7 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Image, Icon, Collapsible } from "@chakra-ui/react";
 import { LuMenu, LuChevronDown, LuMoon, LuSearch, LuSun } from "react-icons/lu";
-import { getSections, getSubsections } from "../util/MarkdownRenderer";
+import {
+  getSections,
+  getSubsections,
+  getPreloadedNavigationData,
+  preloadNavigationData,
+} from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import NavBarSearchResults from "./NavBarSearchResults";
 import logoLight from "../assets/srch_logo.svg";
@@ -126,6 +131,36 @@ function NavBar() {
 
     async function loadAllData() {
       try {
+        let preloaded = getPreloadedNavigationData();
+        if (!preloaded) {
+          preloaded = await preloadNavigationData();
+        }
+
+        const cachedSections = preloaded?.navSections || preloaded?.sections;
+        const cachedSubsections =
+          preloaded?.navSubsections || preloaded?.subsections;
+
+        if (
+          Array.isArray(cachedSections) &&
+          cachedSections.length > 0 &&
+          cachedSubsections &&
+          typeof cachedSubsections === "object"
+        ) {
+          setSections(cachedSections);
+          setSubsections(cachedSubsections);
+
+          if (
+            !currentSectionId &&
+            currentPath !== "/" &&
+            cachedSections.length > 0
+          ) {
+            navigate(`/${cachedSections[0].id}`, { replace: true });
+          }
+
+          hasLoadedData.current = true;
+          return;
+        }
+
         const sectionsData = await getSections();
         const sortedSections = [...sectionsData].sort(
           (a, b) => a.order - b.order,
@@ -266,6 +301,7 @@ function NavBar() {
                   navigate(`/${firstSection.id}`);
                 }
               }}
+              onMouseEnter={() => closeSectionOnLeave("modules")}
             >
               <span>About</span>
             </Box>
@@ -274,6 +310,7 @@ function NavBar() {
               type="button"
               className="nav-link-box nav-button"
               onClick={() => navigate("/acknowledgments")}
+              onMouseEnter={() => closeSectionOnLeave("modules")}
             >
               <span>Acknowledgments</span>
             </Box>
@@ -289,6 +326,7 @@ function NavBar() {
                   setIsSearchOpen(false);
                 }
               }}
+              onMouseEnter={() => closeSectionOnLeave("modules")}
             >
               <LuSearch className="navsearchbar-button" size="1.25em" />
             </Box>
@@ -302,6 +340,7 @@ function NavBar() {
                   : "Switch to dark mode"
               }
               onClick={toggleTheme}
+              onMouseEnter={() => closeSectionOnLeave("modules")}
             >
               {theme === "dark" ? (
                 <LuSun className="navsearchbar-button" size="1.25em" />

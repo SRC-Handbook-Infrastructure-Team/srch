@@ -4,18 +4,46 @@ import logoLight from "../assets/srch_logo.svg";
 import logoDark from "../assets/srch_logo_white.svg";
 import privacyIconLight from "../assets/privacy-icon.svg";
 import privacyIconDark from "../assets/privacy-icon_white.svg";
-import automatedIconLight from "../assets/decision-icon.svg";
-import automatedIconDark from "../assets/decision-icon_white.svg";
-import aiIconLight from "../assets/ai-icon.svg";
-import aiIconDark from "../assets/ai-icon_white.svg";
+import automatedDecisionMakingIconLight from "../assets/automatedDecisionMaking-icon.svg";
+import automatedDecisionMakingIconDark from "../assets/automatedDecisionMaking-icon_white.svg";
+import generativeAIIconLight from "../assets/generativeAI-icon.svg";
+import generativeAIIconDark from "../assets/generativeAI-icon_white.svg";
 import accessibilityIconLight from "../assets/accessibility-icon.svg";
 import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import { Box, Image } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import {
+  getPreloadedNavigationData,
+  preloadNavigationData,
+} from "../util/MarkdownRenderer";
 
-function Footer() {
+function Footer({
+  withSidebars = false,
+  isLeftOpen = false,
+  leftWidth = 300,
+  isRightOpen = false,
+  rightWidth = 300,
+}) {
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
+  const [moduleLinks, setModuleLinks] = useState([
+    { id: "privacy", title: "Privacy", slug: "/privacy/whatIsPrivacy" },
+    {
+      id: "accessibility",
+      title: "Accessibility",
+      slug: "/accessibility/whatIsAccessibility",
+    },
+    {
+      id: "automatedDecisionMaking",
+      title: "Automated Decision Making",
+      slug: "/automatedDecisionMaking/fairness",
+    },
+    {
+      id: "generativeAI",
+      title: "Generative AI",
+      slug: "/generativeAI/copyright",
+    },
+  ]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -35,22 +63,87 @@ function Footer() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadFooterLinksFromCache() {
+      try {
+        let preloaded = getPreloadedNavigationData();
+        if (!preloaded) {
+          preloaded = await preloadNavigationData();
+        }
+
+        const sections = preloaded?.sections || [];
+        const subsectionsMap = preloaded?.subsections || {};
+
+        if (!isMounted || !Array.isArray(sections) || sections.length === 0) {
+          return;
+        }
+
+        const links = sections.map((section) => {
+          const sectionSubsections = subsectionsMap[section.id] || [];
+          const slug =
+            sectionSubsections.length > 0
+              ? `/${section.id}/${sectionSubsections[0].id}`
+              : `/${section.id}`;
+
+          return {
+            id: section.id,
+            title: section.title || section.id,
+            slug,
+          };
+        });
+
+        if (links.length > 0) {
+          setModuleLinks(links);
+        }
+      } catch (error) {
+        console.error("Error loading footer module links from cache:", error);
+      }
+    }
+
+    loadFooterLinksFromCache();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const getLogo = () => (theme === "dark" ? logoDark : logoLight);
   const getPrivacyIcon = () =>
     theme === "dark" ? privacyIconDark : privacyIconLight;
-  const getAutomatedIcon = () =>
-    theme === "dark" ? automatedIconDark : automatedIconLight;
-  const getAiIcon = () => (theme === "dark" ? aiIconDark : aiIconLight);
+  const getAutomatedDecisionMakingIcon = () =>
+    theme === "dark"
+      ? automatedDecisionMakingIconDark
+      : automatedDecisionMakingIconLight;
+  const getGenerativeAIIcon = () =>
+    theme === "dark" ? generativeAIIconDark : generativeAIIconLight;
   const getAccessibilityIcon = () =>
     theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
 
-  const privacySlug = "/privacy/whatIsPrivacy";
-  const accessibilitySlug = "/accessibility/whatIsAccessibility";
-  const decisionSlug = "/automatedDecisionMaking/fairness";
-  const aiSlug = "/generativeAI/copyright";
+  function getModuleIconById(sectionId) {
+    switch (sectionId) {
+      case "privacy":
+        return getPrivacyIcon();
+      case "accessibility":
+        return getAccessibilityIcon();
+      case "automatedDecisionMaking":
+        return getAutomatedDecisionMakingIcon();
+      case "generativeAI":
+        return getGenerativeAIIcon();
+      default:
+        return getPrivacyIcon();
+    }
+  }
 
   return (
-    <Box className="footer-container">
+    <Box
+      className={`footer-container ${withSidebars ? "with-sidebars" : ""} ${isLeftOpen ? "left-open" : ""} ${isRightOpen ? "right-open" : ""}`.trim()}
+      style={{
+        "--left-sidebar-width": `${leftWidth}px`,
+        "--right-sidebar-width": `${rightWidth}px`,
+      }}
+    >
       <div className="footer-line-divider"></div>
       <div className="footer-content">
         <div className="footer-box">
@@ -73,74 +166,25 @@ function Footer() {
             </div>
             <div>
               <div className="heading-footer">Modules</div>
-              <div className="primer-link-primer-footer">
-                <div className="primer-link-photo-primer-footer">
-                  <img
-                    className="footer-icon"
-                    src={getPrivacyIcon()}
-                    alt="Privacy Icon"
-                    width={24}
-                    height={24}
-                  />
+              {moduleLinks.map((module) => (
+                <div className="primer-link-primer-footer" key={module.id}>
+                  <div className="primer-link-photo-primer-footer">
+                    <img
+                      className="footer-icon"
+                      src={getModuleIconById(module.id)}
+                      alt={`${module.title} Icon`}
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                  <button
+                    onClick={() => navigate(module.slug)}
+                    className="module-link-primer-footer"
+                  >
+                    {module.title}
+                  </button>
                 </div>
-                <button
-                  onClick={() => navigate(privacySlug)}
-                  className="module-link-primer-footer"
-                >
-                  Privacy
-                </button>
-              </div>
-              <div className="primer-link-primer-footer">
-                <div className="primer-link-photo-primer-footer">
-                  <img
-                    className="footer-icon"
-                    src={getAccessibilityIcon()}
-                    alt="Accessibility Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(accessibilitySlug)}
-                  className="module-link-primer-footer"
-                >
-                  Accessibility
-                </button>
-              </div>
-              <div className="primer-link-primer-footer">
-                <div className="primer-link-photo-primer-footer">
-                  <img
-                    className="footer-icon"
-                    src={getAutomatedIcon()}
-                    alt="Automated Decision Making Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(decisionSlug)}
-                  className="module-link-primer-footer"
-                >
-                  Automated Decision Making
-                </button>
-              </div>
-              <div className="primer-link-primer-footer">
-                <div className="primer-link-photo-primer-footer">
-                  <img
-                    className="footer-icon"
-                    src={getAiIcon()}
-                    alt="Generative AI Icon"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <button
-                  onClick={() => navigate(aiSlug)}
-                  className="module-link-primer-footer"
-                >
-                  Generative AI
-                </button>
-              </div>
+              ))}
             </div>
             <div className="footer-links">
               <div className="heading-footer">Quick Links</div>

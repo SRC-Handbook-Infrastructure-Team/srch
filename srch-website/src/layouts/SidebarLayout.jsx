@@ -18,6 +18,7 @@ export default function SidebarLayout({ children }) {
   /** ---------------- DOM REFS (for optional freeze logic) ---------------- */
   const mainRef = useRef(null);
   const innerRef = useRef(null);
+  const footerRef = useRef(null);
   const scrollPosRef = useRef(0);
   function getScrollContainer() {
     if (typeof document !== "undefined") {
@@ -116,6 +117,7 @@ export default function SidebarLayout({ children }) {
     storageKey: "leftSidebarWidth",
     collapsedWidth: 0,
     side: "left",
+    cssVarName: "--left-sidebar-width",
     collapsed: leftSidebarCollapsed,
     setCollapsed: setLeftSidebarCollapsed,
     onStartResize: freezeForSidebars,
@@ -127,6 +129,7 @@ export default function SidebarLayout({ children }) {
   const rightSidebar = useResizableSidebar({
     storageKey: "rightSidebarWidth",
     side: "right",
+    cssVarName: "--right-sidebar-width",
     onStartResize: freezeForSidebars,
     onStopResize: releaseForSidebars,
   });
@@ -157,6 +160,65 @@ export default function SidebarLayout({ children }) {
       }
     }
   }, [leftSidebar.width, leftSidebarCollapsed, layoutMode]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.style.setProperty(
+      "--left-sidebar-width",
+      `${leftSidebar.width}px`,
+    );
+    document.documentElement.style.setProperty(
+      "--right-sidebar-width",
+      `${rightSidebar.width}px`,
+    );
+  }, [leftSidebar.width, rightSidebar.width]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+
+    const updateFooterOverlapOffset = () => {
+      const footerEl = footerRef.current;
+      if (!footerEl) return;
+
+      const footerTop = footerEl.getBoundingClientRect().top;
+      const overlap = Math.max(0, window.innerHeight - footerTop);
+
+      document.documentElement.style.setProperty(
+        "--sidebar-footer-offset",
+        `${Math.round(overlap)}px`,
+      );
+    };
+
+    updateFooterOverlapOffset();
+    window.addEventListener("scroll", updateFooterOverlapOffset, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateFooterOverlapOffset, {
+      passive: true,
+    });
+
+    let resizeObserver = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        updateFooterOverlapOffset();
+      });
+
+      if (document.body) resizeObserver.observe(document.body);
+      if (mainRef.current) resizeObserver.observe(mainRef.current);
+      if (innerRef.current) resizeObserver.observe(innerRef.current);
+      if (footerRef.current) resizeObserver.observe(footerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updateFooterOverlapOffset);
+      window.removeEventListener("resize", updateFooterOverlapOffset);
+      if (resizeObserver) resizeObserver.disconnect();
+      document.documentElement.style.setProperty(
+        "--sidebar-footer-offset",
+        "0px",
+      );
+    };
+  }, []);
 
   /** ---------------- RIGHT DRAWER CONTENT STATE ---------------- */
   const [rightContent, setRightContent] = useState(null);
@@ -448,6 +510,7 @@ export default function SidebarLayout({ children }) {
         <aside
           className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
           aria-label="Right sidebar drawer"
+          style={{ width: rightSidebar.width }}
         >
           {isRightOpen && (
             <>
@@ -472,12 +535,26 @@ export default function SidebarLayout({ children }) {
             </>
           )}
         </aside>
-        <Footer
-          isLeftOpen={!leftSidebarCollapsed}
-          leftWidth={leftWidth}
-          isRightOpen={isRightOpen}
-          rightWidth={rightWidth}
+        <div
+          className={`right-resize-hitbox ${rightSidebar.isResizing ? "is-resizing" : ""}`}
+          onMouseDown={rightSidebar.startResize}
+          onTouchStart={rightSidebar.startResize}
+          onKeyDown={rightSidebar.handleKeyDown}
+          role="separator"
+          tabIndex={isRightOpen ? 0 : -1}
+          aria-orientation="vertical"
+          aria-label="Resize drawer pane"
+          aria-hidden={!isRightOpen}
         />
+        <div ref={footerRef}>
+          <Footer
+            withSidebars
+            isLeftOpen={!leftSidebarCollapsed}
+            leftWidth={leftSidebar.width}
+            isRightOpen={isRightOpen}
+            rightWidth={rightSidebar.width}
+          />
+        </div>
       </div>
     </LayoutContext.Provider>
   );

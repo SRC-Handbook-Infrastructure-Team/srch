@@ -59,24 +59,24 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
         />
-        <Collapsible.Root open={showResults}>
-          <Collapsible.Content>
-            <FloatingSearchResults
-              searchQuery={searchQuery}
-              maxResults={maxResults}
-            />
+        <Collapsible.Root open={Boolean(searchQuery)}>
+          <Collapsible.Content className="searchbar-clear-slot">
+            <IconButton
+              aria-label="Clear search"
+              className="searchbar-toggle-button toggle-button"
+              onClick={() => setSearchQuery("")}
+            >
+              <LuX size="0.8em" />
+            </IconButton>
           </Collapsible.Content>
         </Collapsible.Root>
       </Box>
-      <Collapsible.Root open={Boolean(searchQuery)}>
+      <Collapsible.Root open={showResults}>
         <Collapsible.Content>
-          <IconButton
-            aria-label="Toggle search bar"
-            className="searchbar-toggle-button toggle-button"
-            onClick={() => setSearchQuery("")}
-          >
-            <LuX size="0.8em" />
-          </IconButton>
+          <FloatingSearchResults
+            searchQuery={searchQuery}
+            maxResults={maxResults}
+          />
         </Collapsible.Content>
       </Collapsible.Root>
     </Box>

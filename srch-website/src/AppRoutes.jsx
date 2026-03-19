@@ -1,5 +1,6 @@
 import "./styles/App.css";
 import ScrollManager from "./components/ScrollManager";
+import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
@@ -9,6 +10,7 @@ import Acknowledgments from "./pages/Acknowledgments";
 import SearchResultsPage from "./pages/SearchResultsPage";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
+import { preloadNavigationData } from "./util/MarkdownRenderer";
 
 function AppRoutes() {
   const location = useLocation();
@@ -20,6 +22,12 @@ function AppRoutes() {
     (location.pathname === "/") | (location.pathname === "/srch/");
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
+
+  useEffect(() => {
+    preloadNavigationData().catch((error) => {
+      console.error("Error preloading sidebar navigation:", error);
+    });
+  }, []);
 
   return (
     <>

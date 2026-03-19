@@ -7,6 +7,7 @@ import {
   getSections,
   getSubsections,
   getContent,
+  getPreloadedNavigationData,
 } from "../util/MarkdownRenderer";
 
 /* =============================================================================
@@ -112,9 +113,9 @@ export default function ContentsSidebar({
   width,
   collapsed,
   isResizing = false,
-  onToggleSidebar = () => {},
   onStartResize = () => {},
   onHandleKeyDown = () => {},
+  onToggleSidebar = () => {},
 }) {
   const [isAnimatingClose, setIsAnimatingClose] = useState(false);
 
@@ -164,6 +165,34 @@ export default function ContentsSidebar({
 
     async function loadAllData() {
       try {
+        const preloaded = getPreloadedNavigationData();
+        if (preloaded && !hasFetchedData) {
+          const filteredSections = preloaded.sections || [];
+          const subsectionsMap = preloaded.subsections || {};
+
+          if (!isAlive) return;
+          setSections(filteredSections);
+          setSubsections(subsectionsMap);
+
+          if (currentSectionId && subsectionsMap[currentSectionId]) {
+            setExpandedSections((prev) => ({
+              ...prev,
+              [currentSectionId]: true,
+            }));
+          }
+
+          if (
+            !currentSectionId &&
+            filteredSections.length > 0 &&
+            !hasFetchedData
+          ) {
+            navigate(`/${filteredSections[0].id}`, { replace: true });
+          }
+
+          setHasFetchedData(true);
+          return;
+        }
+
         // 1) Fetch sections
         const sectionsData = await getSections();
         const sortedSections = Array.isArray(sectionsData)
@@ -582,7 +611,7 @@ export default function ContentsSidebar({
       <Box p={4}>
         <NavContent />
       </Box>
-      {/* <Box
+      <Box
         className={`left-resizer ${isResizing ? "is-resizing" : ""}`}
         width={collapsed ? "60px" : "6px"}
         onMouseDown={onStartResize}
@@ -594,7 +623,7 @@ export default function ContentsSidebar({
         aria-label="Resize navigation pane"
         aria-hidden={collapsed}
         onDoubleClick={onToggleSidebar}
-      /> */}
+      />
     </Box>
   );
 }

@@ -236,7 +236,7 @@ html:not(.left-open) body .main-content {
 }
 
 html.left-open body .main-content {
-  margin-left: 300px !important;
+  margin-left: var(--left-sidebar-width) !important;
   padding-left: 4vw;
   transition:
     margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -252,11 +252,15 @@ html:not(.right-open) body .main-content {
 }
 
 html.right-open body .main-content {
-  margin-right: 300px !important;
+  margin-right: var(--right-sidebar-width) !important;
   padding-right: 4vw;
   transition:
     margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.is-resizing-sidebars body .main-content {
+  transition: none !important;
 }
 
 html[data-layout-mode="mobile"].right-open body .main-content {
@@ -407,8 +411,9 @@ p > .srch-drawer-link:first-child {
 .left-sidebar {
   position: fixed !important;
   top: var(--nav-bar-height) !important;
+  bottom: var(--sidebar-footer-offset, 0px) !important;
   left: 0 !important;
-  height: calc(100vh - var(--nav-bar-height)) !important;
+  height: auto !important;
   background: var(--color-bg) !important;
   border-right: 1px solid var(--color-border) !important;
   overflow-y: auto !important;
@@ -430,12 +435,13 @@ p > .srch-drawer-link:first-child {
   opacity: 1;
 }
 .right-sidebar {
-  width: 300px;
+  width: var(--right-sidebar-width);
   position: fixed !important;
   top: var(--nav-bar-height) !important;
+  bottom: var(--sidebar-footer-offset, 0px) !important;
   right: 0 !important;
   padding-top: 8px;
-  height: calc(100vh - var(--nav-bar-height)) !important;
+  height: auto !important;
   overflow: hidden auto;
   background: var(--color-bg) !important;
   border-left: 1px solid var(--color-border) !important;
@@ -515,7 +521,7 @@ p > .srch-drawer-link:first-child {
 .right-resize-hitbox {
   position: fixed !important;
   top: var(--nav-bar-height) !important;
-  bottom: 0 !important;
+  bottom: var(--sidebar-footer-offset, 0px) !important;
   right: calc(var(--right-sidebar-width) - 6px) !important;
   width: 6px !important;
   transform: translateX(0);

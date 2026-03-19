@@ -22,7 +22,7 @@
 
 .navsearchbar-input {
   font-size: 1rem;
-  padding-left: 2.5rem;
+  margin-left: 0.5rem;
   transition: opacity 0.3s ease;
   background: transparent;
   border-width: 0 !important;
@@ -75,6 +75,9 @@ html[data-theme="light"] .searchbar-container {
 .searchbar-input-container {
   background: transparent;
   flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .searchbar-input::placeholder {
@@ -87,11 +90,23 @@ html[data-theme="light"] .searchbar-container {
   font-size: 1rem;
   transition: opacity 0.3s ease;
   background: transparent;
+  padding-right: 2.25rem;
   z-index: 9;
   border-width: 0 !important;
   border-radius: 9999999999px;
   opacity: 1;
   pointer-events: auto;
+}
+
+.searchbar-clear-slot {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  z-index: 10;
+  overflow: visible !important;
 }
 .searchbar-input:focus-visible {
   border-width: 0 !important;
@@ -108,39 +123,30 @@ html[data-theme="light"] .searchbar-container {
   z-index: 9999999999 !important;
 }
 
+.searchbar-toggle-button:focus-visible {
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px var(--color-focus-ring) !important;
+  border: none !important;
+  background: transparent !important;
+}
+
 .searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
 .searchbar-toggle-button:active {
-  outline: 2px solid var(--color-focus-ring) !important;
-  outline-offset: 2px;
-  box-shadow: none !important;
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px var(--color-focus-ring) !important;
   border: none !important;
   background: transparent !important;
 }
 
 .toggle-button {
-  width: 0px;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
   z-index: 9999999;
   color: var(--color-header) !important;
   outline: 0 !important;
   box-shadow: none !important;
   border: none !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.searchbar-toggle-button:focus,
-.searchbar-toggle-button:focus-visible,
-.searchbar-toggle-button:active {
-  outline: 2px solid var(--color-focus-ring) !important;
-  outline-offset: 2px;
-  box-shadow: none !important;
-  border: none !important;
+  border-radius: 9999px;
   background: transparent !important;
 }
