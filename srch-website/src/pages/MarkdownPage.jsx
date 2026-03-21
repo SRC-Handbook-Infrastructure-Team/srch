@@ -314,7 +314,10 @@ function MarkdownPage() {
   }, []);
 
   const highlight = useMemo(() => {
-    let hl = location.state?.highlight;
+    let hl =
+      location.state?.highlightConfig ||
+      location.state?.highlightTargets ||
+      location.state?.highlight;
     if (!hl) {
       const params = new URLSearchParams(location.search);
       hl = params.get("highlight");

@@ -21,13 +21,65 @@ import { LuInfo, LuExternalLink } from "react-icons/lu";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function normalizeHighlightTerms(highlight) {
+  if (!highlight) return [];
+  const rawBase =
+    typeof highlight === "object" && !Array.isArray(highlight)
+      ? highlight.terms
+      : highlight;
+  const rawTerms = Array.isArray(rawBase) ? rawBase : [rawBase];
+  const seen = new Set();
+  const terms = [];
+
+  rawTerms.forEach((term) => {
+    const clean = String(term || "").trim();
+    if (!clean) return;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    terms.push(clean);
+  });
+
+  return terms.sort((a, b) => b.length - a.length);
+}
+
+function buildHighlightRegex(highlight) {
+  const terms = normalizeHighlightTerms(highlight);
+  if (terms.length === 0) return null;
+  return new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+}
+
+function resolveHighlightForContext(highlight, isDrawerMode) {
+  if (!highlight || typeof highlight !== "object" || Array.isArray(highlight)) {
+    return highlight;
+  }
+
+  const target = highlight.target;
+  if (target === "drawer" && !isDrawerMode) return null;
+  if (target === "main" && isDrawerMode) return null;
+  return highlight;
+}
+
 export function highlightText(node, highlight) {
   if (!highlight || (!node && node !== 0)) return node;
+  if (
+    typeof highlight === "object" &&
+    !Array.isArray(highlight) &&
+    highlight.scopeAnchor
+  ) {
+    return node;
+  }
+  const regex = buildHighlightRegex(highlight);
+  if (!regex) return node;
+
   if (typeof node === "string") {
-    const regex = new RegExp(`(${highlight})`, "gi");
     const parts = node.split(regex);
     return parts.map((part, idx) =>
-      regex.test(part) ? <mark key={idx}>{part}</mark> : part,
+      idx % 2 === 1 ? <mark key={idx}>{part}</mark> : part,
     );
   }
   if (Array.isArray(node)) {
@@ -677,6 +729,12 @@ function MarkdownRenderer({
     };
   }, [content, externalOriginMap, sectionId, subsectionId, referencesBlock]);
 
+  const isDrawerMode = sidebar && Object.keys(sidebar).length === 0;
+  const effectiveHighlight = useMemo(
+    () => resolveHighlightForContext(highlight, isDrawerMode),
+    [highlight, isDrawerMode],
+  );
+
   /* ------------------------------------------------------------------------
    * Styling tokens used inside the components map
    * --------------------------------------------------------------------- */
@@ -767,17 +825,54 @@ function MarkdownRenderer({
     });
   }
 
+  function centerDrawerChipInPage(term) {
+    if (!term) return;
+
+    const linkEl = document.querySelector(
+      `.srch-drawer-link[data-term="${term}"]`,
+    );
+    if (!linkEl) return;
+
+    const main = document.getElementById("main");
+    if (main) {
+      const mainRect = main.getBoundingClientRect();
+      const linkRect = linkEl.getBoundingClientRect();
+      const delta =
+        linkRect.top -
+        mainRect.top -
+        (mainRect.height / 2 - linkRect.height / 2);
+
+      main.scrollTo({
+        top: main.scrollTop + delta,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    linkEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  }
+
   useEffect(() => {
     if (!activeDrawerLink) return;
 
-    const drawer = document.querySelector(".right-sidebar");
-    if (!drawer) return;
-
-    const timeout = setTimeout(() => {
+    const timeoutA = setTimeout(() => {
       focusDrawerChip(activeDrawerLink);
-    }, 350);
+      centerDrawerChipInPage(activeDrawerLink);
+    }, 120);
 
-    return () => clearTimeout(timeout);
+    const timeoutB = setTimeout(() => {
+      focusDrawerChip(activeDrawerLink);
+      centerDrawerChipInPage(activeDrawerLink);
+    }, 420);
+
+    return () => {
+      clearTimeout(timeoutA);
+      clearTimeout(timeoutB);
+    };
   }, [activeDrawerLink]);
 
   const footnoteSourceMap = useMemo(() => {
@@ -804,7 +899,7 @@ function MarkdownRenderer({
           {Array.isArray(props.children)
             ? props.children.map((child) =>
                 typeof child === "string"
-                  ? highlightText(child, highlight)
+                  ? highlightText(child, effectiveHighlight)
                   : child,
               )
             : props.children}
@@ -827,7 +922,7 @@ function MarkdownRenderer({
             }}
             {...props}
           >
-            {highlightText(childrenArray, highlight)}
+            {highlightText(childrenArray, effectiveHighlight)}
           </h2>
         );
       },
@@ -846,7 +941,7 @@ function MarkdownRenderer({
             }}
             {...props}
           >
-            {highlightText(childrenArray, highlight)}
+            {highlightText(childrenArray, effectiveHighlight)}
           </h3>
         );
       },
@@ -860,7 +955,7 @@ function MarkdownRenderer({
               marginBottom: ".5em",
             }}
           >
-            {highlightText(children, highlight)}
+            {highlightText(children, effectiveHighlight)}
           </p>
         );
       },
@@ -889,7 +984,7 @@ function MarkdownRenderer({
           >
             {childrenArray.map((child, index) =>
               typeof child === "string" ? (
-                highlightText(child, highlight)
+                highlightText(child, effectiveHighlight)
               ) : (
                 <span key={index}>{child}</span>
               ),
@@ -944,7 +1039,7 @@ function MarkdownRenderer({
                 {number}.
               </a>
             )}
-            {highlightText(childrenArray, highlight)}
+            {highlightText(childrenArray, effectiveHighlight)}
           </li>
         );
       },
@@ -1104,8 +1199,10 @@ function MarkdownRenderer({
           if (!value) return;
 
           if (isActive) {
+            setActiveDrawerLinkState(null);
             onDrawerOpen && onDrawerOpen(null);
           } else {
+            setActiveDrawerLinkState(termKey);
             onDrawerOpen && onDrawerOpen(termKey);
           }
         };
@@ -1140,7 +1237,7 @@ function MarkdownRenderer({
                 minWidth: 0,
               }}
             >
-              {highlightText(toShow, highlight)}
+              {highlightText(toShow, effectiveHighlight)}
             </Text>
             <Icon as={LuInfo} flexShrink={0} />
           </Box>
@@ -1162,7 +1259,7 @@ function MarkdownRenderer({
             cursor="pointer"
             _hover={{ color: "purple.500", textDecoration: "none" }}
           >
-            <Link>{highlightText(text, highlight)}</Link>
+            <Link>{highlightText(text, effectiveHighlight)}</Link>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />
           </HStack>
         );
@@ -1183,6 +1280,7 @@ function MarkdownRenderer({
       subsectionId,
       sidebar,
       highlight,
+      effectiveHighlight,
       urlTerm,
       footnoteSourceMap,
       processed.footnoteOriginMap,
@@ -1351,7 +1449,7 @@ function MarkdownRenderer({
                         components={components}
                         remarkPlugins={[
                           remarkGfm,
-                          [remarkHighlight, highlight],
+                          [remarkHighlight, effectiveHighlight],
                           remarkSidebarRef,
                         ]}
                         rehypePlugins={[rehypeRaw]}
@@ -1420,7 +1518,7 @@ function MarkdownRenderer({
                 components={components}
                 remarkPlugins={[
                   remarkGfm,
-                  [remarkHighlight, highlight],
+                  [remarkHighlight, effectiveHighlight],
                   remarkSidebarRef,
                 ]}
                 rehypePlugins={[rehypeRaw]}
@@ -1442,7 +1540,7 @@ function MarkdownRenderer({
       components,
       remarkPlugins: [
         remarkGfm,
-        [remarkHighlight, highlight],
+        [remarkHighlight, effectiveHighlight],
         remarkSidebarRef,
       ],
       rehypePlugins: [rehypeRaw],

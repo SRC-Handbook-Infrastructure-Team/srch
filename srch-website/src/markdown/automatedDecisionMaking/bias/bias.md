@@ -88,10 +88,6 @@ Figure 2: Bias in Model Creation (Suresh et al.)
 
 The impact of bias in ADS is far reaching and never fully known. For an overview of the types of harm bias can cause, click {here}.
 
-## Mitigating Bias In Automated-Decision Making Systems
-
-Understanding sources of bias in AI is an essential first step to developing fairer technology. Check out the primer on Mitigating Bias in Automated-Decision Making Systems (coming soon!) and [AI Governance](governance) for more information.
-
 ## References
 
 Angwin, Julia, Jeff Larson, Lauren Kirchner, and Surya Mattu. “Machine Bias.” ProPublica, May 23, 2016\. [https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing).
@@ -229,7 +225,7 @@ There are two unique ways that representation bias in AI is different from repre
 1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.
 2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias.
 
-In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^11]) and regulated via governance structures. For more information on AI governance \[check out this primer\](governance).
+In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^11]) and regulated via governance structures.
 
 Oversimplification-Case-Study-Healthcare-Proxies-In-High-Risk-Care-Management:
 Heading: Healthcare Proxies In High Risk Care Management
@@ -254,12 +250,12 @@ Evaluation bias is present in facial expression recognition datasets. Common ben
 Benefits-and-Risks-of-Benchmark-Datasets:
 Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^18]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^19] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^19] For a more thorough analysis of (in)justice in risk assessment tools, see the [Justice primer](justice).
 
 Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
 Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^20]
 
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^21] For a more thorough analysis of (in)justice in risk assessment tools, see the \[Justice Primer\](justice).
+Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^21] For a more thorough analysis of (in)justice in risk assessment tools, see the [Justice primer](justice).
 
 here:
 Heading: Types of Harm in Automated-Decision Making Systems
@@ -279,4 +275,4 @@ E.g: People with facial differences have to wait longer for manual processing at
 When an individual experiences interpersonal harm or societal harm due to bias in AI systems  
 E.g: False arrests due to erroneous facial recognition make it difficult for people to clear their names and cause emotional injury to children traumatized by watching their parents getting arrested.[^24]
 
-**If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the \[drawer:Justice Primer\](justice).
+**If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the [Justice primer](justice).

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Collapsible, Skeleton, Stack } from "@chakra-ui/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
+import { getHighlightTargetsFromSnippet } from "../util/highlightTargets";
 
 const ResultSnippet = React.memo(({ snippet, maxResults }) => {
   if (!snippet) return null;
@@ -134,6 +135,11 @@ export const NavBarSearchResults = React.memo(
                             }`;
                             const currentPath =
                               location.pathname + location.hash;
+                            const highlightTargets =
+                              getHighlightTargetsFromSnippet(
+                                snippetToRender,
+                                searchQuery,
+                              );
 
                             if (
                               currentPath === targetPath ||
@@ -142,7 +148,17 @@ export const NavBarSearchResults = React.memo(
                               window.location.reload();
                             } else {
                               navigate(targetPath, {
-                                state: { highlight: searchQuery },
+                                state: {
+                                  highlight: searchQuery,
+                                  highlightTargets,
+                                  highlightConfig: {
+                                    terms: highlightTargets,
+                                    target: doc.isDrawer ? "drawer" : "main",
+                                    scopeAnchor: doc.isDrawer
+                                      ? null
+                                      : doc.anchor,
+                                  },
+                                },
                               });
                             }
                           }}
@@ -158,6 +174,11 @@ export const NavBarSearchResults = React.memo(
                               }`;
                               const currentPath =
                                 location.pathname + location.hash;
+                              const highlightTargets =
+                                getHighlightTargetsFromSnippet(
+                                  snippetToRender,
+                                  searchQuery,
+                                );
 
                               if (
                                 currentPath === targetPath ||
@@ -166,7 +187,17 @@ export const NavBarSearchResults = React.memo(
                                 window.location.reload();
                               } else {
                                 navigate(targetPath, {
-                                  state: { highlight: searchQuery },
+                                  state: {
+                                    highlight: searchQuery,
+                                    highlightTargets,
+                                    highlightConfig: {
+                                      terms: highlightTargets,
+                                      target: doc.isDrawer ? "drawer" : "main",
+                                      scopeAnchor: doc.isDrawer
+                                        ? null
+                                        : doc.anchor,
+                                    },
+                                  },
                                 });
                               }
                             }

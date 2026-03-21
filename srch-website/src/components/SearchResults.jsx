@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Collapsible, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
+import { getHighlightTargetsFromSnippet } from "../util/highlightTargets";
 
 const classSuffix = (className, floating) =>
   floating ? `${className}-floating` : className;
@@ -189,24 +190,63 @@ export const SearchResults = React.memo(
                               tabIndex={0}
                               aria-label={`Open ${doc.title || "result"} in ${doc.sectionTitle || doc.section || "section"}`}
                               onClick={() => {
+                                const highlightTargets =
+                                  getHighlightTargetsFromSnippet(
+                                    snippetToRender,
+                                    searchQuery,
+                                  );
                                 navigate(
                                   `/${doc.section}/${doc.subsection || ""}${
                                     doc.isDrawer
                                       ? `/${doc.anchor}`
                                       : `#${doc.anchor}`
                                   }`,
-                                  { state: { highlight: searchQuery } },
+                                  {
+                                    state: {
+                                      highlight: searchQuery,
+                                      highlightTargets,
+                                      highlightConfig: {
+                                        terms: highlightTargets,
+                                        target: doc.isDrawer
+                                          ? "drawer"
+                                          : "main",
+                                        scopeAnchor: doc.isDrawer
+                                          ? null
+                                          : doc.anchor,
+                                      },
+                                    },
+                                  },
                                 );
                               }}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") {
                                   e.preventDefault();
+                                  const highlightTargets =
+                                    getHighlightTargetsFromSnippet(
+                                      snippetToRender,
+                                      searchQuery,
+                                    );
                                   navigate(
                                     `/${doc.section}/${doc.subsection || ""}${
                                       doc.isDrawer
                                         ? `/${doc.anchor}`
                                         : `#${doc.anchor}`
                                     }`,
+                                    {
+                                      state: {
+                                        highlight: searchQuery,
+                                        highlightTargets,
+                                        highlightConfig: {
+                                          terms: highlightTargets,
+                                          target: doc.isDrawer
+                                            ? "drawer"
+                                            : "main",
+                                          scopeAnchor: doc.isDrawer
+                                            ? null
+                                            : doc.anchor,
+                                        },
+                                      },
+                                    },
                                   );
                                 }
                               }}
@@ -278,14 +318,14 @@ export const SearchResults = React.memo(
                                   }
                                 }}
                               >
-                                aria-disabled={currentPage === totalPages}
-                                aria-label="Go to next search results page"
                                 {i + 1}
                               </span>
                             ))}
                           </div>
                           <a
                             className={`page-nav${currentPage === totalPages ? " invisible" : ""}`}
+                            aria-disabled={currentPage === totalPages}
+                            aria-label="Go to next search results page"
                             onClick={() => {
                               setCurrentPage((p) =>
                                 Math.min(totalPages, p + 1),
