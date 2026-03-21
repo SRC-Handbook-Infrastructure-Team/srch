@@ -84,6 +84,7 @@ export const FloatingSearchResults = React.memo(
                               className="results-item-floating"
                               role="link"
                               tabIndex={0}
+                              aria-label={`Open ${doc.title || "result"} in ${doc.sectionTitle || doc.section || "section"}`}
                               onClick={() => {
                                 const targetPath = `/${doc.section}/${doc.subsection || ""}${
                                   doc.isDrawer
@@ -167,6 +168,13 @@ export const FloatingSearchResults = React.memo(
                           onClick={() => handleViewAllClick()}
                           aria-label={`View all search results`}
                           role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleViewAllClick();
+                            }
+                          }}
                         >
                           {`See full result${searchResults.length === 1 ? "" : "s"}`}
                         </a>

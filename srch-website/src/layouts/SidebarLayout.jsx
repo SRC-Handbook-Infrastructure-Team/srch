@@ -20,6 +20,11 @@ export default function SidebarLayout({ children }) {
   const innerRef = useRef(null);
   const footerRef = useRef(null);
   const scrollPosRef = useRef(0);
+  const leftSidebarRef = useRef(null);
+  const rightSidebarRef = useRef(null);
+  const rightCloseButtonRef = useRef(null);
+  const prevLeftOpenRef = useRef(false);
+  const prevRightOpenRef = useRef(false);
   function getScrollContainer() {
     if (typeof document !== "undefined") {
       const main = document.getElementById("main");
@@ -224,6 +229,49 @@ export default function SidebarLayout({ children }) {
   const [rightContent, setRightContent] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
+  useEffect(() => {
+    const isLeftOpen = !leftSidebarCollapsed;
+    const wasLeftOpen = prevLeftOpenRef.current;
+
+    if (isLeftOpen && !wasLeftOpen) {
+      requestAnimationFrame(() => {
+        const sidebarEl = leftSidebarRef.current;
+        if (!sidebarEl) return;
+
+        const firstFocusable = sidebarEl.querySelector(
+          'button, [href], [tabindex]:not([tabindex="-1"])',
+        );
+
+        if (firstFocusable instanceof HTMLElement) {
+          firstFocusable.focus();
+        } else {
+          sidebarEl.focus();
+        }
+      });
+    }
+
+    prevLeftOpenRef.current = isLeftOpen;
+  }, [leftSidebarCollapsed]);
+
+  useEffect(() => {
+    const wasRightOpen = prevRightOpenRef.current;
+
+    if (isRightOpen && !wasRightOpen) {
+      requestAnimationFrame(() => {
+        if (rightCloseButtonRef.current instanceof HTMLElement) {
+          rightCloseButtonRef.current.focus();
+          return;
+        }
+
+        if (rightSidebarRef.current instanceof HTMLElement) {
+          rightSidebarRef.current.focus();
+        }
+      });
+    }
+
+    prevRightOpenRef.current = isRightOpen;
+  }, [isRightOpen]);
+
   // Manage 'right-open' class on <html> when right sidebar is open in wide mode
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -361,6 +409,15 @@ export default function SidebarLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      const mainEl = mainRef.current;
+      if (mainEl instanceof HTMLElement) {
+        mainEl.focus();
+      }
+    });
+  }, [location.pathname]);
+
   const getBasePath = (path = "") => {
     const parts = path.split("/").filter(Boolean);
     return `/${parts.slice(0, 2).join("/") || ""}`;
@@ -473,10 +530,39 @@ export default function SidebarLayout({ children }) {
     ],
   );
 
+  const focusFirstInContainer = useCallback((container) => {
+    if (!(container instanceof HTMLElement)) return false;
+
+    const firstFocusable = container.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+
+    if (firstFocusable instanceof HTMLElement) {
+      firstFocusable.focus();
+      return true;
+    }
+
+    return false;
+  }, []);
+
+  const handleRightSidebarKeyDown = useCallback(
+    (e) => {
+      if (e.key !== "Tab" || e.shiftKey) return;
+      if (e.target !== e.currentTarget) return;
+
+      const didMove = focusFirstInContainer(e.currentTarget);
+      if (didMove) e.preventDefault();
+    },
+    [focusFirstInContainer],
+  );
+
   return (
     <LayoutContext.Provider value={layoutValue}>
       <div className={"sidebar-layout"} data-layout-mode={layoutMode}>
         <ContentsSidebar
+          sidebarRef={leftSidebarRef}
+          focusTabIndex={!leftSidebarCollapsed ? 3 : -1}
+          onSidebarContainerKeyDown={handleRightSidebarKeyDown}
           className={!leftSidebarCollapsed ? "open" : ""}
           width={leftSidebar.width}
           collapsed={leftSidebarCollapsed}
@@ -502,19 +588,29 @@ export default function SidebarLayout({ children }) {
             {leftSidebarCollapsed ? ">" : "<"}
           </button>
         )}
-        <main id="main" className="main-content" ref={mainRef}>
+        <main
+          id="main"
+          className="main-content"
+          ref={mainRef}
+          tabIndex={1}
+          aria-label="Main content"
+        >
           <div className="main-shift" ref={innerRef}>
             {children}
           </div>
         </main>
         <aside
+          ref={rightSidebarRef}
           className={`right-sidebar ${isRightOpen ? "open" : "close"}`}
           aria-label="Right sidebar drawer"
+          tabIndex={isRightOpen ? 2 : -1}
+          onKeyDown={handleRightSidebarKeyDown}
           style={{ width: rightSidebar.width }}
         >
           {isRightOpen && (
             <>
               <button
+                ref={rightCloseButtonRef}
                 onClick={closeRightDrawerAndResetUrl}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {

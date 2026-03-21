@@ -162,6 +162,7 @@ export const SearchResults = React.memo(
                                 }
                               }}
                               role="button"
+                              aria-label={`Show ${num} results per page`}
                               aria-pressed={num === resultsPerPage}
                             >
                               {num}
@@ -186,6 +187,7 @@ export const SearchResults = React.memo(
                               className="results-item"
                               role="link"
                               tabIndex={0}
+                              aria-label={`Open ${doc.title || "result"} in ${doc.sectionTitle || doc.section || "section"}`}
                               onClick={() => {
                                 navigate(
                                   `/${doc.section}/${doc.subsection || ""}${
@@ -240,6 +242,7 @@ export const SearchResults = React.memo(
                           <a
                             className={`page-nav${currentPage === 1 ? " invisible" : ""}`}
                             aria-disabled={currentPage === 1}
+                            aria-label="Go to previous search results page"
                             onClick={() => {
                               setCurrentPage((p) => Math.max(1, p - 1));
                             }}
@@ -264,6 +267,10 @@ export const SearchResults = React.memo(
                                 }}
                                 tabIndex={0}
                                 role="button"
+                                aria-label={`Go to search results page ${i + 1}`}
+                                aria-current={
+                                  currentPage === i + 1 ? "page" : undefined
+                                }
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter" || e.key === " ") {
                                     e.preventDefault();
@@ -271,6 +278,8 @@ export const SearchResults = React.memo(
                                   }
                                 }}
                               >
+                                aria-disabled={currentPage === totalPages}
+                                aria-label="Go to next search results page"
                                 {i + 1}
                               </span>
                             ))}

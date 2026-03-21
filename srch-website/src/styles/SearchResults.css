@@ -17,11 +17,6 @@
 }
 
 .results-item {
-  appearance: none;
-  background: transparent;
-  border: none;
-  width: 100%;
-  text-align: left;
   padding: 1.25rem 1rem;
   cursor: pointer;
 }
@@ -67,7 +62,6 @@
 
 .result-snippet-text {
   display: -webkit-box;
-  line-clamp: 1;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -76,7 +70,6 @@
 
 .result-snippet-text-clamped {
   display: -webkit-box;
-  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -118,10 +111,6 @@
 }
 
 .per-page-number {
-  appearance: none;
-  background: transparent;
-  border: none;
-  padding: 0;
   cursor: pointer;
   margin: 0 4px;
   text-decoration: none;
@@ -174,10 +163,6 @@
 }
 
 .page-number {
-  appearance: none;
-  background: transparent;
-  border: none;
-  padding: 0;
   cursor: pointer;
   color: var(--color-subtle-emphasis);
   user-select: none;

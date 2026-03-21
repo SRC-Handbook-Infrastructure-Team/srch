@@ -42,7 +42,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
       onClick={handleContainerClick}
     >
       <IconButton
-        aria-label="Toggle search bar"
+        aria-label="Run search"
         className="searchbar-toggle-button toggle-button"
         onClick={() => navigate(`/search/${encodeURIComponent(searchQuery)}`)}
       >
@@ -53,6 +53,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           ref={inputRef}
           className={"searchbar-input"}
           type="text"
+          aria-label="Search handbook content"
           placeholder={"Search for topics, case studies, terms..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

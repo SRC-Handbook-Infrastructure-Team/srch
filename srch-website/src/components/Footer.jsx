@@ -178,10 +178,8 @@ function Footer({
                     />
                   </div>
                   <button
-                    type="button"
                     onClick={() => navigate(module.slug)}
                     className="module-link-primer-footer"
-                    aria-label={`Go to ${module.title} module`}
                   >
                     {module.title}
                   </button>
@@ -191,18 +189,14 @@ function Footer({
             <div className="footer-links">
               <div className="heading-footer">Quick Links</div>
               <button
-                type="button"
                 onClick={() => navigate("/about")}
                 className="module-link-primer-footer"
-                aria-label="Go to About page"
               >
                 About
               </button>
               <button
-                type="button"
                 onClick={() => navigate("/acknowledgments")}
                 className="module-link-primer-footer"
-                aria-label="Go to Acknowledgments page"
               >
                 Acknowledgments
               </button>

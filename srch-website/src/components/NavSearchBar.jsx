@@ -38,7 +38,7 @@ function NavSearchBar({
     <Box ref={containerRef} className={`navsearchbar-container`}>
       <Box className={`navsearchbar-input-container`}>
         <IconButton
-          aria-label="Toggle nav search bar"
+          aria-label="Run search"
           className="searchbar-toggle-button toggle-button"
           onClick={search}
         >
@@ -49,6 +49,7 @@ function NavSearchBar({
           style={{ padding: 0 }}
           className={"navsearchbar-input"}
           type="text"
+          aria-label="Search handbook content"
           placeholder={"Search for topics, case studies, terms..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

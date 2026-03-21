@@ -127,6 +127,7 @@ export const NavBarSearchResults = React.memo(
                           className="results-item-nav-bar"
                           role="link"
                           tabIndex={searchQuery.length > 0 ? 0 : -1}
+                          aria-label={`Open ${doc.title || "result"} in ${doc.sectionTitle || doc.section || "section"}`}
                           onClick={() => {
                             const targetPath = `/${doc.section}/${doc.subsection || ""}${
                               doc.isDrawer ? `/${doc.anchor}` : `#${doc.anchor}`

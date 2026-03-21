@@ -110,6 +110,9 @@ function parseSubsections(content) {
    ========================================================================== */
 export default function ContentsSidebar({
   className = "",
+  sidebarRef = null,
+  focusTabIndex = -1,
+  onSidebarContainerKeyDown = () => {},
   width,
   collapsed,
   isResizing = false,
@@ -479,10 +482,17 @@ export default function ContentsSidebar({
                 className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
                 cursor="pointer"
                 onClick={() => toggleSection(section.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleSection(section.id);
+                  }
+                }}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 role="button"
+                tabIndex={0}
                 aria-label={
                   isExpanded
                     ? `Collapse ${section.title || section.id}`
@@ -530,7 +540,10 @@ export default function ContentsSidebar({
 
                     return (
                       <Box key={sub.id} mb={1}>
-                        <Link to={`/${section.id}/${sub.id}`}>
+                        <Link
+                          className="sidebar-subsection-link"
+                          to={`/${section.id}/${sub.id}`}
+                        >
                           {" "}
                           <Box className={`sidebar-sub-row`}>
                             <Text
@@ -569,6 +582,7 @@ export default function ContentsSidebar({
   return (
     <Box
       as="aside"
+      ref={sidebarRef}
       className={`left-sidebar ${!collapsed ? "open" : ""} ${collapsed && isAnimatingClose ? "closing" : ""} ${className}`.trim()}
       position="fixed"
       left={0}
@@ -581,6 +595,8 @@ export default function ContentsSidebar({
       zIndex={10}
       aria-label="Primary navigation"
       aria-expanded={!collapsed}
+      tabIndex={focusTabIndex}
+      onKeyDown={onSidebarContainerKeyDown}
     >
       <div className="sidebar-header-controls">
         <div>

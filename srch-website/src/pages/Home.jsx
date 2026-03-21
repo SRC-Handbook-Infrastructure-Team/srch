@@ -364,7 +364,8 @@ function Home() {
               <a
                 className="connect-link"
                 href="https://cntr.brown.edu/"
-                target="blank"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   textDecoration: "none",
                   color: "inherit",
@@ -383,7 +384,8 @@ function Home() {
               <a
                 className="connect-link"
                 href="https://www.instagram.com/brown_cntr/"
-                target="blank"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   textDecoration: "none",
                   color: "inherit",
