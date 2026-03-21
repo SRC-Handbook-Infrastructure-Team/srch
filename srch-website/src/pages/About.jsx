@@ -31,7 +31,7 @@ export default function About() {
           </div>
           <p>
             Each section contains a series of primers that are loosely aligned
-            with learning objectives in the SRC curriculum. 
+            with learning objectives in the SRC curriculum.
           </p>
         </section>
       </div>

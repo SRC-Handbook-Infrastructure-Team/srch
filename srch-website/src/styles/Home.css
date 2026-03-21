@@ -72,7 +72,7 @@
 }
 
 .lower-content {
-  margin-top: var(--upper-content-height);
+  margin-top: 0;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -104,6 +104,7 @@
     transform 0.2s ease,
     opacity 0.2s ease;
   display: flex;
+  align-self: center;
   align-items: center;
   justify-content: center;
 }
@@ -457,9 +458,8 @@ html[data-theme="light"] .topic-card {
 }
 
 .upper-content {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
+  margin-top: var(--nav-bar-height);
   width: 100vw;
   height: var(--ack-upper-height);
   z-index: 0;

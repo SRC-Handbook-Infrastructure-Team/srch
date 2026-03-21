@@ -46,7 +46,7 @@
 }
 
 .ack-lower-content {
-  margin-top: calc(var(--ack-upper-height) - 5vh);
+  margin-top: 0;
   padding-top: 50px;
   padding-bottom: 50px;
   position: relative;

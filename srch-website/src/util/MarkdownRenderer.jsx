@@ -14,7 +14,7 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
 import { remarkHighlight } from "./remarkHighlight";
-import { Text, Link, Box, HStack, Icon, Collapsible } from "@chakra-ui/react";
+import { Text, Box, HStack, Icon, Collapsible } from "@chakra-ui/react";
 import { LuChevronRight } from "react-icons/lu";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { LuInfo, LuExternalLink } from "react-icons/lu";
@@ -1161,8 +1161,9 @@ function MarkdownRenderer({
             color="blue.400"
             cursor="pointer"
             _hover={{ color: "purple.500", textDecoration: "none" }}
+            aria-label={`Open ${text || "linked section"}`}
           >
-            <Link>{highlightText(text, highlight)}</Link>
+            <Text as="span">{highlightText(text, highlight)}</Text>
             <Icon as={BsFileEarmarkText} boxSize="0.8em" />
           </HStack>
         );

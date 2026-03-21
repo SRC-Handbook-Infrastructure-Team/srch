@@ -101,6 +101,15 @@ function NavBar() {
     });
   }
 
+  function handleLogoClick() {
+    if (currentPath === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    navigate("/");
+  }
+
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location.pathname]);
@@ -237,7 +246,7 @@ function NavBar() {
             type="button"
             className="navbar-logo-container nav-link-box show-base hide-md"
             aria-label="Go to home page"
-            onClick={() => navigate("/")}
+            onClick={handleLogoClick}
           >
             <Image
               src={getLogo()}
@@ -252,9 +261,9 @@ function NavBar() {
             <Box
               as="button"
               type="button"
-              className="navbar-logo-container nav-link-box"
+              className="navbar-logo-container nav-link-box middle-menu-left"
               aria-label="Go to home page"
-              onClick={() => navigate("/")}
+              onClick={handleLogoClick}
             >
               <Image
                 src={getLogo()}
@@ -265,88 +274,92 @@ function NavBar() {
               />
               <div className="logo-white-overlay"></div>
             </Box>
-            <Box
-              className="nav-dropdown"
-              onMouseEnter={() => openSectionOnHover("modules")}
-            >
+            <Box className="middle-menu-center">
+              <Box
+                className="nav-dropdown"
+                onMouseEnter={() => openSectionOnHover("modules")}
+              >
+                <Box
+                  as="button"
+                  type="button"
+                  className="nav-dropdown-title nav-link-box"
+                  onClick={(e) => toggleSection("modules", e)}
+                >
+                  <span
+                    className="nav-dropdown-title-text"
+                    style={{
+                      color:
+                        openSection === "modules"
+                          ? "var(--color-text-hover)"
+                          : "inherit",
+                    }}
+                  >
+                    Modules
+                  </span>
+                </Box>
+              </Box>
               <Box
                 as="button"
                 type="button"
-                className="nav-dropdown-title nav-link-box"
-                onClick={(e) => toggleSection("modules", e)}
+                className="nav-link-box nav-button"
+                onClick={() => {
+                  const firstSection = sections[0];
+                  const sectionSubsections = subsections[firstSection.id];
+                  if (sectionSubsections && sectionSubsections.length > 0) {
+                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
+                  } else {
+                    navigate(`/${firstSection.id}`);
+                  }
+                }}
+                onMouseEnter={() => closeSectionOnLeave("modules")}
               >
-                <span
-                  className="nav-dropdown-title-text"
-                  style={{
-                    color:
-                      openSection === "modules"
-                        ? "var(--color-text-hover)"
-                        : "inherit",
-                  }}
-                >
-                  Modules
-                </span>
+                <span>About</span>
+              </Box>
+              <Box
+                as="button"
+                type="button"
+                className="nav-link-box nav-button"
+                onClick={() => navigate("/acknowledgments")}
+                onMouseEnter={() => closeSectionOnLeave("modules")}
+              >
+                <span>Acknowledgments</span>
               </Box>
             </Box>
-            <Box
-              as="button"
-              type="button"
-              className="nav-link-box nav-button"
-              onClick={() => {
-                const firstSection = sections[0];
-                const sectionSubsections = subsections[firstSection.id];
-                if (sectionSubsections && sectionSubsections.length > 0) {
-                  navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-                } else {
-                  navigate(`/${firstSection.id}`);
+            <Box className="middle-menu-right">
+              <Box
+                as="button"
+                type="button"
+                className="icon-button"
+                aria-label={isSearchOpen ? "Close search" : "Open search"}
+                onClick={() => {
+                  if (!isSearchOpen) {
+                    forceSearchOpen();
+                  } else {
+                    setIsSearchOpen(false);
+                  }
+                }}
+                onMouseEnter={() => closeSectionOnLeave("modules")}
+              >
+                <LuSearch className="navsearchbar-button" size="1.25em" />
+              </Box>
+              <Box
+                as="button"
+                type="button"
+                className="icon-button"
+                aria-label={
+                  theme === "dark"
+                    ? "Switch to light mode"
+                    : "Switch to dark mode"
                 }
-              }}
-              onMouseEnter={() => closeSectionOnLeave("modules")}
-            >
-              <span>About</span>
-            </Box>
-            <Box
-              as="button"
-              type="button"
-              className="nav-link-box nav-button"
-              onClick={() => navigate("/acknowledgments")}
-              onMouseEnter={() => closeSectionOnLeave("modules")}
-            >
-              <span>Acknowledgments</span>
-            </Box>
-            <Box
-              as="button"
-              type="button"
-              className="icon-button"
-              aria-label={isSearchOpen ? "Close search" : "Open search"}
-              onClick={() => {
-                if (!isSearchOpen) {
-                  forceSearchOpen();
-                } else {
-                  setIsSearchOpen(false);
-                }
-              }}
-              onMouseEnter={() => closeSectionOnLeave("modules")}
-            >
-              <LuSearch className="navsearchbar-button" size="1.25em" />
-            </Box>
-            <Box
-              as="button"
-              type="button"
-              className="icon-button"
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-              onClick={toggleTheme}
-              onMouseEnter={() => closeSectionOnLeave("modules")}
-            >
-              {theme === "dark" ? (
-                <LuSun className="navsearchbar-button" size="1.25em" />
-              ) : (
-                <LuMoon className="navsearchbar-button" size="1.25em" />
-              )}
+                onClick={toggleTheme}
+                onMouseEnter={() => closeSectionOnLeave("modules")}
+              >
+                {theme === "dark" ? (
+                  <LuSun className="navsearchbar-button" size="1.25em" />
+                ) : (
+                  <LuMoon className="navsearchbar-button" size="1.25em" />
+                )}
+              </Box>
             </Box>
           </Box>
           <Box className="right-hstack show-base hide-md">

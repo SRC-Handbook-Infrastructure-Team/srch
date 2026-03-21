@@ -88,12 +88,10 @@ function Home() {
   const getPeopleIcon = () =>
     theme === "dark" ? peopleIconDark : peopleIconLight;
 
-  // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
-      // Check if user has scrolled past the upper-content section
       const scrollY = window.scrollY;
-      const upperContentHeight = window.innerHeight * 0.4; // Approximate upper-content height
+      const upperContentHeight = window.innerHeight * 0.4;
       setIsScrolledDown(scrollY > upperContentHeight);
     };
 
@@ -101,7 +99,6 @@ function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle scroll to content or top
   const handleScrollClick = () => {
     if (curriculumTitleRef.current) {
       const navbarHeight = 70;
@@ -129,23 +126,20 @@ function Home() {
             </div>
           </div>
         </div>
-
+        <button
+          className="scroll-caret-button"
+          onClick={handleScrollClick}
+          aria-label={isScrolledDown ? "Scroll to top" : "Scroll to curriculum"}
+        >
+          <img
+            src={getCarotIcon()}
+            alt="Scroll"
+            className={`scroll-caret-icon ${isScrolledDown ? "hidden" : ""}`}
+          />
+        </button>
         <div className="lower-content">
           <div className="content-section">
             <div className="content-header">
-              <button
-                className="scroll-caret-button"
-                onClick={handleScrollClick}
-                aria-label={
-                  isScrolledDown ? "Scroll to top" : "Scroll to curriculum"
-                }
-              >
-                <img
-                  src={getCarotIcon()}
-                  alt="Scroll"
-                  className={`scroll-caret-icon ${isScrolledDown ? "hidden" : ""}`}
-                />
-              </button>
               <div
                 className="section-title"
                 ref={curriculumTitleRef}

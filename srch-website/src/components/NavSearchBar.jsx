@@ -1,7 +1,7 @@
 import "../styles/SearchBar.css";
 import { Box, Input, IconButton } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 function NavSearchBar({
   searchQuery,
@@ -10,7 +10,18 @@ function NavSearchBar({
   isSearchOpen,
 }) {
   const containerRef = useRef(null);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isSearchOpen || !inputRef.current) return;
+
+    const t = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+
+    return () => clearTimeout(t);
+  }, [isSearchOpen]);
 
   function search() {
     navigate(`/search/${encodeURIComponent(searchQuery)}`);
@@ -34,6 +45,7 @@ function NavSearchBar({
           <LuSearch />
         </IconButton>
         <Input
+          ref={inputRef}
           style={{ padding: 0 }}
           className={"navsearchbar-input"}
           type="text"

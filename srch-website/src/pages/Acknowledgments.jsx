@@ -93,17 +93,12 @@ function TeamGrid({ filteredTeam, teamName }) {
 
         return (
           <div key={`${member.name}-${idx}`} className="ack-card">
-            {photoSrc ? (
+            {photoSrc && (
               <img
                 className="ack-card-photo"
                 src={photoSrc}
                 alt={member.name}
                 decoding="async"
-              />
-            ) : (
-              <div
-                className="ack-card-photo ack-photo-fallback"
-                aria-hidden="true"
               />
             )}
 
