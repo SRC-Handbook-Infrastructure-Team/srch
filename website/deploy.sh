@@ -1,22 +1,23 @@
 #!/bin/bash
 
 # Deployment script for SRCH website
-# Usage: ./deploy.sh <username>
+# Usage: ./deploy.sh <username> <api_base_url>
 
 set -e  # Exit on error
 
-if [ -z "$1" ]; then
-  echo "Error: Username required"
-  echo "Usage: ./deploy.sh <username>"
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Error: Username and API base URL are required"
+  echo "Usage: ./deploy.sh <username> <api_base_url>"
   exit 1
 fi
 
 USERNAME=$1
+API_BASE_URL=$2
 SERVER="ssh.cs.brown.edu"
 DEPLOY_PATH="/web/cs/web/sites/srch"
 
-echo "Building project..."
-npm run build
+echo "Building project with VITE_API_BASE_URL=$API_BASE_URL ..."
+VITE_API_BASE_URL="$API_BASE_URL" npm run build
 
 echo "Uploading build files..."
 scp -r dist/* "$USERNAME@$SERVER:$DEPLOY_PATH/"

@@ -29,6 +29,22 @@ The server listens on port `3001` by default and allows cross-origin requests fr
 | `PORT`           | `3001`                   | Port the server listens on           |
 | `ALLOWED_ORIGIN` | `http://localhost:5173`  | Allowed CORS origin for the API      |
 
+## Production Notes
+
+For production deployment:
+
+1. Set `ALLOWED_ORIGIN` to your production frontend origin (for example, `https://srch.cs.brown.edu`).
+2. Run `npm run build-db` on the deployment host before starting the server.
+3. Keep the process alive with a process manager (`systemd`, `pm2`, etc.) or `nohup`.
+
+Example:
+
+```bash
+npm ci --omit=dev
+npm run build-db
+ALLOWED_ORIGIN=https://srch.cs.brown.edu PORT=3001 nohup npm start > server.log 2>&1 &
+```
+
 ## API Endpoints
 
 ### Content
@@ -58,10 +74,10 @@ The server listens on port `3001` by default and allows cross-origin requests fr
 To reduce browser load time, you can pre-build a search index JSON file for the front-end:
 
 ```bash
-# From the srch-website/ directory:
+# From the website/ directory:
 npm run export-index
 ```
 
-This generates `srch-website/public/search-index.json`. The front-end automatically loads this file when available, falling back to building the index from individual markdown files otherwise.
+This generates `website/public/search-index.json`. The front-end automatically loads this file when available, falling back to building the index from individual markdown files otherwise.
 
 The index is also regenerated automatically when running `npm run build`.

@@ -2,6 +2,7 @@ import FlexSearch from "flexsearch";
 import {
   getSections,
   getSubsections,
+  getContent,
   createIdFromHeading,
 } from "./MarkdownRenderer.jsx";
 
@@ -281,9 +282,22 @@ export async function initializeIndex() {
   for (const section of sections) {
     const subsections = await getSubsections(section.id);
     for (const subsection of subsections) {
-      const { mainContent: subMain, sidebarRaw: subSidebar } =
-        extractMainAndSidebar(subsection.content);
-      const subSidebarParsed = subSidebar ? parseSidebar(subSidebar) : {};
+      let subMain = "";
+      let subSidebarParsed = {};
+
+      if (subsection.content) {
+        const { mainContent, sidebarRaw } = extractMainAndSidebar(
+          subsection.content,
+        );
+        subMain = mainContent;
+        subSidebarParsed = sidebarRaw ? parseSidebar(sidebarRaw) : {};
+      } else {
+        const fullSubsection = await getContent(section.id, subsection.id);
+        subMain = fullSubsection?.content || "";
+        subSidebarParsed = fullSubsection?.sidebar || {};
+      }
+
+      if (!subMain) continue;
 
       const subBlocks = extractBlocksFromContent(
         section.id,

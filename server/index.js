@@ -20,6 +20,7 @@ const rateLimit = require("express-rate-limit");
 const contentRoutes = require("./routes/content");
 const searchRoutes = require("./routes/search");
 
+const bootStartedAt = Date.now();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
 
@@ -55,8 +56,16 @@ app.get("/health", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`SRCH server listening on http://localhost:${PORT}`);
-  console.log(`CORS allowed origin: ${ALLOWED_ORIGIN}`);
+  const readyMs = Date.now() - bootStartedAt;
+  const localUrl = `http://localhost:${PORT}/`;
+  const linkedLocalUrl = process.stdout.isTTY
+    ? `\u001b]8;;${localUrl}\u001b\\${localUrl}\u001b]8;;\u001b\\`
+    : localUrl;
+
+  console.log(`\n  SRCH v1.0  ready in ${readyMs} ms\n`);
+  console.log(`  ->  Local:   ${linkedLocalUrl}`);
+  console.log("  ->  press Ctrl+C to stop");
+  console.log("");
 });
 
 module.exports = app;

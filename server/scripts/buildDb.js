@@ -1,7 +1,7 @@
 /**
  * buildDb.js
  *
- * Reads all markdown files from the srch-website markdown directory,
+ * Reads all markdown files from the website markdown directory,
  * processes them, and populates the SQLite database with sections,
  * subsections, and a full-text search index.
  *
@@ -15,7 +15,7 @@ const { open } = require("sqlite");
 
 const MARKDOWN_DIR = path.join(
   __dirname,
-  "../../srch-website/src/markdown"
+  "../../website/src/markdown"
 );
 const DB_PATH = path.join(__dirname, "../srch.db");
 
