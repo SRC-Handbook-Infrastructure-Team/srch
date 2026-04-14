@@ -13,9 +13,8 @@ The repository for the Socially Responsible Computing Curriculum Handbook
 3. Run `npm install` once from the repository root to install all workspace dependencies.
 
 4. Use these commands from the repository root during development:
-   - `npm run dev` to start backend + frontend
-   - `npm run server` to start backend only
-   - `npm run website` to start frontend only
+   - `npm run dev` to start the frontend
+   - `npm run website` to start the frontend (equivalent)
 
 5. When you are finished with your changes, add + commit + push them to your branch.
 
@@ -23,7 +22,7 @@ The repository for the Socially Responsible Computing Curriculum Handbook
 
 7. Switch to the main branch then pull your merged branch.
 
-8. Deploy both frontend and backend (see the production deployment section below).
+8. Deploy the frontend static site (see the production deployment section below).
 
 9. You should automatically be able to view the deployed changes in our GitHub pages site: https://src-handbook-infrastructure-team.github.io/srch
 
