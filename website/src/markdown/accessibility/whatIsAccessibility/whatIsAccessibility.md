@@ -36,7 +36,7 @@ Disparities in digital access (referred to as the "digital divide") exacerbate d
 
 These definitions of accessibility are just three conceptions amid an entire field of scholarship. What makes digital accessibility exciting to think about is the way it is constantly changing and redefining itself given the context in which it is being evaluated. By using the framework of Universality, Disability, and Equity, we hope to clarify that there are facets to accessibility that one _must_ consider when interacting with, designing, and creating in the technological space.
 
-## References
+## Further Reading
 
 Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
 

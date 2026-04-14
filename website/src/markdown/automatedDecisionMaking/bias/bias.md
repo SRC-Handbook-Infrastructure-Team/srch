@@ -88,7 +88,7 @@ Figure 2: Bias in Model Creation (Suresh et al.)
 
 The impact of bias in ADS is far reaching and never fully known. For an overview of the types of harm bias can cause, click {here}.
 
-## References
+## Further Reading
 
 Angwin, Julia, Jeff Larson, Lauren Kirchner, and Surya Mattu. “Machine Bias.” ProPublica, May 23, 2016\. [https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing).
 

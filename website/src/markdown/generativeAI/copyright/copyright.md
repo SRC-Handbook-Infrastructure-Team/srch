@@ -124,7 +124,7 @@ Originality: Originality means that a work must be independently created by an a
 
 1976 Copyright Act: The 1976 Copyright Act extended copyright to life of the author + 50 years (later extended to 70 years), granted automatic protection upon fixation in a tangible medium, and codified Fair Use as a defense.
 
-## References
+## Further Reading
 
 Al-Busaidi, Adil S. “Redefining Boundaries in Innovation and Knowledge Domains: Investigating the Impact of Generative Artificial Intelligence on Copyright and Intellectual Property Rights.” Journal of Innovation & Knowledge, November 29, 2024. https://www.sciencedirect.com/science/article/pii/S2444569X24001690#:~:text=Within%20the%20current%20legal%20frameworks,works%20(Zirpoli%2C%202023).
 

@@ -208,7 +208,6 @@ export const getSections = async () => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
-            final: frontmatter.final,
           });
         }
       }
@@ -254,7 +253,6 @@ export const getSubsections = async (sectionId) => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
-            final: frontmatter.final,
           });
         }
       }
@@ -374,8 +372,8 @@ export function getPreloadedNavigationData() {
  * continuation line instead, which correctly captures every definition
  * including the last one.
  *
- * FIX: The stripped output now also removes the ## References and
- * ## Footnotes section headings (and all content under ## References), which
+ * FIX: The stripped output now also removes the ## Further Reading and
+ * ## Footnotes section headings (and all content under ## Further Reading), which
  * previously leaked into the rendered page as visible headings and plain text.
  *
  * Returns { stripped, footnotes } where:
@@ -385,7 +383,7 @@ export function getPreloadedNavigationData() {
  */
 export function extractFootnotes(markdown) {
   if (!markdown || typeof markdown !== "string") {
-    return { stripped: markdown, footnotes: [], referencesBlock: null };
+    return { stripped: markdown, footnotes: [], furtherReadingBlock: null };
   }
 
   const defRegex = /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
@@ -406,19 +404,33 @@ export function extractFootnotes(markdown) {
     }
   }
 
-  const referencesMatch = markdown.match(
-    /^##\s+References\s*\n([\s\S]*?)(?=^##\s)/m,
-  );
+  const furtherReadingHeadingRegex = /^##\s+Further Reading\s*$/m;
+  const furtherReadingHeadingMatch = furtherReadingHeadingRegex.exec(markdown);
 
-  const referencesBlock = referencesMatch ? referencesMatch[1].trim() : null;
+  let furtherReadingBlock = null;
+  let withoutFurtherReading = markdown;
+  if (furtherReadingHeadingMatch) {
+    const headingStart = furtherReadingHeadingMatch.index;
+    const contentStart = headingStart + furtherReadingHeadingMatch[0].length;
+    const afterHeading = markdown.slice(contentStart).replace(/^\r?\n/, "");
+    const nextH2Index = afterHeading.search(/^##\s/m);
 
-  const stripped = markdown
-    .replace(/^##\s+References\s*\n[\s\S]*?(?=^##\s)/m, "")
+    if (nextH2Index === -1) {
+      furtherReadingBlock = afterHeading.trim();
+      withoutFurtherReading = markdown.slice(0, headingStart).trimEnd();
+    } else {
+      furtherReadingBlock = afterHeading.slice(0, nextH2Index).trim();
+      withoutFurtherReading =
+        markdown.slice(0, headingStart) + afterHeading.slice(nextH2Index);
+    }
+  }
+
+  const stripped = withoutFurtherReading
     .replace(/^##\s+Footnotes\b[\s\S]*/m, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  return { stripped, footnotes: ordered, definitions, referencesBlock };
+  return { stripped, footnotes: ordered, definitions, furtherReadingBlock };
 }
 
 /**
@@ -488,7 +500,7 @@ export const getContent = async (sectionId, subsectionId) => {
 
     /**
      * This code looks into all of the filepath and does the following:
-     * looks for the ## All Sidebar Content Below divider (or "## Sidebar")
+     * looks for the ## Sidebar divider
      * creates the sidebar dictionary to pull from later (keys stored lowercase)
      * extracts the Key (identical to the clickable term)
      * extracts the Value (the paragraphical content)
@@ -500,8 +512,7 @@ export const getContent = async (sectionId, subsectionId) => {
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
 
-        // allow either of these headings as the sidebar divider
-        const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
+        const dividerRegex = /^##\s*Sidebar\s*$/m;
         const dividerMatch = dividerRegex.exec(cleanContent);
 
         let mainContent = cleanContent;
@@ -518,7 +529,7 @@ export const getContent = async (sectionId, subsectionId) => {
           sidebarRaw = afterDivider.trim();
         }
 
-        const { definitions: allDefinitions, referencesBlock } =
+        const { definitions: allDefinitions, furtherReadingBlock } =
           extractFootnotes(mainContent);
 
         const sidebar = {};
@@ -578,7 +589,7 @@ export const getContent = async (sectionId, subsectionId) => {
           content: parsedContent,
           sidebar,
           allDefinitions,
-          referencesBlock,
+          furtherReadingBlock,
           frontmatter: { ...frontmatter, lastUpdated },
         };
       }
@@ -624,10 +635,9 @@ function MarkdownRenderer({
   subsectionId,
   onDrawerOpen,
   onNavigation,
-  isFinal,
   highlight,
   urlTerm,
-  referencesBlock = null,
+  furtherReadingBlock = null,
   footnoteOriginMap: externalOriginMap = {},
 }) {
   const processed = useMemo(() => {
@@ -701,6 +711,13 @@ function MarkdownRenderer({
       contentWithoutDefs += "\n" + sidebarContent.replace(footnoteDefRegex, "");
     }
 
+    // Remove inline Further Reading from markdown body so only the custom
+    // collapsible section renders it.
+    contentWithoutDefs = contentWithoutDefs.replace(
+      /^##\s+Further Reading\s*\n[\s\S]*?(?=^##\s|\n*$)/m,
+      "",
+    );
+
     const footnotesSectionRegex = /^##\s+Footnotes[\s\S]*?(?=^##\s|\n*$)/gim;
     let replaced = contentWithoutDefs.replace(
       footnotesSectionRegex,
@@ -717,7 +734,7 @@ function MarkdownRenderer({
       return `<sup id="user-content-fnref-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
     });
 
-    if (referencesBlock) {
+    if (furtherReadingBlock) {
       replaced += "\n\n[[CUSTOM_REFERENCES_SECTION]]";
     }
 
@@ -727,7 +744,13 @@ function MarkdownRenderer({
       footnotes,
       footnoteOriginMap: mergedOriginMap,
     };
-  }, [content, externalOriginMap, sectionId, subsectionId, referencesBlock]);
+  }, [
+    content,
+    externalOriginMap,
+    sectionId,
+    subsectionId,
+    furtherReadingBlock,
+  ]);
 
   const isDrawerMode = sidebar && Object.keys(sidebar).length === 0;
   const effectiveHighlight = useMemo(
@@ -903,7 +926,6 @@ function MarkdownRenderer({
                   : child,
               )
             : props.children}
-          {isFinal === false && <span className="beta-tag">BETA</span>}
         </h1>
       ),
       h2: ({ children, ...props }) => {
@@ -1275,7 +1297,6 @@ function MarkdownRenderer({
     [
       onDrawerOpen,
       onNavigation,
-      isFinal,
       sectionId,
       subsectionId,
       sidebar,
@@ -1475,8 +1496,8 @@ function MarkdownRenderer({
       window.scrollTo(0, referencesScrollRef.current);
     });
   }, [showReferences]);
-  function CustomReferencesSection() {
-    if (!referencesBlock) return null;
+  function CustomFurtherReadingSection() {
+    if (!furtherReadingBlock) return null;
     return (
       <section data-references>
         <button
@@ -1523,7 +1544,7 @@ function MarkdownRenderer({
                 ]}
                 rehypePlugins={[rehypeRaw]}
               >
-                {referencesBlock}
+                {furtherReadingBlock}
               </ReactMarkdown>
             </div>
           </Collapsible.Content>
@@ -1551,7 +1572,7 @@ function MarkdownRenderer({
         <ReactMarkdown {...mdProps}>{part0}</ReactMarkdown>
         <CustomFootnotesSection />
         <ReactMarkdown {...mdProps}>{part1}</ReactMarkdown>
-        {part2 !== undefined && <CustomReferencesSection />}
+        {part2 !== undefined && <CustomFurtherReadingSection />}
         <ReactMarkdown {...mdProps}>{part2}</ReactMarkdown>
       </>
     );

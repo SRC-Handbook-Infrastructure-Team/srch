@@ -310,14 +310,13 @@ function MarkdownPage() {
   const [mainContent, setMainContent] = useState("");
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
-  const [contentFinal, setContentFinal] = useState(undefined);
   const [pageTitle, setPageTitle] = useState("");
   const [subsections, setSubsections] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("");
   const [mainFootnotes, setMainFootnotes] = useState([]);
   const [allDefinitions, setAllDefinitions] = useState({});
   const [rawMainMarkdown, setRawMainMarkdown] = useState("");
-  const [referencesBlock, setReferencesBlock] = useState(null);
+  const [furtherReadingBlock, setFurtherReadingBlock] = useState(null);
 
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);
@@ -468,8 +467,7 @@ function MarkdownPage() {
     const contentToShow =
       (typeof sidebarEntry === "string"
         ? sidebarEntry
-        : sidebarEntry.content) ||
-      "";
+        : sidebarEntry.content) || "";
 
     // Build the footnote origin map for this drawer's content only
     const drawerFootnoteOriginMap = buildFootnoteOriginMap(contentToShow, {});
@@ -515,7 +513,7 @@ function MarkdownPage() {
   useEffect(() => {
     async function loadContent() {
       setIsLoading(true);
-      setReferencesBlock(null);
+      setFurtherReadingBlock(null);
 
       if (!sectionId) {
         const sections = await getSections();
@@ -533,10 +531,9 @@ function MarkdownPage() {
           // ── Store raw markdown for footnote origin parsing ──
           setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
-          setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
           setAllDefinitions(result.allDefinitions || {});
-          setReferencesBlock(result.referencesBlock || null);
+          setFurtherReadingBlock(result.furtherReadingBlock || null);
 
           //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
           let lu = result.frontmatter?.lastUpdated || "";
@@ -599,10 +596,9 @@ function MarkdownPage() {
           setMainContent(cleaned);
           setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
-          setContentFinal(result.frontmatter?.final);
           setPageTitle(result.frontmatter?.title || "");
           setAllDefinitions(result.allDefinitions || {});
-          setReferencesBlock(result.referencesBlock || null);
+          setFurtherReadingBlock(result.furtherReadingBlock || null);
 
           let lu = result.frontmatter?.lastUpdated || "";
 
@@ -849,14 +845,13 @@ function MarkdownPage() {
               subsectionId={subsectionId}
               onDrawerOpen={handleDrawerOpen}
               onNavigation={handleNavigation}
-              isFinal={contentFinal}
               highlight={highlight}
               urlTerm={urlTerm}
               allDefinitions={allDefinitions}
               onFootnotesReady={stableOnFootnotesReady}
               extraFootnotes={allPageFootnotes.slice(mainFootnotes.length)}
               footnoteOriginMap={footnoteOriginMap}
-              referencesBlock={referencesBlock}
+              furtherReadingBlock={furtherReadingBlock}
             />
           </Box>
         )}

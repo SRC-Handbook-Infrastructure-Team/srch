@@ -38,7 +38,7 @@ import {
    - "aria-pressed" is used on expand/collapse button for state disclosure.
 
    API CONTRACTS (util/MarkdownRenderer)
-   - getSections()       -> [{ id, title?, order?, final? }, ...]
+  - getSections()       -> [{ id, title?, order? }, ...]
    - getSubsections(id)  -> [{ id, title?, order? }, ...]
    - getContent(sectionId, subId) -> { content: string }
 
@@ -503,7 +503,6 @@ export default function ContentsSidebar({
                   <Text className="sidebar-section-title">
                     {displayNumber}. {section.title}
                   </Text>
-                  {section.final === false}
                 </Box>
 
                 <Icon

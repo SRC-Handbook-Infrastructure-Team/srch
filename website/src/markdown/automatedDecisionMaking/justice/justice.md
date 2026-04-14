@@ -210,7 +210,7 @@ local contexts, particularly when:
 - **Trustworthiness**: Establishing confidence in automated systems by maintaining transparency, fairness, and accountability.
 - **Voice**: Providing individuals the opportunity to express concerns or contest decisions made by algorithms.
 
-## References
+## Further Reading
 
 Angwin, Julia, Jeff Larson, Surya Mattu, and Lauren Kirchner. “Machine Bias.” _ProPublica_, May 23, 2016. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing.
 

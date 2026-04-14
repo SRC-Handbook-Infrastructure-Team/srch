@@ -81,7 +81,7 @@ Privacy is relational and must be understood with respect to a certain person or
 
 The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](/privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
-## References
+## Further Reading
 
 Alibeigi, Ali, Abu Bakar Munir, and Md Ershadul Karim. "Right to Privacy, a Complicated Concept to Review." _Library Philosophy and Practice (e-Journal)_, January 1, 2019. https://digitalcommons.unl.edu/libphilprac/2841.
 
@@ -165,7 +165,7 @@ gate-we-can-open-close-to-others:
 Heading:Case Study:
 The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [_Van Buren v. United States_](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
 
-## References
+## Further Reading
 
 Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
 

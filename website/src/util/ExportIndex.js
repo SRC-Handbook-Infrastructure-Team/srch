@@ -64,7 +64,7 @@ function getPlaintextFromMarkdown(content) {
   content = content.replace(/^---[\s\S]*?---\s*/, "");
   content = content.replace(/!\[[^\]]*\]\([^)]*\)/g, "");
   content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
-    p1.replace(/-/g, " ")
+    p1.replace(/-/g, " "),
   );
   content = content.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
   content = content.replace(/(\*\*|__)(.*?)\1/g, "$2");
@@ -115,7 +115,7 @@ function parseSidebar(sidebarRaw) {
 }
 
 function extractMainAndSidebar(markdown) {
-  const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
+  const dividerRegex = /^##\s*Sidebar\s*$/m;
   const dividerMatch = dividerRegex.exec(markdown);
 
   let mainContent = markdown;
@@ -135,7 +135,7 @@ function extractBlocksFromContent(
   sectionTitle,
   content,
   subsectionId,
-  subsectionTitle
+  subsectionTitle,
 ) {
   const lines = content.replace(/\r/g, "").split("\n");
   const blocks = [];
@@ -212,13 +212,11 @@ function buildContentArray() {
     if (!fs.existsSync(sectionFile)) continue;
 
     const rawContent = fs.readFileSync(sectionFile, "utf8");
-    const { content: cleanContent, frontmatter } =
-      parseFrontmatter(rawContent);
+    const { content: cleanContent, frontmatter } = parseFrontmatter(rawContent);
 
     sections.push({
       id: sectionId,
-      title:
-        frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
+      title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
       order: frontmatter.order || 999,
       content: cleanContent,
     });
@@ -234,19 +232,13 @@ function buildContentArray() {
       .readdirSync(sectionDir, { withFileTypes: true })
       .filter(
         (d) =>
-          d.isDirectory() &&
-          d.name !== "drawer" &&
-          !d.name.startsWith(".")
+          d.isDirectory() && d.name !== "drawer" && !d.name.startsWith("."),
       )
       .map((d) => d.name);
 
     const subsections = [];
     for (const subsectionId of subsectionDirs) {
-      const subFile = path.join(
-        sectionDir,
-        subsectionId,
-        `${subsectionId}.md`
-      );
+      const subFile = path.join(sectionDir, subsectionId, `${subsectionId}.md`);
       if (!fs.existsSync(subFile)) continue;
 
       const subRaw = fs.readFileSync(subFile, "utf8");
@@ -265,7 +257,7 @@ function buildContentArray() {
 
     for (const subsection of subsections) {
       const { mainContent, sidebarRaw } = extractMainAndSidebar(
-        subsection.content
+        subsection.content,
       );
       const sidebarParsed = sidebarRaw ? parseSidebar(sidebarRaw) : {};
 
@@ -274,7 +266,7 @@ function buildContentArray() {
         section.title,
         mainContent,
         subsection.id,
-        subsection.title
+        subsection.title,
       );
       contentArray.push(...blocks);
 
@@ -287,7 +279,7 @@ function buildContentArray() {
           subsectionTitle: subsection.title,
           anchor: key,
           title: getPlaintextFromMarkdown(
-            value.heading || key.replace(/-/g, " ")
+            value.heading || key.replace(/-/g, " "),
           ),
           content: value.content,
           sidebarKey: key,
@@ -307,6 +299,4 @@ const contentArray = buildContentArray();
 fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
 fs.writeFileSync(OUTPUT_PATH, JSON.stringify(contentArray), "utf8");
 
-console.log(
-  `Exported ${contentArray.length} search blocks to ${OUTPUT_PATH}`
-);
+console.log(`Exported ${contentArray.length} search blocks to ${OUTPUT_PATH}`);

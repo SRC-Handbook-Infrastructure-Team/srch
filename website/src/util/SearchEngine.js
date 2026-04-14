@@ -79,7 +79,7 @@ function parseSidebar(sidebarRaw) {
 }
 
 function extractMainAndSidebar(markdown) {
-  const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
+  const dividerRegex = /^##\s*Sidebar\s*$/m;
   const dividerMatch = dividerRegex.exec(markdown);
 
   let mainContent = markdown;

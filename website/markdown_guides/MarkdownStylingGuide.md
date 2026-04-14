@@ -5,46 +5,54 @@ order: 0
 
 # Markdown Styling Guide
 
-This guide explains how to format your markdown primers for the SRC website. We provide a specific structure and special features to create interactive and informative content.
+This guide describes the markdown format that is currently supported by the website renderer and page loader.
 
-## YAML Frontmatter
+## Frontmatter
 
-Every markdown file should begin with YAML frontmatter enclosed by triple dashes:
+You can start each markdown file with frontmatter:
 
 ```markdown
 ---
-title: Your Title Here
+title: Page Title
 order: 1
+lastUpdated: 2026-04-14
 ---
 ```
 
-The frontmatter contains metadata:
+Use these keys:
 
-- `title`: The display title for the sidebar navigation
-- `order`: A number that determines the position in the navigation (lower numbers appear first)
+- title: the name shown in the left navigation and page header
+- order: where this page appears in the list
+- lastUpdated: shown as Last updated on ... at the top of the page
+
+Plain-language notes:
+
+- Frontmatter here is simple key:value parsing, not full YAML support.
+- Numbers are read as numbers.
+- If lastUpdated is missing, the page also checks for a footer like _Last updated ..._.
 
 ## Folder Structure
 
-The markdown content follows this hierarchical structure:
+Put content files under src/markdown in this pattern:
 
 ```
-/markdown/
-  ├── about/                     # Section folder
-  │   └── about.md               # Section landing page
-  ├── automatedDecisionMaking/    # Section folder
-  │   ├── automatedDecisionMaking.md  # Section landing page
-  │   └── fairness/              # Subsection folder
-  │       ├── fairness.md        # Subsection content
-  │       └── drawer/            # Side panel content
-  │           ├── individual-fairness.md
-  │           └── group-fairness.md
-  └── accessibility/              # Another section
-      └── ...
+src/markdown/
+  sectionId/
+    sectionId.md
+    subsectionId/
+      subsectionId.md
 ```
 
-## Headers
+Rules:
 
-Use headers to structure your content:
+- A section page must be sectionId/sectionId.md.
+- A subsection page must be sectionId/subsectionId/subsectionId.md.
+- Hidden directories or files starting with . are ignored.
+- A directory named drawer is ignored as a subsection.
+
+## Headings And IDs
+
+Use regular markdown headings:
 
 ```markdown
 # Main Title (h1)
@@ -56,78 +64,151 @@ Use headers to structure your content:
 #### Minor subsection (h4)
 ```
 
-Each file must have exactly one h1 header at the top and should include a References h2 header at the end if it's a main primer page.
+What the site does:
 
-## Special Links
+- The page title bar at the top is built by the app outside markdown.
+- The first markdown H1 in the file is removed before page content is shown.
+- H2 and H3 headings get automatic anchor IDs.
+- H2 headings are used as search anchors.
 
-### Side Panel (Drawer) Links
+## Sidebar Drawers
 
-To add a button that opens a side panel with additional information:
+Sidebar drawer content lives in the same file, after a divider heading that should be the very last heading in the file. Each sidebar should have a heading itself under the key as shown below (Heading: Drawer Title).
+
+Use this divider heading:
+
+- ## Sidebar
+
+Format:
 
 ```markdown
-[drawer:Button Text](filename-without-extension)
+## Sidebar
+
+term-key:
+Heading: Drawer Title
+Drawer body markdown here.
+
+another-term:
+Another drawer body.
 ```
 
-Example: `[drawer:See Definition](individual-fairness)`
+Rules:
 
-### Navigation Links
+- Each drawer key must be on its own line and end with a colon.
+- Keys are matched without case sensitivity.
+- Heading sets the drawer title shown to users.
+- Drawer body text continues until the next key line.
 
-To add a button that navigates to another primer:
+To open a drawer from body text, use curly braces:
 
 ```markdown
-[nav:Button Text](target-link)
+Use {term-key} for inline drawer chips.
+Use {term-key|Custom Label} to override chip text.
 ```
 
-For links to other subsections in the same section: `[nav:Bias Primer](bias)`
-For links to subsections in other sections: `[nav:Privacy Primer](privacy/whatIsPrivacy)`
+Notes:
+
+- Extra spaces around braces are cleaned automatically.
+- If the key does not exist, readers will see a visible missing marker.
+- Brace tokens are parsed everywhere, so only use them for real drawer links.
+
+## Links
+
+Use normal markdown links:
+
+```markdown
+[External Source](https://example.org)
+[Internal Route](/privacy/whatIsPrivacy)
+[Jump To Section](#what-is-privacy)
+```
+
+What links do:
+
+- External http/https links open in a new tab and show an external-link icon.
+- Hash links scroll to anchors on the current page.
+- Internal links should use absolute routes that start with /. For example: `/privacy`, `/accessibility/whatIsAccessibility`.
+
+## Footnotes And Further Reading
+
+Footnotes work with normal markdown footnote syntax and are shown in a collapsible References section. They can be defined at any point in the markdown file.
+
+Recommended format:
+
+```markdown
+Some claim.[^1]
+
+[^1]: Footnote text.
+```
+
+Notes:
+
+- Use numeric footnote keys, like [^1], and make sure they are unique and correctly matched
+- Footnote definitions are removed from body text and placed in the References panel.
+- Back-links are created automatically.
+- Footnotes can link back to drawer content when needed.
+
+You can also add a separate Further Reading panel by including this heading:
+
+```markdown
+## Further Reading
+
+- Optional bibliography or links
+```
+
+What the site does:
+
+- The Further Reading section is pulled out of the body content.
+- It is shown in its own collapsible Further Reading panel.
+
+## GFM Features
+
+GitHub-flavored markdown features are enabled, including:
+
+- tables
+- strikethrough
+- task lists
+- autolink literals
+- footnote syntax
 
 ## Images
 
-Images should be placed in `/public/srchets/images/` and referenced like this:
+Use normal markdown image syntax:
 
 ```markdown
-![Alt text](/public/srchets/images/filename.jpg)
+![Descriptive alt text](/assets/member-photos/example.jpg)
 ```
 
-Always include meaningful alt text for accessibility.
+Guidelines:
 
-## References
+- Always provide meaningful alt text.
+- Use paths that point to public assets, for example /assets/....
 
-Every primer must include a References section at the end with Chicago-style citations:
-
-```markdown
-## References
-
-Author Last Name, First Name. "Title of Article." _Journal Name_ Volume, Issue (Year): Pages. DOI or URL.
-
-Author Last Name, First Name. _Title of Book_. Publisher City: Publisher Name, Year.
-```
-
-## Example Primer with Frontmatter
-
-Here's a simple example of a well-structured primer:
+## Example Page Skeleton
 
 ```markdown
 ---
-title: Understanding Privacy
+title: What Is Privacy?
 order: 1
+lastUpdated: 2026-04-14
 ---
 
-# Understanding Privacy
+# What Is Privacy?
 
-Introduction text goes here.
+Intro paragraph with a drawer chip {contextual-integrity|contextual integrity}.
 
-## First Section
+## Core Concepts
 
-Content with a [drawer:See Example](example1) side panel link.
+Discussion text and an external [source](https://example.org).[^1]
 
-## Second Section
+[^1]: Example footnote text.
 
-Content with a [nav:Related Topic](another-primer) navigation link.
+## Further Reading
 
-## References
+- Optional further reading list
 
-Smith, John. "Title of Article." _Journal Name_ 10, 2 (2022): 12-34.
+## Sidebar
+
+contextual-integrity:
+Heading: Contextual Integrity
+Contextual integrity explains privacy as appropriate information flow.
 ```
-
-For more information or questions, contact the website team.

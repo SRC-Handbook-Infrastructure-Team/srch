@@ -47,7 +47,7 @@ While the selection of fairness criteria involves inevitable trade-offs, the ult
 
 In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[justice in automated decision-making](/automatedDecisionMaking/justice)**.
 
-## References
+## Further Reading
 
 Bell, Andrew, Lucius Bynum, Nazarii Drushchak, Tetiana Zakharchenko, Lucas Rosenblatt, and Julia Stoyanovich. “The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice.” In 2023 ACM Conference on Fairness, Accountability, and Transparency, 400–422. Chicago IL USA: ACM, 2023. https://doi.org/10.1145/3593013.3594007.
 

@@ -33,7 +33,4 @@ find . -type f -exec chmod 664 {} +
 echo "Deployment complete!"
 EOF
 
-echo "Verifying search index is publicly readable..."
-curl -fsS "https://srch.cs.brown.edu/search-index.json" >/dev/null
-
 echo "Changes should be live at https://srch.cs.brown.edu/"
