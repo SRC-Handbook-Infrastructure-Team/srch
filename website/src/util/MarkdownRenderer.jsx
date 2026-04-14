@@ -176,42 +176,9 @@ export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
   import: "default",
 });
 
-const API_BASE_URL = (
-  import.meta.env?.VITE_API_BASE_URL || "http://localhost:3001"
-).replace(/\/$/, "");
-
-function buildApiUrl(path) {
-  return `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
-}
-
-async function fetchApiJson(path) {
-  const response = await fetch(buildApiUrl(path));
-  if (!response.ok) {
-    throw new Error(`API request failed (${response.status}) for ${path}`);
-  }
-  return response.json();
-}
-
 /* ----------------------------- Section Loaders ----------------------------- */
 
 export const getSections = async () => {
-  try {
-    const rows = await fetchApiJson("/api/sections");
-    if (Array.isArray(rows)) {
-      return rows
-        .map((row) => ({
-          id: row.id,
-          title: row.title,
-          order: Number.isFinite(row.order_num) ? row.order_num : 999,
-          content: row.content || "",
-          final: Boolean(row.is_final),
-        }))
-        .sort((a, b) => a.order - b.order);
-    }
-  } catch (error) {
-    console.warn("Falling back to local markdown for sections:", error);
-  }
-
   try {
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
@@ -255,27 +222,6 @@ export const getSections = async () => {
 };
 
 export const getSubsections = async (sectionId) => {
-  try {
-    const rows = await fetchApiJson(`/api/sections/${sectionId}/subsections`);
-    if (Array.isArray(rows)) {
-      return rows
-        .map((row) => ({
-          id: row.id,
-          section_id: row.section_id,
-          title: row.title,
-          order: Number.isFinite(row.order_num) ? row.order_num : 999,
-          content: row.content || "",
-          final: Boolean(row.is_final),
-        }))
-        .sort((a, b) => a.order - b.order);
-    }
-  } catch (error) {
-    console.warn(
-      `Falling back to local markdown for subsections in ${sectionId}:`,
-      error,
-    );
-  }
-
   try {
     const subsections = [];
     const paths = Object.keys(allMarkdownFiles);
@@ -530,100 +476,6 @@ export function mergeFootnotes(mainMarkdown, sidebarMap, allDefinitions = {}) {
 }
 
 export const getContent = async (sectionId, subsectionId) => {
-  try {
-    if (!sectionId) return null;
-
-    const apiPath = subsectionId
-      ? `/api/sections/${sectionId}/${subsectionId}`
-      : `/api/sections/${sectionId}`;
-
-    const row = await fetchApiJson(apiPath);
-    const rawContent = row?.content || "";
-    if (!rawContent) return null;
-
-    const { content: cleanContent, frontmatter } = parseFrontmatter(rawContent);
-
-    const dividerRegex = /^##\s*(All Sidebar Content Below|Sidebar)\s*$/m;
-    const dividerMatch = dividerRegex.exec(cleanContent);
-
-    let mainContent = cleanContent;
-    let sidebarRaw = null;
-
-    if (dividerMatch) {
-      const splitIndex = dividerMatch.index;
-      mainContent = cleanContent.slice(0, splitIndex).trim();
-      const afterDivider = cleanContent.slice(
-        dividerMatch.index + dividerMatch[0].length,
-      );
-      sidebarRaw = afterDivider.trim();
-    }
-
-    const { definitions: allDefinitions, referencesBlock } =
-      extractFootnotes(mainContent);
-
-    const sidebar = {};
-    if (sidebarRaw) {
-      const lines = sidebarRaw.split("\n");
-      let currentKey = null;
-      let currentHeading = null;
-      let currentValue = [];
-
-      lines.forEach((line) => {
-        const keyMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
-        if (keyMatch) {
-          if (currentKey) {
-            sidebar[currentKey.toLowerCase()] = {
-              heading: currentHeading || currentKey.replace(/-/g, " "),
-              content: currentValue.join("\n").trim(),
-            };
-          }
-
-          currentKey = keyMatch[1].trim();
-          currentHeading = null;
-          currentValue = [];
-        } else if (line.startsWith("Heading:")) {
-          currentHeading = line.replace("Heading:", "").trim();
-        } else if (currentKey) {
-          currentValue.push(line);
-        }
-      });
-
-      if (currentKey) {
-        sidebar[currentKey.toLowerCase()] = {
-          heading: currentHeading || currentKey.replace(/-/g, " "),
-          content: currentValue.join("\n").trim(),
-        };
-      }
-    }
-
-    const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
-      return `<sidebar-ref term="${term}"></sidebar-ref>`;
-    });
-
-    let lastUpdated = null;
-    if (frontmatter.lastUpdated) {
-      lastUpdated = frontmatter.lastUpdated;
-    } else {
-      const footerMatch = mainContent.match(/_Last updated\s+(.+?)\._/i);
-      if (footerMatch) {
-        lastUpdated = footerMatch[1].trim();
-      }
-    }
-
-    return {
-      content: parsedContent,
-      sidebar,
-      allDefinitions,
-      referencesBlock,
-      frontmatter: { ...frontmatter, lastUpdated },
-    };
-  } catch (error) {
-    console.warn(
-      `Falling back to local markdown for content ${sectionId}/${subsectionId || ""}:`,
-      error,
-    );
-  }
-
   try {
     let path;
     if (sectionId && !subsectionId) {
