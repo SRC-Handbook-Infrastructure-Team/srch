@@ -1,6 +1,23 @@
 {
-  "dependencies": {
-    "@chakra-ui/react": "^3.34.0",
-    "@emotion/react": "^11.14.0"
+  "private": true,
+  "workspaces": [
+    "server",
+    "website"
+  ],
+  "scripts": {
+    "dev": "npm run -s dev:reset-ports && npm run -s dev:start",
+    "dev:start": "concurrently -k --raw \"npm run -s --workspace=server dev\" \"npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false\"",
+    "dev:reset-ports": "kill-port 3001 5173 >/dev/null 2>&1 || true",
+    "build": "npm run --workspace=server build-db && npm run --workspace=website build",
+    "deploy": "./deploy.sh",
+    "server": "npm run -s --workspace=server dev",
+    "website": "npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false",
+    "server:quiet": "npm run -s --workspace=server dev > .logs/server.log 2>&1",
+    "website:quiet": "npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false > .logs/web.log 2>&1",
+    "dev:logs": "tail -f .logs/dev.log .logs/server.log .logs/web.log"
+  },
+  "devDependencies": {
+    "kill-port": "^2.0.1",
+    "concurrently": "^9.2.1"
   }
 }

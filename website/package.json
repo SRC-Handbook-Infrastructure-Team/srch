@@ -1,10 +1,11 @@
 {
-  "name": "srch-website",
+  "name": "website",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run export-index",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

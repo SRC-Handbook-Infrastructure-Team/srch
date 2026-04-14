@@ -24,11 +24,11 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: srch-website
+        working-directory: website
         run: npm ci
 
       - name: Build
-        working-directory: srch-website
+        working-directory: website
         run: npm run build
         env:
           VITE_BASE: /srch/
@@ -36,7 +36,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: srch-website/dist
+          path: website/dist
 
   deploy:
     runs-on: ubuntu-latest

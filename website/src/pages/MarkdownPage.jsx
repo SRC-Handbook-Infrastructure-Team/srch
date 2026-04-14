@@ -1,27 +1,16 @@
 /**
  * Builds a footnote origin map for all sidebar drawers on the page.
- * For each sidebar slug, fetches the drawer content and maps footnotes to that slug.
+ * For each sidebar slug, maps footnotes to that slug using the loaded sidebar content.
  * Returns: { [footnoteKey: string]: sidebarSlug }
  */
-async function buildSidebarDrawersFootnoteOriginMap(
-  sectionId,
-  subsectionId,
-  sidebar,
-  getDrawerFile,
-) {
+function buildSidebarDrawersFootnoteOriginMap(sidebar) {
   const originMap = {};
   if (!sidebar || typeof sidebar !== "object") return originMap;
   const slugs = Object.keys(sidebar);
   for (const slug of slugs) {
-    let drawerFile = null;
-    try {
-      drawerFile = await getDrawerFile(sectionId, subsectionId, slug);
-    } catch (_) {}
     const entry = sidebar[slug];
     const contentToShow =
-      drawerFile?.content ||
-      (typeof entry === "string" ? entry : entry?.content) ||
-      "";
+      (typeof entry === "string" ? entry : entry?.content) || "";
     // Use buildFootnoteOriginMap on this drawer's content, mapping all found footnotes to this slug
     const localMap = buildFootnoteOriginMap(contentToShow, {});
     for (const key of Object.keys(localMap)) {
@@ -41,16 +30,6 @@ import MarkdownRenderer, {
   getSubsections,
   highlightText,
 } from "../util/MarkdownRenderer";
-async function getDrawerFile(sectionId, subsectionId, slug) {
-  if (!sectionId || !subsectionId || !slug) return null;
-  const path = `../markdown/${sectionId}/${subsectionId}/drawer/${slug}.md`;
-  try {
-    const mod = await import(/* @vite-ignore */ path);
-    return { content: mod.default || "" };
-  } catch (e) {
-    return null;
-  }
-}
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * buildFootnoteOriginMap
@@ -403,25 +382,14 @@ function MarkdownPage() {
    */
   const [sidebarFootnoteOriginMap, setSidebarFootnoteOriginMap] = useState({});
   useEffect(() => {
-    let cancelled = false;
-    async function buildAllSidebarFootnotes() {
-      if (!sidebar || Object.keys(sidebar).length === 0) {
-        setSidebarFootnoteOriginMap({});
-        return;
-      }
-      const map = await buildSidebarDrawersFootnoteOriginMap(
-        sectionId,
-        subsectionId,
-        sidebar,
-        getDrawerFile,
-      );
-      if (!cancelled) setSidebarFootnoteOriginMap(map);
+    if (!sidebar || Object.keys(sidebar).length === 0) {
+      setSidebarFootnoteOriginMap({});
+      return;
     }
-    buildAllSidebarFootnotes();
-    return () => {
-      cancelled = true;
-    };
-  }, [sectionId, subsectionId, sidebar]);
+
+    const map = buildSidebarDrawersFootnoteOriginMap(sidebar);
+    setSidebarFootnoteOriginMap(map);
+  }, [sidebar]);
 
   // Merge main markdown footnotes and sidebar drawer footnotes
   const footnoteOriginMap = useMemo(() => {
@@ -497,13 +465,7 @@ function MarkdownPage() {
       return;
     }
 
-    let drawerFile = null;
-    try {
-      drawerFile = await getDrawerFile(sectionId, subsectionId, key);
-    } catch (_) {}
-
     const contentToShow =
-      drawerFile?.content ||
       (typeof sidebarEntry === "string"
         ? sidebarEntry
         : sidebarEntry.content) ||
