@@ -4,11 +4,11 @@
     "website"
   ],
   "scripts": {
-    "dev": "npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false",
+    "dev": "npm run -s --workspace=website dev -- --host localhost --port 5173",
     "build": "npm run --workspace=website build",
     "deploy": "./deploy.sh",
-    "website": "npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false",
-    "website:quiet": "npm run -s --workspace=website dev -- --host localhost --port 5173 --strictPort --clearScreen false > .logs/web.log 2>&1",
+    "website": "npm run -s --workspace=website dev -- --host localhost --port 5173",
+    "website:quiet": "npm run -s --workspace=website dev -- --host localhost --port 5173 > .logs/web.log 2>&1",
     "dev:logs": "tail -f .logs/web.log"
   }
 }
