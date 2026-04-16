@@ -6,7 +6,7 @@ lastUpdated: 2025-11-06
 ---
 
 
-## What Is Accessibility?
+### What Is Accessibility?
 
 As technology becomes more deeply embedded in how people work, learn, communicate, and access services, questions of who can actually use that technology have become increasingly urgent. Accessibility is not a fixed standard. It shifts over time as users’ needs change and as laws, design practices, and social debates evolve. What counts as accessible, who gets to define it, and what obligations designers and organizations have are all questions that remain open and contested.
 

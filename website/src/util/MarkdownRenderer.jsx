@@ -18,6 +18,7 @@ import { Text, Link, Box, HStack, Icon, Collapsible } from "@chakra-ui/react";
 import { LuChevronRight } from "react-icons/lu";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { LuInfo, LuExternalLink } from "react-icons/lu";
+import "../styles/MarkdownTables.css";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
@@ -929,7 +930,9 @@ function MarkdownRenderer({
         <h1
           style={{
             marginTop: "2.5rem",
-            marginBottom: "1rem",
+            marginBottom: "1.25rem",
+            fontSize: "2rem",
+            lineHeight: "1.15",
             color: "var(--color-header)",
             fontFamily: "Funnel Sans, sans-serif",
             fontWeight: 700,
@@ -952,9 +955,10 @@ function MarkdownRenderer({
           <h2
             id={id}
             style={{
-              marginTop: "1.5rem",
-              marginBottom: "1.5rem",
-              fontSize: "1.5em",
+              marginTop: "2rem",
+              marginBottom: "1rem",
+              fontSize: "1.75rem",
+              lineHeight: "1.2",
               color: "var(--color-header)",
               fontFamily: "Be Vietnam Pro, sans-serif",
               fontWeight: 600,
@@ -972,8 +976,10 @@ function MarkdownRenderer({
           <h3
             id={id}
             style={{
-              marginBottom: ".5rem",
-              fontSize: "1em",
+              marginTop: "1.5rem",
+              marginBottom: ".75rem",
+              fontSize: "1.5rem",
+              lineHeight: "1.25",
               color: "var(--color-header)",
               fontFamily: "Be Vietnam Pro, sans-serif",
               fontWeight: 600,
@@ -982,6 +988,27 @@ function MarkdownRenderer({
           >
             {highlightText(childrenArray, effectiveHighlight)}
           </h3>
+        );
+      },
+      h4: ({ children, ...props }) => {
+        const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
+        return (
+          <h4
+            id={id}
+            style={{
+              marginTop: "1rem",
+              marginBottom: "0.5rem",
+              fontSize: "1.25rem",
+              lineHeight: "1.3",
+              color: "var(--color-header)",
+              fontFamily: "Be Vietnam Pro, sans-serif",
+              fontWeight: 600,
+            }}
+            {...props}
+          >
+            {highlightText(childrenArray, effectiveHighlight)}
+          </h4>
         );
       },
       p: ({ children }) => {
@@ -1162,11 +1189,10 @@ function MarkdownRenderer({
           />
         ),
       table: (props) => (
-        <div style={{ overflowX: "auto", margin: "1em 0" }}>
+        <div className="md-table-wrapper">
           <table
+            className="md-table"
             style={{
-              width: "100%",
-              borderCollapse: "collapse",
               color: BLACK,
               fontFamily: "Be Vietnam Pro, sans-serif",
             }}
@@ -1176,24 +1202,25 @@ function MarkdownRenderer({
           </table>
         </div>
       ),
+      thead: (props) => <thead className="md-table-head" {...props} />,
+      tbody: (props) => <tbody className="md-table-body" {...props} />,
+      tr: (props) => <tr className="md-table-row" {...props} />,
       th: (props) => (
         <th
+          className="md-table-header-cell"
           style={{
-            border: "1px solid #e0d7ce",
             color: BLACK,
             fontFamily: "Be Vietnam Pro, sans-serif",
-            padding: "0.5em",
           }}
           {...props}
         />
       ),
       td: (props) => (
         <td
+          className="md-table-cell"
           style={{
-            border: "1px solid #e0d7ce",
             color: BLACK,
             fontFamily: "Be Vietnam Pro, sans-serif",
-            padding: "0.5em",
           }}
           {...props}
         />
