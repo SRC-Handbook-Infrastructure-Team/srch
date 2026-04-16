@@ -28,10 +28,10 @@ import SearchBar from "../components/SearchBar";
 
 function Home() {
   const navigate = useNavigate();
-  const privacySlug = "/privacy/whatIsPrivacy";
-  const accessibilitySlug = "/accessibility/whatIsAccessibility";
-  const decisionSlug = "/automatedDecisionMaking/fairness";
-  const aiSlug = "/generativeAI/copyright";
+  const privacySlug = "/privacy";
+  const accessibilitySlug = "/accessibility";
+  const decisionSlug = "/automatedDecisionMaking";
+  const aiSlug = "/generativeAI";
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isScrolledDown, setIsScrolledDown] = useState(false);

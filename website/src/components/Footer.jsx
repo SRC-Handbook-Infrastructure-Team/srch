@@ -27,21 +27,21 @@ function Footer({
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
   const [moduleLinks, setModuleLinks] = useState([
-    { id: "privacy", title: "Privacy", slug: "/privacy/whatIsPrivacy" },
+    { id: "privacy", title: "Privacy", slug: "/privacy" },
     {
       id: "accessibility",
       title: "Accessibility",
-      slug: "/accessibility/whatIsAccessibility",
+      slug: "/accessibility",
     },
     {
       id: "automatedDecisionMaking",
       title: "Automated Decision Making",
-      slug: "/automatedDecisionMaking/fairness",
+      slug: "/automatedDecisionMaking",
     },
     {
       id: "generativeAI",
       title: "Generative AI",
-      slug: "/generativeAI/copyright",
+      slug: "/generativeAI",
     },
   ]);
 
