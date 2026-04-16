@@ -79,16 +79,37 @@ If you are a funder or want to discuss financial support, please contact:
 
 The code and content of our website is public, and we happily welcome contributions to either.
 
-### Quick Local Setup
+### Contribution Types
 
-From the repository root:
+1. Content contributions: Add or make changes to primer markdown, references, definitions, and case studies.
+2. Product contributions: Improve UX, navigation, and accessibility.
+
+### Codebase Structure
+
+The project uses a website-focused frontend layout with content stored in markdown files.
+
+1. Primary app source: [website/src](website/src)
+2. Primer content: [website/src/markdown](website/src/markdown)
+3. Page components: [website/src/pages](website/src/pages)
+4. Shared UI components: [website/src/components](website/src/components)
+5. Styles: [website/src/styles](website/src/styles)
+6. Markdown rendering logic: [website/src/util](website/src/util)
+7. Public assets: [website/public](website/public)
+
+### How To Contribute
+
+1. Fork the repository.
+2. Make changes with commit messages.
+3. Run local checks before submitting:
 
 ```bash
 npm install
 npm run dev
 ```
 
-`npm run website` is equivalent to `npm run dev` for frontend development.
+4. Open a pull request that includes:
+   - A short summary of what changed
+   - Why the change was made
 
 ## License
 
