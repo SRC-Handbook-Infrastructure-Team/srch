@@ -285,10 +285,14 @@ html[data-layout-mode="overlay"].right-open body .main-content {
 
 html:not(.left-open) body .main-content {
   margin-left: 0 !important;
-  padding-left: 0;
+  padding-left: 8vw;
   transition:
     margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.is-landing-page:not(.left-open) body .main-content {
+  padding-left: 0 !important;
 }
 
 html.left-open body .main-content {
