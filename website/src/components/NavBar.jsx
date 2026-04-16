@@ -8,6 +8,7 @@ import {
   getSubsections,
   getPreloadedNavigationData,
   preloadNavigationData,
+  warmMarkdownContent,
 } from "../util/MarkdownRenderer";
 import { NavSearchBar } from "../components/NavSearchBar";
 import NavBarSearchResults from "./NavBarSearchResults";
@@ -291,7 +292,15 @@ function NavBar() {
                   const firstSection = sections[0];
                   navigate(`/${firstSection.id}`);
                 }}
-                onMouseEnter={() => closeSectionOnLeave("modules")}
+                onMouseEnter={() => {
+                  closeSectionOnLeave("modules");
+                  const firstSection = sections[0];
+                  if (firstSection) warmMarkdownContent(firstSection.id);
+                }}
+                onFocus={() => {
+                  const firstSection = sections[0];
+                  if (firstSection) warmMarkdownContent(firstSection.id);
+                }}
               >
                 <span>About</span>
               </Box>
@@ -409,6 +418,8 @@ function NavBar() {
                           navigate(`/${section.id}`);
                           setOpenSection(null);
                         }}
+                        onMouseEnter={() => warmMarkdownContent(section.id)}
+                        onFocus={() => warmMarkdownContent(section.id)}
                       >
                         <span>{section.title}</span>
                       </Box>
@@ -424,6 +435,12 @@ function NavBar() {
                               navigate(`/${section.id}/${subsection.id}`);
                               setOpenSection(null);
                             }}
+                            onMouseEnter={() =>
+                              warmMarkdownContent(section.id, subsection.id)
+                            }
+                            onFocus={() =>
+                              warmMarkdownContent(section.id, subsection.id)
+                            }
                           >
                             <span>{subsection.title}</span>
                           </Box>

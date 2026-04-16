@@ -11,7 +11,7 @@ import generativeAIIconDark from "../assets/generativeAI-icon_white.svg";
 import accessibilityIconLight from "../assets/accessibility-icon.svg";
 import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import { Box, Image } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getPreloadedNavigationData,
   preloadNavigationData,
@@ -25,6 +25,7 @@ function Footer({
   rightWidth = 300,
 }) {
   const navigate = useNavigate();
+  const footerRef = useRef(null);
   const [theme, setTheme] = useState("light");
   const [moduleLinks, setModuleLinks] = useState([
     { id: "privacy", title: "Privacy", slug: "/privacy" },
@@ -105,6 +106,39 @@ function Footer({
     };
   }, []);
 
+  useEffect(() => {
+    const footerEl = footerRef.current;
+    if (!footerEl || typeof document === "undefined") return;
+
+    const updateFooterHeight = () => {
+      document.documentElement.style.setProperty(
+        "--footer-height",
+        `${Math.round(footerEl.getBoundingClientRect().height)}px`,
+      );
+    };
+
+    updateFooterHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateFooterHeight, { passive: true });
+      return () => {
+        window.removeEventListener("resize", updateFooterHeight);
+      };
+    }
+
+    const ro = new ResizeObserver(() => {
+      updateFooterHeight();
+    });
+
+    ro.observe(footerEl);
+    window.addEventListener("resize", updateFooterHeight, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateFooterHeight);
+    };
+  }, []);
+
   const getLogo = () => (theme === "dark" ? logoDark : logoLight);
   const getPrivacyIcon = () =>
     theme === "dark" ? privacyIconDark : privacyIconLight;
@@ -134,6 +168,7 @@ function Footer({
 
   return (
     <Box
+      ref={footerRef}
       className={`footer-container ${withSidebars ? "with-sidebars" : ""} ${isLeftOpen ? "left-open" : ""} ${isRightOpen ? "right-open" : ""}`.trim()}
       style={{
         "--left-sidebar-width": `${leftWidth}px`,

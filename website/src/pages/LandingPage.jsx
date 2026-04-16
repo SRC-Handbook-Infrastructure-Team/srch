@@ -7,6 +7,9 @@ import { LuChevronRight } from "react-icons/lu";
 import MarkdownRenderer, {
   getContent,
   getSubsections,
+  getPreloadedNavigationData,
+  getPreloadedMarkdownContent,
+  warmMarkdownContent,
 } from "../util/MarkdownRenderer";
 import privacyIconLight from "../assets/privacy-icon.svg";
 import privacyIconDark from "../assets/privacy-icon_white.svg";
@@ -77,10 +80,20 @@ function LandingPage() {
   const { sectionId } = useParams();
   const navigate = useNavigate();
 
-  const [mainContent, setMainContent] = useState("");
-  const [sidebar, setSidebar] = useState({});
-  const [subsections, setSubsections] = useState([]);
-  const [pageTitle, setPageTitle] = useState("");
+  const cachedContent = sectionId
+    ? getPreloadedMarkdownContent(sectionId)
+    : null;
+  const cachedNavigation = getPreloadedNavigationData();
+  const cachedLandingSubsections = sectionId
+    ? cachedNavigation?.subsections?.[sectionId] || []
+    : [];
+
+  const [mainContent, setMainContent] = useState(cachedContent?.content || "");
+  const [sidebar, setSidebar] = useState(cachedContent?.sidebar || {});
+  const [subsections, setSubsections] = useState(cachedLandingSubsections);
+  const [pageTitle, setPageTitle] = useState(
+    cachedContent?.frontmatter?.title || "",
+  );
   const [theme, setTheme] = useState("light");
 
   const formattedTitle = useMemo(() => {
@@ -106,6 +119,16 @@ function LandingPage() {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    root.classList.add("is-landing-page");
+    return () => {
+      root.classList.remove("is-landing-page");
+    };
   }, []);
 
   useEffect(() => {
@@ -173,7 +196,7 @@ function LandingPage() {
     <>
       <div className="upper-content landing-upper-content">
         <div className="upper-text-section">
-          <div className="website-title landing-title" id="landing-title">
+          <div className="landing-title" id="landing-title">
             {sectionIcon && (
               <img
                 className="landing-primer-icon"
@@ -210,6 +233,8 @@ function LandingPage() {
                     type="button"
                     className="landing-outline-row"
                     onClick={() => navigate(`/${sectionId}/${sub.id}`)}
+                    onMouseEnter={() => warmMarkdownContent(sectionId, sub.id)}
+                    onFocus={() => warmMarkdownContent(sectionId, sub.id)}
                     aria-label={`Open ${sub.title}`}
                   >
                     <span className="landing-outline-marker" aria-hidden="true">

@@ -1,46 +1,95 @@
-# srch
+# Socially Responsible Computing Handbook (SRCH)
 
-The repository for the Socially Responsible Computing Curriculum Handbook
+This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you're an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools.
 
-# Project setup
+## Visit The Handbook
 
-1. Clone the repository! Navigate to the Code tab of the repo and copy the URL to clone.
-   For example to clone using HTTPS, run
-   `git clone https://github.com/SRC-Handbook-Infrastructure-Team/new-srch.git` in the terminal.
+- Main site: https://srch.cs.brown.edu
+- Repository: https://github.com/SRC-Handbook-Infrastructure-Team/srch
 
-2. Run `cd srch-s25` to move into the repository root
+## What Is SRCH?
 
-3. Run `npm install` once from the repository root to install all workspace dependencies.
+The Socially Responsible Computing Handbook (SRCH) is an open resource reference guide to navigating and discussing contemporary and ongoing intersections between technology and society from a variety of academic perspectives.
 
-4. Use these commands from the repository root during development:
-   - `npm run dev` to start the frontend
-   - `npm run website` to start the frontend (equivalent)
+It is an ongoing collaboration between the Socially Responsible Computing program in the Brown University Computer Science Department and the Center for Technological Responsibility, Reimagination, and Redesign in the Brown University Data Science Institute.
 
-5. When you are finished with your changes, add + commit + push them to your branch.
+SRCH seeks to provide a central resource that compiles the current thinking and scholarship on sociotechnical issues, presenting a roadmap of topics and ideas that can be successfully used in and out of the classroom.
 
-6. When you are ready to deploy, merge your branch into main.
+SRCH is not quite a textbook, but rather a scholarly dynamic reference work, maintaining a growing set of interconnected articles about society and technology for a broad academic audience.
 
-7. Switch to the main branch then pull your merged branch.
+SRCH is developed in collaboration between:
 
-8. Deploy the frontend static site (see the production deployment section below).
+1. The Socially Responsible Computing program in the Brown University Computer Science Department
+2. The Center for Technological Responsibility, Reimagination, and Redesign in the Brown University Data Science Institute
 
-9. You should automatically be able to view the deployed changes in our GitHub pages site: https://src-handbook-infrastructure-team.github.io/srch
+## Who It Is For
 
-# Production Deployment
+SRCH is primarily targeted towards teachers, professors, teaching assistants, and other academics who want to include materials on ethics, society, and computing in their curricula.
 
-Production content is served directly from frontend-bundled markdown files.
-There is no backend content API dependency for website pages.
+Primary audiences include:
 
-## Frontend deploy
+1. Instructors and professors
+2. Teaching assistants
+3. Students and researchers
+4. Others developing or teaching computing-and-society content
 
-Run the unified deploy script from repo root:
+Each section of SRCH is written to be understood at the undergraduate level without prior knowledge, allowing the Handbook itself to be used as a tool for teaching.
+
+## How To Use The Handbook
+
+The Handbook is currently organized into four core modules:
+
+1. Privacy
+2. Accessibility
+3. Automated Decision Making
+4. Generative AI
+
+The SRC Handbook is currently organized into four core modules: Privacy, Accessibility, Automated Decision Making, and Generative AI. Each module contains primers aligned to learning objectives, with side panels throughout that expand on key ideas, definitions, and case studies.
+
+## Project History
+
+SRCH was founded in May 2024 by Michelle L. Ding (Brown University Class of 2025, Current Ph.D Student), with advisors Julia Netter and Suresh Venkatasubramanian.
+
+Milestones:
+
+1. Fall 2024: First cohort launched (privacy and product teams)
+2. Spring 2025: AI and accessibility teams added
+3. Spring 2025: First primers published
+
+Today, Julia Netter and Suresh Venkatasubramanian continue to advise the project, along with Meredith Mendola, Program Manager of the Center for Tech Responsibility.
+
+For current and past contributors, please see the Acknowledgments page in the Handbook.
+
+## Funding And Support
+
+The handbook is hosted by Brown University and supported by grants from the Public Interest Technology University Network, Google Research, and the Ford Foundation.
+
+## Connect With Us
+
+We are excited to hear about how SRCH is being used!
+
+Email: src_handbook@brown.edu
+
+If you are a funder or want to discuss financial support, please contact:
+
+1. suresh_venkatasubramanian@brown.edu
+2. julia_netter@brown.edu
+
+## Contributing
+
+The code and content of our website is public, and we happily welcome contributions to either.
+
+### Quick Local Setup
+
+From the repository root:
 
 ```bash
-./deploy.sh <your_username>
+npm install
+npm run dev
 ```
 
-What this script does:
+`npm run website` is equivalent to `npm run dev` for frontend development.
 
-1. Builds and uploads frontend assets to `/web/cs/web/sites/srch`.
-2. Applies group ownership and permissions recursively (`775` directories, `664` files).
-3. Verifies `https://srch.cs.brown.edu/search-index.json` is publicly readable.
+## License
+
+This work is licensed under CC BY-NC-SA 4.0.

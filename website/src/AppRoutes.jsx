@@ -11,7 +11,10 @@ import Acknowledgments from "./pages/Acknowledgments";
 import SearchResultsPage from "./pages/SearchResultsPage";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
-import { preloadNavigationData } from "./util/MarkdownRenderer";
+import {
+  preloadNavigationData,
+  preloadAllMarkdownContent,
+} from "./util/MarkdownRenderer";
 
 function AppRoutes() {
   const location = useLocation();
@@ -35,6 +38,10 @@ function AppRoutes() {
     preloadNavigationData().catch((error) => {
       console.error("Error preloading sidebar navigation:", error);
     });
+
+    preloadAllMarkdownContent().catch((error) => {
+      console.error("Error preloading markdown content:", error);
+    });
   }, []);
 
   return (
@@ -43,12 +50,11 @@ function AppRoutes() {
       <NavBar layoutMode="overlay" />
 
       {isLandingPage ? (
-        <>
+        <SidebarLayout>
           <Routes>
             <Route path="/:sectionId" element={<LandingPage />} />
           </Routes>
-          <Footer />
-        </>
+        </SidebarLayout>
       ) : isMarkdownPage ? (
         <SidebarLayout>
           <Routes>

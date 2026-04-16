@@ -11,14 +11,18 @@
 }
 
 .about-section {
-  margin-top: 64px
+  margin-top: 64px;
 }
 
 .upper-content.landing-upper-content {
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
   height: auto;
   min-height: 0;
   padding-top: clamp(64px, 8vw, 112px);
+  padding-left: 10vw;
+  padding-right: 10vw;
 }
 
 .upper-content.landing-upper-content::after {
@@ -43,12 +47,18 @@
 
 .about-lower-content.landing-lower-content {
   padding-top: 0;
+  padding-left: 10vw;
+  padding-right: 10vw;
 }
 
 .landing-title {
   display: flex;
   align-items: center;
   gap: 16px;
+  font-family: var(--title-font);
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
 }
 
 .landing-primer-icon {
@@ -190,8 +200,15 @@
     padding: 72px 80px;
   }
 
+  .about-lower-content.landing-lower-content {
+    padding-left: 8vw;
+    padding-right: 8vw;
+  }
+
   .upper-content.landing-upper-content {
     padding-top: clamp(56px, 7vw, 88px);
+    padding-left: 8vw;
+    padding-right: 8vw;
   }
 
   .landing-outline {
@@ -211,8 +228,15 @@
     padding: 48px 24px;
   }
 
+  .about-lower-content.landing-lower-content {
+    padding-left: 6vw;
+    padding-right: 6vw;
+  }
+
   .upper-content.landing-upper-content {
     padding-top: 52px;
+    padding-left: 6vw;
+    padding-right: 6vw;
   }
 
   .landing-title {

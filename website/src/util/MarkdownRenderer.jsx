@@ -305,6 +305,9 @@ export const getSubsections = async (sectionId) => {
 
 let preloadedNavigationData = null;
 let preloadNavigationPromise = null;
+let preloadedContentData = null;
+let preloadContentPromise = null;
+const contentCache = new Map();
 
 function getAllowedNavigationSections(sections = []) {
   const ALLOWED_SECTION_IDS = new Set([
@@ -396,6 +399,43 @@ export async function preloadNavigationData() {
 
 export function getPreloadedNavigationData() {
   return preloadedNavigationData;
+}
+
+export function getPreloadedMarkdownContent(sectionId, subsectionId) {
+  const cacheKey = subsectionId ? `${sectionId}/${subsectionId}` : sectionId;
+  if (!cacheKey) return null;
+  return contentCache.get(cacheKey) || null;
+}
+
+export async function preloadAllMarkdownContent() {
+  if (preloadedContentData) return preloadedContentData;
+  if (preloadContentPromise) return preloadContentPromise;
+
+  preloadContentPromise = (async () => {
+    const sections = await getSections();
+
+    await Promise.all(
+      sections.map(async (section) => {
+        await getContent(section.id);
+
+        const subsections = await getSubsections(section.id).catch(() => []);
+        await Promise.all(
+          subsections.map((subsection) =>
+            getContent(section.id, subsection.id),
+          ),
+        );
+      }),
+    );
+
+    preloadedContentData = {
+      loadedAt: Date.now(),
+      size: contentCache.size,
+    };
+
+    return preloadedContentData;
+  })();
+
+  return preloadContentPromise;
 }
 
 /* ----------------------------- Content Loader ----------------------------- */
@@ -508,6 +548,11 @@ export function mergeFootnotes(mainMarkdown, sidebarMap, allDefinitions = {}) {
 
 export const getContent = async (sectionId, subsectionId) => {
   try {
+    const cacheKey = subsectionId ? `${sectionId}/${subsectionId}` : sectionId;
+    if (cacheKey && contentCache.has(cacheKey)) {
+      return contentCache.get(cacheKey);
+    }
+
     let path;
     if (sectionId && !subsectionId) {
       path = `../markdown/${sectionId}/${sectionId}.md`;
@@ -604,13 +649,19 @@ export const getContent = async (sectionId, subsectionId) => {
             lastUpdated = footerMatch[1].trim();
           }
         }
-        return {
+        const result = {
           content: parsedContent,
           sidebar,
           allDefinitions,
           furtherReadingBlock,
           frontmatter: { ...frontmatter, lastUpdated },
         };
+
+        if (cacheKey) {
+          contentCache.set(cacheKey, result);
+        }
+
+        return result;
       }
     }
 
@@ -620,6 +671,16 @@ export const getContent = async (sectionId, subsectionId) => {
     return null;
   }
 };
+
+export async function warmMarkdownContent(sectionId, subsectionId = null) {
+  if (!sectionId) return null;
+
+  const tasks = [getContent(sectionId, subsectionId)];
+  tasks.push(getSubsections(sectionId).catch(() => []));
+
+  const [content] = await Promise.all(tasks);
+  return content;
+}
 
 /* ----------------------------- Subsection Parser ----------------------------- */
 
@@ -1025,6 +1086,12 @@ function MarkdownRenderer({
           </p>
         );
       },
+
+      em: ({ children, ...props }) => (
+        <em style={{ fontStyle: "italic" }} {...props}>
+          {highlightText(children, effectiveHighlight)}
+        </em>
+      ),
 
       a: (props) => {
         if ("data-footnote-backref" in props) return null;

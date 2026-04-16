@@ -7,6 +7,7 @@ import {
   getSections,
   getSubsections,
   getContent,
+  warmMarkdownContent,
   getPreloadedNavigationData,
 } from "../util/MarkdownRenderer";
 
@@ -472,6 +473,8 @@ export default function ContentsSidebar({
                   role="button"
                   tabIndex={0}
                   onClick={() => navigateToSection(section.id)}
+                  onMouseEnter={() => warmMarkdownContent(section.id)}
+                  onFocus={() => warmMarkdownContent(section.id)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
@@ -522,6 +525,12 @@ export default function ContentsSidebar({
                         <Link
                           className="sidebar-subsection-link"
                           to={`/${section.id}/${sub.id}`}
+                          onMouseEnter={() =>
+                            warmMarkdownContent(section.id, sub.id)
+                          }
+                          onFocus={() =>
+                            warmMarkdownContent(section.id, sub.id)
+                          }
                         >
                           {" "}
                           <Box className={`sidebar-sub-row`}>

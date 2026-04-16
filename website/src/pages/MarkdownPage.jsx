@@ -28,6 +28,7 @@ import MarkdownRenderer, {
   getSections,
   getContent,
   getSubsections,
+  getPreloadedMarkdownContent,
   highlightText,
 } from "../util/MarkdownRenderer";
 
@@ -306,17 +307,36 @@ function MarkdownPage() {
 
   const layout = useLayout() || {};
   const { closeRightDrawer, openRightDrawer } = layout;
-  const [sidebar, setSidebar] = useState({});
-  const [mainContent, setMainContent] = useState("");
+  const cachedPageContent =
+    sectionId && subsectionId
+      ? getPreloadedMarkdownContent(sectionId, subsectionId)
+      : sectionId
+        ? getPreloadedMarkdownContent(sectionId)
+        : null;
+
+  const [sidebar, setSidebar] = useState(cachedPageContent?.sidebar || {});
+  const [mainContent, setMainContent] = useState(
+    cachedPageContent?.content || "",
+  );
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
-  const [pageTitle, setPageTitle] = useState("");
+  const [pageTitle, setPageTitle] = useState(
+    cachedPageContent?.frontmatter?.title || "",
+  );
   const [subsections, setSubsections] = useState([]);
-  const [lastUpdated, setLastUpdated] = useState("");
+  const [lastUpdated, setLastUpdated] = useState(
+    cachedPageContent?.frontmatter?.lastUpdated || "",
+  );
   const [mainFootnotes, setMainFootnotes] = useState([]);
-  const [allDefinitions, setAllDefinitions] = useState({});
-  const [rawMainMarkdown, setRawMainMarkdown] = useState("");
-  const [furtherReadingBlock, setFurtherReadingBlock] = useState(null);
+  const [allDefinitions, setAllDefinitions] = useState(
+    cachedPageContent?.allDefinitions || {},
+  );
+  const [rawMainMarkdown, setRawMainMarkdown] = useState(
+    cachedPageContent?.content || "",
+  );
+  const [furtherReadingBlock, setFurtherReadingBlock] = useState(
+    cachedPageContent?.furtherReadingBlock || null,
+  );
 
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);

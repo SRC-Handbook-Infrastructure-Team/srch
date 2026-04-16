@@ -285,7 +285,7 @@ html[data-layout-mode="overlay"].right-open body .main-content {
 
 html:not(.left-open) body .main-content {
   margin-left: 0 !important;
-  padding-left: 8vw;
+  padding-left: 0;
   transition:
     margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -299,12 +299,20 @@ html.left-open body .main-content {
     padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+html.is-landing-page.left-open body .main-content {
+  padding-left: 0 !important;
+}
+
 html:not(.right-open) body .main-content {
   margin-right: 0 !important;
   padding-right: 8vw;
   transition:
     margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.is-landing-page:not(.right-open) body .main-content {
+  padding-right: 0 !important;
 }
 
 html.right-open body .main-content {
@@ -317,6 +325,10 @@ html.right-open body .main-content {
 
 html.is-resizing-sidebars body .main-content {
   transition: none !important;
+}
+
+html body .main-content {
+  min-height: calc(100vh - var(--nav-bar-height) - var(--footer-height, 0px));
 }
 
 html[data-layout-mode="mobile"].right-open body .main-content {

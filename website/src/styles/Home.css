@@ -507,7 +507,7 @@ html[data-theme="light"] .topic-card {
 
   font-family: var(--title-font);
   font-weight: 700;
-  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-size: 4rem;
   line-height: 1.2;
   color: var(--color-text);
 
@@ -550,7 +550,7 @@ html[data-theme="light"] .topic-card {
   }
 
   .website-title {
-    font-size: clamp(2.5rem, 7vw, 3.5rem);
+    font-size: 4rem;
   }
 
   .info-section {
