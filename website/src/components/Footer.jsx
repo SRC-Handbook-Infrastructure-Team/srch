@@ -81,11 +81,7 @@ function Footer({
         }
 
         const links = sections.map((section) => {
-          const sectionSubsections = subsectionsMap[section.id] || [];
-          const slug =
-            sectionSubsections.length > 0
-              ? `/${section.id}/${sectionSubsections[0].id}`
-              : `/${section.id}`;
+          const slug = `/${section.id}`;
 
           return {
             id: section.id,

@@ -4,8 +4,6 @@ order: 1
 final: false
 ---
 
-# What is Accessibility?
-
 Entire populations are affected by the computational choices made in technology design. When thinking about how to incorporate accessibility into computer science pedagogy, it is crucial to understand that accessibility cannot exist under a single definition. For the purpose of this primer, accessibility will be framed through three categories.
 
 1. Universality

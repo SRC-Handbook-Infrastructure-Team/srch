@@ -4,8 +4,6 @@ order: 3
 final: false
 ---
 
-# Introduction to Copyright and Generative AI
-
 US Copyright law has been completely upended by the rise of claims using generative artificial intelligence. For example, currently, under US copyright law, artistic style is not itself copyrightable and only finished works themselves are. Artistic styles being uncopyrightable has become an issue in the AI copyright space, as distinctive styles themselves are becoming increasingly generated without any credit to artists themselves due to models training on an abundance of artist’s works. This generative phenomenon has been increasingly present, but was highlighted in 2025 with OpenAI’s image generator that was capable of easily generating images in the style of Hayao Miyazaki, the co-founder of Japanese animation house Studio Ghibli. With OpenAI training its models on copious amounts of Studio Ghibli media, users were able to attach an image or request an image be generated in Miyazaki’s style with ease without any copyright filters. This training presented an issue of the legality of training AI models on art and copyrighted content. But, the output of the studio ghibli style presented the issue of who owns, if anyone, the copyright of AI generated content? Proponents against these generations argue that decades of artistic hard work has been exploited. The Studio Ghibli trend was not the only instance of artistic work being used for AI training without permission, but merely highlighted the issue.
 ![The 'distracted boyfriend' meme using Miyazaki’s Studio Ghibli style with OpenAI’s Image Generator.](/assets/primer-photos/ghibli_meme.jpg)
 **_The 'distracted boyfriend' meme using Miyazaki’s Studio Ghibli style with OpenAI’s Image Generator._**

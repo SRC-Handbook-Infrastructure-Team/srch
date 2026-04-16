@@ -4,8 +4,6 @@ order: 3
 final: false
 ---
 
-# Sources of Bias in Automated-Decision Making Systems
-
 ## What is Bias?
 
 Bias is any **systemic process that discriminates against or favors a person or group over another based on stereotypical or inaccurate assumptions of the person or group**.[^1] Like people, algorithms are vulnerable to biases that make their decisions unfair.[^2] As automated-decision making systems (ADS) are increasingly embedded into day-to-day life, it is crucial to understand sources of bias in order to mitigate harms and enhance fairness.

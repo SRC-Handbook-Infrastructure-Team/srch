@@ -210,21 +210,6 @@ function NavBar() {
     loadAllData();
   }, []);
 
-  useEffect(() => {
-    if (
-      currentSectionId &&
-      !currentSubsectionId &&
-      subsections[currentSectionId]
-    ) {
-      const sectionSubsections = subsections[currentSectionId];
-      if (sectionSubsections.length > 0) {
-        navigate(`/${currentSectionId}/${sectionSubsections[0].id}`, {
-          replace: true,
-        });
-      }
-    }
-  }, [subsections, navigate, currentSectionId, currentSubsectionId]);
-
   return (
     <Box
       as="header"
@@ -304,12 +289,7 @@ function NavBar() {
                 className="nav-link-box nav-button"
                 onClick={() => {
                   const firstSection = sections[0];
-                  const sectionSubsections = subsections[firstSection.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${firstSection.id}`);
-                  }
+                  navigate(`/${firstSection.id}`);
                 }}
                 onMouseEnter={() => closeSectionOnLeave("modules")}
               >
@@ -426,16 +406,7 @@ function NavBar() {
                         className="nav-dropdown-item nav-dropdown-section-title nav-button"
                         tabIndex={openSection === "modules" ? 0 : -1}
                         onClick={() => {
-                          if (
-                            sectionSubsections &&
-                            sectionSubsections.length > 0
-                          ) {
-                            navigate(
-                              `/${section.id}/${sectionSubsections[0].id}`,
-                            );
-                          } else {
-                            navigate(`/${section.id}`);
-                          }
+                          navigate(`/${section.id}`);
                           setOpenSection(null);
                         }}
                       >

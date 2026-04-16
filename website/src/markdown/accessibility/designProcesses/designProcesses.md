@@ -4,8 +4,6 @@ order: 3
 final: false
 ---
 
-# Design Processeses
-
 When designing any product, processes may be followed to iterate from ideation to implementation and incorporate user feedback. Thoughtful design processes that include deep considerations of users can support usability and [accessibility](/accessibility/whatIsAccessibility) for diverse target markets.
 
 ## Design Goals: Defining a User Market

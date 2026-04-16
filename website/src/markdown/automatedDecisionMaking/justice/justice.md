@@ -4,8 +4,6 @@ order: 2
 final: false
 ---
 
-# Concepts of Justice in AI
-
 Justice in automated decision-making systems extends beyond identifying isolated instances of
 bias or harm. It requires critical examination of how these systems mirror inequalities and
 inequities in the broader world that they aim to encode.

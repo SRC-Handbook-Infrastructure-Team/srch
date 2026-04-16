@@ -1100,6 +1100,8 @@ function MarkdownRenderer({
             marginBottom: "1em",
             color: BLACK,
             fontFamily: "Be Vietnam Pro, sans-serif",
+            listStyleType: "disc",
+            listStylePosition: "outside",
           }}
           {...props}
         />
@@ -1111,6 +1113,8 @@ function MarkdownRenderer({
             marginBottom: "1em",
             color: BLACK,
             fontFamily: "Be Vietnam Pro, sans-serif",
+            listStyleType: "decimal",
+            listStylePosition: "outside",
           }}
           {...props}
         />

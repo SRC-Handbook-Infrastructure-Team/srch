@@ -4,8 +4,6 @@ order: 2
 final: false
 ---
 
-# Intersections with Other Core Values
-
 Designing technology solutions that ensure privacy, security, accessibility, and usability often requires a balancing act. The case studies below illustrate how these values intersect—sometimes creating tension, and at other times offering opportunities for innovation. Click on each sidebar button to view the full details of that case study.
 
 ---

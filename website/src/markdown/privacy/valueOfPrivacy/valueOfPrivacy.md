@@ -4,8 +4,6 @@ order: 2
 final: true
 ---
 
-# What is the value of privacy?
-
 ## What is privacy good for?
 
 As previously seen, privacy can be [**understood**](whatIsPrivacy) in a myriad of ways. While conceptions of privacy vary, there is broad agreement that privacy facilitates certain {goods} for both individuals and society at large. The way people determine and prioritize these goods depends on their understanding of privacy.

@@ -4,8 +4,6 @@ order: 1
 final: false
 ---
 
-# Algorithmic Fairness
-
 When machines replace humans in {making-high-impact-decision}, it is important for their outcomes to remain fair. But what is algorithmic fairness?
 
 ## Definitions of Fairness

@@ -303,23 +303,6 @@ export default function ContentsSidebar({
   }, [currentSectionId, navigate, hasFetchedData]);
 
   /* =========================================================================
-     Navigation Defaulting: ensure a subsection is selected if section-only URL
-     -------------------------------------------------------------------------
-     If the current URL points to a section but not a subsection, pick the first
-     subsection as the default for a consistent content view.
-     ========================================================================= */
-  useEffect(() => {
-    if (currentSectionId && !currentSubsectionId) {
-      const sectionSubsections = subsections[currentSectionId];
-      if (sectionSubsections && sectionSubsections.length > 0) {
-        navigate(`/${currentSectionId}/${sectionSubsections[0].id}`, {
-          replace: true,
-        });
-      }
-    }
-  }, [currentSectionId, currentSubsectionId, subsections, navigate]);
-
-  /* =========================================================================
      Lazy Headings: fetch on expand only (per section)
      -------------------------------------------------------------------------
      Only pull and parse heavy markdown when necessary. Skips already-loaded
@@ -413,7 +396,7 @@ export default function ContentsSidebar({
   }, [sections, expandedSections, allExpanded]);
 
   /**
-   * Navigate to a section and (optionally) its first subsection.
+   * Navigate to a section landing page.
    *
    * IMPORTANT:
    * - This function is *purely* about navigation.
@@ -421,12 +404,8 @@ export default function ContentsSidebar({
    * - UI state is synced from the URL instead (see useEffect below).
    */
   const navigateToSection = useCallback(
-    (sectionId, sectionSubs) => {
-      if (sectionSubs?.length > 0) {
-        navigate(`/${sectionId}/${sectionSubs[0].id}`);
-      } else {
-        navigate(`/${sectionId}`);
-      }
+    (sectionId) => {
+      navigate(`/${sectionId}`);
     },
     [navigate],
   );
@@ -468,39 +447,42 @@ export default function ContentsSidebar({
      ========================================================================= */
   const NavContent = useCallback(
     () => (
-      <VStack align="stretch" spacing={2}>
+      <VStack align="stretch">
         {sections.map((section, idx) => {
           const sectionSubs = subsections[section.id] || [];
           const hasSubsections = sectionSubs.length > 0;
           const isExpanded = !!expandedSections[section.id];
           const isActiveSection = currentSectionId === section.id; // route-aware
+          const isLandingPage = isActiveSection && !currentSubsectionId;
           const displayNumber = resolveDisplayNumber(section, idx);
 
           return (
-            <Box key={section.id} mb={2} className={`sidebar-section`}>
+            <Box key={section.id} className={`sidebar-section`}>
               <Box
                 className={`sidebar-section-header ${isActiveSection ? "is-active" : ""}`}
-                cursor="pointer"
-                onClick={() => toggleSection(section.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleSection(section.id);
-                  }
-                }}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                role="button"
-                tabIndex={0}
-                aria-label={
-                  isExpanded
-                    ? `Collapse ${section.title || section.id}`
-                    : `Expand ${section.title || section.id}`
-                }
               >
-                <Box display="flex" alignItems="center" gap="6px">
-                  <Text className="sidebar-section-title">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap="6px"
+                  cursor="pointer"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigateToSection(section.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigateToSection(section.id);
+                    }
+                  }}
+                  aria-label={`Open ${section.title || section.id} landing page`}
+                >
+                  <Text
+                    className={`sidebar-section-title ${isLandingPage ? "is-active" : ""}`}
+                  >
                     {displayNumber}. {section.title}
                   </Text>
                 </Box>
@@ -527,9 +509,7 @@ export default function ContentsSidebar({
                 <VStack
                   className="sidebar-subsection-container"
                   align="stretch"
-                  pl={6}
                   mt={1}
-                  spacing={0}
                 >
                   {sectionSubs.map((sub, subIdx) => {
                     const isSubActive =
@@ -538,7 +518,7 @@ export default function ContentsSidebar({
                     const subPrefix = `${displayNumber}.${subLetter}.`;
 
                     return (
-                      <Box key={sub.id} mb={1}>
+                      <Box key={sub.id}>
                         <Link
                           className="sidebar-subsection-link"
                           to={`/${section.id}/${sub.id}`}

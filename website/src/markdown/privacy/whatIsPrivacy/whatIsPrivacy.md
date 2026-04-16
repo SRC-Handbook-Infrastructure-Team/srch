@@ -4,8 +4,6 @@ order: 1
 final: true
 ---
 
-# What is privacy?
-
 Here we present some of the answers different thinkers and disciplines give to the question, "What is privacy about?" We do not aim to comprehensively survey theories or take sides in the many debates happening around this topic in philosophy, psychology, anthropology, and other disciplines. Rather, we offer several lenses through which to understand privacy and what it delineates. The goal is to get students thinking critically about privacy and its applications to computer science.
 
 ## Lens 1: Privacy is about the ability to restrict access to oneself.

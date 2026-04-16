@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import LandingPage from "./pages/LandingPage";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
 import Acknowledgments from "./pages/Acknowledgments";
@@ -14,12 +15,19 @@ import { preloadNavigationData } from "./util/MarkdownRenderer";
 
 function AppRoutes() {
   const location = useLocation();
+  const pathParts = location.pathname.split("/").filter(Boolean);
   const isSearchPage = location.pathname.startsWith("/search");
   const isAcknowledgmentsPage =
     location.pathname.startsWith("/acknowledgments");
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage =
     (location.pathname === "/") | (location.pathname === "/srch/");
+  const isLandingPage =
+    !isHomePage &&
+    !isSearchPage &&
+    !isAcknowledgmentsPage &&
+    !isAboutPage &&
+    pathParts.length === 1;
   const isMarkdownPage =
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
@@ -34,10 +42,16 @@ function AppRoutes() {
       <ScrollManager />
       <NavBar layoutMode="overlay" />
 
-      {isMarkdownPage ? (
+      {isLandingPage ? (
+        <>
+          <Routes>
+            <Route path="/:sectionId" element={<LandingPage />} />
+          </Routes>
+          <Footer />
+        </>
+      ) : isMarkdownPage ? (
         <SidebarLayout>
           <Routes>
-            <Route path="/:sectionId" element={<MarkdownPage />} />
             <Route
               path="/:sectionId/:subsectionId"
               element={<MarkdownPage />}

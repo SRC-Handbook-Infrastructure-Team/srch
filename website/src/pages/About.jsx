@@ -1,15 +1,17 @@
-/**
- * ============================================================================
- * About.jsx — full-hero overlay version (matches Acknowledgments + Home)
- * ----------------------------------------------------------------------------
- * • Full-viewport fixed hero using SRC gradient image
- * • Text block overlays the hero background
- * • Lower content slides upward after hero scroll
- * ============================================================================
- */
+import "../styles/LandingPage.css";
+import aboutMarkdown from "../markdown/about/about.md?raw";
+import MarkdownRenderer from "../util/MarkdownRenderer";
 
-import "../styles/About.css";
+function getAboutContent(markdown) {
+  return String(markdown || "")
+    .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
+    .replace(/^#\s+.*\r?\n+/, "")
+    .trim();
+}
+
 export default function About() {
+  const content = getAboutContent(aboutMarkdown);
+
   return (
     <>
       <div className="upper-content">
@@ -26,13 +28,15 @@ export default function About() {
 
       <div className="about-lower-content">
         <section className="about-section">
-          <div className="section-title" style={{ overflowWrap: "break-word" }}>
-            How to use the handbook
-          </div>
-          <p>
-            Each section contains a series of primers that are loosely aligned
-            with learning objectives in the SRC curriculum.
-          </p>
+          <MarkdownRenderer
+            content={content}
+            sidebar={{}}
+            sectionId="about"
+            subsectionId=""
+            onDrawerOpen={() => {}}
+            onNavigation={() => {}}
+            highlight={null}
+          />
         </section>
       </div>
     </>
