@@ -64,6 +64,43 @@ function resolveHighlightForContext(highlight, isDrawerMode) {
   return highlight;
 }
 
+function stripFurtherReadingBlocks(markdown) {
+  if (!markdown || typeof markdown !== "string") {
+    return { stripped: markdown, furtherReadingBlock: null };
+  }
+
+  const lines = markdown.split(/\r?\n/);
+  const furtherReadingHeadingRegex = /^##\s+Further Reading\s*$/i;
+  const h2Regex = /^##\s/;
+
+  const keptLines = [];
+  const furtherReadingBlocks = [];
+
+  for (let i = 0; i < lines.length; ) {
+    if (furtherReadingHeadingRegex.test(lines[i])) {
+      i += 1;
+      const blockLines = [];
+
+      while (i < lines.length && !h2Regex.test(lines[i])) {
+        blockLines.push(lines[i]);
+        i += 1;
+      }
+
+      const block = blockLines.join("\n").trim();
+      if (block) furtherReadingBlocks.push(block);
+      continue;
+    }
+
+    keptLines.push(lines[i]);
+    i += 1;
+  }
+
+  return {
+    stripped: keptLines.join("\n"),
+    furtherReadingBlock: furtherReadingBlocks.join("\n\n") || null,
+  };
+}
+
 export function highlightText(node, highlight) {
   if (!highlight || (!node && node !== 0)) return node;
   if (
@@ -385,43 +422,24 @@ export function extractFootnotes(markdown) {
   if (!markdown || typeof markdown !== "string") {
     return { stripped: markdown, footnotes: [], furtherReadingBlock: null };
   }
+  const { stripped: withoutFurtherReading, furtherReadingBlock } =
+    stripFurtherReadingBlocks(markdown);
 
   const defRegex = /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
   const definitions = {};
   let match;
-  while ((match = defRegex.exec(markdown)) !== null) {
+  while ((match = defRegex.exec(withoutFurtherReading)) !== null) {
     definitions[match[1]] = match[2].trim();
   }
 
   const refRegex = /\[\^([^\]]+)\](?!:)/g;
   const ordered = [];
   const seen = new Set();
-  while ((match = refRegex.exec(markdown)) !== null) {
+  while ((match = refRegex.exec(withoutFurtherReading)) !== null) {
     const key = match[1];
     if (!seen.has(key) && definitions[key] !== undefined) {
       seen.add(key);
       ordered.push({ key, content: definitions[key] });
-    }
-  }
-
-  const furtherReadingHeadingRegex = /^##\s+Further Reading\s*$/m;
-  const furtherReadingHeadingMatch = furtherReadingHeadingRegex.exec(markdown);
-
-  let furtherReadingBlock = null;
-  let withoutFurtherReading = markdown;
-  if (furtherReadingHeadingMatch) {
-    const headingStart = furtherReadingHeadingMatch.index;
-    const contentStart = headingStart + furtherReadingHeadingMatch[0].length;
-    const afterHeading = markdown.slice(contentStart).replace(/^\r?\n/, "");
-    const nextH2Index = afterHeading.search(/^##\s/m);
-
-    if (nextH2Index === -1) {
-      furtherReadingBlock = afterHeading.trim();
-      withoutFurtherReading = markdown.slice(0, headingStart).trimEnd();
-    } else {
-      furtherReadingBlock = afterHeading.slice(0, nextH2Index).trim();
-      withoutFurtherReading =
-        markdown.slice(0, headingStart) + afterHeading.slice(nextH2Index);
     }
   }
 
@@ -657,6 +675,12 @@ function MarkdownRenderer({
         .trim();
     }
 
+    const {
+      stripped: mainWithoutFurtherReading,
+      furtherReadingBlock: extractedFurtherReadingBlock,
+    } = stripFurtherReadingBlocks(mainContent);
+    mainContent = mainWithoutFurtherReading;
+
     const footnoteDefRegex = /^\[\^([0-9]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
     const footnotesMap = new Map();
     const localOriginMap = {};
@@ -711,13 +735,6 @@ function MarkdownRenderer({
       contentWithoutDefs += "\n" + sidebarContent.replace(footnoteDefRegex, "");
     }
 
-    // Remove inline Further Reading from markdown body so only the custom
-    // collapsible section renders it.
-    contentWithoutDefs = contentWithoutDefs.replace(
-      /^##\s+Further Reading\s*\n[\s\S]*?(?=^##\s|\n*$)/m,
-      "",
-    );
-
     const footnotesSectionRegex = /^##\s+Footnotes[\s\S]*?(?=^##\s|\n*$)/gim;
     let replaced = contentWithoutDefs.replace(
       footnotesSectionRegex,
@@ -734,7 +751,7 @@ function MarkdownRenderer({
       return `<sup id="user-content-fnref-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
     });
 
-    if (furtherReadingBlock) {
+    if (furtherReadingBlock || extractedFurtherReadingBlock) {
       replaced += "\n\n[[CUSTOM_REFERENCES_SECTION]]";
     }
 
@@ -1561,6 +1578,11 @@ function MarkdownRenderer({
     const [part0, rest = ""] = main.split("[[CUSTOM_FOOTNOTES_SECTION]]");
     const [part1, part2 = ""] = rest.split("[[CUSTOM_REFERENCES_SECTION]]");
 
+    const stripCustomMarkers = (value) =>
+      String(value || "")
+        .replace(/\[\[CUSTOM_FOOTNOTES_SECTION\]\]/g, "")
+        .replace(/\[\[CUSTOM_REFERENCES_SECTION\]\]/g, "");
+
     const mdProps = {
       components,
       remarkPlugins: [
@@ -1573,11 +1595,11 @@ function MarkdownRenderer({
 
     return (
       <>
-        <ReactMarkdown {...mdProps}>{part0}</ReactMarkdown>
+        <ReactMarkdown {...mdProps}>{stripCustomMarkers(part0)}</ReactMarkdown>
         <CustomFootnotesSection />
-        <ReactMarkdown {...mdProps}>{part1}</ReactMarkdown>
+        <ReactMarkdown {...mdProps}>{stripCustomMarkers(part1)}</ReactMarkdown>
         {part2 !== undefined && <CustomFurtherReadingSection />}
-        <ReactMarkdown {...mdProps}>{part2}</ReactMarkdown>
+        <ReactMarkdown {...mdProps}>{stripCustomMarkers(part2)}</ReactMarkdown>
       </>
     );
   }
