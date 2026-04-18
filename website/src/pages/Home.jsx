@@ -9,30 +9,43 @@ import lightbulbIconLight from "../assets/lightbulbIcon.svg";
 import lightbulbIconDark from "../assets/lightbulbIcon_white.svg";
 import peopleIconLight from "../assets/peopleIcon.svg";
 import peopleIconDark from "../assets/peopleIcon_white.svg";
-import privacyIconLight from "../assets/privacy-icon.svg";
-import privacyIconDark from "../assets/privacy-icon_white.svg";
-import automatedIconLight from "../assets/automatedDecisionMaking-icon.svg";
-import automatedIconDark from "../assets/automatedDecisionMaking-icon_white.svg";
-import aiIconLight from "../assets/generativeAI-icon.svg";
-import aiIconDark from "../assets/generativeAI-icon_white.svg";
 import carotIconLight from "../assets/carot-icon.svg";
 import carotIconDark from "../assets/carot-icon_white.svg";
 import instaLogoLight from "../assets/instagram-logo.svg";
 import instaLogoDark from "../assets/instagram-logo_white.svg";
-import srcLogoLight from "../assets/src_logo.svg";
-import srcLogoDark from "../assets/src_logo_white.svg";
 import cntrLogo from "../assets/cntr-logo.png";
-import accessibilityIconLight from "../assets/accessibility-icon.svg";
-import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import SearchBar from "../components/SearchBar";
+import { getSections, getSubsections } from "../util/MarkdownRenderer";
+import { getSectionIconById } from "../util/sectionIcons";
+
+function getFirstParagraph(markdown = "") {
+  const text = String(markdown)
+    .replace(/^---[\s\S]*?---\s*/m, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/^#{1,6}\s+.*$/gm, "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/\{[^}]+\}/g, "")
+    .trim();
+
+  const paragraphs = text
+    .split(/\n\s*\n/)
+    .map((p) => p.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+  return paragraphs[0] || "";
+}
+
+function truncate(text = "", max = 130) {
+  const value = String(text || "").trim();
+  if (value.length <= max) return value;
+  return `${value.slice(0, max).trimEnd()}...`;
+}
 
 function Home() {
   const navigate = useNavigate();
-  const privacySlug = "/privacy";
-  const accessibilitySlug = "/accessibility";
-  const decisionSlug = "/automatedDecisionMaking";
-  const aiSlug = "/generativeAI";
   const [searchQuery, setSearchQuery] = useState("");
+  const [curriculumCards, setCurriculumCards] = useState([]);
 
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const curriculumTitleRef = useRef(null);
@@ -67,18 +80,10 @@ function Home() {
     return () => observer.disconnect();
   }, [theme]);
 
-  const getPrivacyIcon = () =>
-    theme === "dark" ? privacyIconDark : privacyIconLight;
-  const getAutomatedIcon = () =>
-    theme === "dark" ? automatedIconDark : automatedIconLight;
-  const getAiIcon = () => (theme === "dark" ? aiIconDark : aiIconLight);
   const getCarotIcon = () =>
     theme === "dark" ? carotIconDark : carotIconLight;
   const getInstaLogo = () =>
     theme === "dark" ? instaLogoDark : instaLogoLight;
-  const getSrcLogo = () => (theme === "dark" ? srcLogoDark : srcLogoLight);
-  const getAccessibilityIcon = () =>
-    theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
 
   const getTargetIcon = () =>
     theme === "dark" ? targetIconDark : targetIconLight;
@@ -99,6 +104,69 @@ function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadCurriculumCards = async () => {
+      try {
+        const sections = await getSections();
+        if (isCancelled) return;
+
+        const sortedSections = [...sections].sort(
+          (a, b) => (a.order || 999) - (b.order || 999),
+        );
+        const subsectionResults = await Promise.all(
+          sortedSections.map((section) => getSubsections(section.id)),
+        );
+
+        if (isCancelled) return;
+
+        const cards = sortedSections
+          .map((section, index) => ({
+            section,
+            subsections: subsectionResults[index] || [],
+          }))
+          .filter(
+            ({ subsections }) =>
+              Array.isArray(subsections) && subsections.length > 0,
+          )
+          .map(({ section }) => ({
+            id: section.id,
+            title: section.title || section.id,
+            slug: `/${section.id}`,
+            description: truncate(getFirstParagraph(section.content)),
+          }));
+
+        setCurriculumCards(cards);
+      } catch {
+        if (isCancelled) return;
+        setCurriculumCards([]);
+      }
+    };
+
+    loadCurriculumCards();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  const getCardIcon = (sectionId) => {
+    const src = getSectionIconById(sectionId, theme);
+    if (!src) return null;
+    return {
+      src,
+      alt: `${cardTitleFromSectionId(sectionId)} Icon`,
+    };
+  };
+
+  const cardTitleFromSectionId = (sectionId) =>
+    String(sectionId || "")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase())
+      .trim() || "Section";
+
   const handleScrollClick = () => {
     if (curriculumTitleRef.current) {
       const navbarHeight = 70;
@@ -118,11 +186,11 @@ function Home() {
             <div className="website-title">Brown SRC Handbook</div>
             <div className="info-section">
               This Handbook is your guide to integrating ethics, responsibility,
-              and social awareness into computer science teaching. Whether
-              you're an instructor designing a syllabus, a TA leading
-              discussions, or a student exploring what impact your work can
-              have, this site offers curated modules, case studies, discussion
-              prompts, and resource tools.
+              and social awareness into computer science teaching. Whether you
+              are an instructor designing a syllabus, a TA leading discussions,
+              or a student exploring what impact your work can have, this site
+              offers curated modules, case studies, discussion prompts, and
+              resource tools.
             </div>
           </div>
         </div>
@@ -153,83 +221,31 @@ function Home() {
             </div>
 
             <div className="card-grid">
-              <button
-                className="topic-card"
-                onClick={() => navigate(privacySlug)}
-              >
-                <div className="outline-tip">
-                  <img
-                    src={getPrivacyIcon()}
-                    alt="Privacy Icon"
-                    width={75}
-                    height={92}
-                  />
-                </div>
-                <div className="card">
-                  <div className="card-heading">Privacy</div>
-                  <div className="topic-subtext">
-                    Think critically about privacy and its applications to
-                    computer science.
-                  </div>
-                </div>
-              </button>
-              <button
-                className="topic-card"
-                onClick={() => navigate(accessibilitySlug)}
-              >
-                <div className="outline-tip">
-                  <img
-                    src={getAccessibilityIcon()}
-                    alt="Accessibility Icon"
-                    width={75}
-                    height={92}
-                  />
-                </div>
-                <div className="card">
-                  <div className="card-heading">Accessibility</div>
-                  <div className="topic-subtext">
-                    Think critically about accessibility and its applications to
-                    computer science.
-                  </div>
-                </div>
-              </button>
-              <button
-                className="topic-card"
-                onClick={() => navigate(decisionSlug)}
-              >
-                <div className="outline-tip">
-                  <img
-                    src={getAutomatedIcon()}
-                    alt="Automated Decision Making Icon"
-                    width={75}
-                    height={92}
-                  />
-                </div>
-                <div className="card">
-                  <div className="card-heading">Automated Decision Making</div>
-                  <div className="topic-subtext">
-                    Think critically about automated decision making and its
-                    applications to computer science.
-                  </div>
-                </div>
-              </button>
-              <button className="topic-card" onClick={() => navigate(aiSlug)}>
-                <div className="outline-tip">
-                  <img
-                    src={getAiIcon()}
-                    alt="Generative AI Icon"
-                    width={75}
-                    height={92}
-                  />
-                </div>
-                <div className="card">
-                  <div className="card-heading">Generative AI</div>
-                  <div className="topic-subtext">
-                    Think critically about Generative AI and its applications to
-                    computer science.
-                  </div>
-                </div>
-              </button>
+              {curriculumCards.map((card) => {
+                const icon = getCardIcon(card.id);
+                return (
+                  <button
+                    key={card.id}
+                    className="topic-card"
+                    onClick={() => navigate(card.slug)}
+                  >
+                    <div className="outline-tip">
+                      {icon ? (
+                        <img
+                          src={icon.src}
+                          alt={icon.alt}
+                          width={75}
+                          height={92}
+                        />
+                      ) : null}
+                    </div>
+                    <div className="card">
+                      <div className="card-heading">{card.title}</div>
+                      <div className="topic-subtext">{card.description}</div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

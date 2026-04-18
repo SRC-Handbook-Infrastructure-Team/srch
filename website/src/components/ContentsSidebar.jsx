@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, VStack, Icon } from "@chakra-ui/react";
 import { LuChevronDown } from "react-icons/lu";
+import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 import {
   getSections,
   getSubsections,
@@ -46,14 +47,6 @@ import {
    ========================================================================== */
 
 /* ----------------------------- Helpers ------------------------------------ */
-// WHY: Stable section number ordering for labels. If not found, fallback to order or index.
-const SECTION_NUMBER_MAP = {
-  privacy: 1,
-  accessibility: 2,
-  "automated-decision-making": 3,
-  "generative-ai": 4,
-};
-
 // WHY: Produce a, b, c... aa, ab... for subsection labels.
 function indexToLetter(index) {
   let s = "";
@@ -205,33 +198,19 @@ export default function ContentsSidebar({
             )
           : [];
 
-        // 2) Filter allowed sections (defensive)
-        const ALLOWED_SECTION_IDS = new Set([
-          "privacy",
-          "accessibility",
-          "automatedDecisionMaking",
-          "generativeAI",
-        ]);
-        const filteredSections = sortedSections.filter(
-          (s) => s && ALLOWED_SECTION_IDS.has(s.id),
-        );
-
-        if (!isAlive) return;
-        setSections(filteredSections);
-
-        // 3) Fetch subsections in PARALLEL for speed
-        const subFetches = filteredSections.map((section) =>
+        // 2) Fetch subsections in PARALLEL for speed
+        const subFetches = sortedSections.map((section) =>
           getSubsections(section.id),
         );
         const subResults = await Promise.all(subFetches);
 
         if (!isAlive) return;
 
-        // 4) Sanitize + normalize subsections per section
+        // 3) Sanitize + normalize subsections per section
         const subsectionsMap = {};
         const expandStateMap = {};
 
-        filteredSections.forEach((section, idx) => {
+        sortedSections.forEach((section, idx) => {
           const rawSubsections = subResults[idx];
 
           if (rawSubsections && rawSubsections.length > 0) {
@@ -266,6 +245,14 @@ export default function ContentsSidebar({
           }
         });
 
+        const filteredSections = sortedSections.filter(
+          (section) =>
+            Array.isArray(subsectionsMap[section.id]) &&
+            subsectionsMap[section.id].length > 0,
+        );
+
+        setSections(filteredSections);
+
         setSubsections(subsectionsMap);
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
 
@@ -280,7 +267,7 @@ export default function ContentsSidebar({
           }));
         }
 
-        // 5) If no section in URL, navigate to the first allowed section.
+        // 4) If no section in URL, navigate to the first available section.
         if (
           !currentSectionId &&
           filteredSections.length > 0 &&
@@ -434,12 +421,9 @@ export default function ContentsSidebar({
     });
   }, [currentSectionId, fetchHeadingsForSection]);
 
-  // WHY: Resolve display number once (prefers explicit mapping).
-  const resolveDisplayNumber = useCallback((section, idx) => {
-    return (
-      SECTION_NUMBER_MAP[section.id] ??
-      (typeof section.order === "number" ? section.order + 1 : idx + 1)
-    );
+  // WHY: Section numbers follow the rendered markdown order.
+  const resolveDisplayNumber = useCallback((_section, idx) => {
+    return idx + 1;
   }, []);
 
   /* =========================================================================
@@ -593,22 +577,13 @@ export default function ContentsSidebar({
             onClick={toggleExpandCollapse}
             aria-pressed={allExpanded}
           >
-            {allExpanded ? "Collapse all" : "Expand all"}
-            <span
+            <Icon
+              as={allExpanded ? BsArrowsCollapse : BsArrowsExpand}
               className="icon-double-chevron"
               aria-hidden="true"
-              style={{
-                marginLeft: 6,
-                transform: allExpanded ? "rotate(180deg)" : "none",
-              }}
-            >
-              <svg viewBox="0 0 10 6">
-                <path d="M1 5l4-4 4 4" />
-              </svg>
-              <svg viewBox="0 0 10 6" style={{ transform: "translateY(-2px)" }}>
-                <path d="M1 5l4-4 4 4" />
-              </svg>
-            </span>
+              boxSize="1em"
+            />
+            {allExpanded ? "Collapse Sections" : "Expand Sections"}
           </button>
         </div>
       </div>

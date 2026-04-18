@@ -16,7 +16,7 @@ export default function useResizableSidebar({
   onStopResize = () => {},
   getDynamicBounds,
 } = {}) {
-  const defaultWidth = 300;
+  const defaultWidth = 322;
   const minWidth = 300;
   const [maxWidth, setMaxWidthState] = useState(calculateMax());
   const [width, setWidthState] = useState(defaultWidth);

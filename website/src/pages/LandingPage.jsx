@@ -1,6 +1,6 @@
 import "../styles/LandingPage.css";
 import "../styles/Home.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import { LuChevronRight } from "react-icons/lu";
@@ -11,14 +11,7 @@ import MarkdownRenderer, {
   getPreloadedMarkdownContent,
   warmMarkdownContent,
 } from "../util/MarkdownRenderer";
-import privacyIconLight from "../assets/privacy-icon.svg";
-import privacyIconDark from "../assets/privacy-icon_white.svg";
-import accessibilityIconLight from "../assets/accessibility-icon.svg";
-import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
-import automatedIconLight from "../assets/automatedDecisionMaking-icon.svg";
-import automatedIconDark from "../assets/automatedDecisionMaking-icon_white.svg";
-import generativeAiIconLight from "../assets/generativeAI-icon.svg";
-import generativeAiIconDark from "../assets/generativeAI-icon_white.svg";
+import { getSectionIconById } from "../util/sectionIcons";
 
 function prettifySlug(slug = "") {
   return String(slug)
@@ -31,18 +24,7 @@ function prettifySlug(slug = "") {
 }
 
 function getSectionIcon(sectionId, theme) {
-  switch (sectionId) {
-    case "privacy":
-      return theme === "dark" ? privacyIconDark : privacyIconLight;
-    case "accessibility":
-      return theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
-    case "automatedDecisionMaking":
-      return theme === "dark" ? automatedIconDark : automatedIconLight;
-    case "generativeAI":
-      return theme === "dark" ? generativeAiIconDark : generativeAiIconLight;
-    default:
-      return null;
-  }
+  return getSectionIconById(sectionId, theme);
 }
 
 function getSubsectionPreview(content) {
@@ -57,7 +39,7 @@ function getSubsectionPreview(content) {
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1")
     // Remove headings, quotes, list markers, and footnote syntax.
-    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    .replace(/^\s{0,3}#{1,6}\s+.*$/gm, "")
     .replace(/^\s{0,3}>\s?/gm, "")
     .replace(/^\s*[-*+]\s+/gm, "")
     .replace(/^\s*\d+\.\s+/gm, "")
@@ -74,6 +56,17 @@ function getSubsectionPreview(content) {
 
   if (!plain) return "";
   return plain;
+}
+
+// Convert index to letter: 0->a, 1->b, ... 25->z, 26->aa, etc.
+function indexToLetter(index) {
+  let s = "";
+  let i = index;
+  do {
+    s = String.fromCharCode(97 + (i % 26)) + s;
+    i = Math.floor(i / 26) - 1;
+  } while (i >= 0);
+  return s;
 }
 
 function LandingPage() {
@@ -95,12 +88,26 @@ function LandingPage() {
     cachedContent?.frontmatter?.title || "",
   );
   const [theme, setTheme] = useState("light");
+  const [collapseColumns, setCollapseColumns] = useState(false);
+  const twoColumnRef = useRef(null);
+  const collapseWidthRef = useRef(null);
 
   const formattedTitle = useMemo(() => {
     return pageTitle && pageTitle.trim()
       ? pageTitle.trim()
       : prettifySlug(sectionId || "");
   }, [pageTitle, sectionId]);
+
+  const sectionNumberById = useMemo(() => {
+    const map = {};
+    const navSections = cachedNavigation?.sections || [];
+    navSections.forEach((section, index) => {
+      if (section?.id) {
+        map[section.id] = index + 1;
+      }
+    });
+    return map;
+  }, [cachedNavigation]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -181,6 +188,75 @@ function LandingPage() {
     };
   }, [sectionId, navigate]);
 
+  useEffect(() => {
+    setCollapseColumns(false);
+    collapseWidthRef.current = null;
+  }, [sectionId]);
+
+  useEffect(() => {
+    const container = twoColumnRef.current;
+    if (!container || subsections.length === 0) return;
+
+    let rafId = null;
+
+    const evaluateCollapse = () => {
+      const titleEls = Array.from(
+        container.querySelectorAll(".landing-outline-card-title"),
+      );
+      if (titleEls.length === 0) return;
+
+      const hasMeasurableWidth = titleEls.some((el) => el.clientWidth > 0);
+      if (!hasMeasurableWidth) return;
+
+      const containerWidth = container.clientWidth || 0;
+
+      if (collapseColumns) {
+        const collapseWidth = collapseWidthRef.current;
+        if (
+          typeof collapseWidth === "number" &&
+          containerWidth < collapseWidth + 96
+        ) {
+          return;
+        }
+      }
+
+      const shouldCollapse = titleEls.some(
+        (el) => el.scrollWidth > el.clientWidth + 2,
+      );
+
+      if (shouldCollapse) {
+        collapseWidthRef.current = containerWidth;
+      }
+
+      setCollapseColumns((prev) =>
+        prev === shouldCollapse ? prev : shouldCollapse,
+      );
+    };
+
+    const scheduleEvaluation = () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(evaluateCollapse);
+    };
+
+    scheduleEvaluation();
+
+    const observer = new ResizeObserver(() => {
+      scheduleEvaluation();
+    });
+
+    observer.observe(container);
+    const titleEls = container.querySelectorAll(".landing-outline-card-title");
+    titleEls.forEach((el) => observer.observe(el));
+
+    window.addEventListener("resize", scheduleEvaluation, { passive: true });
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      observer.disconnect();
+      window.removeEventListener("resize", scheduleEvaluation);
+    };
+  }, [subsections, collapseColumns]);
+
   const handleNavigation = (targetId) => {
     if (!targetId) return;
     if (targetId.includes("/")) {
@@ -194,8 +270,8 @@ function LandingPage() {
 
   return (
     <>
-      <div className="upper-content landing-upper-content">
-        <div className="upper-text-section">
+      <div className="landing-upper-content">
+        <div className="landing-upper-text-section">
           <div className="landing-title" id="landing-title">
             {sectionIcon && (
               <img
@@ -210,59 +286,80 @@ function LandingPage() {
       </div>
 
       <div className="about-lower-content landing-lower-content">
-        <section className="about-section">
-          {mainContent && (
-            <Box>
-              <MarkdownRenderer
-                content={mainContent}
-                sidebar={sidebar}
-                sectionId={sectionId}
-                subsectionId=""
-                onDrawerOpen={() => {}}
-                onNavigation={handleNavigation}
-                highlight={null}
-              />
-            </Box>
-          )}
+        <div
+          ref={twoColumnRef}
+          className={`landing-two-column-container ${collapseColumns ? "is-collapsed" : ""}`.trim()}
+        >
           {subsections.length > 0 && (
-            <div className="landing-outline" aria-label="Primer Outline">
-              <div className="landing-outline-list">
-                {subsections.map((sub, index) => (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    className="landing-outline-row"
-                    onClick={() => navigate(`/${sectionId}/${sub.id}`)}
-                    onMouseEnter={() => warmMarkdownContent(sectionId, sub.id)}
-                    onFocus={() => warmMarkdownContent(sectionId, sub.id)}
-                    aria-label={`Open ${sub.title}`}
-                  >
-                    <span className="landing-outline-marker" aria-hidden="true">
-                      <span className="landing-outline-dot" />
-                      {index < subsections.length - 1 && (
-                        <span className="landing-outline-stem" />
-                      )}
-                    </span>
-                    <span className="landing-outline-card">
-                      <span className="landing-outline-card-title">
-                        {sub.title}
-                      </span>
-                      {sub.preview && (
-                        <span className="landing-outline-card-preview">
-                          {sub.preview}
-                        </span>
-                      )}
-                      <LuChevronRight
-                        className="landing-outline-chevron"
+            <div className="landing-outline-column">
+              <div className="landing-outline" aria-label="Primer Outline">
+                <div className="landing-outline-list">
+                  {subsections.map((sub, index) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      className="landing-outline-row"
+                      onClick={() => navigate(`/${sectionId}/${sub.id}`)}
+                      onMouseEnter={() =>
+                        warmMarkdownContent(sectionId, sub.id)
+                      }
+                      onFocus={() => warmMarkdownContent(sectionId, sub.id)}
+                      aria-label={`Open ${(() => {
+                        const sectionNum = sectionNumberById[sectionId] || 1;
+                        const subLetter = indexToLetter(index);
+                        return `${sectionNum}.${subLetter}. ${sub.title}`;
+                      })()}`}
+                    >
+                      <span
+                        className="landing-outline-marker"
                         aria-hidden="true"
-                      />
-                    </span>
-                  </button>
-                ))}
+                      >
+                        <span className="landing-outline-dot" />
+                        {index < subsections.length - 1 && (
+                          <span className="landing-outline-stem" />
+                        )}
+                      </span>
+                      <span className="landing-outline-card">
+                        <span className="landing-outline-card-title">
+                          {(() => {
+                            const sectionNum =
+                              sectionNumberById[sectionId] || 1;
+                            const subLetter = indexToLetter(index);
+                            return `${sectionNum}.${subLetter}. ${sub.title}`;
+                          })()}
+                        </span>
+                        {sub.preview && (
+                          <span className="landing-outline-card-preview">
+                            {sub.preview}
+                          </span>
+                        )}
+                        <LuChevronRight
+                          className="landing-outline-chevron"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
-        </section>
+          <section className="about-section landing-content-column">
+            {mainContent && (
+              <Box>
+                <MarkdownRenderer
+                  content={mainContent}
+                  sidebar={sidebar}
+                  sectionId={sectionId}
+                  subsectionId=""
+                  onDrawerOpen={() => {}}
+                  onNavigation={handleNavigation}
+                  highlight={null}
+                />
+              </Box>
+            )}
+          </section>
+        </div>
       </div>
     </>
   );

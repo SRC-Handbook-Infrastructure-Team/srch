@@ -2,49 +2,25 @@ import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
 import logoLight from "../assets/srch_logo.svg";
 import logoDark from "../assets/srch_logo_white.svg";
-import privacyIconLight from "../assets/privacy-icon.svg";
-import privacyIconDark from "../assets/privacy-icon_white.svg";
-import automatedDecisionMakingIconLight from "../assets/automatedDecisionMaking-icon.svg";
-import automatedDecisionMakingIconDark from "../assets/automatedDecisionMaking-icon_white.svg";
-import generativeAIIconLight from "../assets/generativeAI-icon.svg";
-import generativeAIIconDark from "../assets/generativeAI-icon_white.svg";
-import accessibilityIconLight from "../assets/accessibility-icon.svg";
-import accessibilityIconDark from "../assets/accessibility-icon_white.svg";
 import { Box, Image } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import {
   getPreloadedNavigationData,
   preloadNavigationData,
 } from "../util/MarkdownRenderer";
+import { getSectionIconById } from "../util/sectionIcons";
 
 function Footer({
   withSidebars = false,
   isLeftOpen = false,
-  leftWidth = 300,
+  leftWidth = 322,
   isRightOpen = false,
   rightWidth = 300,
 }) {
   const navigate = useNavigate();
   const footerRef = useRef(null);
   const [theme, setTheme] = useState("light");
-  const [moduleLinks, setModuleLinks] = useState([
-    { id: "privacy", title: "Privacy", slug: "/privacy" },
-    {
-      id: "accessibility",
-      title: "Accessibility",
-      slug: "/accessibility",
-    },
-    {
-      id: "automatedDecisionMaking",
-      title: "Automated Decision Making",
-      slug: "/automatedDecisionMaking",
-    },
-    {
-      id: "generativeAI",
-      title: "Generative AI",
-      slug: "/generativeAI",
-    },
-  ]);
+  const [moduleLinks, setModuleLinks] = useState([]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -75,8 +51,6 @@ function Footer({
         }
 
         const sections = preloaded?.sections || [];
-        const subsectionsMap = preloaded?.subsections || {};
-
         if (!isMounted || !Array.isArray(sections) || sections.length === 0) {
           return;
         }
@@ -140,30 +114,8 @@ function Footer({
   }, []);
 
   const getLogo = () => (theme === "dark" ? logoDark : logoLight);
-  const getPrivacyIcon = () =>
-    theme === "dark" ? privacyIconDark : privacyIconLight;
-  const getAutomatedDecisionMakingIcon = () =>
-    theme === "dark"
-      ? automatedDecisionMakingIconDark
-      : automatedDecisionMakingIconLight;
-  const getGenerativeAIIcon = () =>
-    theme === "dark" ? generativeAIIconDark : generativeAIIconLight;
-  const getAccessibilityIcon = () =>
-    theme === "dark" ? accessibilityIconDark : accessibilityIconLight;
-
   function getModuleIconById(sectionId) {
-    switch (sectionId) {
-      case "privacy":
-        return getPrivacyIcon();
-      case "accessibility":
-        return getAccessibilityIcon();
-      case "automatedDecisionMaking":
-        return getAutomatedDecisionMakingIcon();
-      case "generativeAI":
-        return getGenerativeAIIcon();
-      default:
-        return getPrivacyIcon();
-    }
+    return getSectionIconById(sectionId, theme);
   }
 
   return (
@@ -197,25 +149,31 @@ function Footer({
             </div>
             <div>
               <div className="heading-footer">Modules</div>
-              {moduleLinks.map((module) => (
-                <div className="primer-link-primer-footer" key={module.id}>
-                  <div className="primer-link-photo-primer-footer">
-                    <img
-                      className="footer-icon"
-                      src={getModuleIconById(module.id)}
-                      alt={`${module.title} Icon`}
-                      width={24}
-                      height={24}
-                    />
+              {moduleLinks.map((module) => {
+                const iconSrc = getModuleIconById(module.id);
+
+                return (
+                  <div className="primer-link-primer-footer" key={module.id}>
+                    <div className="primer-link-photo-primer-footer">
+                      {iconSrc ? (
+                        <img
+                          className="footer-icon"
+                          src={iconSrc}
+                          alt={`${module.title} Icon`}
+                          width={24}
+                          height={24}
+                        />
+                      ) : null}
+                    </div>
+                    <button
+                      onClick={() => navigate(module.slug)}
+                      className="module-link-primer-footer"
+                    >
+                      {module.title}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => navigate(module.slug)}
-                    className="module-link-primer-footer"
-                  >
-                    {module.title}
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div className="footer-links">
               <div className="heading-footer">Quick Links</div>

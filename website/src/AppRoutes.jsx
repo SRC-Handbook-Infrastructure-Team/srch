@@ -1,5 +1,6 @@
 import "./styles/App.css";
 import ScrollManager from "./components/ScrollManager";
+import ScrollProgressBar from "./components/ScrollProgressBar";
 import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
@@ -15,6 +16,7 @@ import {
   preloadNavigationData,
   preloadAllMarkdownContent,
 } from "./util/MarkdownRenderer";
+import { initializeIndex } from "./util/SearchEngine";
 
 function AppRoutes() {
   const location = useLocation();
@@ -35,12 +37,27 @@ function AppRoutes() {
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
   useEffect(() => {
-    preloadNavigationData().catch((error) => {
-      console.error("Error preloading sidebar navigation:", error);
-    });
+    Promise.allSettled([
+      preloadNavigationData(),
+      preloadAllMarkdownContent(),
+      initializeIndex(),
+    ]).then((results) => {
+      const [navResult, markdownResult, searchResult] = results;
 
-    preloadAllMarkdownContent().catch((error) => {
-      console.error("Error preloading markdown content:", error);
+      if (navResult.status === "rejected") {
+        console.error("Error preloading sidebar navigation:", navResult.reason);
+      }
+
+      if (markdownResult.status === "rejected") {
+        console.error(
+          "Error preloading markdown content:",
+          markdownResult.reason,
+        );
+      }
+
+      if (searchResult.status === "rejected") {
+        console.error("Error preloading search index:", searchResult.reason);
+      }
     });
   }, []);
 
@@ -50,24 +67,25 @@ function AppRoutes() {
       <NavBar layoutMode="overlay" />
 
       {isLandingPage ? (
-        <SidebarLayout>
-          <Routes>
-            <Route path="/:sectionId" element={<LandingPage />} />
-          </Routes>
-        </SidebarLayout>
+        <Routes>
+          <Route path="/:sectionId" element={<LandingPage />} />
+        </Routes>
       ) : isMarkdownPage ? (
-        <SidebarLayout>
-          <Routes>
-            <Route
-              path="/:sectionId/:subsectionId"
-              element={<MarkdownPage />}
-            />
-            <Route
-              path="/:sectionId/:subsectionId/:term"
-              element={<MarkdownPage />}
-            />
-          </Routes>
-        </SidebarLayout>
+        <>
+          <ScrollProgressBar />
+          <SidebarLayout>
+            <Routes>
+              <Route
+                path="/:sectionId/:subsectionId"
+                element={<MarkdownPage />}
+              />
+              <Route
+                path="/:sectionId/:subsectionId/:term"
+                element={<MarkdownPage />}
+              />
+            </Routes>
+          </SidebarLayout>
+        </>
       ) : (
         <>
           <Routes>

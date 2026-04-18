@@ -142,7 +142,7 @@
 }
 
 .topic-card {
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   flex-direction: row;
@@ -227,11 +227,19 @@ html[data-theme="light"] .topic-card {
 }
 
 .card-grid {
+  --card-grid-gap: 24px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: var(--card-grid-gap);
   width: 80vw;
   margin: 0 auto;
+}
+
+/* Center an orphan item in the last row while keeping one-card column width. */
+.card-grid > .topic-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc((100% - var(--card-grid-gap)) / 2);
 }
 
 @media (max-width: 900px) {
@@ -239,6 +247,11 @@ html[data-theme="light"] .topic-card {
     grid-template-columns: 1fr;
     width: calc(100% - 13.22vw);
     justify-content: center;
+  }
+
+  .card-grid > .topic-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    width: 100%;
   }
 
   .intro-text {
@@ -279,26 +292,22 @@ html[data-theme="light"] .topic-card {
 .topic-subtext {
   align-self: stretch;
   color: var(--color-text);
-  line-height: normal;
+  line-height: 1.45;
   font-size: 16px;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   word-wrap: break-word;
-}
-
-.line-divider {
-  position: relative;
-  width: 100vw !important;
-  height: 2px;
-  background: var(--color-border);
-  margin: 0 auto;
-  z-index: -1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  min-height: calc(1.45em * 3);
 }
 
 .content-section {
   width: 100vw;
-  padding-top: var(--section-spacing);
-  padding-bottom: var(--section-spacing);
+  padding-bottom: 2.5rem;
   align-self: center;
   justify-content: center;
   flex-direction: column;
@@ -327,15 +336,15 @@ html[data-theme="light"] .topic-card {
 .section-title {
   align-self: stretch;
   text-align: center;
-  color: var(--color-text);
-  font-size: var(--large-text);
-  font-family: var(--title-font);
-  font-weight: var(--title-weight);
-  line-height: normal;
+  color: var(--color-header);
+  font-size: 2.5rem;
+  font-family: "Funnel Sans", sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
   justify-self: center;
   word-wrap: break-word;
-  margin-bottom: 1.5rem;
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .how-to-section {

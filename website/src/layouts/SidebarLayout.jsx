@@ -38,8 +38,8 @@ export default function SidebarLayout({ children }) {
     typeof window !== "undefined" ? window.innerWidth : 1440,
   );
   // Track sidebar widths for layout calculation
-  // const [leftWidth, setLeftWidth] = useState(300);
-  const leftWidth = 300;
+  // const [leftWidth, setLeftWidth] = useState(322);
+  const leftWidth = 322;
   const rightWidth = 300;
 
   // --- Layout mode logic: returns "wide" or "overlay" ---
@@ -585,7 +585,22 @@ export default function SidebarLayout({ children }) {
             }
             title={leftSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {leftSidebarCollapsed ? ">" : "<"}
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              focusable="false"
+              aria-hidden="true"
+              className={`header-toggle-icon ${leftSidebarCollapsed ? "is-collapsed" : "is-open"}`}
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
           </button>
         )}
         <main

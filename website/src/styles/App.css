@@ -13,7 +13,7 @@
   --mobile-menu-offset: 0px;
   --mobile-menu-height: 250px;
   --mobile-menu-height-expanded: 350px;
-  --left-sidebar-width: 300px;
+  --left-sidebar-width: 322px;
   --right-sidebar-width: 300px;
 
   --color-text: #343434;
@@ -195,4 +195,38 @@ mark {
 html.right-open .right-sidebar {
   transform: translateX(0);
   opacity: 1;
+}
+
+.progress-bar {
+  position: fixed;
+  top: var(--nav-bar-height);
+  left: 0;
+  z-index: 49;
+  width: 100%;
+  height: 4px;
+  max-width: 100vw;
+  pointer-events: none;
+  background: transparent;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--color-red-gradient);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+:root[data-theme="dark"] .progress-bar-fill {
+  background: var(--color-text-hover);
+}
+
+.line-divider {
+  position: relative;
+  width: 100vw !important;
+  height: 2px;
+  background: var(--color-border);
+  margin: 0 auto;
+  z-index: -1;
 }

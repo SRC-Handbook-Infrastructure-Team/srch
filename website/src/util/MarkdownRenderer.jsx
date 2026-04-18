@@ -102,6 +102,116 @@ function stripFurtherReadingBlocks(markdown) {
   };
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function inlineMarkdownToHtml(text) {
+  let html = escapeHtml(text);
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  return html;
+}
+
+function timelineBodyToHtml(markdownBody) {
+  const lines = String(markdownBody || "").split(/\r?\n/);
+  const blocks = [];
+  let paragraphBuffer = [];
+
+  const flushParagraph = () => {
+    if (paragraphBuffer.length === 0) return;
+    const text = paragraphBuffer.join(" ").replace(/\s+/g, " ").trim();
+    if (text) {
+      blocks.push(`<p>${inlineMarkdownToHtml(text)}</p>`);
+    }
+    paragraphBuffer = [];
+  };
+
+  for (const lineRaw of lines) {
+    const line = lineRaw.trim();
+    if (!line) {
+      flushParagraph();
+      continue;
+    }
+
+    const imageMatch = line.match(
+      /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)$/,
+    );
+    if (imageMatch) {
+      flushParagraph();
+      const alt = escapeHtml(imageMatch[1]);
+      const src = escapeHtml(imageMatch[2]);
+      const title = imageMatch[3] ? String(imageMatch[3]).trim() : "";
+      if (title === "wrap-right") {
+        blocks.push(
+          `<img class="timeline-event-image markdown-content-image markdown-content-image--float-right timeline-event-image--wrap-right" src="${src}" alt="${alt}" />`,
+        );
+      } else {
+        blocks.push(
+          `<img class="timeline-event-image" src="${src}" alt="${alt}" />`,
+        );
+      }
+      continue;
+    }
+
+    paragraphBuffer.push(line);
+  }
+
+  flushParagraph();
+
+  return blocks.join("\n");
+}
+
+function renderTimelineBlock(blockContent) {
+  const eventPattern =
+    /\[(?<date>[^\]\n]+?)\]\s*\n(?<body>[\s\S]*?)(?=\n\[(?:[^\]\n]+?)\]\s*\n|$)/g;
+
+  const events = [];
+  let match;
+
+  while ((match = eventPattern.exec(blockContent)) !== null) {
+    const rawDate = String(match.groups?.date || "").trim();
+    const body = String(match.groups?.body || "").trim();
+    if (!rawDate || !body) continue;
+
+    const isCurrent = rawDate.endsWith("*");
+    const date = isCurrent ? rawDate.slice(0, -1).trim() : rawDate;
+
+    events.push({ date, isCurrent, bodyHtml: timelineBodyToHtml(body) });
+  }
+
+  if (events.length === 0) return blockContent;
+
+  const items = events
+    .map(
+      (event) => `<div class="timeline-event">
+  <div class="timeline-date-pill">
+    <span class="timeline-marker${event.isCurrent ? " is-current" : ""}"></span>
+    <span class="timeline-date-text">${escapeHtml(event.date)}</span>
+  </div>
+  <div class="timeline-event-content">
+${event.bodyHtml}
+  </div>
+</div>`,
+    )
+    .join("\n");
+
+  return `<div class="timeline-block">\n${items}\n</div>`;
+}
+
+function transformTimelineBlocks(markdown) {
+  return String(markdown || "").replace(
+    /:::timeline\s*\n([\s\S]*?)\n:::/g,
+    (_, blockContent) => renderTimelineBlock(blockContent),
+  );
+}
+
 export function highlightText(node, highlight) {
   if (!highlight || (!node && node !== 0)) return node;
   if (
@@ -235,7 +345,13 @@ export const getSections = async () => {
           !processedSections.has(sectionId)
         ) {
           processedSections.add(sectionId);
-          const content = await allMarkdownFiles[path]();
+          let content;
+          try {
+            content = await allMarkdownFiles[path]();
+          } catch (error) {
+            console.warn(`Skipping unreadable markdown file: ${path}`, error);
+            continue;
+          }
           const { content: cleanContent, frontmatter } =
             parseFrontmatter(content);
 
@@ -280,7 +396,13 @@ export const getSubsections = async (sectionId) => {
           !processedSubsections.has(subsectionId)
         ) {
           processedSubsections.add(subsectionId);
-          const content = await allMarkdownFiles[path]();
+          let content;
+          try {
+            content = await allMarkdownFiles[path]();
+          } catch (error) {
+            console.warn(`Skipping unreadable markdown file: ${path}`, error);
+            continue;
+          }
           const { content: cleanContent, frontmatter } =
             parseFrontmatter(content);
 
@@ -309,15 +431,13 @@ let preloadedContentData = null;
 let preloadContentPromise = null;
 const contentCache = new Map();
 
-function getAllowedNavigationSections(sections = []) {
-  const ALLOWED_SECTION_IDS = new Set([
-    "privacy",
-    "accessibility",
-    "automatedDecisionMaking",
-    "generativeAI",
-  ]);
-
-  return sections.filter((s) => s && ALLOWED_SECTION_IDS.has(s.id));
+function getAllowedNavigationSections(sections = [], allSubsectionsMap = {}) {
+  return sections.filter(
+    (s) =>
+      s &&
+      Array.isArray(allSubsectionsMap[s.id]) &&
+      allSubsectionsMap[s.id].length > 0,
+  );
 }
 
 function sanitizeSubsections(rawSubsections = []) {
@@ -364,7 +484,10 @@ export async function preloadNavigationData() {
       }
     });
 
-    const filteredSections = getAllowedNavigationSections(sortedSections);
+    const filteredSections = getAllowedNavigationSections(
+      sortedSections,
+      allSubsectionsMap,
+    );
     const subsectionsMap = {};
     filteredSections.forEach((section) => {
       if (allSubsectionsMap[section.id]) {
@@ -572,7 +695,13 @@ export const getContent = async (sectionId, subsectionId) => {
      */
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
-        const content = await allMarkdownFiles[filePath]();
+        let content;
+        try {
+          content = await allMarkdownFiles[filePath]();
+        } catch (error) {
+          console.warn(`Failed to load markdown file: ${filePath}`, error);
+          return null;
+        }
         const { content: cleanContent, frontmatter } =
           parseFrontmatter(content);
 
@@ -725,6 +854,7 @@ function MarkdownRenderer({
       return { main: "", sidebar: {}, footnotes: [], footnoteOriginMap: {} };
 
     let raw = typeof content === "string" ? content : content.content || "";
+    raw = transformTimelineBlocks(raw);
 
     const sidebarRegex = /^##\s+Sidebar\s*$/im;
     const sidebarMatch = raw.match(sidebarRegex);
@@ -987,28 +1117,27 @@ function MarkdownRenderer({
 
   const components = useMemo(
     () => ({
-      h1: (props) => (
-        <h1
-          style={{
-            marginTop: "2.5rem",
-            marginBottom: "1.25rem",
-            fontSize: "2rem",
-            lineHeight: "1.15",
-            color: "var(--color-header)",
-            fontFamily: "Funnel Sans, sans-serif",
-            fontWeight: 700,
-          }}
-          {...props}
-        >
-          {Array.isArray(props.children)
-            ? props.children.map((child) =>
-                typeof child === "string"
-                  ? highlightText(child, effectiveHighlight)
-                  : child,
-              )
-            : props.children}
-        </h1>
-      ),
+      h1: ({ children, ...props }) => {
+        const id = createIdFromHeading(children);
+        const childrenArray = Array.isArray(children) ? children : [children];
+        return (
+          <h1
+            id={id}
+            style={{
+              marginTop: "2.5rem",
+              marginBottom: "1.25rem",
+              fontSize: "2rem",
+              lineHeight: "1.15",
+              color: "var(--color-header)",
+              fontFamily: "Funnel Sans, sans-serif",
+              fontWeight: 700,
+            }}
+            {...props}
+          >
+            {highlightText(childrenArray, effectiveHighlight)}
+          </h1>
+        );
+      },
       h2: ({ children, ...props }) => {
         const id = createIdFromHeading(children);
         const childrenArray = Array.isArray(children) ? children : [children];
@@ -1109,6 +1238,7 @@ function MarkdownRenderer({
           <a
             {...props}
             style={{
+              fontWeight: "600",
               textDecoration: isFootnoteLink ? "none" : "underline",
               color: "var(--color-text-hover)",
             }}
@@ -1292,20 +1422,34 @@ function MarkdownRenderer({
           {...props}
         />
       ),
-      img: (props) => (
-        <img
-          src={props.src}
-          alt={props.alt || ""}
-          style={{
-            maxWidth: "80%",
-            maxHeight: "500px",
-            objectFit: "contain",
-            borderRadius: "6px",
-            margin: "1.5em auto",
-            display: "block",
-          }}
-        />
-      ),
+      img: (props) => {
+        const existingClassName = String(props.className || "").trim();
+        const hasWrapRightClass =
+          /(^|\s)timeline-event-image--wrap-right(\s|$)/.test(
+            existingClassName,
+          );
+        const isWrapRight = props.title === "wrap-right" || hasWrapRightClass;
+        const markdownClass = isWrapRight
+          ? "markdown-content-image markdown-content-image--float-right"
+          : "markdown-content-image markdown-content-image--centered";
+        const mergedClassName = [existingClassName, markdownClass]
+          .filter(Boolean)
+          .join(" ");
+
+        return (
+          <img
+            src={props.src}
+            alt={props.alt || ""}
+            title={isWrapRight ? undefined : props.title}
+            className={mergedClassName}
+            style={{
+              maxHeight: "500px",
+              objectFit: "contain",
+              borderRadius: "6px",
+            }}
+          />
+        );
+      },
 
       "sidebar-ref": ({ node }) => {
         let raw = node.properties?.["term"] || "";
@@ -1363,6 +1507,7 @@ function MarkdownRenderer({
             flexShrink={1}
             maxW="100%"
             minW={0}
+            fontWeight={600}
           >
             <Text
               as="span"
