@@ -12,11 +12,7 @@ import Acknowledgments from "./pages/Acknowledgments";
 import SearchResultsPage from "./pages/SearchResultsPage";
 import SidebarLayout from "./layouts/SidebarLayout";
 import About from "./pages/About";
-import {
-  preloadNavigationData,
-  preloadAllMarkdownContent,
-} from "./util/MarkdownRenderer";
-import { initializeIndex } from "./util/SearchEngine";
+import { preloadNavigationData } from "./util/MarkdownRenderer";
 
 function AppRoutes() {
   const location = useLocation();
@@ -26,7 +22,7 @@ function AppRoutes() {
     location.pathname.startsWith("/acknowledgments");
   const isAboutPage = location.pathname.startsWith("/about");
   const isHomePage =
-    (location.pathname === "/") | (location.pathname === "/srch/");
+    location.pathname === "/" || location.pathname === "/srch/";
   const isLandingPage =
     !isHomePage &&
     !isSearchPage &&
@@ -37,27 +33,8 @@ function AppRoutes() {
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
   useEffect(() => {
-    Promise.allSettled([
-      preloadNavigationData(),
-      preloadAllMarkdownContent(),
-      initializeIndex(),
-    ]).then((results) => {
-      const [navResult, markdownResult, searchResult] = results;
-
-      if (navResult.status === "rejected") {
-        console.error("Error preloading sidebar navigation:", navResult.reason);
-      }
-
-      if (markdownResult.status === "rejected") {
-        console.error(
-          "Error preloading markdown content:",
-          markdownResult.reason,
-        );
-      }
-
-      if (searchResult.status === "rejected") {
-        console.error("Error preloading search index:", searchResult.reason);
-      }
+    preloadNavigationData().catch((error) => {
+      console.error("Error preloading sidebar navigation:", error);
     });
   }, []);
 

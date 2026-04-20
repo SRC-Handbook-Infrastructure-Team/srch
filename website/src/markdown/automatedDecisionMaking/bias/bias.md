@@ -1,276 +1,211 @@
 ---
-title: Sources of Bias
-order: 3
+title: Bias in Automated Decision-Making Systems
+order: 2
 final: false
 ---
 
 ## What is Bias?
 
-Bias is any **systemic process that discriminates against or favors a person or group over another based on stereotypical or inaccurate assumptions of the person or group**.[^1] Like people, algorithms are vulnerable to biases that make their decisions unfair.[^2] As automated-decision making systems (ADS) are increasingly embedded into day-to-day life, it is crucial to understand sources of bias in order to mitigate harms and enhance fairness.
+Automated decision-making (ADM) systems are increasingly embedded in day-to-day life: the Stanford AI index reports that as of 2024, 78% of businesses were working to incorporate AI into operations, that GPT 4 can outperform human doctors in key clinical tasks and that as of 2025, Waymo provides over 150,000 rides in self-driving cars per week.[^1]
 
-## Sources of Bias in Automated-Decision Making Systems
+Decisions made by ADMs, like human decision making, can be flawed. One of the primary ways in which decisions can be flawed is due to bias. **Bias** is any systemic process that discriminates against or favors a person or group over another based on stereotypical or inaccurate assumptions of the person or group.
 
-We will organize sources of bias in ADS into two categories based on where they occur in the {ai-dev-lifecycle}. {Data-Generation} is the first phase of the AI development lifecycle, where data is generated, measured, and collected from a sample population. **During the data generation phase, historical, representation, and measurement bias can occur.** {Model-Creation} is the second phase of the AI development lifecycle, where an architecture is defined, weights are trained, and finally the model is deployed in real-world settings. **During model creation, learning, aggregation, evaluation, and deployment bias can occur.** Understanding each source of bias and how it is introduced into AI systems provides a starting point for measuring and mitigating bias.[^3]
+Ultimately, society benefits from processes and decision makers that minimize bias. Understanding the ways in which ADM systems can be biased and the harms that may arise from those biases, allows one to make informed decisions about whether imperfect ADM outcomes or imperfect human decision making would ultimately lead to minimizing bias.
 
-### Bias in Data Generation
+For example, judges are imperfect decision makers. They often let high risk defendants out on bail, some are prone to be overly strict, all get hungry. Legal scholar Cass Sunstein argues that when evaluating the use of an AI risk prediction model in the justice system, the model should be evaluated against the imperfection of the current system.[^2] Evaluating systems of decision making and attempting to implement systems that minimize biases can help reduce harms caused by bias.
 
-#### Historical Bias
+**Types of Potential Harm from Bias in automated decision-making Systems:**  
+Biases in ADMs can lead to material harm to peoples' health and livelihood making it essential that ADM system creators and implementers are aware of the potential biases that may arise.
 
-**Historical bias is when a model becomes biased through data that reflects societal stereotypes.** This can occur even with perfect data sampling methods, as a biased society leads to biased data.
+**Allocative harm** occurs when biased systems deny individuals or groups access to resources, opportunities, or benefits.
 
-{Historical-Bias-Case-Study--Gender-Bias-in-Word-Embeddings}
+**Representational Harm** arises when certain people or groups are stigmatized, stereotyped, or underrepresented, shaping how they are perceived and valued in society.
 
-#### Representation Bias
+## Sources of Bias in automated decision-making Systems
 
-**Representation bias occurs when datasets fail to include demographics, leading to underrepresentation.** Representation bias can happen if:
+We can organize sources of bias in ADM systems into three categories based on where they occur in the ADM system development life cycle: bias in data curation, bias in model creation and bias in model testing and deployment.
 
-1. the target population doesn’t reflect the use population
-2. if uneven sampling methods lead to underrepresentation, or
-3. if there is pre-existing underrepresentation within a population.
+Data Curation occurs when data is gathered, labeled and collected into data sets. Data sets are then employed in model creation to help train models to have proper responses to stimuli. Once models are created, they are then tested on new data sets to ensure that they respond appropriately and accurately before they are then deployed for their intended use. Biases can be introduced throughout all the stages of this process.
 
-For more information, see {here}.
+![Figure 1 description: A flowchart diagram illustrating sources of bias in machine learning data pipelines, flowing left to right. It begins with a "data generation" box feeding into a globe icon labeled "world," where red bold text marks "HISTORICAL BIAS." An arrow leads to a "population definition & sampling" step connecting to a crowd icon labeled "sample," marked with red bold text "REPRESENTATION BIAS." From there, a "measurement" step feeds into a cylinder labeled "dataset," marked with red bold text "MEASUREMENT BIAS." The dataset then flows through "preprocessing, train/test split" and branches into two outputs: "training data" and "test data." A second parallel lower pathway runs from "population definition & sampling" through "measurement" and "preprocessing, train/test split" to a final output labeled "benchmarks." The three bias types — Historical Bias, Representation Bias, and Measurement Bias — are highlighted in red throughout to indicate key failure points in the pipeline.](/assets/primer-photos/?)
 
-{Representation-Bias-Case-Study--Underrepresentation-In-Automated-Mental-Illness-Detection}
+**Figure 1:** Bias in Data Curation and Model Generation (adapted from Suresh et al.)_[^3]_
 
-{Why-Representation-Bias-in-AI-is-Different}
+## Bias in Data Curation
 
-#### Measurement Bias
+Bias can be introduced at the very start of the ADM lifecycle during **data curation**. Data curation is how data is generated, collected, represented, and measured. **Figure 2** below is a visual representation of bias in data curation, the first half of the ADM system lifecycle shown in **Figure 1**.
 
-**Measurement bias occurs when a measurement fails to represent the variable, person, or group being measured.**
+![Figure 2 description: A left-to-right flowchart showing sources of bias in machine learning data pipelines. Starting from "data generation" and a globe ("world"), the flow passes through population sampling, measurement, and preprocessing stages before splitting into "training data," "test data," and "benchmarks" outputs. Three bias types are labeled in red at key stages: "Historical Bias" at data generation, "Representation Bias" at population sampling, and "Measurement Bias" at measurement.](/assets/primer-photos/?)
 
-This can occur in two ways:
+**Figure 2:** Bias in Data Generation (adapted from Suresh et al.)[^4]
 
-- **Oversimplification:** If an overly simplistic measurement is used to represent a complex concept
-- **Differential Measurement**: If groups are measured differently
-- **Differential Accuracy**: If accuracy differs across groups
+During data curation, developers' decisions about what data to include, how to define variables, and which populations to represent all reflect **structural** factors, such as existing social hierarchies, institutional priorities, and historical inequities. The "structure" that shapes bias can be defined as the broader social, political, and economic context in which the data is produced.
 
-{Oversimplification-Case-Study-Healthcare-Proxies-In-High-Risk-Care-Management}
+Bias in **data curation** displays itself through **historical bias, representation bias, and measurement bias.** Each of these mechanisms describes a different way that social inequality, exclusion, or distortion can enter a dataset.
 
-{Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores}
+### Historical Bias
 
-![Summary of bias in the data generation pipeline](/assets/primer-photos/figure_1_bias_in_data_generation.png)  
-Figure 1: Bias in Data Generation (Suresh et al.)
+**Historical bias** occurs when a model's data reflects societal stereotypes. Even if a dataset perfectly reflects reality, it can still be historically biased because it reflects prejudices that exist in the real world.
 
-### Bias in Model Creation
+One example of historical bias is gender bias due to large language models being trained on data that reflects historical sexism.[^5]
 
-#### Aggregation Bias
+**Case Study: [Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes](https://arxiv.org/pdf/1711.08412)**
 
-**Aggregation bias occurs when distinct groups in a model are treated as one size fits all.** Underpinning aggregation bias is the assumption that sub-groups are homogenous enough to be treated the same in the dataset and processed together in aggregate, which is not always the case.
+**Garg et. al. (2017)**
 
-{Aggregation-Bias-Case-Study-AI-Based-Reading-Assistants-For-Readers-With-Dyslexia}
+When training data is input into a word embedding program, words are assigned vector representations within the multi-dimensional space. Associated words are positioned closer to each other in the high dimensional vector space as a result of shared context. Garg et. al., found that words associated with women are systematically closer to traditionally female occupations, adjectives and traits than words associated with men are to traditionally female occupations, adjectives and traits. Similar disparities in distance exist between racial groups and certain occupations, adjectives and traits. Their work laid the groundwork for subsequent research demonstrating how statistical patterns in training data associated with societal biases can lead to models that encode bias and reproduce it in their output.
 
-#### Learning Bias
+**Statistical Vs. Taste-Based discrimination**
 
-**Learning bias occurs when modeling decisions amplify performance disparities.** Choices like which loss function is used, how many epochs are trained for, and what the learning rate is can exacerbate existing performance disparities in the model.
+Historical bias creates the distinction between statistical discrimination and taste based discrimination.
 
-{Learning-Bias-Case-Study-Distillation-In-Medical-Models-Misses-Rare-Cancers}
+**Statistical discrimination** occurs in a limited information environment where agents form expectations based on factors often associated with membership in a certain group.
 
-#### Evaluation Bias
+**Taste-based discrimination** occurs due to an agent's prejudiced group preferences.[^6]
 
-**Evaluation bias occurs when evaluation benchmark datasets don’t represent the use population**.[^4]
+### Representation Bias
 
-{Evaluation-Bias-Case-Study-Facial-Expression-Recognition-In-The-Wild}
+**Representation bias** occurs when a model's dataset underrepresents or omits certain groups or attributes. This representation disparity can occur due to skewed sampling, unbalanced inclusion criteria, or limited diversity in the data sources.
 
-{Benefits-and-Risks-of-Benchmark-Datasets}
+**Sampling Bias:** when the method of data collection systematically excludes members of the target population.
 
-#### Deployment Bias
+**Example:** a dataset that does not include hyphenated last names being used to train a name-generation model
 
-**Deployment bias occurs when a model is used to solve a problem that it was not designed for.**
+**Underrepresentation Bias:** when the data available on the target population is insufficient to properly train the model.
 
-{Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label}
+**Example:** a dataset being used to train a model identifying cancer from MRI scans that does not have enough scans of rare cancers.
 
-![Bias in model creation pipeline](/assets/primer-photos/figure_2_model_creation_bias.png)  
-Figure 2: Bias in Model Creation (Suresh et al.)
+Underrepresentation bias was discovered by Huang and Huang in their work looking at data sets that commonly train image generating software.[^7]
 
-## Impact of Bias
+**Case Study: Representation Bias in [Image Generating Software](https://link.springer.com/article/10.1007/s00146-025-02533-1?utm)**
 
-The impact of bias in ADS is far reaching and never fully known. For an overview of the types of harm bias can cause, click {here}.
+**Huang and Huang**
+
+Huang and Huang found that with Generative Adversarial Networks (GANs), a type of image generating AI software, models will exacerbate societal biases and improperly represent minority groups. For example, if a GAN is asked to create images of engineers, it will overwhelmingly generate images of White males because images of White males were the primary images in the dataset that the model was trained on. In their analysis of AI image generating software, the models were shown to underrepresent minority groups because the training datasets did not include sufficient representation of minorities.
+
+When datasets overrepresent some demographics and underrepresent others, the resulting model will learn unevenly, performing well for majority groups but poorly for individuals from underrepresented or minority groups.
+
+### Measurement Bias
+
+**Measurement bias** arises when a variable is chosen to act as a proxy for prediction of an abstract concept, but the proxy is inherently biased. For example, past credit scores are used as a proxy for fiscal responsibility, but minority groups have been historically denied opportunities to build good credit. If the proxies being used by a model are based on a history of discrimination, they can introduce bias into the model.
+
+A case study on healthcare risk assessment algorithms demonstrates how using money spent on healthcare as a proxy variable for health need can be biased against groups that systematically spend less on healthcare.[^8]
+
+**Case Study: [Dissecting racial bias in an algorithm used to manage the health of populations](https://www.science.org/doi/10.1126/science.aax2342)**
+
+**Obermeyer et. al. (2019)**
+
+To assess patient need, many hospitals use risk assessment software. One variable imputed into risk assessment models is healthcare spending. In the software studied by Obermeyer et. al., healthcare spending was used as a proxy in an algorithm that predicts health need to identify patients who will benefit most from healthcare programs. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients with the same score. This is an example of measurement bias because the proxy variable, cost, was a poor measure of the target variable, health need.
+
+## Bias in Model Creation
+
+### Model Creation
+
+Bias can also emerge in model creation: the definition of the model architecture and the training of the weights. Engineers may bring their own biases into the design process, deciding which trade-offs to prioritize and which populations to optimize their model for. Figure 3 below is a visual representation of bias in model creation, the second half of the ADM system lifecycle shown in Figure 1\.
+
+
+![Figure 3 description: A left-to-right flowchart showing sources of bias in the model training and deployment stage of a machine learning pipeline. Training data feeds into "model learning" (labeled "Learning Bias" in red), while test data and benchmarks feed into "evaluation" (labeled "Evaluation Bias" in red). Both, along with a "model definition" step (labeled "Aggregation Bias" in red), feed into a central "model" block. The model then runs to produce a grid-style "model output," which passes through post-processing and human interpretation before reaching a globe icon representing the "world," with this final stage labeled "Deployment Bias" in red.](/assets/primer-photos/?)
+
+**Figure 3:** Bias in Model Creation (adapted from Suresh et al.)[^9]  
+
+### How does bias appear in model creation?
+
+The modeling stage involves countless design choices, so each of these choices can introduce or amplify inequities depending on what the model prioritizes and who it is optimized to serve. Bias in model creation typically appears through four main mechanisms: **aggregation bias, learning bias, evaluation bias, and deployment bias**.
+
+### Aggregation Bias\*\*
+
+**Aggregation bias** occurs when distinct groups are treated as homogeneous in a model, even though these populations differ in meaningful ways. Aggregation bias will often lead the model's performance to be unequal across subgroups. In some cases, it can lead to a model that is not optimal for _any_ group, or a model that only works properly for the dominant population.
+
+### Learning Bias
+
+**Learning bias** occurs when a model's encoded priorities make it practical to overlook a minority group. An objective function to evaluate a model's performance, such as accuracy or mean squared error might be programmed so that a model can succeed by ignoring or excluding a minority group while still performing well according to the objective function.
+
+**Example:** say a model is given the objective to get the highest percent correct answers guessing peoples' ages from photographs. If the model is given 100 subjects to attempt to guess their ages and guesses all 90 White people correctly and all 10 Black people incorrectly, the overall level of accuracy would be 90%. Looking just at the model's accuracy, it may seem like the model is performing well. But, when you look closer, it becomes clear that the model is unable to correctly predict age for _any_ Black people. This model is optimizing for the majority population, ignoring minority group errors and exhibiting learning bias.
+
+One case study by MIT researchers found learning bias and historical bias to be present in a now defunct Amazon hiring software.[^10] This demonstrates how two or more biases can occur simultaneously.
+
+**Case Study: [Hiring Fairly in the Age of Algorithms](https://arxiv.org/abs/2004.07132)**
+
+**Langenkamp et. al. (2020)**
+
+Starting in 2014, Amazon used an ADM system to filter through resumes and find the best candidates. However, since the model was optimized to choose the best candidates, and in past hiring data the majority of good candidates had been male, the model learned to use maleness as an indicator that someone would be the good candidate. This led to a model making hiring decisions that systematically disadvantaged women. This study demonstrates learning bias because the model was taught to find the best candidates, so the software came to understand maleness as a factor that contributed to being a good candidate. However, this is simultaneously an example of historical bias, because historical sexism in the field of engineering contributed to the fact that the majority of past engineers hired were male.
+
+### Evaluation Bias
+
+**Evaluation bias** occurs _after_ model creation, when evaluation benchmark datasets are input to train a model, but they do not represent the user population. Many ADM systems are evaluated on narrow or sanitized datasets, which creates a misleadingly positive picture of model performance. When models perform positively on sanitized datasets, engineers do not work to further improve model performance. When such models are then deployed in more diverse, uncontrolled environments, they perform worse than developers intended.
+
+Researchers have found that facial expression recognition datasets used in model evaluation do not contain the diversity of faces that exist in the target population. This has caused companies to output models that do not correctly recognize diverse faces with a high level of accuracy.[^11] This was discovered by Joy Buolamwini in her MIT thesis Gender Shades.
+
+**Case Study: [Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf)**
+
+**Buolamwini and Gebru (2018)**
+
+Researchers created a dataset of thousands of pictures of male and female faces drawn from parliament members from across the world with a range of skin tones. They then assessed the efficacy of facial recognition technologies from IBM, Microsoft and Face++ at recognizing faces and genders. While they found that models had a high level of overall accuracy, when looking at model accuracy by race and gender, they found that the models were only about 65-80% accurate in detecting dark skinned, female faces as opposed to light skinned male faces, with which all three models had an over 99% accuracy rate.
+
+## Bias in Model Deployment
+
+### Deployment Bias
+
+**Deployment bias** arises after _model creation_, when models are used to solve problems they were never designed to address or towards a population on whose data they were never trained. Even if the model is well-trained and fairly evaluated, it can still produce harmful and discriminatory outcomes when used in an improper way or in a population it was never intended to be used on.
+
+| Type of Bias        | Definition                                                                                                                                    | When It Occurs                               |
+| :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
+| Historical Bias     | When data reflects pre-existing societal inequalities or stereotypes                                                                          | Before data collection and sampling          |
+| Representation Bias | When the dataset fails to represent the target population                                                                                     | During data collection and dataset formation |
+| Measurement Bias    | When a variable is chosen to act as a proxy for the prediction of an abstract concept, but the proxy does not properly represent the concept. | During data labeling/feature engineering     |
+| Aggregation Bias    | When distinct groups are treated as homogeneous                                                                                               | During model design and feature aggregation  |
+| Learning Bias       | When a model's encoded priorities make it practical to overlook a minority group                                                              | During model learning                        |
+| Evaluation Bias     | When evaluation datasets don't reflect the diversity of user population                                                                       | During testing/validation                    |
+| Deployment Bias     | When models are used in contexts different from those they were designed for                                                                  | During deployment/implementation             |
+
+## Conclusion
+
+Bias can occur at all stages of the automated decision-making system lifecycle, ranging from how data is generated and measured, how models are optimized and evaluated, to where models are deployed. When creating a model, it is essential to critically examine the data input into a model during training and evaluation, as well as the assumptions you approach the project with. By having an awareness of the ways in which ADM systems become biased, and examining our own assumptions, we can build ADM systems that serve target populations effectively and fairly.
 
 ## Further Reading
 
-Angwin, Julia, Jeff Larson, Lauren Kirchner, and Surya Mattu. “Machine Bias.” ProPublica, May 23, 2016\. [https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing).
+Barocas, Solon, and Andrew D. Selbst. "Big Data's Disparate Impact." _California Law Review_ 104, no. 3 (2016): 671\. [https://doi.org/10.15779/Z38BG31](https://doi.org/10.15779/Z38BG31).
 
-Babisha, A., A. Swaminathan, D. Anuradha, C. Gnanaprakasam, and T. Kalaichelvi. “Advancements in Facial Expression Recognition: State-of-the-Art Techniques and Innovations.” International Journal of Intelligent Systems and Applications in Engineering, March 6, 2023. [https://ijisae.org/index.php/IJISAE/article/view/5097](https://ijisae.org/index.php/IJISAE/article/view/5097).
+Buolamwini, Joy, and Timnit Gebru. "Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification." _Proceedings of Machine Learning Research_ 81 (2018): 1–15. [https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf).
 
-“Bias: The Basics: Addressing Bias.” Addressing Bias: Rights, Responsibilities and Responses. Accessed March 26, 2025. [https://www.knowyourrightsandresponsibilities.psu.edu/pages/bias/bias-the-basics\#:\~:text=What%20is%20Bias%3F,of%20the%20person%20or%20group](https://www.knowyourrightsandresponsibilities.psu.edu/pages/bias/bias-the-basics#:~:text=What%20is%20Bias%3F,of%20the%20person%20or%20group).
+Ewens, Michael, Bryan Tomlin, and Liang Choon Wang. "Statistical Discrimination or Prejudice? A Large Sample Field Experiment." _Review of Economics and Statistics_ 96, no. 1 (March 2014): 119–134. [https://doi.org/10.1162/REST_a_00365](https://doi.org/10.1162/REST_a_00365).
 
-Billig, Michael. "Prejudice, categorization and particularization: From a perceptual to a rhetorical approach." European Journal of Social Psychology 15, no. 1 (1985): 79-103. [https://www.researchgate.net/publication/228056297_Prejudice_categorization_and_particularization_From_a_perceptual_to_a_rhetorical_approach](https://www.researchgate.net/publication/228056297_Prejudice_categorization_and_particularization_From_a_perceptual_to_a_rhetorical_approach]).
+Garg, Nikhil, Londa Schiebinger, Dan Jurafsky, and James Zou. "Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes." _Proceedings of the National Academy of Sciences_ 115, no. 16 (April 2018): E3635–E3644. [https://doi.org/10.1073/pnas.1720347115](https://doi.org/10.1073/pnas.1720347115).
 
-Buolamwini, Joy, and Timnit Gebru. "Gender shades: Intersectional accuracy disparities in commercial gender classification." In Conference on fairness, accountability and transparency, pp. 77-91. PMLR, 2018\. [https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf).
+Gil, Yolanda, and Raymond Perrault, co-dirs. _Artificial Intelligence Index Report 2025_. Stanford, CA: Stanford University Human-Centered Artificial Intelligence, 2025\. [https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf](https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf).
 
-Collins, Erin. "Punishing risk." Geo. LJ 107 (2018): 57\. [https://www.law.georgetown.edu/georgetown-law-journal/wp-content/uploads/sites/26/2018/12/Punishing-Risk-2.pdf](https://www.law.georgetown.edu/georgetown-law-journal/wp-content/uploads/sites/26/2018/12/Punishing-Risk-2.pdf).
+Hort, Max, Zhenpeng Chen, Jie M. Zhang, Mark Harman, and Federica Sarro. "Bias Mitigation for Machine Learning Classifiers: A Comprehensive Survey." _ACM Journal on Responsible Computing_ 1, no. 2 (2024): 1–52. [https://doi.org/10.1145/3631326](https://doi.org/10.1145/3631326).
 
-“Dyslexia FAQ.” Yale Dyslexia. Accessed April 14, 2025\. [https://dyslexia.yale.edu/dyslexia/dyslexia-faq/](https://dyslexia.yale.edu/dyslexia/dyslexia-faq/).
+Huang, Linus Ta-Lun, and Tsung-Ren Huang. "Generative Bias: Widespread, Unexpected, and Uninterpretable Biases in Generative Models and Their Implications." _AI & Society_. Published ahead of print, 2025\. [https://doi.org/10.1007/s00146-025-02533-1](https://doi.org/10.1007/s00146-025-02533-1).
 
-“Facial Recognition And The Facial Difference Community: 2024 Survey Results.” Face Equality International. Accessed March 13, 2025\. [https://faceequalityinternational.org/FEI_2024_survey_results.pdf](https://faceequalityinternational.org/FEI_2024_survey_results.pdf).
+Langenkamp, Max, Allan Costa, and Chris Cheung. "Hiring Fairly in the Age of Algorithms." arXiv preprint, arXiv:2004.07132. April 15, 2020\. [https://arxiv.org/abs/2004.07132](https://arxiv.org/abs/2004.07132).
 
-Fraenkel, Aaron. “COMPAS Recidivism Algorithm \- Fairness & Algorithmic Decision Making.” Fairness & Algorithmic Decision Making. Accessed March 30, 2025\. [https://afraenkel.github.io/fairness-book/content/04-compas.html\#compas-recidivism-algorithm](https://afraenkel.github.io/fairness-book/content/04-compas.html#compas-recidivism-algorithm).
+Leavy, Susan, Barry O'Sullivan, and Eugenia Siapera. "Data, Power and Bias in Artificial Intelligence." Paper presented at the AI for Social Good Workshop, Harvard CRCS, online, July 20–21, 2020\. [https://crcs.seas.harvard.edu/sites/g/files/omnuum6171/files/crcs/files/ai4sg_2020_paper_81.pdf](https://crcs.seas.harvard.edu/sites/g/files/omnuum6171/files/crcs/files/ai4sg_2020_paper_81.pdf).
 
-Garg, Nikhil, Londa Schiebinger, Dan Jurafsky, and James Zou. "Word embeddings quantify 100 years of gender and ethnic stereotypes." Proceedings of the National Academy of Sciences 115, no. 16 (2018): E3635-E3644. [https://arxiv.org/pdf/1711.08412](https://arxiv.org/pdf/1711.08412).
+Obermeyer, Ziad, Brian Powers, Christine Vogeli, and Sendhil Mullainathan. "Dissecting Racial Bias in an Algorithm Used to Manage the Health of Populations." _Science_ 366, no. 6464 (October 25, 2019): 447–453. [https://doi.org/10.1126/science.aax2342](https://doi.org/10.1126/science.aax2342).
 
-Hofmann, Valentin, Pratyusha Ria Kalluri, Dan Jurafsky, and Sharese King. "AI generates covertly racist decisions about people based on their dialect." Nature 633, no. 8028 (2024): 147-154. [https://www.nature.com/articles/s41586-024-07856-5](https://www.nature.com/articles/s41586-024-07856-5).
+Sunstein, Cass R. "Algorithms, Correcting Biases." _Social Research: An International Quarterly_ 86, no. 2 (Summer 2019): 499–511.
 
-MacMillan, Douglass, David Ovalle , and Aaron Schaffer. “Police Ignore Standards after AI Facial Recognition Matches \- Washington Post.” Washington Post, January 13, 2025\. [https://www.washingtonpost.com/business/interactive/2025/police-artificial-intelligence-facial-recognition/](https://www.washingtonpost.com/business/interactive/2025/police-artificial-intelligence-facial-recognition/).
+Suresh, Harini, and John Guttag. "A Framework for Understanding Sources of Harm throughout the Machine Learning Life Cycle." _EAAMO '21: Equity and Access in Algorithms, Mechanisms, and Optimization_, October 5–9, 2021\. [https://doi.org/10.1145/3465416.3483305](https://doi.org/10.1145/3465416.3483305).
 
-Mehrabi, Ninareh, Fred Morstatter, Nripsuta Saxena, Kristina Lerman, and Aram Galstyan. "A survey on bias and fairness in machine learning." ACM computing surveys (CSUR) 54, no. 6 (2021): 1-35. [https://arxiv.org/pdf/1908.09635](https://arxiv.org/pdf/1908.09635).
+[^1]: Yolanda Gil and Raymond Perrault, co-dirs., _Artificial Intelligence Index Report 2025_ (Stanford, CA: Stanford University Human-Centered Artificial Intelligence, 2025), [https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf](https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf)
 
-Memory and new controls for ChatGPT. Accessed March 30, 2025\. [https://openai.com/index/memory-and-new-controls-for-chatgpt](https://openai.com/index/memory-and-new-controls-for-chatgpt).
+[^2]: Cass R. Sunstein, "Algorithms, Correcting Biases," _Social Research: An International Quarterly_ 86, no. 2 (Summer 2019): 499–511.
 
-Nerušil, Boris, Jaroslav Polec, Juraj Škunda, and Juraj Kačur. "Eye tracking based dyslexia detection using a holistic approach." Scientific Reports 11, no. 1 (2021): 15687\. [https://www.nature.com/articles/s41598-021-95275-1](https://www.nature.com/articles/s41598-021-95275-1).
+[^3]: Harini Suresh and John Guttag, "A Framework for Understanding Sources of Harm throughout the Machine Learning Life Cycle," _EAAMO '21: Equity and Access in Algorithms, Mechanisms, and Optimization_, October 5–9, 2021, [https://doi.org/10.1145/3465416.3483305](https://doi.org/10.1145/3465416.3483305). Figure adapted by author.
 
-Obermeyer, Ziad, Brian Powers, Christine Vogeli, and Sendhil Mullainathan. "Dissecting racial bias in an algorithm used to manage the health of populations." Science 366, no. 6464 (2019): 447-453. [https://pubmed.ncbi.nlm.nih.gov/31649194/](https://pubmed.ncbi.nlm.nih.gov/31649194/).
+[^4]: Suresh and Guttag, "A Framework for Understanding Sources of Harm."
 
-Roy, Arnab Kumar, Hemant Kumar Kathania, Adhitiya Sharma, Abhishek Dey, and Md Sarfaraj Alam Ansari. "ResEmoteNet: bridging accuracy and loss reduction in facial emotion recognition." IEEE Signal Processing Letters (2024). [https://ieeexplore.ieee.org/document/10812829](https://ieeexplore.ieee.org/document/10812829).
+[^5]: Nikhil Garg, Londa Schiebinger, Dan Jurafsky, and James Zou, "Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes," _Proceedings of the National Academy of Sciences_ 115, no. 16 (April 2018): E3635–E3644, [https://doi.org/10.1073/pnas.1720347115](https://doi.org/10.1073/pnas.1720347115).
 
-Srivathsa, Neha. “Multimodal, Self-Supervised Deep Learning-Based Estimation of Symptoms and Severity of Depression and Anxiety.” Thesis, 2022\. [https://purl.stanford.edu/vp366kq1885](https://purl.stanford.edu/vp366kq1885).
+[^6]: Michael Ewens, Bryan Tomlin, and Liang Choon Wang, "Statistical Discrimination or Prejudice? A Large Sample Field Experiment," _Review of Economics and Statistics_ 96, no. 1 (March 2014): 119–134, [https://doi.org/10.1162/REST_a_00365](https://doi.org/10.1162/REST_a_00365).
 
-Suresh, Harini, and John Guttag. "A framework for understanding sources of harm throughout the machine learning life cycle." In Proceedings of the 1st ACM Conference on Equity and Access in Algorithms, Mechanisms, and Optimization, pp. 1-9. 2021\. [https://dl.acm.org/doi/fullHtml/10.1145/3465416.3483305](https://dl.acm.org/doi/fullHtml/10.1145/3465416.3483305).
+[^7]: Linus Ta-Lun Huang and Tsung-Ren Huang, "Generative Bias: Widespread, Unexpected, and Uninterpretable Biases in Generative Models and Their Implications," _AI & Society_, published ahead of print, 2025, [https://doi.org/10.1007/s00146-025-02533-1](https://doi.org/10.1007/s00146-025-02533-1).
 
-Thaqi, Enkeleda, Mohamed Omar Mantawy, and Enkelejda Kasneci. "SARA: Smart AI reading assistant for reading comprehension." In Proceedings of the 2024 Symposium on Eye Tracking Research and Applications, pp. 1-3. 2024\. [https://dl.acm.org/doi/pdf/10.1145/3649902.3655661](https://dl.acm.org/doi/pdf/10.1145/3649902.3655661).
+[^8]: Ziad Obermeyer, Brian Powers, Christine Vogeli, and Sendhil Mullainathan, "Dissecting Racial Bias in an Algorithm Used to Manage the Health of Populations," _Science_ 366, no. 6464 (October 25, 2019): 447–453, [https://doi.org/10.1126/science.aax2342](https://doi.org/10.1126/science.aax2342).
 
-Understanding bias: A resource guide. Accessed March 26, 2025\. [https://www.justice.gov/d9/fieldable-panel-panes/basic-panes/attachments/2021/09/29/understanding_bias_content.pdf](https://www.justice.gov/d9/fieldable-panel-panes/basic-panes/attachments/2021/09/29/understanding_bias_content.pdf).
+[^9]: Suresh and Guttag, "A Framework for Understanding Sources of Harm."
 
-Yi, Sibo, Yule Liu, Zhen Sun, Tianshuo Cong, Xinlei He, Jiaxing Song, Ke Xu, and Qi Li. "Jailbreak attacks and defenses against large language models: A survey." arXiv preprint arXiv:2407.04295 (2024). [https://arxiv.org/pdf/2407.04295](https://arxiv.org/pdf/2407.04295).
+[^10]: Max Langenkamp, Allan Costa, and Chris Cheung, "Hiring Fairly in the Age of Algorithms," arXiv preprint, arXiv:2004.07132, April 15, 2020, [https://arxiv.org/abs/2004.07132](https://arxiv.org/abs/2004.07132).
 
-Zimmerman, Eric. “Self Supervised Learning in Computational Pathology.” Research Topics in Self Supervised Learning. Lecture presented at the Research Topics in Self Supervised Learning, November 8, 2024\.
-
-## Footnotes
-
-[^1]: “Bias: The Basics”
-
-[^2]: Mehrabi, “A survey on bias and fairness in machine learning”
-
-[^3]: Suresh, “A Framework for Understanding Sources of Harm”
-
-[^4]: Suresh, “A Framework for Understanding Sources of Harm”
-
-[^5]: Suresh, “A Framework for Understanding Sources of Harm"
-
-[^6]: “Memory and New Controls for ChatGPT”
-
-[^7]: Suresh, “A Framework for Understanding Sources of Harm"
-
-[^8]: “Memory and New Controls for ChatGPT”
-
-[^9]: Garg, _Word Embeddings_
-
-[^10]: Hoffman, _AI Generates Covertly Racist Decisions_; Yi, _Jailbreak Attacks_
-
-[^11]: Buolamwini, “Gender Shades”
-
-[^12]: Obermeyer, “Dissecting Racial Bias”
-
-[^13]: Thaqi, “SARA: Smart AI Reading Assistant”
-
-[^14]: Nerušil, “Eye Tracking”
-
-[^15]: “Dyslexia FAQ”
-
-[^16]: Zimmerman, _Self Supervised Learning_
-
-[^17]: Babisha, _Advancements in Facial Expression Recognition;_ Roy, _ResEmoteNet_
-
-[^18]: Angwin, _Machine Bias_
-
-[^19]: Collins, _Punishing Risk_
-
-[^20]: Angwin, _Machine Bias_
-
-[^21]: Collins, _Punishing Risk_
-
-[^22]: Suresh, _A Framework for Understanding Sources of Harm_
-
-[^23]: _Facial Recognition And The Facial Difference Community_
-
-[^24]: MacMillan, _Police Ignore Standards_
-
-## Sidebar
-
-ai-dev-lifecycle:
-Heading: Understanding AI Development Lifecycle
-
-The AI development lifecycle provides a framework for understanding how bias is introduced to automated-decision making systems.
-
-### Understanding Data Generation Phase of AI Development
-
-In this phase, data is generated and a dataset is created. Data can be generated naturalistically or through experiments. **A dataset is created by defining and sampling from a target population, measuring variables of interest, pre-processing the dataset, and defining a train/test split.** For example, in a weather prediction AI model, weather data is generated naturally and simply needs to be measured to be collected. Questions of which regions to include (e.g. US or global), what kind of weather variables to include (e.g. temperature or precipitation, continuous or categorical values), what preprocessing steps to take, and how to define the testing dataset are all decisions with trade-offs.
-
-### Understanding Model Creation Phase of AI Development
-
-**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^5] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^6]
-
-Data-Generation:
-Heading: Understanding Data Generation Phase of AI Development
-
-In this phase, data is generated and a dataset is created. Data can be generated naturalistically or through experiments. A dataset is created by defining and sampling from a target population, measuring variables of interest, pre-processing the dataset, and defining a train/test split. For example, in a weather prediction AI model, weather data is generated naturally and simply needs to be measured to be collected. Questions of which regions to include (e.g. US or global), what kind of weather variables to include (e.g. temperature or precipitation, continuous or categorical values), what preprocessing steps to take, and how to define the testing dataset are all decisions with trade-offs.
-
-Model-Creation:
-Heading: Understanding Model Creation Phase of AI Development
-
-**Once a dataset is created, a model must be defined, trained, evaluated, and deployed.** Defining an AI model involves determining the model architecture, loss function, optimizer, and hyperparameters. Next the model is trained, requiring decisions about how many epochs to train on. Once trained, the model is evaluated on metrics like accuracy, F1 accuracy, and/or accuracy across categories. Following this, model post-processing like thresholding can be implemented to transform outputs into a task-specific format. Once the model has been trained, evaluated, and post-processed, it is deployed for real-world use. It is useful to view the model creation process as iterative rather than linear. Once a model is deployed, it can be trained on real-time data or augmented to increase accuracy for under-performing categories.[^7] ChatGPT is an example of this; it improves its output by training on user data (input) and personalizing responses through its user memory feature which stores a summary of user data.[^8]
-
-Historical-Bias-Case-Study--Gender-Bias-in-Word-Embeddings:
-Heading: Gender Bias in Word Embeddings
-Societal gender biases are widely reflected in media, which is used to train large language models (LLMs)**. Because the training data of LLMs contains societal biases, the model learns to reflect this bias.**[^9] As LLMs become increasingly integrated into automatic-decision making systems, this causes harm to women and other gender minorities. This is an open area of research, as LLMs are resilient to alignment techniques and vulnerable to jailbreaking.[^10]
-
-Representation-Bias-Case-Study--Underrepresentation-In-Automated-Mental-Illness-Detection:
-Heading: Underrepresentation in Automated Mental Illness Detection
-For example, research out of Stanford showed that AI could detect anxiety and depression with 93% and 87% accuracy respectively. However, because the research study occurred at Stanford’s research hospital which serves a primarily White community, 0 black people were included in the study. If this AI model were used in healthcare systems serving diverse communities, the target population would fail to represent the use population, leading to sampling bias and higher error rates for people of color. In medicine, multi-site research studies are a common method to normalize regional data differences and enhance diversity. In AI, collecting data from diverse locations can be a way to reach diverse audiences and mitigate sampling bias.
-
-Why-Representation-Bias-in-AI-is-Different:
-There are two unique ways that representation bias in AI is different from representation bias in other fields.
-
-1. Metadata is often not collected during the data generation process. Without this information, it is difficult to measure underrepresentation in a dataset.
-2. Without rigorous intersectional evaluation after model development, it is impossible to know how much a model is impacted by representation bias.
-
-In the private sector, profit incentives to minimize development costs can lead to datasets developed without metadata and models that are released before intersectional evaluation is completed. Representation related harms can be measured in academic research (e.g. “Gender Shades”[^11]) and regulated via governance structures.
-
-Oversimplification-Case-Study-Healthcare-Proxies-In-High-Risk-Care-Management:
-Heading: Healthcare Proxies In High Risk Care Management
-Predictive algorithms used to approve high risk care management programs in healthcare screen 200 million people in the US each year. Algorithms produce risk scores to identify patients who will benefit most from these programs. However, healthcare spending was used as a proxy for health issues. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients, with an average of 26.3% more chronic illnesses. As a result, measurement bias leads to higher need Black patients being denied access to high risk care management programs compared with lower need White patients with equivalent healthcare spending. In response, the healthcare company worked with researchers to develop a better proxy that combined health prediction with cost prediction, leading to an 84% reduction in bias.[^12]
-
-Differential-Measurement-Case-Study-The-Impact-Of-Over-Policing-On-Recidivism-Scores:
-Heading: Impact Of Over Policing-On Recidivism Scores
-Criminal justice risk assessment models determine someone’s risk to re-offend based on number of arrests. However, over-policing of minority communities leads to an uneven mapping of crime to arrest, relative to White communities. As a result, commercial risk assessment tools like COMPAS are significantly more likely to falsely predict that a Black defendant will re-offend than a White defendant.
-
-Aggregation-Bias-Case-Study-AI-Based-Reading-Assistants-For-Readers-With-Dyslexia:
-Heading: AI Based Reading Assistants For Readers With Dyslexia
-AI-based reading assistants have been developed to aid reading comprehension by using eye-tracking to provide definitions when readers struggle to comprehend words.[^13] Research shows that people with dyslexia have different eye movements when reading than people who don’t have dyslexia.[^14] If a reading assistant uses an underlying eye-tracking model that processes dyslexic and non-dyslexic eye-movement reading patterns in aggregate, it may fail to represent the distinct reading patterns of either subgroup accurately. In addition to aggregation bias, representation bias can further exacerbate performance disparities. Since people with dyslexia make up 20% of the population, if dyslexic reading patterns are not oversampled to account for underrepresentation in the use population, the model will also suffer from representation bias, leading to even higher error rates for people with dyslexia.[^15]
-
-Learning-Bias-Case-Study-Distillation-In-Medical-Models-Misses-Rare-Cancers:
-Heading: Distillation In Medical Models Misses Rare Cancers
-When AI models are distilled to be more compact, they lose the nuance necessary to capture under-represented features in the data. For example, **in AI-based breast cancer screening**, **rare cancers are under-represented in medical images.** If a breast cancer detection model is distilled, performance disparities for under-represented cancers will increase because the distilled model has fewer parameters with which it can learn complex underrepresented features in the data.[^16]
-
-Evaluation-Bias-Case-Study-Facial-Expression-Recognition-In-The-Wild:
-Heading: Facial Expression Recognition In The Wild
-Evaluation bias is present in facial expression recognition datasets. Common benchmarks like AffectNet and FER2013 contain images taken in controlled settings and processed to account for crops, rotation, and more. **In a model that seeks to predict facial expressions in naturalistic settings, benchmarking against these datasets would introduce evaluation bias by failing to reflect the use population**. Indeed, many facial expression recognition models report up to 95% accuracy, but state-of-the-art expression recognition “in the wild” is only 72%.[^17]
-
-Benefits-and-Risks-of-Benchmark-Datasets:
-Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^18]
-
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^19] For a more thorough analysis of (in)justice in risk assessment tools, see the [Justice primer](justice).
-
-Deployment-Bias-Case-Study-Using-Recidivism-Tools-Off-Label:
-Criminal risk assessment tools are intended to model the risk of recidivism, the likelihood that a convicted criminal will commit a crime in the future. These algorithms are designed to assist judges in determining bail amounts and bail eligibility. **In practice, risk assessment tools (which predict the likelihood of future crime) are used to determine sentencing lengths (the punishment for a current crime conviction).**[^20]
-
-Often arising out of a lack of AI literacy and overreliance on technology, deployment bias can have catastrophic human impact and undermine fairness in the criminal justice system.[^21] For a more thorough analysis of (in)justice in risk assessment tools, see the [Justice primer](justice).
-
-here:
-Heading: Types of Harm in Automated-Decision Making Systems
-**Allocative Harm**  
-When opportunities are withheld from certain people or groups  
-E.g: Racial bias in loan-worthiness systems lead to race-based loan denial.[^22]
-
-**Representational Harm**  
-When certain people or groups are stigmatized or stereotyped18  
-E.g: LLMs disproportionately feature marginalized groups as victims in stories.
-
-**Quality of Service Harms**  
-When the quality of service an individual or group receives is diminished due to bias in AI systems[^23]  
-E.g: People with facial differences have to wait longer for manual processing at airport security checkpoints.
-
-**Interpersonal and Social System Harms**  
-When an individual experiences interpersonal harm or societal harm due to bias in AI systems  
-E.g: False arrests due to erroneous facial recognition make it difficult for people to clear their names and cause emotional injury to children traumatized by watching their parents getting arrested.[^24]
-
-**If we fail to mitigate bias, we will build system that generate injustice.** For an overview of justice in automated-decision making systems, refer to the [Justice primer](justice).
+[^11]: Joy Buolamwini and Timnit Gebru, "Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification," _Proceedings of Machine Learning Research_ 81 (2018): 1–15, [https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf).

@@ -19,12 +19,19 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const MARKDOWN_DIR = path.join(__dirname, "../markdown");
-const OUTPUT_PATH = path.join(__dirname, "../../public/search-index.json");
+const SEARCH_INDEX_OUTPUT_PATH = path.join(
+  __dirname,
+  "../../public/search-index.json",
+);
+const MARKDOWN_DATA_OUTPUT_PATH = path.join(
+  __dirname,
+  "../../public/markdown-data.json",
+);
 
 /* ----------------------------- Utilities ----------------------------- */
 
 function parseFrontmatter(content) {
-  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
+  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/;
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -130,6 +137,105 @@ function extractMainAndSidebar(markdown) {
   return { mainContent, sidebarRaw };
 }
 
+function stripFurtherReadingBlocks(markdown) {
+  if (!markdown || typeof markdown !== "string") {
+    return { stripped: markdown, furtherReadingBlock: null };
+  }
+
+  const lines = markdown.split(/\r?\n/);
+  const furtherReadingHeadingRegex = /^##\s+Further Reading\s*$/i;
+  const h2Regex = /^##\s/;
+
+  const keptLines = [];
+  const furtherReadingBlocks = [];
+
+  for (let i = 0; i < lines.length; ) {
+    if (furtherReadingHeadingRegex.test(lines[i])) {
+      i += 1;
+      const blockLines = [];
+
+      while (i < lines.length && !h2Regex.test(lines[i])) {
+        blockLines.push(lines[i]);
+        i += 1;
+      }
+
+      const block = blockLines.join("\n").trim();
+      if (block) furtherReadingBlocks.push(block);
+      continue;
+    }
+
+    keptLines.push(lines[i]);
+    i += 1;
+  }
+
+  return {
+    stripped: keptLines.join("\n"),
+    furtherReadingBlock: furtherReadingBlocks.join("\n\n") || null,
+  };
+}
+
+function extractFootnotes(markdown) {
+  if (!markdown || typeof markdown !== "string") {
+    return { stripped: markdown, footnotes: [], furtherReadingBlock: null };
+  }
+
+  const { stripped: withoutFurtherReading, furtherReadingBlock } =
+    stripFurtherReadingBlocks(markdown);
+
+  const defRegex = /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm;
+  const definitions = {};
+  let match;
+
+  while ((match = defRegex.exec(withoutFurtherReading)) !== null) {
+    definitions[match[1]] = match[2].trim();
+  }
+
+  return { definitions, furtherReadingBlock };
+}
+
+function parseMarkdownContentForRuntime(cleanContent, frontmatter = {}) {
+  const dividerRegex = /^##\s*Sidebar\s*$/m;
+  const dividerMatch = dividerRegex.exec(cleanContent);
+
+  let mainContent = cleanContent;
+  let sidebarRaw = null;
+
+  if (dividerMatch) {
+    const splitIndex = dividerMatch.index;
+    mainContent = cleanContent.slice(0, splitIndex).trim();
+    const afterDivider = cleanContent.slice(
+      dividerMatch.index + dividerMatch[0].length,
+    );
+    sidebarRaw = afterDivider.trim();
+  }
+
+  const { definitions: allDefinitions, furtherReadingBlock } =
+    extractFootnotes(mainContent);
+  const sidebar = sidebarRaw ? parseSidebar(sidebarRaw) : {};
+
+  const parsedContent = mainContent.replace(/\{([^}]+)\}/g, (_, term) => {
+    return `<sidebar-ref term="${term}"></sidebar-ref>`;
+  });
+
+  let lastUpdated = null;
+  if (frontmatter.lastUpdated) {
+    lastUpdated = frontmatter.lastUpdated;
+  } else {
+    const footerMatch = mainContent.match(/_Last updated\s+(.+?)\._/i);
+    if (footerMatch) {
+      lastUpdated = footerMatch[1].trim();
+    }
+  }
+
+  return {
+    content: parsedContent,
+    sidebar,
+    allDefinitions,
+    furtherReadingBlock,
+    frontmatter: { ...frontmatter, lastUpdated },
+  };
+}
+
 function extractBlocksFromContent(
   sectionId,
   sectionTitle,
@@ -193,10 +299,13 @@ function extractBlocksFromContent(
 
 function buildContentArray() {
   const contentArray = [];
+  const sections = [];
+  const subsectionsBySection = {};
+  const contentByKey = {};
 
   if (!fs.existsSync(MARKDOWN_DIR)) {
     console.error(`Markdown directory not found: ${MARKDOWN_DIR}`);
-    return contentArray;
+    return { contentArray, sections, subsectionsBySection, contentByKey };
   }
 
   const sectionDirs = fs
@@ -205,7 +314,7 @@ function buildContentArray() {
     .map((d) => d.name);
 
   // Load and sort sections
-  const sections = [];
+  const rawSections = [];
   for (const sectionId of sectionDirs) {
     const sectionDir = path.join(MARKDOWN_DIR, sectionId);
     const sectionFile = path.join(sectionDir, `${sectionId}.md`);
@@ -214,17 +323,32 @@ function buildContentArray() {
     const rawContent = fs.readFileSync(sectionFile, "utf8");
     const { content: cleanContent, frontmatter } = parseFrontmatter(rawContent);
 
-    sections.push({
+    rawSections.push({
       id: sectionId,
       title: frontmatter.title || cleanContent.split("\n")[0].replace("# ", ""),
       order: frontmatter.order || 999,
       content: cleanContent,
+      frontmatter,
     });
   }
 
-  sections.sort((a, b) => a.order - b.order);
+  rawSections.sort((a, b) => a.order - b.order);
 
-  for (const section of sections) {
+  rawSections.forEach((section) => {
+    sections.push({
+      id: section.id,
+      title: section.title,
+      order: section.order,
+      content: section.content,
+    });
+
+    contentByKey[section.id] = parseMarkdownContentForRuntime(
+      section.content,
+      section.frontmatter,
+    );
+  });
+
+  for (const section of rawSections) {
     const sectionDir = path.join(MARKDOWN_DIR, section.id);
 
     // Load subsections
@@ -250,12 +374,26 @@ function buildContentArray() {
         title: subFm.title || subClean.split("\n")[0].replace("# ", ""),
         order: subFm.order || 999,
         content: subClean,
+        frontmatter: subFm,
       });
     }
 
     subsections.sort((a, b) => a.order - b.order);
 
+    subsectionsBySection[section.id] = subsections.map((subsection) => ({
+      id: subsection.id,
+      title: subsection.title,
+      order: subsection.order,
+      content: subsection.content,
+    }));
+
     for (const subsection of subsections) {
+      const subsectionKey = `${section.id}/${subsection.id}`;
+      contentByKey[subsectionKey] = parseMarkdownContentForRuntime(
+        subsection.content,
+        subsection.frontmatter,
+      );
+
       const { mainContent, sidebarRaw } = extractMainAndSidebar(
         subsection.content,
       );
@@ -289,14 +427,33 @@ function buildContentArray() {
     }
   }
 
-  return contentArray;
+  return { contentArray, sections, subsectionsBySection, contentByKey };
 }
 
 /* ----------------------------- Main ----------------------------- */
 
-const contentArray = buildContentArray();
+const { contentArray, sections, subsectionsBySection, contentByKey } =
+  buildContentArray();
+const markdownData = {
+  generatedAt: new Date().toISOString(),
+  sections,
+  subsectionsBySection,
+  contentByKey,
+};
 
-fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-fs.writeFileSync(OUTPUT_PATH, JSON.stringify(contentArray), "utf8");
+fs.mkdirSync(path.dirname(SEARCH_INDEX_OUTPUT_PATH), { recursive: true });
+fs.writeFileSync(
+  SEARCH_INDEX_OUTPUT_PATH,
+  JSON.stringify(contentArray),
+  "utf8",
+);
+fs.writeFileSync(
+  MARKDOWN_DATA_OUTPUT_PATH,
+  JSON.stringify(markdownData),
+  "utf8",
+);
 
-console.log(`Exported ${contentArray.length} search blocks to ${OUTPUT_PATH}`);
+console.log(
+  `Exported ${contentArray.length} search blocks to ${SEARCH_INDEX_OUTPUT_PATH}`,
+);
+console.log(`Exported markdown cache to ${MARKDOWN_DATA_OUTPUT_PATH}`);

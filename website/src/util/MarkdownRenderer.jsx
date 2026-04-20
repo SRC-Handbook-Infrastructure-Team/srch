@@ -293,7 +293,7 @@ export function createIdFromHeading(text) {
 }
 
 export function parseFrontmatter(content) {
-  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
+  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/;
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -328,6 +328,13 @@ export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
 
 export const getSections = async () => {
   try {
+    const precomputed = await loadPrecomputedMarkdownData();
+    if (Array.isArray(precomputed?.sections)) {
+      return [...precomputed.sections].sort(
+        (a, b) => (a.order || 999) - (b.order || 999),
+      );
+    }
+
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSections = new Set();
@@ -376,6 +383,15 @@ export const getSections = async () => {
 
 export const getSubsections = async (sectionId) => {
   try {
+    const precomputed = await loadPrecomputedMarkdownData();
+    const precomputedSubsections =
+      precomputed?.subsectionsBySection?.[sectionId];
+    if (Array.isArray(precomputedSubsections)) {
+      return [...precomputedSubsections].sort(
+        (a, b) => (a.order || 999) - (b.order || 999),
+      );
+    }
+
     const subsections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSubsections = new Set();
@@ -430,6 +446,34 @@ let preloadNavigationPromise = null;
 let preloadedContentData = null;
 let preloadContentPromise = null;
 const contentCache = new Map();
+let precomputedMarkdownData = null;
+let precomputedMarkdownDataPromise = null;
+
+async function loadPrecomputedMarkdownData() {
+  if (precomputedMarkdownData) return precomputedMarkdownData;
+  if (precomputedMarkdownDataPromise) return precomputedMarkdownDataPromise;
+
+  precomputedMarkdownDataPromise = (async () => {
+    try {
+      const base = import.meta.env?.BASE_URL ?? "/";
+      const url = `${base}markdown-data.json`.replace(/\/\//g, "/");
+      const response = await fetch(url, {
+        cache: import.meta.env.DEV ? "no-store" : "default",
+      });
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      if (!data || typeof data !== "object") return null;
+
+      precomputedMarkdownData = data;
+      return data;
+    } catch {
+      return null;
+    }
+  })();
+
+  return precomputedMarkdownDataPromise;
+}
 
 function getAllowedNavigationSections(sections = [], allSubsectionsMap = {}) {
   return sections.filter(
@@ -674,6 +718,24 @@ export const getContent = async (sectionId, subsectionId) => {
     const cacheKey = subsectionId ? `${sectionId}/${subsectionId}` : sectionId;
     if (cacheKey && contentCache.has(cacheKey)) {
       return contentCache.get(cacheKey);
+    }
+
+    if (cacheKey) {
+      const precomputed = await loadPrecomputedMarkdownData();
+      const precomputedContent = precomputed?.contentByKey?.[cacheKey];
+
+      if (precomputedContent && typeof precomputedContent === "object") {
+        const result = {
+          content: precomputedContent.content || "",
+          sidebar: precomputedContent.sidebar || {},
+          allDefinitions: precomputedContent.allDefinitions || {},
+          furtherReadingBlock: precomputedContent.furtherReadingBlock || null,
+          frontmatter: precomputedContent.frontmatter || {},
+        };
+
+        contentCache.set(cacheKey, result);
+        return result;
+      }
     }
 
     let path;

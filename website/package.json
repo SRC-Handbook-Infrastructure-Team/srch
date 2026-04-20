@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run export-index",
     "dev": "vite",
     "prebuild": "npm run export-index",
     "build": "vite build",
