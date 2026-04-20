@@ -24,6 +24,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import { useLayout } from "../layouts/LayoutContext";
+import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
 import MarkdownRenderer, {
   getSections,
   getContent,
@@ -337,6 +338,11 @@ function MarkdownPage() {
   const [furtherReadingBlock, setFurtherReadingBlock] = useState(
     cachedPageContent?.furtherReadingBlock || null,
   );
+
+  useDrawerScrollWatcher({
+    urlTerm,
+    isReady: !isLoading && !!mainContent,
+  });
 
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);

@@ -701,6 +701,12 @@ p > .srch-drawer-link:first-child {
   transform: translateX(0) !important;
   opacity: 1 !important;
 }
+
+.right-sidebar:focus,
+.right-sidebar:focus-visible {
+  outline: none !important;
+}
+
 .right-sidebar.closing {
   transform: translateX(100%) !important;
   opacity: 0 !important;

@@ -1,6 +1,21 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
+function isScrollableElement(el) {
+  if (!(el instanceof HTMLElement)) return false;
+  const style = window.getComputedStyle(el);
+  const overflowY = style.overflowY || "";
+  const allowsScroll =
+    overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay";
+  return allowsScroll && el.scrollHeight > el.clientHeight + 1;
+}
+
+function getPreferredScrollContainer() {
+  const mainEl = document.getElementById("main");
+  if (isScrollableElement(mainEl)) return mainEl;
+  return window;
+}
+
 /**
  * Consistent base path calculation - matches SidebarLayout and ScrollManager
  * Returns "/section/subsection" or "/section" (never trailing slash)
@@ -65,7 +80,7 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
     // Small delay to ensure DOM is settled after React render
     const timeoutId = setTimeout(() => {
       const mainEl = document.getElementById("main");
-      const scrollContainer = mainEl || window;
+      const scrollContainer = getPreferredScrollContainer();
       const searchRoot = mainEl || document;
 
       // Find the chip element
@@ -125,22 +140,25 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
 
         const targetScroll =
           currentScroll +
+          50 +
           chipCenterRelativeToContainer -
           containerRect.height / 2;
 
-        // Clamp to valid scroll range
-        const maxScroll =
-          scrollContainer === window
-            ? document.documentElement.scrollHeight - window.innerHeight
-            : scrollContainer.scrollHeight - scrollContainer.clientHeight;
+        // // Clamp to valid scroll range
+        // const maxScroll =
+        //   scrollContainer === window
+        //     ? document.documentElement.scrollHeight - window.innerHeight
+        //     : scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
-        const clampedScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+        // const clampedScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+
+        const clampedScroll = targetScroll;
 
         // Perform scroll
         if (scrollContainer === window) {
-          window.scrollTo({ top: clampedScroll, behavior: "instant" });
+          window.scrollTo({ top: clampedScroll, behavior: "auto" });
         } else {
-          scrollContainer.scrollTop = clampedScroll;
+          scrollContainer.scrollTo({ top: clampedScroll, behavior: "auto" });
         }
 
         if (process.env.NODE_ENV !== "production") {

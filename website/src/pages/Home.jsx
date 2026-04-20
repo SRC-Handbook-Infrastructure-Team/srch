@@ -14,6 +14,7 @@ import carotIconDark from "../assets/carot-icon_white.svg";
 import instaLogoLight from "../assets/instagram-logo.svg";
 import instaLogoDark from "../assets/instagram-logo_white.svg";
 import cntrLogo from "../assets/cntr-logo.png";
+import srcLogo from "../assets/src_logo.svg"
 import SearchBar from "../components/SearchBar";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
@@ -373,7 +374,7 @@ function Home() {
                 Connect with Us
               </div>
               <p className="search-subtitle">
-                Follow us to receive CNTR news and updates!
+                Follow us to receive CNTR and SRC@Brown CS news and updates!
               </p>
             </div>
             <div className="cntr-link-area">
@@ -419,6 +420,26 @@ function Home() {
                     CNTR Instagram:
                     <br />
                     <span className="connect-link">@brown_cntr</span>
+                  </p>
+                </div>
+              </a>
+              <a
+                className="connect-link"
+                href="https://responsible.cs.brown.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  fontWeight: 400,
+                }}
+              >
+                <div className="connect-cont">
+                  <img src={srcLogo} alt="CNTR logo" width={56} height={67} />
+                  <p className="connect-text">
+                    SRC@Brown CS Website:
+                    <br />
+                    <span className="connect-link">responsible.cs.brown.edu</span>
                   </p>
                 </div>
               </a>

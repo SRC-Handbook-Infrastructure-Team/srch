@@ -31,35 +31,53 @@ function getSectionIcon(sectionId, theme) {
 function getSubsectionPreview(content) {
   if (!content) return "";
 
-  const plain = String(content)
-    // Remove code blocks and inline code markers.
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/`([^`]+)`/g, "$1")
-    // Remove markdown table rows and separator lines.
-    .replace(/^\s*\|.*\|\s*$/gm, "")
-    .replace(/^\s*[:|-]+(?:\s*\|\s*[:|-]+)*\s*$/gm, "")
-    // Resolve common markdown links/images to human-readable text.
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1")
-    // Remove headings, quotes, list markers, and footnote syntax.
-    .replace(/^\s{0,3}#{1,6}\s+.*$/gm, "")
-    .replace(/^\s{0,3}>\s?/gm, "")
-    .replace(/^\s*[-*+]\s+/gm, "")
-    .replace(/^\s*\d+\.\s+/gm, "")
-    .replace(/^\[\^.+\]:.*$/gm, "")
-    .replace(/\[\^[^\]]+\]/g, "")
-    // Convert custom inline tokens used in this project.
-    .replace(/\{([^}|]+)\|([^}]+)\}/g, "$2")
-    .replace(/\{([^}]+)\}/g, "$1")
-    // Remove emphasis markers and remaining html tags.
-    .replace(/(\*\*|__|~~|\*|_)/g, "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  // Convert custom sidebar reference tags to readable text for previews.
+  content = content.replace(
+    /<sidebar-ref\s+term=["']([^"']+)["']\s*(?:\/>|>\s*<\/sidebar-ref>)/gi,
+    (_, term) => String(term || "").replace(/[-_]+/g, " "),
+  );
 
-  if (!plain) return "";
-  return plain;
+  // Remove any remaining HTML-like tags that may appear in raw markdown.
+  content = content.replace(/<[^>]+>/g, "");
+
+  content = content.replace(/!\[[^\]]*\]\([^\)]*\)/g, "");
+
+  // Replace drawer links {text} with just 'text'
+  content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
+    p1.replace(/-/g, " "),
+  );
+
+  // Replace general links [text](url) with just 'text'
+  content = content.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
+
+  // Remove emphasis and code markers
+  content = content.replace(/(\*\*|__)(.*?)\1/g, "$2"); // bold
+  content = content.replace(/(\*|_)(.*?)\1/g, "$2"); // italic
+  content = content.replace(/`([^`]+)`/g, "$1"); // inline code
+
+  // Remove headings but keep text
+  content = content.replace(/^#{1,6}\s*(.*)$/gm, "$1");
+
+  // Remove footnotes
+  content = content.replace(/\[\^([^\]]+)\]/g, "");
+
+  // Remove Markdown table rows (lines starting and ending with |)
+  content = content.replace(/^\s*\|[-:\s|]+\|\s*$/gm, "");
+
+  // Normalize spaces (but keep newlines)
+  content = content.replace(/[ \t]{2,}/g, " ");
+
+  // Preserve paragraph breaks by replacing multiple newlines with exactly two newlines
+  content = content.replace(/\n{2,}/g, "\n\n").trim();
+
+  // Clean spacing before punctuation after tag and markdown cleanup.
+  content = content.replace(/\s+([,.;:!?])/g, "$1");
+
+  // Remove remaining text inside square brackets including the brackets
+  content = content.replace(/\[[^\]]*\]/g, "");
+
+  if (!content) return "";
+  return content.trim();
 }
 
 function extractPrimerIntroPreview(content = "") {

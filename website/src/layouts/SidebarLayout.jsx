@@ -260,13 +260,8 @@ export default function SidebarLayout({ children }) {
 
     if (isRightOpen && !wasRightOpen) {
       requestAnimationFrame(() => {
-        if (rightCloseButtonRef.current instanceof HTMLElement) {
-          rightCloseButtonRef.current.focus();
-          return;
-        }
-
         if (rightSidebarRef.current instanceof HTMLElement) {
-          rightSidebarRef.current.focus();
+          rightSidebarRef.current.focus({ preventScroll: true });
         }
       });
     }
