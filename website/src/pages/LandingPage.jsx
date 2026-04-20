@@ -427,10 +427,16 @@ function LandingPage() {
                           </span>
                         )}
 
-                        {expandedCards.has(sub.id) &&
-                        Array.isArray(sub.h2Blocks) &&
+                        {Array.isArray(sub.h2Blocks) &&
                         sub.h2Blocks.length > 0 ? (
-                          <span className="landing-outline-subheading-list">
+                          <span
+                            className={`landing-outline-subheading-list ${
+                              expandedCards.has(sub.id)
+                                ? "landing-outline-subheading-list--expanded"
+                                : "landing-outline-subheading-list--collapsed"
+                            }`}
+                            aria-hidden={!expandedCards.has(sub.id)}
+                          >
                             {sub.h2Blocks.map((block, blockIndex) => (
                               <span
                                 key={`${sub.id}-h2-${blockIndex}`}
@@ -456,7 +462,13 @@ function LandingPage() {
                         ) : (
                           !sub.introPreview &&
                           sub.preview && (
-                            <span className="landing-outline-card-preview">
+                            <span
+                              className={`landing-outline-card-preview ${
+                                !expandedCards.has(sub.id)
+                                  ? "landing-outline-card-preview--collapsed"
+                                  : ""
+                              }`}
+                            >
                               {sub.preview}
                             </span>
                           )

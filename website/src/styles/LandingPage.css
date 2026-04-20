@@ -403,24 +403,36 @@ html.is-landing-page {
   color: var(--color-header);
   width: 24px;
   height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   margin-top: 2px;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px transparent;
   cursor: pointer;
   transition:
     color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .landing-outline-collapse-icon:hover {
   color: var(--color-accent);
+  background: var(--color-accent-30);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
 }
 
 .landing-outline-card-intro {
   display: -webkit-box;
   width: 100%;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  max-height: calc(2 * 28px + 4px);
   overflow: hidden;
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -432,11 +444,11 @@ html.is-landing-page {
   font-size: var(--body-text);
   font-weight: var(--sub-weight);
   line-height: 28px;
-  transition: padding-bottom 0.2s ease;
+  transition: margin-bottom 0.2s ease;
 }
 
 .landing-outline-card-intro--collapsed {
-  padding-bottom: 14px;
+  margin-bottom: 14px;
 }
 
 .landing-outline-subheading-preview {
@@ -455,23 +467,33 @@ html.is-landing-page {
 .landing-outline-subheading-list {
   display: flex;
   flex-direction: column;
-  padding-top: 12px;
-  margin-left: 0;
-  padding-left: 0;
-  padding-bottom: 14px;
+  padding-top: 0;
+  margin-left: -26px;
+  padding-left: 26px;
+  padding-bottom: 0;
   gap: 12px;
-  animation: slideDown 0.2s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    padding-top 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 1000px;
-  }
+.landing-outline-subheading-list--expanded {
+  padding-top: 12px;
+  padding-bottom: 14px;
+  max-height: 1000px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.landing-outline-subheading-list--collapsed {
+  pointer-events: none;
 }
 
 .landing-outline-subheading-row {
@@ -536,6 +558,10 @@ html.is-landing-page {
   font-size: var(--body-text);
   font-weight: var(--sub-weight);
   line-height: 28px;
+}
+
+.landing-outline-card-preview--collapsed {
+  padding-bottom: 14px;
 }
 
 .landing-content-stack {
@@ -694,13 +720,13 @@ html.is-landing-page {
   }
 
   .landing-outline-subheading-list {
-    margin-left: 0;
-    padding-left: 0;
+    margin-left: -28px;
+    padding-left: 28px;
     gap: 10px;
   }
 
   .landing-outline-subheading-dot {
-    left: -24px;
+    left: -27px;
     width: 11px;
     height: 11px;
   }
