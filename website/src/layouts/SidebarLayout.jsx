@@ -52,6 +52,8 @@ export default function SidebarLayout({ children }) {
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(
     computeLayoutMode() != "wide",
   );
+  const [animateLeftSidebar, setAnimateLeftSidebar] = useState(false);
+  const leftSidebarAnimationTimerRef = useRef(null);
 
   const layoutMode = useMemo(
     () => computeLayoutMode(),
@@ -381,6 +383,46 @@ export default function SidebarLayout({ children }) {
     [openPanel, closePanel, leftSidebarCollapsed, isRightOpen],
   );
 
+  const handleManualLeftSidebarToggle = useCallback(() => {
+    if (leftSidebarAnimationTimerRef.current) {
+      clearTimeout(leftSidebarAnimationTimerRef.current);
+    }
+
+    setAnimateLeftSidebar(true);
+    leftSidebar.toggleCollapsed();
+
+    leftSidebarAnimationTimerRef.current = setTimeout(() => {
+      setAnimateLeftSidebar(false);
+      leftSidebarAnimationTimerRef.current = null;
+    }, 450);
+  }, [leftSidebar]);
+
+  useEffect(() => {
+    return () => {
+      if (leftSidebarAnimationTimerRef.current) {
+        clearTimeout(leftSidebarAnimationTimerRef.current);
+      }
+
+      if (typeof document !== "undefined") {
+        document.documentElement.classList.remove(
+          "left-sidebar-manual-transition",
+        );
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    if (animateLeftSidebar) {
+      document.documentElement.classList.add("left-sidebar-manual-transition");
+    } else {
+      document.documentElement.classList.remove(
+        "left-sidebar-manual-transition",
+      );
+    }
+  }, [animateLeftSidebar]);
+
   /** Maintain original openRightDrawer / closeRightDrawer API
    * so existing callers don’t need to change.
    */
@@ -564,11 +606,12 @@ export default function SidebarLayout({ children }) {
           focusTabIndex={!leftSidebarCollapsed ? 3 : -1}
           onSidebarContainerKeyDown={handleRightSidebarKeyDown}
           className={!leftSidebarCollapsed ? "open" : ""}
+          animateTransitions={animateLeftSidebar}
           width={leftSidebar.width}
           collapsed={leftSidebarCollapsed}
           setCollapsed={setLeftSidebarCollapsed}
           isResizing={leftSidebar.isResizing}
-          onToggleSidebar={leftSidebar.toggleCollapsed}
+          onToggleSidebar={handleManualLeftSidebarToggle}
           onStartResize={leftSidebar.startResize}
           onHandleKeyDown={leftSidebar.handleKeyDown}
         />
@@ -577,7 +620,7 @@ export default function SidebarLayout({ children }) {
             className="header-toggle"
             onClick={() => {
               if (typeof leftSidebar?.toggleCollapsed === "function") {
-                leftSidebar.toggleCollapsed();
+                handleManualLeftSidebarToggle();
               }
             }}
             aria-label={

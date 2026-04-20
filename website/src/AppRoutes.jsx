@@ -66,15 +66,12 @@ function AppRoutes() {
       <ScrollManager />
       <NavBar layoutMode="overlay" />
 
-      {isLandingPage ? (
-        <Routes>
-          <Route path="/:sectionId" element={<LandingPage />} />
-        </Routes>
-      ) : isMarkdownPage ? (
+      {isMarkdownPage ? (
         <>
-          <ScrollProgressBar />
+          {!isLandingPage && <ScrollProgressBar />}
           <SidebarLayout>
             <Routes>
+              <Route path="/:sectionId" element={<LandingPage />} />
               <Route
                 path="/:sectionId/:subsectionId"
                 element={<MarkdownPage />}

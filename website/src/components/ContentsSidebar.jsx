@@ -106,6 +106,7 @@ export default function ContentsSidebar({
   className = "",
   sidebarRef = null,
   focusTabIndex = -1,
+  animateTransitions = false,
   onSidebarContainerKeyDown = () => {},
   width,
   collapsed,
@@ -555,7 +556,7 @@ export default function ContentsSidebar({
     <Box
       as="aside"
       ref={sidebarRef}
-      className={`left-sidebar ${!collapsed ? "open" : ""} ${collapsed && isAnimatingClose ? "closing" : ""} ${className}`.trim()}
+      className={`left-sidebar ${animateTransitions ? "with-transition" : ""} ${!collapsed ? "open" : ""} ${collapsed && isAnimatingClose ? "closing" : ""} ${className}`.trim()}
       position="fixed"
       left={0}
       style={{

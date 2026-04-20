@@ -403,9 +403,7 @@ html:not(.left-open):not(.right-open) body .main-content {
   margin-left: 0 !important;
   padding-left: 8vw;
   padding-right: 8vw;
-  transition:
-    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: none;
 }
 
 html.is-landing-page:not(.left-open):not(.right-open) body .main-content {
@@ -417,6 +415,18 @@ html.left-open body .main-content {
   margin-left: var(--left-sidebar-width) !important;
   padding-left: 4vw;
   padding-right: 4vw;
+  transition: none;
+}
+
+html.left-sidebar-manual-transition:not(.left-open):not(.right-open)
+  body
+  .main-content {
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.left-sidebar-manual-transition.left-open body .main-content {
   transition:
     margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -646,13 +656,18 @@ p > .srch-drawer-link:first-child {
   overflow-y: auto !important;
   opacity: 0;
   transform: translateX(-100%);
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.25s ease;
+  transition: none;
   contain: layout paint style;
   will-change: transform;
   backface-visibility: hidden;
 }
+
+.left-sidebar.with-transition {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
+}
+
 .left-sidebar.closing {
   transform: translateX(-100%) !important;
   opacity: 0 !important;

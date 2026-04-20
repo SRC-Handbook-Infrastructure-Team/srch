@@ -1,10 +1,11 @@
 import "../styles/LandingPage.css";
 import "../styles/Home.css";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
-import { LuChevronRight } from "react-icons/lu";
+import { LuMinus, LuPlus } from "react-icons/lu";
 import MarkdownRenderer, {
+  extractFootnotes,
   getContent,
   getSubsections,
   getPreloadedNavigationData,
@@ -34,6 +35,9 @@ function getSubsectionPreview(content) {
     // Remove code blocks and inline code markers.
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/`([^`]+)`/g, "$1")
+    // Remove markdown table rows and separator lines.
+    .replace(/^\s*\|.*\|\s*$/gm, "")
+    .replace(/^\s*[:|-]+(?:\s*\|\s*[:|-]+)*\s*$/gm, "")
     // Resolve common markdown links/images to human-readable text.
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
@@ -56,6 +60,103 @@ function getSubsectionPreview(content) {
 
   if (!plain) return "";
   return plain;
+}
+
+function extractPrimerIntroPreview(content = "") {
+  const markdown = stripNonBodySections(content);
+  if (!markdown.trim()) return "";
+
+  const introBlock = markdown.replace(/^#\s[^\r\n]+(?:\r?\n)+/, "");
+  const firstSection = introBlock.split(/^##\s+/m)[0].trim();
+
+  return truncateText(getSubsectionPreview(firstSection), 220);
+}
+
+function truncateText(text = "", maxLength = 150) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  if (value.length <= maxLength) return value;
+  return `${value.slice(0, maxLength).trim()}...`;
+}
+
+function stripNonBodySections(markdown = "") {
+  let main = String(markdown || "");
+  if (!main.trim()) return "";
+
+  // Keep only content before the sidebar divider, matching page rendering behavior.
+  const sidebarMatch = /^##\s*Sidebar\s*$/im.exec(main);
+  if (sidebarMatch) {
+    main = main.slice(0, sidebarMatch.index).trim();
+  }
+
+  const { stripped } = extractFootnotes(main);
+  return String(stripped || "").trim();
+}
+
+function extractH2Blocks(content = "") {
+  const markdown = stripNonBodySections(content);
+  if (!markdown.trim()) return [];
+
+  const headingRegex = /^##\s+(.+)$/gm;
+  const excludedHeadings = new Set(["further reading", "footnotes", "sidebar"]);
+  const matches = [];
+  let match;
+
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const title = String(match[1] || "")
+      .replace(/\s+#+\s*$/, "")
+      .trim();
+
+    if (!title || excludedHeadings.has(title.toLowerCase())) {
+      continue;
+    }
+
+    matches.push({
+      title,
+      index: match.index,
+      bodyStart: headingRegex.lastIndex,
+    });
+  }
+
+  if (matches.length === 0) return [];
+
+  return matches
+    .map((item, idx) => {
+      const bodyEnd =
+        idx < matches.length - 1 ? matches[idx + 1].index : markdown.length;
+      const body = markdown.slice(item.bodyStart, bodyEnd);
+      const excerpt = truncateText(getSubsectionPreview(body), 180);
+
+      return {
+        title: item.title,
+        excerpt,
+      };
+    })
+    .filter((item) => item.title);
+}
+
+async function resolveSubsectionMarkdown(sectionId, sub) {
+  if (!sectionId || !sub?.id) return "";
+
+  const preloaded = getPreloadedMarkdownContent(sectionId, sub.id);
+  if (typeof preloaded?.content === "string" && preloaded.content.trim()) {
+    return preloaded.content;
+  }
+
+  try {
+    const fetched = await getContent(sectionId, sub.id);
+    if (typeof fetched?.content === "string" && fetched.content.trim()) {
+      return fetched.content;
+    }
+  } catch {
+    // Fall back to raw subsection content if cleaned content fetch fails.
+  }
+
+  if (typeof sub.content === "string" && sub.content.trim()) {
+    return sub.content;
+  }
+
+  return "";
 }
 
 // Convert index to letter: 0->a, 1->b, ... 25->z, 26->aa, etc.
@@ -88,9 +189,7 @@ function LandingPage() {
     cachedContent?.frontmatter?.title || "",
   );
   const [theme, setTheme] = useState("light");
-  const [collapseColumns, setCollapseColumns] = useState(false);
-  const twoColumnRef = useRef(null);
-  const collapseWidthRef = useRef(null);
+  const [expandedCards, setExpandedCards] = useState(new Set());
 
   const formattedTitle = useMemo(() => {
     return pageTitle && pageTitle.trim()
@@ -165,15 +264,29 @@ function LandingPage() {
       setPageTitle(result.frontmatter?.title || "");
 
       if (Array.isArray(subsectionData)) {
-        setSubsections(
-          subsectionData
-            .filter((sub) => sub && typeof sub.id === "string" && sub.id)
-            .map((sub) => ({
+        const normalized = subsectionData.filter(
+          (sub) => sub && typeof sub.id === "string" && sub.id,
+        );
+
+        const enrichedSubsections = await Promise.all(
+          normalized.map(async (sub) => {
+            const markdown = await resolveSubsectionMarkdown(sectionId, sub);
+            const h2Blocks = extractH2Blocks(markdown);
+
+            return {
               id: sub.id,
               title: sub.title || prettifySlug(sub.id),
-              preview: getSubsectionPreview(sub.content),
-            })),
+              introPreview: extractPrimerIntroPreview(markdown),
+              preview: truncateText(getSubsectionPreview(markdown), 180),
+              h2Blocks,
+            };
+          }),
         );
+
+        if (!isMounted) return;
+        setSubsections(enrichedSubsections);
+        // Initialize all cards as collapsed
+        setExpandedCards(new Set());
       } else {
         setSubsections([]);
       }
@@ -188,75 +301,6 @@ function LandingPage() {
     };
   }, [sectionId, navigate]);
 
-  useEffect(() => {
-    setCollapseColumns(false);
-    collapseWidthRef.current = null;
-  }, [sectionId]);
-
-  useEffect(() => {
-    const container = twoColumnRef.current;
-    if (!container || subsections.length === 0) return;
-
-    let rafId = null;
-
-    const evaluateCollapse = () => {
-      const titleEls = Array.from(
-        container.querySelectorAll(".landing-outline-card-title"),
-      );
-      if (titleEls.length === 0) return;
-
-      const hasMeasurableWidth = titleEls.some((el) => el.clientWidth > 0);
-      if (!hasMeasurableWidth) return;
-
-      const containerWidth = container.clientWidth || 0;
-
-      if (collapseColumns) {
-        const collapseWidth = collapseWidthRef.current;
-        if (
-          typeof collapseWidth === "number" &&
-          containerWidth < collapseWidth + 96
-        ) {
-          return;
-        }
-      }
-
-      const shouldCollapse = titleEls.some(
-        (el) => el.scrollWidth > el.clientWidth + 2,
-      );
-
-      if (shouldCollapse) {
-        collapseWidthRef.current = containerWidth;
-      }
-
-      setCollapseColumns((prev) =>
-        prev === shouldCollapse ? prev : shouldCollapse,
-      );
-    };
-
-    const scheduleEvaluation = () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(evaluateCollapse);
-    };
-
-    scheduleEvaluation();
-
-    const observer = new ResizeObserver(() => {
-      scheduleEvaluation();
-    });
-
-    observer.observe(container);
-    const titleEls = container.querySelectorAll(".landing-outline-card-title");
-    titleEls.forEach((el) => observer.observe(el));
-
-    window.addEventListener("resize", scheduleEvaluation, { passive: true });
-
-    return () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      observer.disconnect();
-      window.removeEventListener("resize", scheduleEvaluation);
-    };
-  }, [subsections, collapseColumns]);
-
   const handleNavigation = (targetId) => {
     if (!targetId) return;
     if (targetId.includes("/")) {
@@ -267,6 +311,19 @@ function LandingPage() {
   };
 
   const sectionIcon = getSectionIcon(sectionId, theme);
+
+  const toggleCardExpanded = (subId, event) => {
+    event.stopPropagation();
+    setExpandedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(subId)) {
+        next.delete(subId);
+      } else {
+        next.add(subId);
+      }
+      return next;
+    });
+  };
 
   return (
     <>
@@ -286,13 +343,26 @@ function LandingPage() {
       </div>
 
       <div className="about-lower-content landing-lower-content">
-        <div
-          ref={twoColumnRef}
-          className={`landing-two-column-container ${collapseColumns ? "is-collapsed" : ""}`.trim()}
-        >
+        <div className="landing-content-stack">
+          <section className="about-section landing-content-column">
+            {mainContent && (
+              <Box>
+                <MarkdownRenderer
+                  content={mainContent}
+                  sidebar={sidebar}
+                  sectionId={sectionId}
+                  subsectionId=""
+                  onDrawerOpen={() => {}}
+                  onNavigation={handleNavigation}
+                  highlight={null}
+                />
+              </Box>
+            )}
+          </section>
           {subsections.length > 0 && (
             <div className="landing-outline-column">
               <div className="landing-outline" aria-label="Primer Outline">
+                <h3 className="landing-outline-heading">Primer Outline</h3>
                 <div className="landing-outline-list">
                   {subsections.map((sub, index) => (
                     <button
@@ -311,32 +381,86 @@ function LandingPage() {
                       })()}`}
                     >
                       <span
-                        className="landing-outline-marker"
-                        aria-hidden="true"
+                        className={`landing-outline-card ${
+                          !expandedCards.has(sub.id)
+                            ? "landing-outline-card--collapsed"
+                            : ""
+                        }`}
                       >
-                        <span className="landing-outline-dot" />
-                        {index < subsections.length - 1 && (
-                          <span className="landing-outline-stem" />
-                        )}
-                      </span>
-                      <span className="landing-outline-card">
-                        <span className="landing-outline-card-title">
-                          {(() => {
-                            const sectionNum =
-                              sectionNumberById[sectionId] || 1;
-                            const subLetter = indexToLetter(index);
-                            return `${sectionNum}.${subLetter}. ${sub.title}`;
-                          })()}
-                        </span>
-                        {sub.preview && (
-                          <span className="landing-outline-card-preview">
-                            {sub.preview}
-                          </span>
-                        )}
-                        <LuChevronRight
-                          className="landing-outline-chevron"
+                        <span
+                          className="landing-outline-dot"
                           aria-hidden="true"
                         />
+                        <span className="landing-outline-card-heading-row">
+                          <span className="landing-outline-card-title">
+                            {(() => {
+                              const sectionNum =
+                                sectionNumberById[sectionId] || 1;
+                              const subLetter = indexToLetter(index);
+                              return `${sectionNum}.${subLetter}. ${sub.title}`;
+                            })()}
+                          </span>
+                          {expandedCards.has(sub.id) ? (
+                            <LuMinus
+                              className="landing-outline-collapse-icon"
+                              aria-hidden="true"
+                              onClick={(e) => toggleCardExpanded(sub.id, e)}
+                            />
+                          ) : (
+                            <LuPlus
+                              className="landing-outline-collapse-icon"
+                              aria-hidden="true"
+                              onClick={(e) => toggleCardExpanded(sub.id, e)}
+                            />
+                          )}
+                        </span>
+
+                        {sub.introPreview && (
+                          <span
+                            className={`landing-outline-card-intro ${
+                              !expandedCards.has(sub.id)
+                                ? "landing-outline-card-intro--collapsed"
+                                : ""
+                            }`}
+                          >
+                            {sub.introPreview}
+                          </span>
+                        )}
+
+                        {expandedCards.has(sub.id) &&
+                        Array.isArray(sub.h2Blocks) &&
+                        sub.h2Blocks.length > 0 ? (
+                          <span className="landing-outline-subheading-list">
+                            {sub.h2Blocks.map((block, blockIndex) => (
+                              <span
+                                key={`${sub.id}-h2-${blockIndex}`}
+                                className="landing-outline-subheading-row"
+                              >
+                                <span
+                                  className="landing-outline-subheading-dot"
+                                  aria-hidden="true"
+                                />
+                                <span className="landing-outline-subheading-copy">
+                                  <span className="landing-outline-subheading-title">
+                                    {block.title}
+                                  </span>
+                                  {block.excerpt && (
+                                    <span className="landing-outline-subheading-preview">
+                                      {block.excerpt}
+                                    </span>
+                                  )}
+                                </span>
+                              </span>
+                            ))}
+                          </span>
+                        ) : (
+                          !sub.introPreview &&
+                          sub.preview && (
+                            <span className="landing-outline-card-preview">
+                              {sub.preview}
+                            </span>
+                          )
+                        )}
                       </span>
                     </button>
                   ))}
@@ -344,21 +468,6 @@ function LandingPage() {
               </div>
             </div>
           )}
-          <section className="about-section landing-content-column">
-            {mainContent && (
-              <Box>
-                <MarkdownRenderer
-                  content={mainContent}
-                  sidebar={sidebar}
-                  sectionId={sectionId}
-                  subsectionId=""
-                  onDrawerOpen={() => {}}
-                  onNavigation={handleNavigation}
-                  highlight={null}
-                />
-              </Box>
-            )}
-          </section>
         </div>
       </div>
     </>
