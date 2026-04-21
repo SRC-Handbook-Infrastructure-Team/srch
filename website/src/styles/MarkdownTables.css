@@ -65,12 +65,12 @@
   text-align: center;
 }
 
-.md-table-body tr td:first-child {
+/* .md-table-body tr td:first-child {
   font-weight: 700;
   font-size: 1rem;
   text-align: center;
   color: var(--color-header) !important;
-}
+} */
 
 .md-table-body tr td:last-child {
   text-align: left;

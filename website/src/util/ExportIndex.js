@@ -93,7 +93,8 @@ function parseSidebar(sidebarRaw) {
   let currentValue = [];
 
   sidebarRaw.split("\n").forEach((line) => {
-    const keyMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+    const normalizedLine = line.trimStart();
+    const keyMatch = normalizedLine.match(/^([A-Za-z0-9-_]+):\s*$/);
     if (keyMatch) {
       if (currentKey) {
         sidebar[currentKey.toLowerCase()] = {
@@ -104,8 +105,8 @@ function parseSidebar(sidebarRaw) {
       currentKey = keyMatch[1];
       currentHeading = null;
       currentValue = [];
-    } else if (line.startsWith("Heading:")) {
-      currentHeading = line.replace("Heading:", "").trim();
+    } else if (normalizedLine.startsWith("Heading:")) {
+      currentHeading = normalizedLine.replace("Heading:", "").trim();
     } else if (currentKey) {
       currentValue.push(line);
     }

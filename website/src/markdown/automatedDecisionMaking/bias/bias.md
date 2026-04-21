@@ -27,7 +27,7 @@ We can organize sources of bias in ADM systems into three categories based on wh
 
 Data Curation occurs when data is gathered, labeled and collected into data sets. Data sets are then employed in model creation to help train models to have proper responses to stimuli. Once models are created, they are then tested on new data sets to ensure that they respond appropriately and accurately before they are then deployed for their intended use. Biases can be introduced throughout all the stages of this process.
 
-![Figure 1 description: A flowchart diagram illustrating sources of bias in machine learning data pipelines, flowing left to right. It begins with a "data generation" box feeding into a globe icon labeled "world," where red bold text marks "HISTORICAL BIAS." An arrow leads to a "population definition & sampling" step connecting to a crowd icon labeled "sample," marked with red bold text "REPRESENTATION BIAS." From there, a "measurement" step feeds into a cylinder labeled "dataset," marked with red bold text "MEASUREMENT BIAS." The dataset then flows through "preprocessing, train/test split" and branches into two outputs: "training data" and "test data." A second parallel lower pathway runs from "population definition & sampling" through "measurement" and "preprocessing, train/test split" to a final output labeled "benchmarks." The three bias types — Historical Bias, Representation Bias, and Measurement Bias — are highlighted in red throughout to indicate key failure points in the pipeline.](/assets/primer-photos/?)
+![Figure 1 description: A flowchart diagram illustrating sources of bias in machine learning data pipelines, flowing left to right. It begins with a "data generation" box feeding into a globe icon labeled "world," where red bold text marks "HISTORICAL BIAS." An arrow leads to a "population definition & sampling" step connecting to a crowd icon labeled "sample," marked with red bold text "REPRESENTATION BIAS." From there, a "measurement" step feeds into a cylinder labeled "dataset," marked with red bold text "MEASUREMENT BIAS." The dataset then flows through "preprocessing, train/test split" and branches into two outputs: "training data" and "test data." A second parallel lower pathway runs from "population definition & sampling" through "measurement" and "preprocessing, train/test split" to a final output labeled "benchmarks." The three bias types — Historical Bias, Representation Bias, and Measurement Bias — are highlighted in red throughout to indicate key failure points in the pipeline.](/assets/primer-photos/biasOverSystemLifecycle.png)
 
 **Figure 1:** Bias in Data Curation and Model Generation (adapted from Suresh et al.)_[^3]_
 
@@ -35,7 +35,7 @@ Data Curation occurs when data is gathered, labeled and collected into data sets
 
 Bias can be introduced at the very start of the ADM lifecycle during **data curation**. Data curation is how data is generated, collected, represented, and measured. **Figure 2** below is a visual representation of bias in data curation, the first half of the ADM system lifecycle shown in **Figure 1**.
 
-![Figure 2 description: A left-to-right flowchart showing sources of bias in machine learning data pipelines. Starting from "data generation" and a globe ("world"), the flow passes through population sampling, measurement, and preprocessing stages before splitting into "training data," "test data," and "benchmarks" outputs. Three bias types are labeled in red at key stages: "Historical Bias" at data generation, "Representation Bias" at population sampling, and "Measurement Bias" at measurement.](/assets/primer-photos/?)
+![Figure 2 description: A left-to-right flowchart showing sources of bias in machine learning data pipelines. Starting from "data generation" and a globe ("world"), the flow passes through population sampling, measurement, and preprocessing stages before splitting into "training data," "test data," and "benchmarks" outputs. Three bias types are labeled in red at key stages: "Historical Bias" at data generation, "Representation Bias" at population sampling, and "Measurement Bias" at measurement.](/assets/primer-photos/biasInDataGeneration.png)
 
 **Figure 2:** Bias in Data Generation (adapted from Suresh et al.)[^4]
 
@@ -47,7 +47,7 @@ Bias in **data curation** displays itself through **historical bias, representat
 
 **Historical bias** occurs when a model's data reflects societal stereotypes. Even if a dataset perfectly reflects reality, it can still be historically biased because it reflects prejudices that exist in the real world.
 
-One example of historical bias is gender bias due to large language models being trained on data that reflects historical sexism.[^5]
+One example of historical bias is gender bias due to large language models being trained on {data-that-reflects-historical-sexism}.[^5]
 
 **Case Study: [Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes](https://arxiv.org/pdf/1711.08412)**
 
@@ -71,7 +71,7 @@ Historical bias creates the distinction between statistical discrimination and t
 
 **Example:** a dataset that does not include hyphenated last names being used to train a name-generation model
 
-**Underrepresentation Bias:** when the data available on the target population is insufficient to properly train the model.
+**{Underrepresentation-bias}:** when the data available on the target population is insufficient to properly train the model.
 
 **Example:** a dataset being used to train a model identifying cancer from MRI scans that does not have enough scans of rare cancers.
 
@@ -89,7 +89,7 @@ When datasets overrepresent some demographics and underrepresent others, the res
 
 **Measurement bias** arises when a variable is chosen to act as a proxy for prediction of an abstract concept, but the proxy is inherently biased. For example, past credit scores are used as a proxy for fiscal responsibility, but minority groups have been historically denied opportunities to build good credit. If the proxies being used by a model are based on a history of discrimination, they can introduce bias into the model.
 
-A case study on healthcare risk assessment algorithms demonstrates how using money spent on healthcare as a proxy variable for health need can be biased against groups that systematically spend less on healthcare.[^8]
+A case study on {healthcare-risk-assessment} algorithms demonstrates how using money spent on healthcare as a proxy variable for health need can be biased against groups that systematically spend less on healthcare.[^8]
 
 **Case Study: [Dissecting racial bias in an algorithm used to manage the health of populations](https://www.science.org/doi/10.1126/science.aax2342)**
 
@@ -103,16 +103,15 @@ To assess patient need, many hospitals use risk assessment software. One variabl
 
 Bias can also emerge in model creation: the definition of the model architecture and the training of the weights. Engineers may bring their own biases into the design process, deciding which trade-offs to prioritize and which populations to optimize their model for. Figure 3 below is a visual representation of bias in model creation, the second half of the ADM system lifecycle shown in Figure 1\.
 
+![Figure 3 description: A left-to-right flowchart showing sources of bias in the model training and deployment stage of a machine learning pipeline. Training data feeds into "model learning" (labeled "Learning Bias" in red), while test data and benchmarks feed into "evaluation" (labeled "Evaluation Bias" in red). Both, along with a "model definition" step (labeled "Aggregation Bias" in red), feed into a central "model" block. The model then runs to produce a grid-style "model output," which passes through post-processing and human interpretation before reaching a globe icon representing the "world," with this final stage labeled "Deployment Bias" in red.](/assets/primer-photos/biasInModelTraining.png)
 
-![Figure 3 description: A left-to-right flowchart showing sources of bias in the model training and deployment stage of a machine learning pipeline. Training data feeds into "model learning" (labeled "Learning Bias" in red), while test data and benchmarks feed into "evaluation" (labeled "Evaluation Bias" in red). Both, along with a "model definition" step (labeled "Aggregation Bias" in red), feed into a central "model" block. The model then runs to produce a grid-style "model output," which passes through post-processing and human interpretation before reaching a globe icon representing the "world," with this final stage labeled "Deployment Bias" in red.](/assets/primer-photos/?)
-
-**Figure 3:** Bias in Model Creation (adapted from Suresh et al.)[^9]  
+**Figure 3:** Bias in Model Creation (adapted from Suresh et al.)[^9]
 
 ### How does bias appear in model creation?
 
 The modeling stage involves countless design choices, so each of these choices can introduce or amplify inequities depending on what the model prioritizes and who it is optimized to serve. Bias in model creation typically appears through four main mechanisms: **aggregation bias, learning bias, evaluation bias, and deployment bias**.
 
-### Aggregation Bias\*\*
+### Aggregation Bias
 
 **Aggregation bias** occurs when distinct groups are treated as homogeneous in a model, even though these populations differ in meaningful ways. Aggregation bias will often lead the model's performance to be unequal across subgroups. In some cases, it can lead to a model that is not optimal for _any_ group, or a model that only works properly for the dominant population.
 
@@ -122,7 +121,7 @@ The modeling stage involves countless design choices, so each of these choices c
 
 **Example:** say a model is given the objective to get the highest percent correct answers guessing peoples' ages from photographs. If the model is given 100 subjects to attempt to guess their ages and guesses all 90 White people correctly and all 10 Black people incorrectly, the overall level of accuracy would be 90%. Looking just at the model's accuracy, it may seem like the model is performing well. But, when you look closer, it becomes clear that the model is unable to correctly predict age for _any_ Black people. This model is optimizing for the majority population, ignoring minority group errors and exhibiting learning bias.
 
-One case study by MIT researchers found learning bias and historical bias to be present in a now defunct Amazon hiring software.[^10] This demonstrates how two or more biases can occur simultaneously.
+One {case-study-by-MIT-researchers} found learning bias and historical bias to be present in a now defunct Amazon hiring software.[^10] This demonstrates how two or more biases can occur simultaneously.
 
 **Case Study: [Hiring Fairly in the Age of Algorithms](https://arxiv.org/abs/2004.07132)**
 
@@ -134,7 +133,7 @@ Starting in 2014, Amazon used an ADM system to filter through resumes and find t
 
 **Evaluation bias** occurs _after_ model creation, when evaluation benchmark datasets are input to train a model, but they do not represent the user population. Many ADM systems are evaluated on narrow or sanitized datasets, which creates a misleadingly positive picture of model performance. When models perform positively on sanitized datasets, engineers do not work to further improve model performance. When such models are then deployed in more diverse, uncontrolled environments, they perform worse than developers intended.
 
-Researchers have found that facial expression recognition datasets used in model evaluation do not contain the diversity of faces that exist in the target population. This has caused companies to output models that do not correctly recognize diverse faces with a high level of accuracy.[^11] This was discovered by Joy Buolamwini in her MIT thesis Gender Shades.
+Researchers have found that facial expression recognition datasets used in model evaluation do not contain the diversity of faces that exist in the target population. This has caused companies to output models that do not correctly recognize diverse faces with a high level of accuracy.[^11] This was discovered by Joy Buolamwini in her MIT thesis {Gender-Shades}.
 
 **Case Study: [Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf)**
 
@@ -209,3 +208,32 @@ Suresh, Harini, and John Guttag. "A Framework for Understanding Sources of Harm 
 [^10]: Max Langenkamp, Allan Costa, and Chris Cheung, "Hiring Fairly in the Age of Algorithms," arXiv preprint, arXiv:2004.07132, April 15, 2020, [https://arxiv.org/abs/2004.07132](https://arxiv.org/abs/2004.07132).
 
 [^11]: Joy Buolamwini and Timnit Gebru, "Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification," _Proceedings of Machine Learning Research_ 81 (2018): 1–15, [https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf).
+
+## Sidebar
+
+data-that-reflects-historical-sexism:
+Heading: Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes
+
+When training data is input into a word embedding program, words are assigned vector representations within the multi-dimensional space. Associated words are positioned closer to each other in the high dimensional vector space as a result of shared context. Garg et. al., found that words associated with women are systematically closer to traditionally female occupations, adjectives and traits than words associated with men are to traditionally female occupations, adjectives and traits. Similar disparities in distance exist between racial groups and certain occupations, adjectives and traits. Their work laid the groundwork for subsequent research demonstrating how statistical patterns in training data associated with societal biases can lead to models that encode bias and reproduce it in their output.
+
+Underrepresentation-bias:
+Heading: Representation Bias in Image Generating Software
+
+Huang and Huang found that with Generative Adversarial Networks (GANs), a type of image generating AI software, models will exacerbate societal biases and improperly represent minority groups. For example, if a GAN is asked to create images of engineers, it will overwhelmingly generate images of White males because images of White males were the primary images in the dataset that the model was trained on. In their analysis of AI image generating software, the models were shown to underrepresent minority groups because the training datasets did not include sufficient representation of minorities.
+
+When datasets overrepresent some demographics and underrepresent others, the resulting model will learn unevenly, performing well for majority groups but poorly for individuals from underrepresented or minority groups.
+
+healthcare-risk-assessment:
+Heading: Dissecting racial bias in an algorithm used to manage the health of populations
+
+Obermeyer et. al. (2019) To assess patient need, many hospitals use risk assessment software. One variable imputed into risk assessment models is healthcare spending. In the software studied by Obermeyer et. al., healthcare spending was used as a proxy in an algorithm that predicts health need to identify patients who will benefit most from healthcare programs. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients with the same score. This is an example of measurement bias because the proxy variable, cost, was a poor measure of the target variable, health need.
+
+case-study-by-MIT-researchers:
+Heading: Hiring Fairly in the Age of Algorithms
+
+Langenkamp et. al. (2020) Starting in 2014, Amazon used an ADM system to filter through resumes and find the best candidates. However, since the model was optimized to choose the best candidates, and in past hiring data the majority of good candidates had been male, the model learned to use maleness as an indicator that someone would be the good candidate. This led to a model making hiring decisions that systematically disadvantaged women. This study demonstrates learning bias because the model was taught to find the best candidates, so the software came to understand maleness as a factor that contributed to being a good candidate. However, this is simultaneously an example of historical bias, because historical sexism in the field of engineering contributed to the fact that the majority of past engineers hired were male.
+
+Gender-Shades:
+Heading: Intersectional Accuracy Disparities in Commercial Gender Classification
+
+Buolamwini and Gebru (2018) Researchers created a dataset of thousands of pictures of male and female faces drawn from parliament members from across the world with a range of skin tones. They then assessed the efficacy of facial recognition technologies from IBM, Microsoft and Face++ at recognizing faces and genders. While they found that models had a high level of overall accuracy, when looking at model accuracy by race and gender, they found that the models were only about 65-80% accurate in detecting dark skinned, female faces as opposed to light skinned male faces, with which all three models had an over 99% accuracy rate.

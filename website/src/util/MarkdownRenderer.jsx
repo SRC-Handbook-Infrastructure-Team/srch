@@ -795,7 +795,8 @@ export const getContent = async (sectionId, subsectionId) => {
           let currentValue = [];
 
           lines.forEach((line) => {
-            const keyMatch = line.match(/^([A-Za-z0-9-_]+):\s*$/);
+            const normalizedLine = line.trimStart();
+            const keyMatch = normalizedLine.match(/^([A-Za-z0-9-_]+):\s*$/);
             if (keyMatch) {
               if (currentKey) {
                 // store with lowercase key for case-insensitive lookup
@@ -808,8 +809,8 @@ export const getContent = async (sectionId, subsectionId) => {
               currentKey = keyMatch[1].trim();
               currentHeading = null;
               currentValue = [];
-            } else if (line.startsWith("Heading:")) {
-              currentHeading = line.replace("Heading:", "").trim();
+            } else if (normalizedLine.startsWith("Heading:")) {
+              currentHeading = normalizedLine.replace("Heading:", "").trim();
             } else if (currentKey) {
               currentValue.push(line);
             }
@@ -954,12 +955,13 @@ function MarkdownRenderer({
       let currentSlug = null;
       for (let i = 0; i < lines.length; ++i) {
         const line = lines[i];
-        const slugMatch = line.match(/^(\w[\w-]*):\s*$/);
+        const normalizedLine = line.trimStart();
+        const slugMatch = normalizedLine.match(/^(\w[\w-]*):\s*$/);
         if (slugMatch) {
           currentSlug = slugMatch[1];
           continue;
         }
-        const refMatch = line.match(/\[\^([0-9]+)\]/);
+        const refMatch = normalizedLine.match(/\[\^([0-9]+)\]/);
         if (refMatch && currentSlug) {
           if (!footnotesMap.has(refMatch[1])) {
             localOriginMap[refMatch[1]] = currentSlug;
