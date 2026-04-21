@@ -231,7 +231,7 @@ html[data-theme="light"] .topic-card {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--card-grid-gap);
-  width: 80vw;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -307,7 +307,9 @@ html[data-theme="light"] .topic-card {
 
 .content-section {
   width: 100vw;
-  padding-bottom: 2.5rem;
+  padding-left: var(--ack-hero-paddingX);
+  padding-right: var(--ack-hero-paddingX);
+  padding-bottom: 72px;
   align-self: center;
   justify-content: center;
   flex-direction: column;
@@ -336,20 +338,22 @@ html[data-theme="light"] .topic-card {
 .section-title {
   align-self: stretch;
   text-align: center;
-  color: var(--color-header);
-  font-size: 2.5rem;
-  font-family: "Funnel Sans", sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
   justify-self: center;
-  word-wrap: break-word;
-  margin-top: 2.5rem;
-  margin-bottom: 1.25rem;
+  margin-top: 72px;
+  margin-bottom: 12px;
+  font-size: 2em;
+  line-height: 1.15;
+  color: var(--color-header);
+  font-weight: bold;
+}
+
+.content-section:first-of-type .section-title {
+  margin-top: 36px;
 }
 
 .how-to-section {
-  padding-left: 10vw;
-  padding-right: 10vw;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .info-list {
@@ -387,12 +391,12 @@ html[data-theme="light"] .topic-card {
 
 .learn-more-container {
   display: flex;
-  width: 80vw;
+  width: 100%;
   justify-content: flex-end;
   align-items: flex-end;
   gap: 10px;
-  padding-top: 12px;
-  padding-bottom: 36px;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .learn-more-button {

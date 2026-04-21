@@ -5,8 +5,8 @@
 
   background: var(--color-bg);
   padding-bottom: 72px;
-  padding-right: 200px;
-  padding-left: 200px;
+  padding-right: 250px;
+  padding-left: 250px;
   padding-top: 0px;
 }
 
@@ -89,6 +89,7 @@ html.is-landing-page {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 20px;
+  margin-bottom: 72px;
   justify-content: center;
 }
 

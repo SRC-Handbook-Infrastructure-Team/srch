@@ -214,7 +214,7 @@ function Home() {
                 ref={curriculumTitleRef}
                 style={{ overflowWrap: "break-word" }}
               >
-                Check out Our Curriculum
+                Check Out Our Curriculum
               </div>
               <div className="curriculum-subtext">
                 Explore our focus areas of socially responsible computing
