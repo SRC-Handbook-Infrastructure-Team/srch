@@ -1,327 +1,206 @@
 ---
-title: Concepts of Justice in AI
+title: Justice in AI
 order: 4
 final: false
 ---
 
-Justice in automated decision-making systems extends beyond identifying isolated instances of
-bias or harm. It requires critical examination of how these systems mirror inequalities and
-inequities in the broader world that they aim to encode.
+# Justice in Artificial Intelligence Outline
 
-## Types of Justice
+## Introduction
 
-While many variations of justice exist in the context of legal studies and political science, when
-examining automated decision-making scenarios, two broad categories consistently emerge:
-**distributive justice** and **procedural justice**.
+Justice is the idea that individuals should be treated fairly. However, what that means when trying to create the best AI Systems presents many questions, diverging opinions, and diversity in implementation.
 
-- **Distributive Justice**: Fair distribution of resources, opportunities, or benefits in AI outputs by ensuring that outcomes do not perpetuate existing inequities or systemic discrimination.
-- **Procedural Justice**: Insurance that all individuals and groups are respected and valued in automated decision-making processes.
+While [fairness](/AI/fairness), as currently formalized in AI, relies on mathematical criteria, justice relies on an ever-evolving assumption about what counts as “just.” Justice reflects deeper philosophical tensions about what kind of justice AI systems should aim for: distributive, procedural, or other philosophical approaches. Justice requires tools that actively build on equality and access: Can AI be that tool?
 
-### Distributive Justice (Outcome-Focused)
+## Conceptions of Justice
 
-Distributive justice in automated decision-making emphasizes the equitable allocation of
-resources, opportunities, and benefits in order to address and counteract systemic
-discrimination and historical inequalities embedded in society. However, not all justice-related
-efforts explicitly target these systemic concerns; different frameworks may instead prioritize
-other aspects of fairness. Despite these variations, three (sometimes conflicting) conceptions
-of distributive justice demonstrate distinct ways to assess automated decision-making
-systems: **sufficiency**, **priority**, and **equality of opportunity**.
+There are many efforts to build mathematically fair models and de-bias datasets as well as govern the outcomes of Automated Decision Systems (ADS). However, a philosophical notion of justice provides an intellectual framework for building models and tech. There is no one notion of justice that is accepted by everyone and some conceptions also conflict with each other, making all impossible to implement at once.[^1] The choice of guiding methodology largely depends on the outcome goal behind and values behind development of ADS. Principally, there are two big overarching conceptions that show different approaches to what justice should achieve:
 
-#### Sufficiency
+| Process-Focused Justice                                                                                                                                                                                                                                                                                                                                                                                                               | Outcome-Focused Justice                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Process-focused approaches to justice focus only on the process through which the users go, not on the outcomes of that process Process-focused justice is the idea that all individuals and groups should be respected and valued in automated decision-making processes. It applies to interactions with all kinds of decision-makers, whether that be a legal authority, corporate system, community institution, or an algorithm. | Outcome-focused justice focuses on the fairness of the outcomes or results of decisions and actions taken. This is a philosophy of fair distribution of resources, opportunities, or benefits, which can also be applied to AI outputs. This concept emphasizes that outcomes must not perpetuate existing inequities or systemic discrimination. |
 
-The principle of **sufficiency** emphasizes ensuring that all individuals or groups receive a
-minimum acceptable threshold of resources and opportunities, and guarantees that no one falls
-below an ethically justifiable threshold. Rather than focusing on equal outcomes, sufficiency
-prioritizes meeting fundamental needs first, which helps protect the most vulnerable individuals
-from harm. In the context of automated decision-making, this approach ensures that AI systems
-explicitly embed minimum ethical standards into their predictions and allocations.
+#### Key Questions for Process-Focused Justice in AI:
 
-{Case-Study-Annie-MOORE}
-
-#### Priority
-
-The principle of **priority** focuses on the allocation of resources and opportunities to individuals or groups in order to address existing disparities or urgent needs. This approach recognizes that certain populations may require more immediate or substantial support to achieve equitable outcomes. In automated decision-making, priority ensures that AI systems can identify and respond to these critical needs.
-
-{Case-Study-SafeRent-Solutions-AI-Scoring-System}
-
-{Case-Study-AI-Tools-for-LA-Housing}
-
-#### Equality of Opportunity
-
-**Equality of opportunity** ensures that all individuals have fair access to resources and
-opportunities, regardless of their background. This principle aims to remove barriers that
-prevent equitable participation and advancement in society. In the context of AI, equality of
-opportunity involves designing systems that (a) do not perpetuate existing biases that reflect
-morally arbitrary characteristics (e.g., race, gender) and (b) actively promote inclusivity.
-
-{Case-Study-Algorithmic-Justice-League}
-
-#### Key Questions for Distributive Justice
-
-The following questions are meant to help diagnose whether an AI system is distributing
-benefits and burdens fairly while spotlighting who gains, who loses, and why:
-
-- Do particular individuals or communities receive a disproportionate share of resources,
-  opportunities, or risks?
-- What trade-offs, if any, exist between the three tenets of distributive justice
-  (i.e., sufficiency, priority, and equality of opportunity)?
-- Does the AI’s design explicitly account for differences in social, economic, or political
-  advantages?
-
-### Procedural Justice (Process-Focused)
-
-Individuals’ perceptions of procedurally just encounters are based on four central features of
-their interactions with any decision-maker, whether that be a legal authority, corporate system,
-community institution, or an algorithm: **neutrality**, **respect**, **voice**, and **trustworthiness**.
-
-![Procedural Justice Graphic](/assets/primer-photos/yls_procedural_justice.png)
-_Figure from Yale Law School representing the four pillars of procedural justice._
-
-When considering the role of algorithms as automated decision-makers capable of making
-authoritative decisions, these core features of procedural justice remain relevant.
-
-- **Neutrality**: An algorithm shows neutrality when its decision rules are consistent,
-  evidence‑based, and free from hidden biases. Practically, that means using validated
-  features, documenting all preprocessing steps, stress‑testing for disparate impact, and
-  publishing model cards so outsiders can see the logic. If two applicants present the
-  same relevant facts, the system should reach the same conclusion every time and be
-  able to demonstrate that consistency under audit.
-
-{Case-Study-Shapley-Values-for-Credit-Scores}
-
-- **Respect**: Respect in an automated setting is largely conveyed through user experience
-  and data handling. Interfaces should provide plain‑language explanations, avoid
-  dark‑pattern nudges, and accommodate accessibility needs (e.g., screen‑reader
-  compatibility, multiple languages). On the back end, respect for users also means
-  collecting only the data strictly necessary for the task and safeguarding it with strong
-  privacy controls.
-
-{Case-Study-SCHUFA}
-
-- **Voice**: Algorithms can’t “listen,” but their designers can build structured channels for
-  voice: pre‑deployment participatory design sessions, in‑app feedback forms, and
-  post‑decision appeal mechanisms that route complaints to a human reviewer. Logging
-  those interactions and feeding validated issues back into model retraining turns user
-  voice into a live governance signal rather than a box‑checking exercise.
-
-{Case-Study-Wikimedia-Value-Sensitive-Algorithm}
-
-- **Trustworthiness**: Trustworthiness emerges when system owners act and are seen to act
-  in the public’s interest. Concretely, that involves open sourcing evaluation code where
-  possible, publishing third‑party audit reports, disclosing conflicts of interest, and
-  committing to sunset or retrain the model when context shifts. Regular transparency
-  updates signal that the algorithm’s creators are motivated by fairness and public
-  well‑being, not just efficiency or profit.
-
-{Case-Study-Pymetrics-Independent-Audit}
-
-It is crucial to scrutinize automated decision-making algorithms through this procedural justice
-framework to ensure they are designed and implemented in ways that uphold respect,
-demonstrate neutrality, amplify individual and community voices, and foster trust in the
-institutions that employ them.
-
-#### Key Questions for Procedural Justice
-
-The following questions are meant to help gauge whether an AI system’s decision‑making
-process is procedurally just:
-
-- Are individuals treated with dignity and respect in automated decision-making processes
-  and outcomes?
+- Are individuals treated with dignity and respect in automated decision-making processes and outcomes?
 - Is there clear communication about why the system is making certain decisions?
-- Can individuals contest the AI system’s decisions, and are those processes accessible
-  and fair?
+- Can individuals contest the AI system’s decisions, and are those processes accessible and fair?
 - Do appropriate mechanisms for accountability (e.g. effective auditing) exist?
 
-## Mechanisms for Algorithmic Accountability
+Key components of process-focused (or procedural) justice are **respect, trustworthiness**, granting everyone a **voice** to tell their side, and **neutrality.**
 
-Justice in automated decision-making requires mechanisms that reinforce the core tenets of
-distributive justice and procedural justice. Mechanisms for algorithmic accountability serve
-this critical role by establishing practices and safeguards to assess, maintain, and enhance
-distributive and procedural justice throughout the decision-making process.
+**Respect** captures the idea that all individuals must be treated with dignity. This includes courteous communication, acknowledgment of people's concerns, and the absence of demeaning or dismissive behavior.
 
-### Independent Auditing
+**Trustworthiness** refers to whether decision makers convey sincere, benevolent, and fair motives to those impacted by their decisions. People evaluate not only the logic of a decision but also the intentions behind it. Trust is strengthened when decision makers demonstrate concern for stakeholders' well-being and explain their reasoning in ways that signal integrity and accountability. A key aspect of trustworthiness is transparency and right to request explanations for model's performance, like in the {youtube-case|YouTube moderation case}.
 
-Due to the continuous negative impact of biases originating from automated decision-making
-systems, a recurring theme when discussing algorithmic accountability is the need for
-third-party, external auditing as a counterbalance to purely internal oversight. External auditors
-can help:
+**Voice** emphasizes that everyone affected by a decision is given the opportunity to share their perspective. This does not guarantee that every viewpoint will determine the outcome, but it ensures that the process is participatory rather than unilateral.
 
-1. Identify overlooked biases that in-house teams might miss due to organizational blind
-   spots or conflicts of interest.
-2. Establish trust among affected communities because independent assessments
-   increase transparency and legitimacy.
-3. Create standardized governance practices across different industries and use cases,
-   which will improve fairness metrics over time.
+**Neutrality** refers to the expectation that decisions are unbiased. A procedurally just process requires that rules are applied consistently, that decision criteria are clearly explained, and that personal preferences or prejudices do not shape outcomes.
 
-Independent external oversight is most effective when auditors can reliably access relevant data
-or model outputs. However, many external auditors face barriers like restricted APIs or
-excessive legal hurdles, which limit their ability to test for bias or harmful outcomes. Without a
-clear path to the necessary information, audits risk being reduced to surface-level checks that
-fail to address deeper, systemic issues, a phenomenon referred to as audit washing.
+#### Key Questions for Outcome-focused justice (Distributive Justice) in AI:
 
-### Institutional Accountability
+- Do particular individuals or communities receive a disproportionate share of resources, opportunities, or risks because of the system’s design?
+- What trade-offs, if any, exist between the three tenets of distributive justice (i.e., sufficiency, priority, and equality of opportunity)?
+- Does the system cause the deepening of social, economic, or political advantages for certain groups while leaving other groups behind?
 
-Holding a single developer accountable for biased code may do little to fix the deeper systemic
-forces that shaped that bias in the first place. Therefore, it is crucial to spotlight the
-responsibility of governments, large organizations, and social institutions, rather than just “bad
-actors.” The obligation is on these groups as collectives rather than individual developers and
-deployers of AI models to mitigate harm and ensure compliance with anti-discrimination
-standards. Rather than imposing blanket liability on developers, lawmakers should focus on the
-actual use cases to better tackle the root causes of AI bias and foster accountable AI
-deployments.
+**Sufficiency**, **priority**, and **equality of opportunity** are three distinct ways to assess automated decision-making systems through the lens of distributive justice. They are at times contradictory, but show diverse proposed ways of achieving outcome-focused justice.
 
-{Timnit-Gebrus-Google-Exit}
+**Sufficiency** focuses on ensuring that all individuals and groups reach a minimum acceptable threshold of resources, protections, and opportunities. The core idea is that no one should fall below an ethically justifiable standard of well-being, even if outcomes are not perfectly equal. Rather than seeking to equalize all results, a sufficiency approach prioritizes meeting fundamental needs first and protecting the most vulnerable from serious harm. In AI systems, sufficiency asks whether automated decisions systematically push anyone below this threshold.
 
-## Tradeoffs between Efficiency and Bias
+**Priority** emphasizes directing resources and opportunities to those who are worst off or face the most urgent needs. It acknowledges that some individuals or groups require more intensive or immediate support in order to achieve genuinely fair outcomes. For automated decision-making, priority asks whether AI systems are capable of recognizing existing disparities and responding in ways that reduce them rather than entrench them. This lens focuses on how outcomes are distributed, especially for people who are already disadvantaged.
 
-The bias-efficiency tradeoff highlights tensions in algorithmic decision-making between
-optimizing for performance, cost, savings, and scale, while upholding justice. Algorithms provide
-quick and cost-effective decisions, but these efficiencies can magnify social biases and overlook
-local contexts, particularly when:
+**Equality of opportunity** ensures that all individuals have fair access to valuable resources and life chances, regardless of morally arbitrary characteristics such as race, gender, or socioeconomic background. Principally, it aims to remove any barriers that prevent equitable participation and advancement in society. In the context of AI, equality of opportunity involves designing systems that avoid reproducing historical biases and that support inclusive access to beneficial decisions. It evaluates not only who “wins” or “loses” in an algorithmic process, but whether people had a fair chance, given their starting position, to benefit from the technology.
 
-- Historical data reflect systemic discrimination.
-- Design priorities emphasize speed, profit, or scalability at the expense of nuanced, local
-  fairness considerations.
-- Protected groups are indirectly penalized by proxy methods (e.g., [Bayesian Improved
-  Surname Geocoding](https://www.rand.org/health-care/tools-methods/bisg.html)).
-- Large-scale models adopt reductionist approaches that fail to account for local
-  community needs (e.g., environmental costs).
+**Case Study:** {Generative-AI-Based-Tutoring-System-for-Upper-Egypt-Community-Schools|Generative AI-Based Tutoring System for Upper Egypt Community Schools}
 
-{Case-Study-Biased-Car-Insurance-Premiums-in-Michigan}
+## Other Notions of Justice
 
-## Glossary
+However, beyond the principally-different conceptions of justice (process vs outcome), many other ideas and philosophies have emerged to capture the breadth of inequalities and areas of life that get affected by possible injustices.
 
-- **Algorithmic Accountability**: Concept for ensuring automated decision-making systems operate ethically and transparently, with mechanisms (e.g., audits) to identify and mitigate injustices.
-- **Audit Washing**: Superficial or ineffective audits that give a misleading impression of fairness without addressing systemic issues.
-- **Bias**: Systematic unfairness in decision-making systems, based on superficial or inaccurate assumptions, leading to disproportionate harm or advantage for certain groups.
-- **Bias-Efficiency Tradeoff**: Tension between achieving efficiency through automated systems and the potential amplification of biases or injustices.
-- **Distributive Justice**: Fair allocation of resources and opportunities to address systemic discrimination and inequalities.
-- **Equality of Opportunity**: Guaranteeing fair access to resources and opportunities regardless of background or identity.
-- **Harm**: Negative consequences resulting from biased or unjust automated decisions.
-- **Independent Auditing**: The practice of having neutral, third-party experts evaluate AI models and decisions for potential biases or harms.
-- **Justice**: Fair treatment ensuring equitable processes and outcomes in automated decision-making.
-- **Neutrality**: Central feature of procedural justice; ensuring impartiality and unbiased treatment within automated decisions.
-- **Priority**: Preferential allocation of resources to groups or individuals facing the most urgent needs or significant disadvantages.
-- **Procedural Justice**: Fairness in the processes that lead to automated decisions, emphasizing respect, neutrality, voice, and trustworthiness.
-- **Respect**: Treating individuals with dignity and valuing their rights within decision-making processes.
-- **Sufficiency**: Ensuring all individuals receive a minimum acceptable level of resources or opportunities to meet fundamental needs.
-- **Trustworthiness**: Establishing confidence in automated systems by maintaining transparency, fairness, and accountability.
-- **Voice**: Providing individuals the opportunity to express concerns or contest decisions made by algorithms.
+## Restorative Justice
 
-## Further Reading
+**Restorative justice is a set of principles and practices to deal with crimes or incidents, as violations of people and relationships. While it holds perpetrators accountable, it attempts to determine what can be done to repair that harm and rebuild the damaged relationships.**
+Restorative justice can help victims build a constructive relationship or dialogue with those who harmed them, but only through a voluntary, safe, and facilitated encounter in which offenders accept responsibility and all affected parties have a voice. Its goal is repair:[^5] supporting victims’ healing, giving offenders a chance to make amends, and helping the wider community restore trust, safety, and relational health. It also seeks transformation by addressing not only individual harm but also the deeper social or structural causes of wrongdoing, so that people, relationships, and systems can change. One example of these initiatives is the {dfBL-case|Data for Black Lives's effort to build data-based reparations for healthcare}.
 
-Angwin, Julia, Jeff Larson, Surya Mattu, and Lauren Kirchner. “Machine Bias.” _ProPublica_, May 23, 2016. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing.
+#### Key AI Questions for Restorative Justice:
 
-Appel, Ruth E. “Strengthening AI Accountability Through Better Third Party Evaluations.” _Stanford Institute for Human-Centered Artificial Intelligence_, November 6, 2024. https://hai.stanford.edu/news/strengthening-ai-accountability-through-better-third-party-evaluations.
+- Which people and communities most affected by this AI system have been harmed, excluded, or misrepresented by similar systems in the past?
+- Are harmed people and communities meaningfully involved in shaping how this system is designed, reviewed, and governed?
+- What concrete harms, exclusions, or injustices could this AI system perpetuate, and what specific steps are built in to acknowledge, prevent, and repair those harms?
+- Does this system merely avoid repeating past harm, or does it also address the deeper structural causes that made those harms possible?
 
-Barocas, Solon, and Andrew D. Selbst. “Big Data’s Disparate Impact.” _California Law Review_ 104, no. 3 (2016): 671–732. https://dx.doi.org/10.2139/ssrn.2477899.
+## Epistemic Justice
 
-Bukoski, Michael. “Moral Uncertainty and Distributive Sufficiency.” _Ethical Theory and Moral Practice_ 24, no. 4 (2021): 949+. https://link.gale.com/apps/doc/A683675865/AONE?u=anon~671d731&sid=googleScholar&xid=9f3ccaee.
+**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^7] At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^8]**
 
-Buolamwini, Joy, dir. _Coded Bias_ [Film]. 7th Empire Media, 2020.
+In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}.
 
-Elford, Gideon. “Equality of Opportunity.” In _The Stanford Encyclopedia of Philosophy_, Fall 2023 Edition, edited by Edward N. Zalta and Uri Nodelman. https://plato.stanford.edu/archives/fall2023/entries/equal-opportunity/.
+#### Key AI Questions for Epistemic Justice:
 
-Goodman, Ellen P., and Julia Tréhu. “AI Audit-Washing and Accountability.” _German Marshall Fund of the United States_, November 2022. https://www.gmfus.org/news/ai-audit-washing-and-accountability.
+- Whose knowledge, perspectives, and lived experiences are included in the data and design and which are missing?
+- Does the AI system privilege one cultural or epistemic framework as “objective” or “neutral”?
+- Do marginalized communities have the power to contest how they are represented or categorized?
+- Does the system unintentionally silence, distort, or misinterpret certain groups?
 
-Holtug, Nils. “Prioritarianism.” In _Oxford Research Encyclopedia of Politics_. Oxford University Press, 2017. https://doi.org/10.1093/acrefore/9780190228637.013.232.
+## Structural Justice
 
-Kaufman, Alexander. “Distributive Justice, Theories of.” In _Encyclopedia of Applied Ethics_ (Second Edition), edited by Ruth Chadwick, 842–850. Academic Press, 2012. https://doi.org/10.1016/B978-0-12-373932-2.00227-1.
+**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^11]. For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^12] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies.**
 
-Kroll, Joshua A., Joanna Huey, Solon Barocas, Edward W. Felten, Joel R. Reidenberg, David G. Robinson, and Harlan Yu. “Accountable Algorithms.” _University of Pennsylvania Law Review_ 165, no. 3 (2017): 633–705. https://scholarship.law.upenn.edu/penn_law_review/vol165/iss3/3/.
+#### Key AI Questions for Structural Justice:
 
-RAND Corporation. "Bayesian Improved Surname Geocoding (BISG)." _RAND Health Care_. Accessed April 14, 2025. https://www.rand.org/health-care/tools-methods/bisg.html.
+- Does the AI reproduce existing power hierarchies or actively challenge them?
+- Are there institutional practices, laws, or economic structures that the AI amplifies that disadvantage certain groups?
+- Does the AI system increase surveillance, monitoring, or control over already marginalized populations?
+- Does the AI rely on data collected through extraction, coercion, or [limited consent](/privacy/consent)?
 
-Stanford Law School. “Bias in Large Language Models and Who Should Be Held Accountable.” Accessed April 14, 2025. https://law.stanford.edu/press/bias-in-large-language-models-and-who-should-be-held-accountable/.
+## Environmental Justice
 
-Stern, Carly. “LA Thinks AI Could Help Decide Which Homeless People Get Scarce Housing – and Which Don’t.” _Vox_, December 6, 2024. https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai.
+**Environmental justice examines how environmental benefits, burdens, and risks are distributed across communities, and whether some groups bear disproportionate harms from environmental degradation. When applied to AI, environmental justice assesses how algorithmic systems influence environmental governance, resource allocation, climate risk management, and the ecological footprint of {AI-infrastructure} itself.**
 
-University of Oxford. _How AI Is Improving Outcomes for Resettled Refugees: The Annie™ MOORE Project_. 2022. https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer.
+#### Key AI Questions for Environmental Justice:
 
-Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14, 2025. https://law.yale.edu/justice-collaboratory/procedural-justice.
+- Who bears the environmental costs of AI development? Are these costs geographically or socio-economically concentrated?
+- Are Indigenous and local communities consulted when environmental models rely on land, cultural resources, or ecological knowledge?
+- How are environmental harms and benefits distributed across regions, particularly the Global South versus the Global North?
 
-Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
+ADS systems don’t exist in a vacuum but within the same social, political, and environmental systems that shape human institutions. As a result, questions of justice in AI cannot be reduced to a single definition of fairness or a single technical solution. Instead, they emerge at the intersection of multiple traditions of justice that illuminate different dimensions of how technological systems affect people and communities.
+
+Deciding which approach to justice to take will be driven by the community for whom the technology is created, the overall goals, and agency of the developer, but various frameworks laid out in this primer show that justice in AI is inherently multidimensional. A system may appear procedurally fair while producing unequal outcomes. It may reduce bias in predictions while still reinforcing structural inequalities or extracting environmental resources from vulnerable communities. Addressing justice in AI therefore requires looking beyond isolated technical metrics toward a more comprehensive understanding of how algorithmic systems operate within society.
+
+## Bibliography
+
+Buccella, Alessandra. 2023\. "'AI for All' Is a Matter of Social Justice." AI and Ethics 3: 1143-1152.
+
+Burnett, Camille, Michael Swanberg, Ashley Hudson, and Donna Schminkey. 2018\. "Structural Justice: A Critical Feminist Framework Exploring the Intersection between Justice, Equity and Structural Reconciliation." Journal of Health Disparities Research and Practice 11, no. 4, article 4\.
+
+Data for Black Lives. 2020\. "What Is Data for Black Lives?" September 1, 2020\. https://d4bl.org/videos/55-what-is-data-for-black-lives.
+
+Fricker, Miranda. 2007\. Epistemic Injustice: Power and the Ethics of Knowing. Oxford: Oxford University Press. https://doi.org/10.1093/acprof:oso/9780198237907.001.0001.
+
+Gabriel, Iason. 2022\. "Toward a Theory of Justice for Artificial Intelligence." Daedalus 151, no. 2: 218-231.
+
+Guo, Cindy X., Elizabeth X., and Monica Lange. 2023\. "Data Colonialism and Data Sets." Harvard Law Review Blog, June 22, 2023\. https://harvardlawreview.org/blog/2023/06/data-colonialism-and-data-sets/.
+
+Hao, Karen. 2022\. "A New Vision of Artificial Intelligence for the People." MIT Technology Review, April 22, 2022\.
+
+Kaur, Kirandeep, Ben Grama, Nairita Roy Chaudhuri, and Maria Jose Recalde-Vela. 2023\. "Ethics and Epistemic Injustice in the Global South: A Response to Hopman's Human Rights Exceptionalism as Justification for Covert Research." Journal of Human Rights Practice 15, no. 2: 347-373. https://doi.org/10.1093/jhuman/huad008.
+
+Maddox, Raglan, and Melody E. Morton Ninomiya. 2025\. "Indigenous Sovereignty in Research and Epistemic Justice: Truth Telling through Research." Global Public Health 20, no. 1\. https://doi.org/10.1080/17441692.2024.2436436.
+
+Mejias, Ulises A., and Nick Couldry. 2024\. Data Grab: The New Colonialism of Big Tech and How to Fight Back. N.p.: WH Allen.
+
+Miller, David. 2017\. "Justice." In The Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/justice/.
+
+Newman v. Google LLC, No. 5:20-cv-04011 (N.D. Cal. filed June 16, 2020).
+
+Newman v. Google LLC, No. 20-CV-04011-LHK, slip op. (N.D. Cal. June 25, 2021).
+
+Nicholas, Jeffery. 2012\. "Structural Justice." Review of Responsibility for Justice, by Iris Marion Young. The Review of Politics 74: 521-524. https://doi.org/10.1017/S0034670512000678.
+
+Rafanelli, Lucia M. 2022\. "Justice, Injustice, and Artificial Intelligence: Lessons from Political Theory and Philosophy." Big Data and Society 9, no. 1\.
+
+Santoni de Sio, Filippo, Txai Almeida, and Jeroen van den Hoven. 2024\. "The Future of Work: Freedom, Justice and Capital in the Age of Artificial Intelligence." Critical Review of International Social and Political Philosophy 27, no. 5: 659-683.
+
+Stanford Humanities Center. 2024\. "Round Table: Epistemic Justice." YouTube video. Filmed January 20, 2022, posted August 29, 2024\. https://www.youtube.com/watch?v=\[insert video ID\].
+
+Stempel, Jonathan, and Rosalba O'Brien. 2023\. "YouTube Defeats Racial Bias Lawsuit by Black, Hispanic Content Creators." Reuters, August 17, 2023\. https://www.reuters.com/legal/youtube-defeats-racial-bias-lawsuit-by-black-hispanic-content-creators-2023-08-17/.
+
+"Three Core Elements of Restorative Justice." n.d. Restorative Justice. Accessed April 20, 2026\. https://restorativejustice.org/what-is-restorative-justice/three-core-elements-of-restorative-justice/.
+
+Zurita, Victoria, and Chen Bar-Itzhak. 2024\. "In Search of Epistemic Justice." Arcade: A Digital Salon, Stanford Humanities Center, Spring 2024\. https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice.
+
+[^1]: Miller, David. 2017\. “Justice (Stanford Encyclopedia of Philosophy).” Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/justice/.
+
+[^2]: Stempel, Jonathan, and Rosalba O'Brien. 2023\. “YouTube defeats racial bias lawsuit by Black, Hispanic content creators.” _Reuters_, August 17, 2023\. https://www.reuters.com/legal/youtube-defeats-racial-bias-lawsuit-by-black-hispanic-content-creators-2023-08-17/.
+
+[^3]: _Newman v. Google LLC_, No. 5:20-cv-04011 (N.D. Cal. filed June 16, 2020).
+
+[^4]: _Newman v. Google LLC_, No. 20-CV-04011-LHK, slip op. (N.D. Cal. June 25, 2021).
+
+[^5]: “Three Core Elements of Restorative Justice.” n.d. Restorative Justice. Accessed April 20, 2026\. https://restorativejustice.org/what-is-restorative-justice/three-core-elements-of-restorative-justice/.
+
+[^6]: _Data for Black Lives_. 2020\. “What is Data for Black Lives?” September 1, 2020\. https://d4bl.org/videos/55-what-is-data-for-black-lives.
+
+[^7]: Fricker, Miranda, _Epistemic Injustice: Power and the Ethics of Knowing_ (Oxford, 2007; online edn, Oxford Academic, 1 Sept. 2007), https://doi.org/10.1093/acprof:oso/9780198237907.001.0001, accessed 20 Apr. 2026\.
+
+[^8]: Zurita, Victoria, and Chen Bar-Itzhak. "In Search of Epistemic Justice." _Arcade: A Digital Salon_, Stanford Humanities Center, Spring 2024\. [https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice](https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice).
+
+[^9]: Maddox, Raglan, and Melody E. Morton Ninomiya. 2025\. “Indigenous Sovereignty in Research and Epistemic Justice: Truth Telling through Research.” _Global Public Health_ 20 (1). doi:10.1080/17441692.2024.2436436.
+
+[^10]: Kirandeep Kaur, Ben Grama, Nairita Roy Chaudhuri, Maria Jose Recalde-Vela, Ethics and Epistemic Injustice in the Global South: A Response to Hopman’s Human Rights Exceptionalism as Justification for Covert Research, _Journal of Human Rights Practice_, Volume 15, Issue 2, July 2023, Pages 347–373, [https://doi.org/10.1093/jhuman/huad008](https://doi.org/10.1093/jhuman/huad008).
+
+[^11]: Nicholas, Jeffery. (2012). STRUCTURAL JUSTICE Iris Marion Young: Responsibility for Justice. (Oxford: Oxford University Press, 2011\. Pp. xxv, 193.). The Review of Politics. 74\. 521-524. 10.1017/S0034670512000678.
+
+[^12]: Burnett, Camille; Swanberg, Michael; Hudson, Ashley; and Schminkey, Donna (2018) "Structural Justice: A critical feminist framework exploring the intersection between justice, equity and structural reconciliation.," _Journal of Health Disparities Research and Practice_: Vol. 11: Iss. 4, Article 4\.
+
+[^13]: Soudi, Marwa, Esraa Ali, Maha Bali, and Nihal Mabrouk. “Generative AI-Based Tutoring System for Upper Egypt Community Schools.” _In Proceedings of the 2023 Conference on Human Centered Artificial Intelligence: Education and Practice (HCAIep ’23)_, 16–21. New York: ACM, 2023. https://doi.org/10.1145/3633083.3633085.
 
 ## Sidebar
 
-Case-Study-Annie-MOORE:
-Heading: Annie MOORE
-Annie MOORE is an AI-powered matching system that has been implemented by the U.S. refugee resettlement agency HIAS since 2018. The system operationalizes sufficiency by matching refugees to host communities where each individual has a high likelihood of achieving a minimum threshold of employment and economic security. The system assesses refugees’ backgrounds and personal needs against local opportunities and resources. Through this process, the system enhances refugee integration and facilitates targeted resource allocation, which allows agencies like HIAS to provide more tailored support to individuals facing significant challenges.
+youtube-case:
+Heading: YouTube Content Moderation Appeals (2023)[^2]
+In the [lawsuit _Newman v. Google_](https://www.courthousenews.com/wp-content/uploads/2020/06/newman-google.pdf)[^3], Black and Hispanic creators argued that YouTube disproportionately restricted, demonetized, and downranked their videos, and they specifically alleged that the platform interfered with, delayed, or ignored appeals, preventing timely manual review and leaving creators without effective recourse while they lost audience reach and revenue. This case can be understood primarily as a case about alleged unequal treatment in platform moderation and untransparent—procedurally unjust—appeals process. The case was not simply that creators lacked an appeal path, but the complaint centered on a broader claim that YouTube’s moderation systems were not race-neutral and instead treated creators from minority groups differently from similarly situated white creators. The creators ultimately [lost](https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_20-cv-04011/pdf/USCOURTS-cand-3_20-cv-04011-0.pdf)[^4], and the case was dismissed with prejudice, meaning it can not be brought again. Although algorithmic discrimination by race was plausible in theory, the plaintiffs did not come close to showing that they had actually suffered discrimination on the record before the court, according to the judge. Newman v. Google illustrates how disputes over platform moderation can combine group fairness concerns with procedural justice concerns. The plaintiffs claimed that minority creators were treated unequally and that appeals were ineffective or obstructed, which raised questions about voice, transparency, and neutral review.
 
-[Further Reading](https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer?utm_source=chatgpt.com)
+dfbl-case:
+Heading: Data for Black Lives's effort to build data-based reparations for healthcare
+[Data for Black Lives (D4BL)](https://d4bl.org/) is a movement of activists, organizers, and scientists that challenges the use of data and algorithms as tools of racial oppression and argues for data practices that serve Black communities instead. Its work spans abolition, political education, data governance, and algorithmic justice, and it produces campaigns, reports, events, and datasets. Rather than treating data harms as isolated technical flaws, D4BL places them in the longer history of systemic injustice, from redlining to predictive policing to unequal health outcomes.[^6] One concrete example is its COVID-19 racial disparity data work, including the [D4BL COVID-19 Disparities Tracker](https://d4bl.org/datasets/44-d4-bl-covid-19-disparities-tracker) and related datasets on Black COVID-19 cases and deaths. These projects consolidated and surfaced race-based public health data at a moment when many institutions were failing to make such disparities visible. In doing so, D4BL was not simply collecting data for its own sake. It was using data infrastructure to document harm, support public accountability, and direct attention toward communities bearing disproportionate health burdens. D4BL’s dataset initiatives show what a restorative orientation to data can look like. Its work suggests that just health AI requires more than reducing bias in models. It requires recognizing historical harm, involving affected communities in governance, and building datasets and analytic systems that help repair inequity rather than reproduce it. In that sense, D4BL reflects restorative justice through all three dimensions: creating space for affected communities to shape the conversation, using data to address concrete harm, and pushing for structural transformation in how data systems are governed. The dataset can be found [here](https://docs.google.com/spreadsheets/d/1NFViedF47p-P0MKKl8_O0mKAhba0Yqn200EfUR4GlcQ/edit?gid=0#gid=0).
 
-Case-Study-SafeRent-Solutions-AI-Scoring-System:
-Heading: SafeRent Solutions AI Scoring System
-In Massachusetts, an AI-driven tenant screening system by SafeRent Solutions demonstrates how algorithmic practices may undermine justice as priority. Traditionally, AI scoring systems have maintained heavy reliance on credit history and non-rental debt without accounting for the mitigating benefit of housing vouchers. In this case, SafeRent’s algorithm generated a “SafeRent Score” that incurred frequent penalizations on low-income applicants using housing vouchers, many of whom were Black and Hispanic.
+Generative-AI-Based-Tutoring-System-for-Upper-Egypt-Community-Schools:
+Heading: Generative AI-Based Tutoring System for Upper Egypt Community Schools[^13]
+This tutoring system piloted in Egypt brought together teachers and AI experts to build a learning platform for under-resourced schools. The focus was on supporting mostly female students, and teachers were involved throughout the design process to make the platform fit real classroom needs. This tool hit all three pillars of distributive justice: Sufficiency: The platform provides a baseline level of educational support to learners who otherwise have insufficient access to tutoring or quality instruction. Priority: the design and distribution method prioritizes girls in low-resource schools, recognizing that they face urgent, systemic barriers. Equality of Opportunity: Teachers co-designed the system to ensure fair access to meaningful learning, preventing AI from reproducing gendered educational disparities.
 
-The metric resulted in unfair rental application rejections despite exemplary records showing on-time rent payments. Rather than prioritizing the needs of applicants facing acute economic hardship, the system’s design treated voucher users as inherent risks due to lower traditional credit scores. As a result, landlords relying on the SafeRent Score denied housing opportunities to the very individuals who needed extra support. The subsequent lawsuit, filed in 2022 and settled for approximately $2.3 million in November 2024, forced SafeRent to suspend the SafeRent Score for voucher users for five years and mandated that property managers perform holistic assessments of these applicants.
+data-colonialism:
+Data colonialism as defined by Nick Couldry and Ulises Mejias in their book _The Costs of Connection_ is “process by which governments, non-governmental organizations and corporations claim ownership of and privatize the data that is produced by their users and citizens.” For further reading and watching, see Professor Nick Couldry’s [explanation](https://www.lse.ac.uk/lse-player/what-is-data-colonialism) of data colonialism and how it shows up in tech practices.
 
-This case shows that a scoring system misaligned with the principle of justice as priority can exacerbate existing inequities by failing to recognize that those who rely on vouchers are in urgent need of stable housing.
+hegemonic-definitions-of-accuracy:
+Hegemonic definitions of accuracy or epistemological hegemony refer to situations in which one dominant group’s standards for what counts as true, credible, valid, or “accurate” are treated as neutral and universal, while other ways of knowing or other speakers are discounted. In practice, this means that knowledge is judged not only by evidence, but also by who is speaking, which social perspective is treated as authoritative, and which histories of power shape credibility. An example would be an AI or institutional system that treats mainstream, Western, bureaucratic, or majority-group data categories as the most “accurate” way to describe reality, while dismissing the lived testimony of marginalized people or ignoring Indigenous and community-based understandings. For more information and discussion on this topic, see the “[Round Table: Epistemic Justice](https://youtu.be/S0uQ534Ox9g?si=4TRzMoARVxGvEbZQ)” from the Stanford Humanities Center.
 
-[Further Reading](https://www.theverge.com/2024/11/20/24297692/ai-landlord-tool-saferent-low-income-tenants-discrimination-settlement)
+technological-infrastructure:
+Heading: Indigenous Data Sovereignty in Language AI (Papa Reo, Te Hiku Media)[^9][^10]
 
-Case-Study-AI-Tools-for-LA-Housing:
-Heading: AI Tools for LA Housing
-In contrast to systems that penalize applicants by relying on traditional credit and eviction data, Los Angeles is piloting an AI-driven approach to housing allocation designed to prioritize those with the most urgent needs. In this model developed by USC researchers and community stakeholders, historical data is re-examined and adjusted for inherent biases. Instead of using a flat scoring system that inadvertently lowers scores for those with housing vouchers, the new system assigns additional weight to factors demonstrating acute vulnerability, like prolonged homelessness or pronounced gaps in income. This provision, currently being implemented by the Los Angeles Homeless Services Authority (LAHSA), ensures that applicants facing extreme hardship are given preferential consideration.
+Te Hiku Media, a Māori-led media organization in Aotearoa New Zealand, has developed Papa Reo, a language AI platform grounded in Indigenous knowledge systems and principles of data sovereignty. The project emerged from decades of work to revitalize te reo Māori and responds directly to the limitations of Western-centered AI development, which typically relies on large-scale data extraction, standardization, and centralized control. In contrast, Indigenous approaches emphasize relationality, community accountability, and the right of communities to control how their knowledge is collected, used, and shared. Western data practices often treat knowledge as neutral “data” to be extracted and validated through dominant frameworks, sidelining local epistemologies and reducing communities to sources of input. This reproduces epistemic injustice by privileging Euro-Western standards of accuracy and authority, while silencing or distorting other ways of knowing. In AI, this logic is reflected in the “more is more” paradigm, where large datasets are scraped and aggregated with little regard for consent, context, or community benefit, often reinforcing historical patterns of exclusion and marginalization. Papa Reo offers a different model. Rather than extracting Māori language data into global systems, Te Hiku Media built its own infrastructure for speech recognition and natural language processing, using community-held archives and participatory data collection. Crucially, the project ensures that Māori communities retain ownership and governance over their data, and that the benefits of AI development flow back to them. This includes developing tools tailored to smaller datasets and supporting other Indigenous communities in building their own capabilities, rather than forcing them into dominant technological frameworks. The Papa Reo case demonstrates how Indigenous data governance can actively resist epistemic injustice. It reframes communities not as passive data subjects but as knowledge holders and decision-makers, restores control over meaning-making and representation, and challenges the assumption that openness and scale are inherently just. In doing so, it points toward a broader transformation of AI: from extractive systems that reproduce historical inequities to relational systems that respect sovereignty, enable participation, and sustain cultural knowledge in the digital age. The project can be found here: [https://papareo.io/](https://papareo.io/)
 
-[Further Reading](https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai)
+AI-infrastructure:
+Heading: Thirsty for power and water, AI-crunching data centers sprout across the West
 
-Case-Study-Algorithmic-Justice-League:
-Heading: Algorithmic Justice League
-The Algorithmic Justice League (AJL), founded by Joy Buolawmwini, is dedicated to combating bias in AI systems to ensure equitable treatment across diverse populations. The documentary Coded Bias explores the AJL’s discovery that facial recognition technologies act on embedded biases in their training data when failing to accurately identify darker-skinned faces. The film also shows Buolawmwini’s advocacy for legislation to address algorithmic biases that undermine equality of opportunity.
-
-- [Gender Shades](http://gendershades.org/overview.html): an interactive evaluation of the accuracy of AI-powered gender classification products
-
-[Further Reading](https://www.ajl.org/)
-
-Case-Study-Shapley-Values-for-Credit-Scores:
-Heading: Shapley Values for Credit Scores
-Traditional credit scorecards have used logistic regression models because their decision-making processes offer interpretability. However, more powerful machine learning models like XGBoost and random forest algorithms typically offer superior predictive accuracy at the cost of interpretability. This tradeoff creates a neutrality problem as decisions become opaque. Researchers addressed this challenge by developing a novel framework using Shapley values to create interpretable credit scorecards that maintain the predictive power of advanced models.
-
-The Shapley values approach works by deriving credit scores for each predictor variable group in complex models like XGBoost and random forest. This method provides a mathematical guarantee that the contribution of each feature to the final decision is fairly allocated, which ensures consistency across applications. Researchers showed that removing discriminatory features like age and gender didn't significantly impact classification capabilities, proving that neutral credit scoring systems could achieve high accuracy without compromising fairness.
-
-This approach to neutrality satisfies the technical requirements of consistency and evidence-based decision-making while also making the rules transparent enough for outsiders to verify the logic. The mathematically rigorous allocation of feature importance ensures that if two loan applicants present identical relevant facts, they will receive identical scores.
-
-[Further Reading](https://pmc.ncbi.nlm.nih.gov/articles/PMC11318906/)
-
-Case-Study-SCHUFA:
-Heading: SCHUFA
-SCHUFA, a German credit bureau, provides creditworthiness scores to lenders based on automated processing of personal data. When an individual was denied credit after SCHUFA supplied information about her, she requested access to details about how her score was determined. SCHUFA provided some data but refused to explain the calculation methodology, citing trade secrets. After a series of appeals, the case reached the CJEU, which ruled decisively on the side of respect for individuals.
-
-The Court determined that when credit scoring agencies create probability scores through automated processing that significantly affect individuals, they engage in "automated decision-making" under Article 22 of the GDPR. This triggered important protections: the right to meaningful information about the logic involved, the right to human intervention, and the right to express one's point of view and challenge the decision.
-
-This case established that respect in algorithmic systems requires more than merely efficient processing; it demands treating individuals as autonomous agents who deserve explanations and recourse. The judgment forcefully rejected the notion that commercial interests in algorithmic secrecy outweigh individuals' rights to understand decisions that affect their lives. This respect manifests through both interface transparency (providing explanations) and substantive rights (offering meaningful recourse).
-
-[Further Reading](https://iapp.org/news/a/key-takeaways-from-the-cjeus-recent-automated-decision-making-rulings)
-
-Case-Study-Wikimedia-Value-Sensitive-Algorithm:
-Heading: Wikimedia Value-Sensitive Algorithm
-Researchers at the University of Minnesota developed an "intelligent socialization algorithm" to help WikiProjects (self-organized groups within Wikipedia) identify and recruit suitable new members. Rather than designing the algorithm based solely on technical considerations, they employed "Value-Sensitive Algorithm Design", which incorporated stakeholders' explicit feedback in the early stages of algorithm creation.
-
-This process began with interviews of WikiProject organizers to understand their recruitment practices and values. The researchers then translated these qualitative insights into specific algorithmic features and constraints. For example, they learned that project organizers valued editing activity as well as subject-matter expertise, communication skills, and cultural fit. The algorithm was designed to respect these multidimensional criteria rather than optimizing for simple metrics like edit count. After deployment, the system actively collected feedback from both project organizers and invitees, which helped create a continuous improvement loop. The results were notable, as experienced newcomers who received algorithm-generated invitations showed increased participation in projects compared to control groups.
-
-This case shows that meaningful voice in algorithmic systems doesn't require humanlike understanding but rather deliberate design choices that value stakeholder input throughout the development and deployment process. By creating structured channels for stakeholder feedback and actually incorporating this feedback into system design, the WikiProjects recruitment algorithm transformed user voice from a passive input into an active governance mechanism.
-
-[Further Reading](https://haiyizhu.com/wp-content/uploads/2018/09/VSAD_pre_camera_ready.pdf)
-
-Case-Study-Pymetrics-Independent-Audit:
-Heading: Pymetrics Trust
-Pymetrics develops algorithms that assess job candidates based on their performance in gamified assessments designed to measure cognitive and emotional traits. Aware of potential concerns about bias in hiring algorithms, pymetrics voluntarily submitted its candidate screening tools to an independent audit by researchers from Northeastern University.
-
-This cooperative audit was structured to maintain both rigor and independence. The auditors examined source code, tested statistical outcomes, and evaluated safeguards against manipulation. They specifically assessed whether pymetrics' implementation of the "four-fifths rule", a legal standard for detecting adverse impact in hiring, functioned as claimed. The audit confirmed that pymetrics' fairness guarantees were technically sound and included sufficient safeguards against both human error and intentional subversion.
-
-This approach established trustworthiness through multiple mechanisms: independent verification by credible third parties, transparency about methods, and a demonstrated willingness to subject proprietary systems to external scrutiny. By providing evidence that its fairness claims were more than marketing rhetoric, pymetrics established itself as a trustworthy actor in the sensitive context of employment.
-
-[Further Reading](https://mislove.org/publications/Pymetrics-FAccT.pdf)
-
-Timnit-Gebrus-Google-Exit:
-Heading: Timnit Gebru
-Timnit Gebru’s forced exit from Google serves as a notable example of why holding an individual developer accountable does little to remedy the underlying systemic issues that produce biased AI. The case shows that it is the institution’s opaque review processes, profit-driven priorities, and entrenched cultural biases that create conditions ripe for discriminatory outcomes. Gebru’s experience, where her legitimate criticisms of internal practices and calls for transparency were used to scapegoat her as “problematic”, affirms that responsibility must lie with governments, large organizations, and social institutions. Therefore, lawmakers and regulators should focus on ensuring that companies deploy robust safeguards in their automated systems to address the root causes of bias across diverse use cases, from financial decision-making to hiring practices, instead of imposing blanket liability on individual developers.
-
-[Further Reading](https://www.axios.com/2021/02/19/google-tweaks-diversity-research-policies-following-inquiry)
-
-Case-Study-Biased-Car-Insurance-Premiums-in-Michigan:
-Heading: Car Insurance Premiums in Michigan
-Insurance companies have increasingly adopted AI to optimize pricing for car insurance. These algorithms analyze vast amounts of data, including location, driving history, and demographic information, to determine premiums. While these systems offer efficiency and cost savings, they often perpetuate existing biases. For example, studies have shown that drivers in predominantly Black neighborhoods within regions like Michigan are charged higher premiums compared to those in predominantly White neighborhoods, despite similar accident risks. This bias reflects historical discrimination and can exacerbate economic inequalities by disproportionately affecting marginalized communities. To address these types of issues, it is crucial to implement mechanisms for accountability, like those mentioned in this primer, to ensure fairness and equity in automated decision-making processes.
-
-[Further Reading](https://www.governing.com/policy/michigans-fair-and-reasonable-reforms-allowed-car-insurers-to-charge-more-in-black-neighborhoods?utm_source=chatgpt.com)
+[Several U.S. cities](https://andthewest.stanford.edu/2025/thirsty-for-power-and-water-ai-crunching-data-centers-sprout-across-the-west/), Phoenix, Las Vegas, The Dalles (Oregon), reported significant community conflict over the water consumption of hyperscale data centers used to train and host large AI models. Public records revealed that some centers used billions of gallons of potable water per year for cooling, disproportionately affecting local drought-prone or low-income regions. This case illustrates how AI infrastructure can produce environmental injustice by placing ecological burdens on communities with limited political power, while the benefits flow primarily to distant corporate and global users.

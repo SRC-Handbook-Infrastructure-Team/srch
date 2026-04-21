@@ -79,87 +79,95 @@ Privacy is relational and must be understood with respect to a certain person or
 
 The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [Value of Privacy](/privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
-[^1]: Alibeigi, Ali, Abu Bakar Munir, and Md Ershadul Karim. "Right to Privacy, a Complicated Concept to Review." _Library Philosophy and Practice (e-Journal)_, January 1, 2019. https://digitalcommons.unl.edu/libphilprac/2841.
+## Further Reading
 
-[^2]: Allen, Anita. "Privacy-as-Data Control: Conceptual, Practical, and Moral Limits of the Paradigm." _Connecticut Law Review_ 32 (January 1, 2000): 861–75. https://scholarship.law.upenn.edu/faculty_scholarship/790.
+Alibeigi, Ali, Abu Bakar Munir, and Md Ershadul Karim. "Right to Privacy, a Complicated Concept to Review." _Library Philosophy and Practice (e-Journal)_, January 1, 2019. https://digitalcommons.unl.edu/libphilprac/2841.
 
-[^3]: Bhave, Devasheesh P., Laurel H. Teo, and Reeshad S. Dalal. "Privacy at Work: A Review and a Research Agenda for a Contested Terrain." _Journal of Management_ 46, no. 1 (2020): 127–64. https://doi.org/10.1177/0149206319878254.
+Allen, Anita. "Privacy-as-Data Control: Conceptual, Practical, and Moral Limits of the Paradigm." _Connecticut Law Review_ 32 (January 1, 2000): 861–75. https://scholarship.law.upenn.edu/faculty_scholarship/790.
 
-[^4]: boyd, danah. "What Is Privacy?" _The Message_ (blog), August 1, 2014. https://medium.com/message/what-is-privacy-5ed72c66aa86.
+Bhave, Devasheesh P., Laurel H. Teo, and Reeshad S. Dalal. "Privacy at Work: A Review and a Research Agenda for a Contested Terrain." _Journal of Management_ 46, no. 1 (2020): 127–64. https://doi.org/10.1177/0149206319878254.
 
-[^5]: Bratman, Ben. "Brandeis & Warren's 'The Right to Privacy' and the Birth of the Right to Privacy." _Tennessee Law Review_ 69 (January 1, 2002): 623. https://scholarship.law.pitt.edu/fac_articles/63.
+boyd, danah. "What Is Privacy?" _The Message_ (blog), August 1, 2014. https://medium.com/message/what-is-privacy-5ed72c66aa86.
 
-[^6]: Bye, Kent. "Primer on the Contextual Integrity Theory of Privacy with Philosopher Helen Nissenbaum." _Voices of VR_ (blog), June 24, 2021. https://voicesofvr.com/998-primer-on-the-contextual-integrity-theory-of-privacy-with-philosopher-helen-nissenbaum/.
+Bratman, Ben. "Brandeis & Warren's 'The Right to Privacy' and the Birth of the Right to Privacy." _Tennessee Law Review_ 69 (January 1, 2002): 623. https://scholarship.law.pitt.edu/fac_articles/63.
 
-[^7]: Canetti, Rein, Cynthia Dwork, Moni Naor, and Rafail Ostrovsky. "Deniable Encryption." In _Advances in Cryptology — CRYPTO '97_, edited by Burton S. Kaliski, 1294:90–104. Berlin, Heidelberg: Springer Berlin Heidelberg, 1997. https://doi.org/10.1007/BFb0052229.
+Bye, Kent. "Primer on the Contextual Integrity Theory of Privacy with Philosopher Helen Nissenbaum." _Voices of VR_ (blog), June 24, 2021. https://voicesofvr.com/998-primer-on-the-contextual-integrity-theory-of-privacy-with-philosopher-helen-nissenbaum/.
 
-[^8]: Clark, Andy, and David Chalmers. "The Extended Mind." _Analysis_ 58, no. 1 (January 1998): 7–19. http://www.jstor.org/stable/3328150.
+Canetti, Rein, Cynthia Dwork, Moni Naor, and Rafail Ostrovsky. "Deniable Encryption." In _Advances in Cryptology — CRYPTO '97_, edited by Burton S. Kaliski, 1294:90–104. Berlin, Heidelberg: Springer Berlin Heidelberg, 1997. https://doi.org/10.1007/BFb0052229.
 
-[^9]: Desfontaines, Damien. "A List of Real-World Uses of Differential Privacy." _Ted Is Writing Things_ (blog), March 22, 2025. https://desfontain.es/blog/real-world-differential-privacy.html.
+Clark, Andy, and David Chalmers. "The Extended Mind." _Analysis_ 58, no. 1 (January 1998): 7–19. http://www.jstor.org/stable/3328150.
 
-[^10]: Dwork, Cynthia, Frank McSherry, Kobbi Nissim, and Adam Smith. "Calibrating Noise to Sensitivity in Private Data Analysis." In _Theory of Cryptography_, edited by Shai Halevi and Tal Rabin, 265–84. Berlin, Heidelberg: Springer, 2006. https://doi.org/10.1007/11681878_14.
+Desfontaines, Damien. "A List of Real-World Uses of Differential Privacy." _Ted Is Writing Things_ (blog), March 22, 2025. https://desfontain.es/blog/real-world-differential-privacy.html.
 
-[^11]: Electronic Privacy Information Center. "Differential Privacy." epic.org. Accessed April 12, 2025. https://epic.org/differential-privacy/.
+Dwork, Cynthia, Frank McSherry, Kobbi Nissim, and Adam Smith. "Calibrating Noise to Sensitivity in Private Data Analysis." In _Theory of Cryptography_, edited by Shai Halevi and Tal Rabin, 265–84. Berlin, Heidelberg: Springer, 2006. https://doi.org/10.1007/11681878_14.
 
-[^12]: FPC. "Fair Information Practice Principles (FIPPs)." Accessed April 11, 2025. https://www.fpc.gov/resources/fipps/.
+Electronic Privacy Information Center. "Differential Privacy." epic.org. Accessed April 12, 2025. https://epic.org/differential-privacy/.
 
-[^13]: Freivogel, William H. "The Right to Be Let Alone." In _The SAGE Guide to Key Issues in Mass Media Ethics and Law_, edited by William H. Freivogel and William A. Babcock, 303–18. 2455 Teller Road, Thousand Oaks California 91320: SAGE Publications, Inc., 2015. https://doi.org/10.4135/9781483346540.n27.
+FPC. "Fair Information Practice Principles (FIPPs)." Accessed April 11, 2025. https://www.fpc.gov/resources/fipps/.
 
-[^14]: Gavison, Ruth. "Privacy and the Limits of Law." _The Yale Law Journal_ 89, no. 3 (1980): 421–71. https://doi.org/10.2307/795891.
+Freivogel, William H. "The Right to Be Let Alone." In _The SAGE Guide to Key Issues in Mass Media Ethics and Law_, edited by William H. Freivogel and William A. Babcock, 303–18. 2455 Teller Road, Thousand Oaks California 91320: SAGE Publications, Inc., 2015. https://doi.org/10.4135/9781483346540.n27.
 
-[^15]: GDPR. "General Data Protection Regulation (GDPR) – Legal Text," May 25, 2018. https://gdpr-info.eu/.
+Gavison, Ruth. "Privacy and the Limits of Law." _The Yale Law Journal_ 89, no. 3 (1980): 421–71. https://doi.org/10.2307/795891.
 
-[^16]: Gellman, Bart, and Ashkan Soltani. "NSA Infiltrates Links to Yahoo, Google Data Centers Worldwide, Snowden Documents Say." _The Wahington Post_, October 30, 2013. https://www.washingtonpost.com/world/national-security/nsa-infiltrates-links-to-yahoo-google-data-centers-worldwide-snowden-documents-say/2013/10/30/e51d661e-4166-11e3-8b74-d89d714ca4dd_story.html.
+GDPR. "General Data Protection Regulation (GDPR) – Legal Text," May 25, 2018. https://gdpr-info.eu/.
 
-[^17]: Harvard University Privacy Tools Project. "Differential Privacy." Accessed April 11, 2025. https://privacytools.seas.harvard.edu/differential-privacy.
+Gellman, Bart, and Ashkan Soltani. "NSA Infiltrates Links to Yahoo, Google Data Centers Worldwide, Snowden Documents Say." _The Wahington Post_, October 30, 2013. https://www.washingtonpost.com/world/national-security/nsa-infiltrates-links-to-yahoo-google-data-centers-worldwide-snowden-documents-say/2013/10/30/e51d661e-4166-11e3-8b74-d89d714ca4dd_story.html.
 
-[^18]: Inness, Julie C. _Privacy, Intimacy, and Isolation_. New York: Oxford Univ. Press, 1996. https://doi.org/10.1093/0195104609.001.0001.
+Harvard University Privacy Tools Project. "Differential Privacy." Accessed April 11, 2025. https://privacytools.seas.harvard.edu/differential-privacy.
 
-[^19]: Koops, Bert-Jaap, Bryce Newell, Tjerk Timan, Ivan Škorvánek, Tomislav Chokrevski, and Maša Galič. "A Typology of Privacy." _University of Pennsylvania Journal of International Law_ 38, no. 2 (January 1, 2017): 483–575. https://scholarship.law.upenn.edu/jil/vol38/iss2/4.
+Inness, Julie C. _Privacy, Intimacy, and Isolation_. New York: Oxford Univ. Press, 1996. https://doi.org/10.1093/0195104609.001.0001.
 
-[^20]: Lindemulder, Gregg, and Matthew Kosinski. "What Is a Man-in-the-Middle (MITM) Attack?" IBM, June 11, 2024. https://www.ibm.com/think/topics/man-in-the-middle.
+Koops, Bert-Jaap, Bryce Newell, Tjerk Timan, Ivan Škorvánek, Tomislav Chokrevski, and Maša Galič. "A Typology of Privacy." _University of Pennsylvania Journal of International Law_ 38, no. 2 (January 1, 2017): 483–575. https://scholarship.law.upenn.edu/jil/vol38/iss2/4.
 
-[^21]: LMA Research Data Management Working Group. "Biomedical Data Lifecycle." Harvard Biomedical Data Management, 2024. https://datamanagement.hms.harvard.edu/plan-design/biomedical-data-lifecycle.
+Lindemulder, Gregg, and Matthew Kosinski. "What Is a Man-in-the-Middle (MITM) Attack?" IBM, June 11, 2024. https://www.ibm.com/think/topics/man-in-the-middle.
 
-[^22]: Lundgren, Björn. "A Dilemma for Privacy as Control." _The Journal of Ethics_ 24, no. 2 (2020): 165–75. https://doi.org/10.1007/s10892-019-09316-z.
+LMA Research Data Management Working Group. "Biomedical Data Lifecycle." Harvard Biomedical Data Management, 2024. https://datamanagement.hms.harvard.edu/plan-design/biomedical-data-lifecycle.
 
-[^23]: Mulligan, Deirdre K., Colin Koopman, and Nick Doty. "Privacy Is an Essentially Contested Concept: A Multi-Dimensional Analytic for Mapping Privacy." _Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences_ 374, no. 2083 (December 28, 2016). https://doi.org/10.1098/rsta.2016.0118.
+Lundgren, Björn. "A Dilemma for Privacy as Control." _The Journal of Ethics_ 24, no. 2 (2020): 165–75. https://doi.org/10.1007/s10892-019-09316-z.
 
-[^24]: Nissenbaum, Helen. _Privacy in Context: Technology, Policy, and the Integrity of Social Life_. Stanford, CA: Stanford University Press, 2010.
+Mulligan, Deirdre K., Colin Koopman, and Nick Doty. "Privacy Is an Essentially Contested Concept: A Multi-Dimensional Analytic for Mapping Privacy." _Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences_ 374, no. 2083 (December 28, 2016). https://doi.org/10.1098/rsta.2016.0118.
 
-[^25]: Oyez. "Carpenter v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2017/16-402.
+Nissenbaum, Helen. _Privacy in Context: Technology, Policy, and the Integrity of Social Life_. Stanford, CA: Stanford University Press, 2010.
 
-[^26]: Oyez. "Griswold v. Connecticut." Accessed April 11, 2025. www.oyez.org/cases/1964/496.
+Oyez. "Carpenter v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2017/16-402.
 
-[^27]: Oyez. "Katz v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/1967/35.
+Oyez. "Griswold v. Connecticut." Accessed April 11, 2025. www.oyez.org/cases/1964/496.
 
-[^28]: Oyez. "Kyllo v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2000/99-8508.
+Oyez. "Katz v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/1967/35.
 
-[^29]: Oyez. "United States v. Jones." Accessed April 11, 2025. https://www.oyez.org/cases/2011/10-1259.
+Oyez. "Kyllo v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2000/99-8508.
 
-[^30]: Oyez. "Van Buren v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2020/19-783.
+Oyez. "United States v. Jones." Accessed April 11, 2025. https://www.oyez.org/cases/2011/10-1259.
 
-[^31]: Pressly, Lowry. _The Right to Oblivion: Privacy and the Good Life_. 1st ed. Cambridge: Harvard University Press, 2024. https://doi.org/10.2307/jj.16394399.
+Oyez. "Van Buren v. United States." Accessed April 11, 2025. https://www.oyez.org/cases/2020/19-783.
 
-[^32]: Roessler, Beate, and Judith DeCew. "Privacy." In _The Stanford Encyclopedia of Philosophy_, edited by Edward N. Zalta and Uri Nodelman, Winter 2023. Metaphysics Research Lab, Stanford University, 2023. https://plato.stanford.edu/archives/win2023/entries/privacy/.
+Pressly, Lowry. _The Right to Oblivion: Privacy and the Good Life_. 1st ed. Cambridge: Harvard University Press, 2024. https://doi.org/10.2307/jj.16394399.
 
-[^33]: Solove, Daniel J. "A Taxonomy of Privacy." _University of Pennsylvania Law Review_ 154, no. 3 (January 1, 2006): 477. https://doi.org/10.2307/40041279.
+Roessler, Beate, and Judith DeCew. "Privacy." In _The Stanford Encyclopedia of Philosophy_, edited by Edward N. Zalta and Uri Nodelman, Winter 2023. Metaphysics Research Lab, Stanford University, 2023. https://plato.stanford.edu/archives/win2023/entries/privacy/.
 
-[^34]: Thomson, Judith Jarvis. "The Right to Privacy." _Philosophy & Public Affairs_ 4, no. 4 (1975): 295–314. https://www.jstor.org/stable/2265075.
+Solove, Daniel J. "A Taxonomy of Privacy." _University of Pennsylvania Law Review_ 154, no. 3 (January 1, 2006): 477. https://doi.org/10.2307/40041279.
 
-[^35]: Véliz, Carissa. "In the Privacy of Our Streets." In _Surveillance, Privacy and Public Space_, edited by Bryce Clayton Newell, Tjerk Timan, and Bert-Jaap Koops, 1st ed., 16–32. Routledge, 2018. https://doi.org/10.4324/9781315200811.
+Thomson, Judith Jarvis. "The Right to Privacy." _Philosophy & Public Affairs_ 4, no. 4 (1975): 295–314. https://www.jstor.org/stable/2265075.
 
-[^36]: ———. _The Ethics of Privacy and Surveillance_. Oxford Philosophical Monographs. Oxford: Oxford University Press, 2024. https://philpapers.org/rec/VLITEO.
+Véliz, Carissa. "In the Privacy of Our Streets." In _Surveillance, Privacy and Public Space_, edited by Bryce Clayton Newell, Tjerk Timan, and Bert-Jaap Koops, 1st ed., 16–32. Routledge, 2018. https://doi.org/10.4324/9781315200811.
 
-[^37]: Warren, Samuel D., and Louis D. Brandeis. "The Right to Privacy." _Harvard Law Review_ 4, no. 5 (December 15, 1890): 193–220. https://doi.org/10.2307/1321160.
+———. _The Ethics of Privacy and Surveillance_. Oxford Philosophical Monographs. Oxford: Oxford University Press, 2024. https://philpapers.org/rec/VLITEO.
 
-[^38]: Wheeler, Evan. _Security Risk Management: Building an Information Security Risk Management Program from the Ground Up_. Elsevier Science & Technology Books, 2011. https://doi.org/10.1016/C2010-0-64926-1.
+Warren, Samuel D., and Louis D. Brandeis. "The Right to Privacy." _Harvard Law Review_ 4, no. 5 (December 15, 1890): 193–220. https://doi.org/10.2307/1321160.
+
+Wheeler, Evan. _Security Risk Management: Building an Information Security Risk Management Program from the Ground Up_. Elsevier Science & Technology Books, 2011. https://doi.org/10.1016/C2010-0-64926-1.
 
 ## Sidebar
 
 gate-we-can-open-close-to-others:
 Heading:Case Study:
 The notion of access to private information as a binary operator underpins the Supreme Court’s 2021 decision in [_Van Buren v. United States_](https://www.oyez.org/cases/2020/19-783), which clarified the meaning of the Computer Fraud and Abuse Act (CFAA). In the majority opinion, Justice Amy Coney Barrett wrote, “liability under [two clauses of the CFAA] stems from a gates-up-or-down inquiry—one either can or cannot access a computer system, and one either can or cannot access certain areas within the system” (2021, 13).
+
+## Further Reading
+
+Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
+
+"Definition and Overview of Universal Design (UD)." Centre for Excellence in Universal Design. Accessed April 14, 2025. https://universaldesign.ie/about-universal-design/definition-and-overview
 
 man-in-the-middle-attack:
 For more details on man-in-the-middle (MITM) attacks, see [“What is a man-in-the-middle (MITM) attack?”](https://www.ibm.com/think/topics/man-in-the-middle) from IBM.
