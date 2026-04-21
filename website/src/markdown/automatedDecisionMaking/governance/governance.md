@@ -74,9 +74,7 @@ After defining the frameworks for key ingredients, governance approaches, and un
 
 The major stakeholders involved in AI governance can be divided into four categories: governments, industry actors, academic institutions, and civil society organizations. Each player has distinct incentives, capacities, and claims to legitimacy. Understanding their roles and tensions is essential to grasping how AI governance is negotiated in practice. 
 
-[image 1]
-
-[image source]
+![stakeholders](/assets/primer-photos/ADM/governance/stakeholders.png)
 
 ### Government Overview
 
