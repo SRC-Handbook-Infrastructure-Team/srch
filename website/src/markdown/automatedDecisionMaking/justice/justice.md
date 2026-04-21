@@ -109,7 +109,7 @@ ADS systems don’t exist in a vacuum but within the same social, political, and
 
 Deciding which approach to justice to take will be driven by the community for whom the technology is created, the overall goals, and agency of the developer, but various frameworks laid out in this primer show that justice in AI is inherently multidimensional. A system may appear procedurally fair while producing unequal outcomes. It may reduce bias in predictions while still reinforcing structural inequalities or extracting environmental resources from vulnerable communities. Addressing justice in AI therefore requires looking beyond isolated technical metrics toward a more comprehensive understanding of how algorithmic systems operate within society.
 
-## Bibliography
+## Further Reading
 
 Buccella, Alessandra. 2023\. "'AI for All' Is a Matter of Social Justice." AI and Ethics 3: 1143-1152.
 
