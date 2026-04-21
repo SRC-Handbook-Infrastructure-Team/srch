@@ -1,6 +1,6 @@
 ---
 title: Consent
-order: 4
+order: 5
 lastUpdated: 2026-04-21
 ---
 
@@ -159,169 +159,164 @@ Paternalism hinges on who gets to make the rules and using what standards. This 
 
 The theory of **{contextual-integrity|contextual integrity}** put forth by privacy scholar Helen Nissenbaum understands consent as one possible aspect of the appropriate flow of information, defined according to the subject, sender, recipient, information type, and **transmission principles** (of which ‘with consent’ and ‘with notice’ are options).[^78] An appealing feature of contextual integrity as a privacy protection framework is its ability to reflect evolving ethical norms and societal interests.
 
-[^1]:  [A. John Simmons, “Tacit Consent and Political Obligation,” *Philosophy & Public Affairs* 5, no. 3 (1976): 274–91.](https://www.zotero.org/google-docs/?JyLP1R)
+<!-- Note: duplicates have not been removed and these are not in alphabetical order. For this case, that represents
+a substantial amount of work, so we're skipping it for right now-->
 
-[^2]:  [Solon Barocas and Helen Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” in *Privacy, Big Data, and the Public Good: Frameworks for Engagement*, ed. Julia Lane et al. (Cambridge University Press, 2014), 56–57.](https://www.zotero.org/google-docs/?Fl2KeP)
+[^1]:  A. John Simmons, “Tacit Consent and Political Obligation,” *Philosophy & Public Affairs* 5, no. 3 (1976): 274–91.
 
-[^3]:  [Batya Friedman et al., “Informed Consent by Design,” in *Security and Usability* (O’Reilly Media, Inc., 2005), 503, https://old.vsdesign.org/publications/pdf/Security\_and\_Usability\_ch24.pdf.](https://www.zotero.org/google-docs/?w05VSE)
+[^2]:  Solon Barocas and Helen Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” in *Privacy, Big Data, and the Public Good: Frameworks for Engagement*, ed. Julia Lane et al. (Cambridge University Press, 2014), 56–57.
 
-[^4]:  [“The Development of Consent to Computing,” *IEEE Annals of the History of Computing* 41, no. 4 (2019): 37, https://doi.org/10.1109/MAHC.2019.2896282.](https://www.zotero.org/google-docs/?iIRRil)
+[^3]:  Batya Friedman et al., “Informed Consent by Design,” in *Security and Usability* (O’Reilly Media, Inc., 2005), 503, https://old.vsdesign.org/publications/pdf/Security\_and\_Usability\_ch24.pdf.
 
-[^5]:  [Samuel D. Warren and Louis D. Brandeis, “The Right to Privacy,” *Harvard Law Review* 4, no. 5 (1890): 193–220, https://doi.org/10.2307/1321160.](https://www.zotero.org/google-docs/?1z7QCq)
+[^4]:  “The Development of Consent to Computing,” *IEEE Annals of the History of Computing* 41, no. 4 (2019): 37, https://doi.org/10.1109/MAHC.2019.2896282.
 
-[^6]:  [“Big Data: Destroyer of Informed Consent,” *Yale Journal of Law & Technology* 21 (2019): 30\.](https://www.zotero.org/google-docs/?rvlj75)
+[^5]:  Samuel D. Warren and Louis D. Brandeis, “The Right to Privacy,” *Harvard Law Review* 4, no. 5 (1890): 193–220, https://doi.org/10.2307/1321160.
 
-[^7]:  [Meg Leta Jones, *The Character of Consent: The History of Cookies and the Future of Technology Policy*, Information Policy Series (MIT Press, 2024), 71\.](https://www.zotero.org/google-docs/?74brVk)
+[^6]:  “Big Data: Destroyer of Informed Consent,” *Yale Journal of Law & Technology* 21 (2019): 30\.
 
-[^8]:  [Una Lee and Dann Toliver, “Building Consentful Tech,” And Also Too, 2017, https://www.andalsotoo.net/wp-content/uploads/2018/10/Building-Consentful-Tech-Zine-SPREADS.pdf.](https://www.zotero.org/google-docs/?GB4djJ)
+[^7]:  Meg Leta Jones, *The Character of Consent: The History of Cookies and the Future of Technology Policy*, Information Policy Series (MIT Press, 2024), 71\.
 
-[^9]:  [“Informed Consent by Design,” 499\.](https://www.zotero.org/google-docs/?M8kKou)
+[^8]:  Una Lee and Dann Toliver, “Building Consentful Tech,” And Also Too, 2017, https://www.andalsotoo.net/wp-content/uploads/2018/10/Building-Consentful-Tech-Zine-SPREADS.pdf.
 
-[^10]:  [Neil Richards and Woodrow Hartzog, “The Pathologies of Digital Consent,” Washington University Law Review, Trust and Privacy in the Digital Age, vol. 96, no. 6 (2019), https://openscholarship.wustl.edu/law\_lawreview/vol96/iss6/11.](https://www.zotero.org/google-docs/?Si5gko)
+[^9]:  “Informed Consent by Design,” 499\.
 
-[^11]:  [Friedman et al., “Informed Consent by Design.”](https://www.zotero.org/google-docs/?bWC0Ur)
+[^10]:  Neil Richards and Woodrow Hartzog, “The Pathologies of Digital Consent,” Washington University Law Review, Trust and Privacy in the Digital Age, vol. 96, no. 6 (2019), https://openscholarship.wustl.edu/law\_lawreview/vol96/iss6/11.
 
-[^12]:  [Daniel J. Solove, “Privacy Self-Management and the Consent Dilemma,” *Harvard Law Review* 126 (2013): 1880–903.](https://www.zotero.org/google-docs/?PR43pw)
+[^11]:  Friedman et al., “Informed Consent by Design.”
 
-[^13]:  [“Building Consentful Tech.”](https://www.zotero.org/google-docs/?lR7zZ6)
+[^12]:  Daniel J. Solove, “Privacy Self-Management and the Consent Dilemma,” *Harvard Law Review* 126 (2013): 1880–903.
 
-[^14]:  [Article 29 Working Party (WP29), “Guidelines on Consent under Regulation 2016/679,” April 10, 2018, 12\.](https://www.zotero.org/google-docs/?2fezcu)
+[^13]:  “Building Consentful Tech.”
 
-[^15]:  [Colin M. Gray et al., “The Dark (Patterns) Side of UX Design,” *Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems*, April 21, 2018, 2, https://doi.org/10.1145/3173574.3174108.](https://www.zotero.org/google-docs/?enXs3F)
+[^14]:  Article 29 Working Party (WP29), “Guidelines on Consent under Regulation 2016/679,” April 10, 2018, 12\.
 
-[^16]:  [Max Witynski, “Behavioral Economics, Explained,” *UChicago News*, n.d., accessed January 1, 2026, https://news.uchicago.edu/explainer/what-is-behavioral-economics.](https://www.zotero.org/google-docs/?jouDyp)
+[^15]:  Colin M. Gray et al., “The Dark (Patterns) Side of UX Design,” *Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems*, April 21, 2018, 2, https://doi.org/10.1145/3173574.3174108.
 
-[^17]:  [Friedman et al., “Informed Consent by Design.”](https://www.zotero.org/google-docs/?vHHawh)
+[^16]:  Max Witynski, “Behavioral Economics, Explained,” *UChicago News*, n.d., accessed January 1, 2026, https://news.uchicago.edu/explainer/what-is-behavioral-economics.
 
-[^18]:  [Midas Nouwens et al., “Dark Patterns after the GDPR: Scraping Consent Pop-Ups and Demonstrating Their Influence,” *Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems*, April 21, 2020, 1–13, https://doi.org/10.1145/3313831.3376321.](https://www.zotero.org/google-docs/?NvqJMy)
+[^17]:  Friedman et al., “Informed Consent by Design.”
 
-[^19]:  [Gray et al., “The Dark (Patterns) Side of UX Design.”](https://www.zotero.org/google-docs/?o9obYY)
+[^18]:  Midas Nouwens et al., “Dark Patterns after the GDPR: Scraping Consent Pop-Ups and Demonstrating Their Influence,” *Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems*, April 21, 2020, 1–13, https://doi.org/10.1145/3313831.3376321.
 
-[^20]:  [Ramona Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments: A Scoping Review,” *IEEE Access* 13 (2025): 71974, https://doi.org/10.1109/ACCESS.2025.3562773.](https://www.zotero.org/google-docs/?bFYpVF)
+[^19]:  Gray et al., “The Dark (Patterns) Side of UX Design.”
 
-[^21]:  [Batya Friedman and David G. Hendry, *Value Sensitive Design: Shaping Technology with Moral Imagination* (The MIT Press, 2019), https://doi.org/10.7551/mitpress/7585.001.0001.](https://www.zotero.org/google-docs/?GDBKV7)
+[^20]:  Ramona Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments: A Scoping Review,” *IEEE Access* 13 (2025): 71974, https://doi.org/10.1109/ACCESS.2025.3562773.
 
-[^22]:  [Mary Flanagan and Helen Nissenbaum, *Values at Play in Digital Games* (The MIT Press, 2014), https://doi.org/10.7551/mitpress/9016.001.0001.](https://www.zotero.org/google-docs/?RvLyre)
+[^21]:  Batya Friedman and David G. Hendry, *Value Sensitive Design: Shaping Technology with Moral Imagination* (The MIT Press, 2019), https://doi.org/10.7551/mitpress/7585.001.0001.
 
-[^23]:  [Katie Shilton, “Values Levers: Building Ethics into Design,” *Science, Technology, & Human Values* 38, no. 3 (2013): 374–97, https://doi.org/10.1177/0162243912436985.](https://www.zotero.org/google-docs/?OBVvdy)
+[^22]:  Mary Flanagan and Helen Nissenbaum, *Values at Play in Digital Games* (The MIT Press, 2014), https://doi.org/10.7551/mitpress/9016.001.0001.
 
-[^24]:  [Jeffrey Bardzell and Shaowen Bardzell, “What Is ‘Critical’ about Critical Design?,” *Proceedings of the SIGCHI Conference on Human Factors in Computing Systems*, April 27, 2013, 3297–306, https://doi.org/10.1145/2470654.2466451.](https://www.zotero.org/google-docs/?ZFFMWC)
+[^23]:  Katie Shilton, “Values Levers: Building Ethics into Design,” *Science, Technology, & Human Values* 38, no. 3 (2013): 374–97, https://doi.org/10.1177/0162243912436985.
 
-[^25]:  [Phoebe Sengers et al., “Reflective Design,” *Proceedings of the 4th Decennial Conference on Critical Computing: Between Sense and Sensibility*, August 20, 2005, 49–58, https://doi.org/10.1145/1094562.1094569.](https://www.zotero.org/google-docs/?QKAv03)
+[^24]:  Jeffrey Bardzell and Shaowen Bardzell, “What Is ‘Critical’ about Critical Design?,” *Proceedings of the SIGCHI Conference on Human Factors in Computing Systems*, April 27, 2013, 3297–306, https://doi.org/10.1145/2470654.2466451.
 
-[^26]:  [Friedman et al., “Informed Consent by Design.”](https://www.zotero.org/google-docs/?hNERAF)
+[^25]:  Phoebe Sengers et al., “Reflective Design,” *Proceedings of the 4th Decennial Conference on Critical Computing: Between Sense and Sensibility*, August 20, 2005, 49–58, https://doi.org/10.1145/1094562.1094569.
 
-[^27]:  [Data & Society Research Institute, “Data & Society Research Institute Comments to NTIA on ‘Stakeholder Engagement on Cybersecurity in the Digital Ecosystem,’” Data & Society, May 27, 2015, https://datasociety.net/pubs/dcr/Data\&Society\_NTIA-comments\_May2015.pdf.](https://www.zotero.org/google-docs/?fZpLir)
+[^26]:  Friedman et al., “Informed Consent by Design.”
 
-[^28]:  [Electronic Privacy Information Center, “Enforcement of Privacy Laws,” Epic.Org, 2025, https://epic.org/issues/data-protection/enforcement-of-privacy-laws/.](https://www.zotero.org/google-docs/?AOSJM1)
+[^27]:  Data & Society Research Institute, “Data & Society Research Institute Comments to NTIA on ‘Stakeholder Engagement on Cybersecurity in the Digital Ecosystem,’” Data & Society, May 27, 2015, https://datasociety.net/pubs/dcr/Data\&Society\_NTIA-comments\_May2015.pdf.
 
-[^29]:  [Wikipedia contributors, “Brussels Effect,” in *Wikipedia* (Wikipedia, The Free Encyclopedia, November 24, 2025), https://en.wikipedia.org/wiki/Brussels\_effect.](https://www.zotero.org/google-docs/?NKms1H)
+[^28]:  Electronic Privacy Information Center, “Enforcement of Privacy Laws,” Epic.Org, 2025, https://epic.org/issues/data-protection/enforcement-of-privacy-laws/.
 
-[^30]:  [Jones, *The Character of Consent*.](https://www.zotero.org/google-docs/?Xowy6K)
+[^29]:  Wikipedia contributors, “Brussels Effect,” in *Wikipedia* (Wikipedia, The Free Encyclopedia, November 24, 2025), https://en.wikipedia.org/wiki/Brussels\_effect.
 
-[^31]:  [“Privacy Self-Management and the Consent Dilemma,” 1880\.](https://www.zotero.org/google-docs/?gyTLdl)
+[^30]:  Jones, *The Character of Consent*.
 
-[^32]:  [Ari Ezra Waldman, “Privacy, Practice, and Performance,” *California Law Review* 110 (2022), https://doi.org/10.15779/Z38JD4PQ3D.](https://www.zotero.org/google-docs/?DEa5mx)
+[^31]:  “Privacy Self-Management and the Consent Dilemma,” 1880\.
 
-[^33]:  [Fida K. Dankar et al., “Dynamic-Informed Consent: A Potential Solution for Ethical Dilemmas in Population Sequencing Initiatives,” Computational and Structural Biotechnology Journal 18 (2020): 919, https://doi.org/10.1016/j.csbj.2020.03.027.](https://www.zotero.org/google-docs/?IiKzlw)
+[^32]:  Ari Ezra Waldman, “Privacy, Practice, and Performance,” *California Law Review* 110 (2022), https://doi.org/10.15779/Z38JD4PQ3D.
 
-[^34]:  [Jones, The Character of Consent, 3\.](https://www.zotero.org/google-docs/?uNpxtl)
+[^33]:  Fida K. Dankar et al., “Dynamic-Informed Consent: A Potential Solution for Ethical Dilemmas in Population Sequencing Initiatives,” Computational and Structural Biotechnology Journal 18 (2020): 919, https://doi.org/10.1016/j.csbj.2020.03.027.
 
-[^35]:  [Isabel Wagner, “Privacy Policies across the Ages: Content of Privacy Policies 1996–2021,” *ACM Transactions on Privacy and Security* 26, no. 3 (2023): 1–32, https://doi.org/10.1145/3590152.](https://www.zotero.org/google-docs/?EIoAYz)
+[^34]:  Jones, The Character of Consent, 3\.
 
-[^36]:  [Caspar Barnes et al., “Enabling Demonstrated Consent for Biobanking with Blockchain and Generative AI,” *The American Journal of Bioethics* 25, no. 4 (2025): 96–111, https://doi.org/10.1080/15265161.2024.2416117.](https://www.zotero.org/google-docs/?1Jtbnv)
+[^35]:  Isabel Wagner, “Privacy Policies across the Ages: Content of Privacy Policies 1996–2021,” *ACM Transactions on Privacy and Security* 26, no. 3 (2023): 1–32, https://doi.org/10.1145/3590152.
 
-[^37]:  [Woodrow Hartzog, “The Case Against Idealising Control,” *European Data Protection Law Review* 4 (2018), https://scholarship.law.bu.edu/cgi/viewcontent.cgi?article=4050\&context=faculty\_scholarship.](https://www.zotero.org/google-docs/?ain6XZ)
+[^36]:  Caspar Barnes et al., “Enabling Demonstrated Consent for Biobanking with Blockchain and Generative AI,” *The American Journal of Bioethics* 25, no. 4 (2025): 96–111, https://doi.org/10.1080/15265161.2024.2416117.
 
-[^38]:  [Jonathan A. Obar and Anne Oeldorf-Hirsch, “The Biggest Lie on the Internet: Ignoring the Privacy Policies and Terms of Service Policies of Social Networking Services,” *Information, Communication & Society* 23, no. 1 (2018): 128–47, https://doi.org/10.1080/1369118X.2018.1486870.](https://www.zotero.org/google-docs/?xkJQ8P)
+[^37]:  Woodrow Hartzog, “The Case Against Idealising Control,” *European Data Protection Law Review* 4 (2018), https://scholarship.law.bu.edu/cgi/viewcontent.cgi?article=4050\&context=faculty\_scholarship.
 
-[^39]:  [Paul Bernal, “Collaborative Consent: Harnessing the Strengths of the Internet for Consent in the Online Environment,” *International Review of Law, Computers & Technology* 24, no. 3 (2010): 287–97, https://doi.org/10.1080/13600869.2010.522335.](https://www.zotero.org/google-docs/?zYlFiC)
+[^38]:  Jonathan A. Obar and Anne Oeldorf-Hirsch, “The Biggest Lie on the Internet: Ignoring the Privacy Policies and Terms of Service Policies of Social Networking Services,” *Information, Communication & Society* 23, no. 1 (2018): 128–47, https://doi.org/10.1080/1369118X.2018.1486870.
 
-[^40]:  [Daniel J. Solove, “Digital Dossiers and the Aggregation Effect,” *TeachPrivacy*, November 25, 2024, https://teachprivacy.com/digital-dossiers-and-the-aggregation-effect/.](https://www.zotero.org/google-docs/?rwoh55)
+[^39]:  Paul Bernal, “Collaborative Consent: Harnessing the Strengths of the Internet for Consent in the Online Environment,” *International Review of Law, Computers & Technology* 24, no. 3 (2010): 287–97, https://doi.org/10.1080/13600869.2010.522335.
 
-[^41]:  [Froomkin, “Big Data: Destroyer of Informed Consent.”](https://www.zotero.org/google-docs/?AJ3rhk)
+[^40]:  Daniel J. Solove, “Digital Dossiers and the Aggregation Effect,” *TeachPrivacy*, November 25, 2024, https://teachprivacy.com/digital-dossiers-and-the-aggregation-effect/.
 
-[^42]:  [Froomkin, “Big Data: Destroyer of Informed Consent.”](https://www.zotero.org/google-docs/?ATV48D)
+[^41]:  Froomkin, “Big Data: Destroyer of Informed Consent.”
 
-[^43]:  [Solon Barocas and Helen Nissenbaum, “On Notice: The Trouble with Notice and Consent,” *Proceedings of the Engaging Data Forum: The First International Forum on the Application and Management of Personal Electronic Information*, October 2009, 6, https://ssrn.com/abstract=2567409.](https://www.zotero.org/google-docs/?NEgMHa)
+[^42]:  Froomkin, “Big Data: Destroyer of Informed Consent.”
 
-[^44]:  [Rene Millman, “Big Tech Needs Less than a Month to Pay off over $7 Billion in 2025 Fines, Proton Warns,” *TechRadar*, January 28, 2026, https://www.techradar.com/vpn/vpn-privacy-security/big-tech-could-need-only-one-month-to-pay-off-over-usd7-billion-in-2025-fines-proton-warns.](https://www.zotero.org/google-docs/?HKQifv)
+[^43]:  Solon Barocas and Helen Nissenbaum, “On Notice: The Trouble with Notice and Consent,” *Proceedings of the Engaging Data Forum: The First International Forum on the Application and Management of Personal Electronic Information*, October 2009, 6, https://ssrn.com/abstract=2567409.
 
-[^45]:  [Richards and Hartzog, “The Pathologies of Digital Consent,” 1487\.](https://www.zotero.org/google-docs/?GfY6VC)
+[^44]:  Rene Millman, “Big Tech Needs Less than a Month to Pay off over $7 Billion in 2025 Fines, Proton Warns,” *TechRadar*, January 28, 2026, https://www.techradar.com/vpn/vpn-privacy-security/big-tech-could-need-only-one-month-to-pay-off-over-usd7-billion-in-2025-fines-proton-warns.
 
-[^46]:  [Nancy Kim, “Clicking and Cringing,” Oregon Law Review 86 (2007): 821, https://scholarlycommons.law.cwsl.edu/cgi/viewcontent.cgi?article=1054\&context=fs.](https://www.zotero.org/google-docs/?4WdRVi)
+[^45]:  Richards and Hartzog, “The Pathologies of Digital Consent,” 1487\.
 
-[^47]:  [Aiha Nguyen, *The Constant Boss: Work Under Digital Surveillance* (Data & Society, 2021), https://datasociety.net/wp-content/uploads/2021/05/The\_Constant\_Boss.pdf.](https://www.zotero.org/google-docs/?CuZgp8)
+[^46]:  Nancy Kim, “Clicking and Cringing,” Oregon Law Review 86 (2007): 821, https://scholarlycommons.law.cwsl.edu/cgi/viewcontent.cgi?article=1054\&context=fs.
 
-[^48]:  [Data & Society Research Institute, “Data & Society Research Institute Comments to NTIA on ‘Stakeholder Engagement on Cybersecurity in the Digital Ecosystem.’”](https://www.zotero.org/google-docs/?lIKb6H)
+[^47]:  Aiha Nguyen, *The Constant Boss: Work Under Digital Surveillance* (Data & Society, 2021), https://datasociety.net/wp-content/uploads/2021/05/The\_Constant\_Boss.pdf.
 
-[^49]:  [Juniper L. Lovato et al., “Limits of Individual Consent and Models of Distributed Consent in Online Social Networks,” *2022 ACM Conference on Fairness Accountability and Transparency*, June 21, 2022, 2252, https://doi.org/10.1145/3531146.3534640.](https://www.zotero.org/google-docs/?owherr)
+[^48]:  Data & Society Research Institute, “Data & Society Research Institute Comments to NTIA on ‘Stakeholder Engagement on Cybersecurity in the Digital Ecosystem.’”
 
-[^50]:  [Alan Mislove et al., “You Are Who You Know: Inferring User Profiles in Online Social Networks,” Proceedings of the Third ACM International Conference on Web Search and Data Mining, ACM, February 4, 2010, 251–60, https://doi.org/10.1145/1718487.1718519.](https://www.zotero.org/google-docs/?broken=ZLtWdn)
+[^49]:  Juniper L. Lovato et al., “Limits of Individual Consent and Models of Distributed Consent in Online Social Networks,” *2022 ACM Conference on Fairness Accountability and Transparency*, June 21, 2022, 2252, https://doi.org/10.1145/3531146.3534640.
 
-[^51]:  [James P. Bagrow et al., “Information Flow Reveals Prediction Limits in Online Social Activity,” Nature Human Behaviour 3, no. 2 (2019): 122–28, https://doi.org/10.1038/s41562-018-0510-5.](https://www.zotero.org/google-docs/?broken=Tcr6xO)
+[^50]:  Alan Mislove et al., “You Are Who You Know: Inferring User Profiles in Online Social Networks,” Proceedings of the Third ACM International Conference on Web Search and Data Mining, ACM, February 4, 2010, 251–60, https://doi.org/10.1145/1718487.1718519.
 
-[^52]:  [Jones, The Character of Consent, 180\.](https://www.zotero.org/google-docs/?LBIGkN)
+[^51]:  James P. Bagrow et al., “Information Flow Reveals Prediction Limits in Online Social Activity,” Nature Human Behaviour 3, no. 2 (2019): 122–28, https://doi.org/10.1038/s41562-018-0510-5.
 
-[^53]:  [Froomkin, “Big Data: Destroyer of Informed Consent,” 33\.](https://www.zotero.org/google-docs/?broken=RipAOZ)
+[^52]:  Jones, The Character of Consent, 180\.
 
-[^54]:  [Barocas and Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” 61\.](https://www.zotero.org/google-docs/?FO3HqQ)
+[^53]:  Froomkin, “Big Data: Destroyer of Informed Consent,” 33\.
 
-[^55]:  [Luger and Rodden, “Terms of Agreement,” 230\.](https://www.zotero.org/google-docs/?broken=mcW81Z)
+[^54]:  Barocas and Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” 61\.
 
-[^56]:  [Richards and Hartzog, “The Pathologies of Digital Consent,” 1490\.](https://www.zotero.org/google-docs/?broken=lfZQyB)
+[^55]:  Luger and Rodden, “Terms of Agreement,” 230\.
 
-[^57]:  [Meg Leta Jones et al., “AI and the Ethics of Automating Consent,” *IEEE Security & Privacy* 16, no. 3 (2018): 64–72, https://doi.org/10.1109/MSP.2018.2701155.](https://www.zotero.org/google-docs/?d5BT3O)
+[^56]:  Richards and Hartzog, “The Pathologies of Digital Consent,” 1490\.
 
-[^58]:  [Jones et al., “AI and the Ethics of Automating Consent.”](https://www.zotero.org/google-docs/?op0Kps)
+[^57]:  Meg Leta Jones et al., “AI and the Ethics of Automating Consent,” *IEEE Security & Privacy* 16, no. 3 (2018): 64–72, https://doi.org/10.1109/MSP.2018.2701155.
 
-[^59]:  [Jones et al., “AI and the Ethics of Automating Consent,” 69\.](https://www.zotero.org/google-docs/?Tf0MIa)
+[^58]:  Jones et al., “AI and the Ethics of Automating Consent.”
 
-[^60]:  [Dankar et al., “Dynamic-Informed Consent.”](https://www.zotero.org/google-docs/?hInEck)
+[^59]:  Jones et al., “AI and the Ethics of Automating Consent,” 69\.
 
-[^61]:  [Barnes et al., “Enabling Demonstrated Consent for Biobanking with Blockchain and Generative AI,” 97\.](https://www.zotero.org/google-docs/?FVce5i)
+[^60]:  Dankar et al., “Dynamic-Informed Consent.”
 
-[^62]:  [Natalie Ram, “Tiered Consent And The Tyranny Of Choice,” *Jurimetrics*, Spring 2008, http://scholarworks.law.ubalt.edu/all\_fac/873.](https://www.zotero.org/google-docs/?7ebrIQ)
+[^61]:  Barnes et al., “Enabling Demonstrated Consent for Biobanking with Blockchain and Generative AI,” 97\.
 
-[^63]:  [Thomas Ploug and Søren Holm, “Meta Consent – A Flexible Solution to the Problem of Secondary Use of Health Data,” *Bioethics* 30, no. 9 (2016): 721–32, https://doi.org/10.1111/bioe.12286.](https://www.zotero.org/google-docs/?Sy4HrQ)
+[^62]:  Natalie Ram, “Tiered Consent And The Tyranny Of Choice,” *Jurimetrics*, Spring 2008, http://scholarworks.law.ubalt.edu/all\_fac/873.
 
-[^64]:  [Bernal, “Collaborative Consent.”](https://www.zotero.org/google-docs/?0JOj9r)
+[^63]:  Thomas Ploug and Søren Holm, “Meta Consent – A Flexible Solution to the Problem of Secondary Use of Health Data,” *Bioethics* 30, no. 9 (2016): 721–32, https://doi.org/10.1111/bioe.12286.
 
-[^65]:  [Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments,” 71977\.](https://www.zotero.org/google-docs/?fiQ3PJ)
+[^64]:  Bernal, “Collaborative Consent.”
 
-[^66]:  [Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments.”](https://www.zotero.org/google-docs/?WwDpZC)
+[^65]:  Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments,” 71977\.
 
-[^67]:  [Jones, *The Character of Consent*.](https://www.zotero.org/google-docs/?9AiCHB)
+[^66]:  Schmidt et al., “Challenges and Solutions in Implementing Informed Consent in Digital Environments.”
 
-[^68]:  [Barocas and Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” 45\.](https://www.zotero.org/google-docs/?qBEgjq)
+[^67]:  Jones, *The Character of Consent*.
 
-[^69]:  [Helen Nissenbaum, “The Meaning of Anonymity in an Information Age,” *The Information Society* 15, no. 2 (1999): 141–44, https://doi.org/10.1080/019722499128592.](https://www.zotero.org/google-docs/?4Q3C1H)
+[^68]:  Barocas and Nissenbaum, “Big Data’s End Run around Anonymity and Consent,” 45\.
 
-[^70]:  [Alan F. Karr and Jerome P. Reiter, “Using Statistics to Protect Privacy,” in *Privacy, Big Data, and the Public Good: Frameworks for Engagement*, ed. Julia Lane et al. (Cambridge University Press, 2014).](https://www.zotero.org/google-docs/?3nK1Yl)
+[^69]:  Helen Nissenbaum, “The Meaning of Anonymity in an Information Age,” *The Information Society* 15, no. 2 (1999): 141–44, https://doi.org/10.1080/019722499128592.
 
-[^71]:  [Karr and Reiter, “Using Statistics to Protect Privacy,” 278–79.](https://www.zotero.org/google-docs/?8EjzV9)
+[^70]:  Alan F. Karr and Jerome P. Reiter, “Using Statistics to Protect Privacy,” in *Privacy, Big Data, and the Public Good: Frameworks for Engagement*, ed. Julia Lane et al. (Cambridge University Press, 2014).
 
-[^72]:  [Solove, “Privacy Self-Management and the Consent Dilemma,” 1901\.](https://www.zotero.org/google-docs/?3wjt8Z)
+[^71]:  Karr and Reiter, “Using Statistics to Protect Privacy,” 278–79.
 
-[^73]:  [Richards and Hartzog, “The Pathologies of Digital Consent,” 1494\.](https://www.zotero.org/google-docs/?Bk3RWb)
+[^72]:  Solove, “Privacy Self-Management and the Consent Dilemma,” 1901\.
 
-[^74]:  [Ana Caraban et al., “23 Ways to Nudge: A Review of Technology-Mediated Nudging in Human-Computer Interaction,” *Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems*, May 2, 2019, 1–15, https://doi.org/10.1145/3290605.3300733.](https://www.zotero.org/google-docs/?l9JqBG)
+[^73]:  Richards and Hartzog, “The Pathologies of Digital Consent,” 1494\.
 
-[^75]:  [Kim, “Clicking and Cringing.”](https://www.zotero.org/google-docs/?yAnn5a)
+[^74]:  Ana Caraban et al., “23 Ways to Nudge: A Review of Technology-Mediated Nudging in Human-Computer Interaction,” *Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems*, May 2, 2019, 1–15, https://doi.org/10.1145/3290605.3300733.
 
-[^76]:  [Dankar et al., “Dynamic-Informed Consent.”](https://www.zotero.org/google-docs/?cZR9Qw)
+[^75]:  Kim, “Clicking and Cringing.”
 
-[^77]:  [Froomkin, “Big Data: Destroyer of Informed Consent.”](https://www.zotero.org/google-docs/?NCmDhX)
+[^76]:  Dankar et al., “Dynamic-Informed Consent.”
 
-[^78]:  [Scott Berinato, “‘Stop Thinking About Consent: It Isn’t Possible and It Isn’t Right,’” *Harvard Business Review*, The Big Idea Series  /  Tracked, September 24, 2018, https://www5.qa.hbr.org/2018/09/stop-thinking-about-consent-it-isnt-possible-and-it-isnt-right.](https://www.zotero.org/google-docs/?FMqi71)
+[^77]:  Froomkin, “Big Data: Destroyer of Informed Consent.”
 
-
-
-
-
-
-
-
+[^78]:  Scott Berinato, “‘Stop Thinking About Consent: It Isn’t Possible and It Isn’t Right,’” *Harvard Business Review*, The Big Idea Series  /  Tracked, September 24, 2018, https://www5.qa.hbr.org/2018/09/stop-thinking-about-consent-it-isnt-possible-and-it-isnt-right.
 
 ## Sidebar
 
