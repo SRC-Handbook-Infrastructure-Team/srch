@@ -1188,8 +1188,8 @@ function MarkdownRenderer({
           <h1
             id={id}
             style={{
-              marginTop: "2.5rem",
-              marginBottom: "1.25rem",
+              marginTop: "72px",
+              marginBottom: "36px",
               fontSize: "2rem",
               lineHeight: "1.15",
               color: "var(--color-header)",
