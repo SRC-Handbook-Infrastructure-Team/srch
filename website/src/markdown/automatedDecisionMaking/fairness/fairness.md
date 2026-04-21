@@ -1,7 +1,7 @@
 ---
 title: Algorithmic Fairness
-order: 1
-final: false
+order: 2
+final: true
 ---
 
 In cases where machines replace humans in making high-impact decisions, it is important for their outcomes to remain fair. But what does algorithmic fairness actually mean?
@@ -50,7 +50,7 @@ To illustrate these concepts below, we can imagine an automated loan approval mo
 
 Metrics such as **demographic parity** compare positive outcomes across groups, which, in the loan approval example, would be the outcome of getting approved or getting a high score. To satisfy independence, the approval rates should be very similar across groups.
 
-!([]independence.png)
+![Bar graph showing independence](/assets/primer-photos/independence.png)
 
 In the example above, there is a clear skew of Group A towards lower scores. Group A is less likely to receive a score above the positive threshold of 0.5, and therefore less likely to be approved, which violates independence. If independence were fully upheld, both groups would have equal rates of positive outcomes.
 
@@ -67,7 +67,7 @@ Independence is a helpful tool in looking at predicted outcomes. However, it ass
 
 The primary separation metrics assess parity across true positive rates and false positive rates to determine the difference between various groups, often summarized as an overall **equalized-odds gap**. To satisfy separation, these rates must be consistent across groups.
 
-!([] separation.png)
+![Bar graphs showing separation](/assets/primer-photos/separation.png)
 
 As depicted above, Group B has a much higher rate of approval among unqualified applicants, suggesting a worse false positive rate. Unqualified Group B applicants were more likely to be approved than similarly unqualified applicants from Group A, which shows a fairness disparity. The score distribution among qualified applicants follows similar patterns, with qualified applicants from Group A less likely to be approved than qualified applicants from Group B, suggesting a disparity in the true positive rate.
 
@@ -79,7 +79,7 @@ Separation discerns predictions across groups given their true outcome, which ca
 
 Sufficiency is evaluated using group-wise calibration metrics, including **positive predictive value (PPV)**, which is the proportion of approved or high-scoring applicants who are truly qualified, and **negative predictive value (NPV)**, which is the proportion of denied or low-scoring applicants who are truly unqualified. These are computed separately by group and compared for parity. Perfect sufficiency implies that calibration curves overlap across groups or that PPV and NPV gaps are near zero.
 
-!([]sufficiency.png)
+![Bar graphs showing sufficiency](/assets/primer-photos/sufficiency.png)
 
 As depicted above, among applicants who were predicted to be approved, Group B exhibits a much higher rate of true qualification than Group A, indicating a disparity in positive predictive value (PPV). In other words, an approval or high score corresponds to a stronger signal of true qualification for Group B than it does for Group A, meaning that identical model predictions do not have the same interpretive meaning across groups. The model therefore fails to satisfy sufficiency: conditional on receiving the same prediction, applicants from different groups experience systematically different probabilities of being truly qualified or unqualified.
 

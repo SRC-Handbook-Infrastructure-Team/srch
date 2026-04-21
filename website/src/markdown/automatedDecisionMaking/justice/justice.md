@@ -1,7 +1,7 @@
 ---
 title: Justice in AI
-order: 4
-final: false
+order: 3
+final: true
 ---
 
 # Justice in Artificial Intelligence Outline
@@ -14,7 +14,7 @@ While [fairness](/AI/fairness), as currently formalized in AI, relies on mathema
 
 ## Conceptions of Justice
 
-There are many efforts to build mathematically fair models and de-bias datasets as well as govern the outcomes of Automated Decision Systems (ADS). However, a philosophical notion of justice provides an intellectual framework for building models and tech. There is no one notion of justice that is accepted by everyone and some conceptions also conflict with each other, making all impossible to implement at once.[^1] The choice of guiding methodology largely depends on the outcome goal behind and values behind development of ADS. Principally, there are two big overarching conceptions that show different approaches to what justice should achieve:
+There are many efforts to build mathematically fair models and de-bias datasets as well as govern the outcomes of Automated Decision Systems (ADS). However, a philosophical notion of justice provides an intellectual framework for building models and tech. There is no one notion of justice that is accepted by everyone and some conceptions also conflict with each other, making all impossible to implement at once.[^11] The choice of guiding methodology largely depends on the outcome goal behind and values behind development of ADS. Principally, there are two big overarching conceptions that show different approaches to what justice should achieve:
 
 | Process-Focused Justice                                                                                                                                                                                                                                                                                                                                                                                                               | Outcome-Focused Justice                                                                                                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -31,7 +31,7 @@ Key components of process-focused (or procedural) justice are **respect, trustwo
 
 **Respect** captures the idea that all individuals must be treated with dignity. This includes courteous communication, acknowledgment of people's concerns, and the absence of demeaning or dismissive behavior.
 
-**Trustworthiness** refers to whether decision makers convey sincere, benevolent, and fair motives to those impacted by their decisions. People evaluate not only the logic of a decision but also the intentions behind it. Trust is strengthened when decision makers demonstrate concern for stakeholders' well-being and explain their reasoning in ways that signal integrity and accountability. A key aspect of trustworthiness is transparency and right to request explanations for model's performance, like in the {youtube-case|YouTube moderation case}[^2].
+**Trustworthiness** refers to whether decision makers convey sincere, benevolent, and fair motives to those impacted by their decisions. People evaluate not only the logic of a decision but also the intentions behind it. Trust is strengthened when decision makers demonstrate concern for stakeholders' well-being and explain their reasoning in ways that signal integrity and accountability. A key aspect of trustworthiness is transparency and right to request explanations for model's performance, like in the {youtube-case|YouTube moderation case}[^19].
 
 **Voice** emphasizes that everyone affected by a decision is given the opportunity to share their perspective. This does not guarantee that every viewpoint will determine the outcome, but it ensures that the process is participatory rather than unilateral.
 
@@ -60,7 +60,7 @@ However, beyond the principally-different conceptions of justice (process vs out
 ## Restorative Justice
 
 **Restorative justice is a set of principles and practices to deal with crimes or incidents, as violations of people and relationships. While it holds perpetrators accountable, it attempts to determine what can be done to repair that harm and rebuild the damaged relationships.**
-Restorative justice can help victims build a constructive relationship or dialogue with those who harmed them, but only through a voluntary, safe, and facilitated encounter in which offenders accept responsibility and all affected parties have a voice. Its goal is repair:[^5] supporting victims’ healing, giving offenders a chance to make amends, and helping the wider community restore trust, safety, and relational health. It also seeks transformation by addressing not only individual harm but also the deeper social or structural causes of wrongdoing, so that people, relationships, and systems can change. One example of these initiatives is the {dfBL-case|Data for Black Lives's effort to build data-based reparations for healthcare}.
+Restorative justice can help victims build a constructive relationship or dialogue with those who harmed them, but only through a voluntary, safe, and facilitated encounter in which offenders accept responsibility and all affected parties have a voice. Its goal is repair:[^20] supporting victims’ healing, giving offenders a chance to make amends, and helping the wider community restore trust, safety, and relational health. It also seeks transformation by addressing not only individual harm but also the deeper social or structural causes of wrongdoing, so that people, relationships, and systems can change. One example of these initiatives is the {dfBL-case|Data for Black Lives's effort to build data-based reparations for healthcare}.
 
 #### Key AI Questions for Restorative Justice:
 
@@ -71,9 +71,9 @@ Restorative justice can help victims build a constructive relationship or dialog
 
 ## Epistemic Justice
 
-**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^7]** 
+**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^4]** 
 
-At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^8] In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}[^9][^10].
+At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^21] In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}[^9][^8].
 
 #### Key AI Questions for Epistemic Justice:
 
@@ -84,7 +84,7 @@ At the core of it, epistemic injustice occurs when certain people’s knowledge,
 
 ## Structural Justice
 
-**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^11].** For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^12] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies. 
+**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^14].** For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^2] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies. 
 
 #### Key AI Questions for Structural Justice:
 
@@ -109,86 +109,60 @@ ADS systems don’t exist in a vacuum but within the same social, political, and
 
 Deciding which approach to justice to take will be driven by the community for whom the technology is created, the overall goals, and agency of the developer, but various frameworks laid out in this primer show that justice in AI is inherently multidimensional. A system may appear procedurally fair while producing unequal outcomes. It may reduce bias in predictions while still reinforcing structural inequalities or extracting environmental resources from vulnerable communities. Addressing justice in AI therefore requires looking beyond isolated technical metrics toward a more comprehensive understanding of how algorithmic systems operate within society.
 
-## Further Reading
+[^1]: Buccella, Alessandra. 2023\. "'AI for All' Is a Matter of Social Justice." AI and Ethics 3: 1143-1152.
 
-Buccella, Alessandra. 2023\. "'AI for All' Is a Matter of Social Justice." AI and Ethics 3: 1143-1152.
+[^2]: Burnett, Camille, Michael Swanberg, Ashley Hudson, and Donna Schminkey. 2018\. "Structural Justice: A Critical Feminist Framework Exploring the Intersection between Justice, Equity and Structural Reconciliation." Journal of Health Disparities Research and Practice 11, no. 4, article 4\.
 
-Burnett, Camille, Michael Swanberg, Ashley Hudson, and Donna Schminkey. 2018\. "Structural Justice: A Critical Feminist Framework Exploring the Intersection between Justice, Equity and Structural Reconciliation." Journal of Health Disparities Research and Practice 11, no. 4, article 4\.
+[^3]: Data for Black Lives. 2020\. "What Is Data for Black Lives?" September 1, 2020\. https://d4bl.org/videos/55-what-is-data-for-black-lives.
 
-Data for Black Lives. 2020\. "What Is Data for Black Lives?" September 1, 2020\. https://d4bl.org/videos/55-what-is-data-for-black-lives.
+[^4]: Fricker, Miranda. 2007\. Epistemic Injustice: Power and the Ethics of Knowing. Oxford: Oxford University Press. https://doi.org/10.1093/acprof:oso/9780198237907.001.0001.
 
-Fricker, Miranda. 2007\. Epistemic Injustice: Power and the Ethics of Knowing. Oxford: Oxford University Press. https://doi.org/10.1093/acprof:oso/9780198237907.001.0001.
+[^5]: Gabriel, Iason. 2022\. "Toward a Theory of Justice for Artificial Intelligence." Daedalus 151, no. 2: 218-231.
 
-Gabriel, Iason. 2022\. "Toward a Theory of Justice for Artificial Intelligence." Daedalus 151, no. 2: 218-231.
+[^6]: Guo, Cindy X., Elizabeth X., and Monica Lange. 2023\. "Data Colonialism and Data Sets." Harvard Law Review Blog, June 22, 2023\. https://harvardlawreview.org/blog/2023/06/data-colonialism-and-data-sets/.
 
-Guo, Cindy X., Elizabeth X., and Monica Lange. 2023\. "Data Colonialism and Data Sets." Harvard Law Review Blog, June 22, 2023\. https://harvardlawreview.org/blog/2023/06/data-colonialism-and-data-sets/.
+[^7]: Hao, Karen. 2022\. "A New Vision of Artificial Intelligence for the People." MIT Technology Review, April 22, 2022\.
 
-Hao, Karen. 2022\. "A New Vision of Artificial Intelligence for the People." MIT Technology Review, April 22, 2022\.
+[^8]: Kaur, Kirandeep, Ben Grama, Nairita Roy Chaudhuri, and Maria Jose Recalde-Vela. 2023\. "Ethics and Epistemic Injustice in the Global South: A Response to Hopman's Human Rights Exceptionalism as Justification for Covert Research." Journal of Human Rights Practice 15, no. 2: 347-373. https://doi.org/10.1093/jhuman/huad008.
 
-Kaur, Kirandeep, Ben Grama, Nairita Roy Chaudhuri, and Maria Jose Recalde-Vela. 2023\. "Ethics and Epistemic Injustice in the Global South: A Response to Hopman's Human Rights Exceptionalism as Justification for Covert Research." Journal of Human Rights Practice 15, no. 2: 347-373. https://doi.org/10.1093/jhuman/huad008.
+[^9]: Maddox, Raglan, and Melody E. Morton Ninomiya. 2025\. "Indigenous Sovereignty in Research and Epistemic Justice: Truth Telling through Research." Global Public Health 20, no. 1\. https://doi.org/10.1080/17441692.2024.2436436.
 
-Maddox, Raglan, and Melody E. Morton Ninomiya. 2025\. "Indigenous Sovereignty in Research and Epistemic Justice: Truth Telling through Research." Global Public Health 20, no. 1\. https://doi.org/10.1080/17441692.2024.2436436.
+[^10]: Mejias, Ulises A., and Nick Couldry. 2024\. Data Grab: The New Colonialism of Big Tech and How to Fight Back. N.p.: WH Allen.
 
-Mejias, Ulises A., and Nick Couldry. 2024\. Data Grab: The New Colonialism of Big Tech and How to Fight Back. N.p.: WH Allen.
+[^11]: Miller, David. 2017\. "Justice." In The Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/justice/.
 
-Miller, David. 2017\. "Justice." In The Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/justice/.
+[^12]: Newman v. Google LLC, No. 5:20-cv-04011 (N.D. Cal. filed June 16, 2020).
 
-Newman v. Google LLC, No. 5:20-cv-04011 (N.D. Cal. filed June 16, 2020).
+[^13]: Newman v. Google LLC, No. 20-CV-04011-LHK, slip op. (N.D. Cal. June 25, 2021).
 
-Newman v. Google LLC, No. 20-CV-04011-LHK, slip op. (N.D. Cal. June 25, 2021).
+[^14]: Nicholas, Jeffery. 2012\. "Structural Justice." Review of Responsibility for Justice, by Iris Marion Young. The Review of Politics 74: 521-524. https://doi.org/10.1017/S0034670512000678.
 
-Nicholas, Jeffery. 2012\. "Structural Justice." Review of Responsibility for Justice, by Iris Marion Young. The Review of Politics 74: 521-524. https://doi.org/10.1017/S0034670512000678.
+[^15]: Rafanelli, Lucia M. 2022\. "Justice, Injustice, and Artificial Intelligence: Lessons from Political Theory and Philosophy." Big Data and Society 9, no. 1\.
 
-Rafanelli, Lucia M. 2022\. "Justice, Injustice, and Artificial Intelligence: Lessons from Political Theory and Philosophy." Big Data and Society 9, no. 1\.
+[^16]: Santoni de Sio, Filippo, Txai Almeida, and Jeroen van den Hoven. 2024\. "The Future of Work: Freedom, Justice and Capital in the Age of Artificial Intelligence." Critical Review of International Social and Political Philosophy 27, no. 5: 659-683.
 
-Santoni de Sio, Filippo, Txai Almeida, and Jeroen van den Hoven. 2024\. "The Future of Work: Freedom, Justice and Capital in the Age of Artificial Intelligence." Critical Review of International Social and Political Philosophy 27, no. 5: 659-683.
+[^17]: Soudi, Marwa, Esraa Ali, Maha Bali, and Nihal Mabrouk. “Generative AI-Based Tutoring System for Upper Egypt Community Schools.” _In Proceedings of the 2023 Conference on Human Centered Artificial Intelligence: Education and Practice (HCAIep ’23)_, 16–21. New York: ACM, 2023. https://doi.org/10.1145/3633083.3633085.
 
-Stanford Humanities Center. 2024\. "Round Table: Epistemic Justice." YouTube video. Filmed January 20, 2022, posted August 29, 2024\. https://www.youtube.com/watch?v=\[insert video ID\].
+[^18]: Stanford Humanities Center. 2024\. "Round Table: Epistemic Justice." YouTube video. Filmed January 20, 2022, posted August 29, 2024\. https://www.youtube.com/watch?v=\[insert video ID\].
 
-Stempel, Jonathan, and Rosalba O'Brien. 2023\. "YouTube Defeats Racial Bias Lawsuit by Black, Hispanic Content Creators." Reuters, August 17, 2023\. https://www.reuters.com/legal/youtube-defeats-racial-bias-lawsuit-by-black-hispanic-content-creators-2023-08-17/.
+[^19]: Stempel, Jonathan, and Rosalba O'Brien. 2023\. "YouTube Defeats Racial Bias Lawsuit by Black, Hispanic Content Creators." Reuters, August 17, 2023\. https://www.reuters.com/legal/youtube-defeats-racial-bias-lawsuit-by-black-hispanic-content-creators-2023-08-17/.
 
-"Three Core Elements of Restorative Justice." n.d. Restorative Justice. Accessed April 20, 2026\. https://restorativejustice.org/what-is-restorative-justice/three-core-elements-of-restorative-justice/.
+[^20]: "Three Core Elements of Restorative Justice." n.d. Restorative Justice. Accessed April 20, 2026\. https://restorativejustice.org/what-is-restorative-justice/three-core-elements-of-restorative-justice/.
 
-Zurita, Victoria, and Chen Bar-Itzhak. 2024\. "In Search of Epistemic Justice." Arcade: A Digital Salon, Stanford Humanities Center, Spring 2024\. https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice.
-
-[^1]: Miller, David. 2017\. “Justice (Stanford Encyclopedia of Philosophy).” Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/justice/.
-
-[^2]: Stempel, Jonathan, and Rosalba O'Brien. 2023\. “YouTube defeats racial bias lawsuit by Black, Hispanic content creators.” _Reuters_, August 17, 2023\. https://www.reuters.com/legal/youtube-defeats-racial-bias-lawsuit-by-black-hispanic-content-creators-2023-08-17/.
-
-[^3]: _Newman v. Google LLC_, No. 5:20-cv-04011 (N.D. Cal. filed June 16, 2020).
-
-[^4]: _Newman v. Google LLC_, No. 20-CV-04011-LHK, slip op. (N.D. Cal. June 25, 2021).
-
-[^5]: “Three Core Elements of Restorative Justice.” n.d. Restorative Justice. Accessed April 20, 2026\. https://restorativejustice.org/what-is-restorative-justice/three-core-elements-of-restorative-justice/.
-
-[^6]: _Data for Black Lives_. 2020\. “What is Data for Black Lives?” September 1, 2020\. https://d4bl.org/videos/55-what-is-data-for-black-lives.
-
-[^7]: Fricker, Miranda, _Epistemic Injustice: Power and the Ethics of Knowing_ (Oxford, 2007; online edn, Oxford Academic, 1 Sept. 2007), https://doi.org/10.1093/acprof:oso/9780198237907.001.0001, accessed 20 Apr. 2026\.
-
-[^8]: Zurita, Victoria, and Chen Bar-Itzhak. "In Search of Epistemic Justice." _Arcade: A Digital Salon_, Stanford Humanities Center, Spring 2024\. [https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice](https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice).
-
-[^9]: Maddox, Raglan, and Melody E. Morton Ninomiya. 2025\. “Indigenous Sovereignty in Research and Epistemic Justice: Truth Telling through Research.” _Global Public Health_ 20 (1). doi:10.1080/17441692.2024.2436436.
-
-[^10]: Kirandeep Kaur, Ben Grama, Nairita Roy Chaudhuri, Maria Jose Recalde-Vela, Ethics and Epistemic Injustice in the Global South: A Response to Hopman’s Human Rights Exceptionalism as Justification for Covert Research, _Journal of Human Rights Practice_, Volume 15, Issue 2, July 2023, Pages 347–373, [https://doi.org/10.1093/jhuman/huad008](https://doi.org/10.1093/jhuman/huad008).
-
-[^11]: Nicholas, Jeffery. (2012). STRUCTURAL JUSTICE Iris Marion Young: Responsibility for Justice. (Oxford: Oxford University Press, 2011\. Pp. xxv, 193.). The Review of Politics. 74\. 521-524. 10.1017/S0034670512000678.
-
-[^12]: Burnett, Camille; Swanberg, Michael; Hudson, Ashley; and Schminkey, Donna (2018) "Structural Justice: A critical feminist framework exploring the intersection between justice, equity and structural reconciliation.," _Journal of Health Disparities Research and Practice_: Vol. 11: Iss. 4, Article 4\.
-
-[^13]: Soudi, Marwa, Esraa Ali, Maha Bali, and Nihal Mabrouk. “Generative AI-Based Tutoring System for Upper Egypt Community Schools.” _In Proceedings of the 2023 Conference on Human Centered Artificial Intelligence: Education and Practice (HCAIep ’23)_, 16–21. New York: ACM, 2023. https://doi.org/10.1145/3633083.3633085.
+[^21]: Zurita, Victoria, and Chen Bar-Itzhak. 2024\. "In Search of Epistemic Justice." Arcade: A Digital Salon, Stanford Humanities Center, Spring 2024\. https://shc.stanford.edu/arcade/colloquies/search-epistemic-justice.
 
 ## Sidebar
 
 youtube-case:
 Heading: YouTube Content Moderation Appeals (2023)
-In the [lawsuit _Newman v. Google_](https://www.courthousenews.com/wp-content/uploads/2020/06/newman-google.pdf)[^3], Black and Hispanic creators argued that YouTube disproportionately restricted, demonetized, and downranked their videos, and they specifically alleged that the platform interfered with, delayed, or ignored appeals, preventing timely manual review and leaving creators without effective recourse while they lost audience reach and revenue. This case can be understood primarily as a case about alleged unequal treatment in platform moderation and untransparent—procedurally unjust—appeals process. The case was not simply that creators lacked an appeal path, but the complaint centered on a broader claim that YouTube’s moderation systems were not race-neutral and instead treated creators from minority groups differently from similarly situated white creators. The creators ultimately [lost](https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_20-cv-04011/pdf/USCOURTS-cand-3_20-cv-04011-0.pdf)[^4], and the case was dismissed with prejudice, meaning it can not be brought again. Although algorithmic discrimination by race was plausible in theory, the plaintiffs did not come close to showing that they had actually suffered discrimination on the record before the court, according to the judge. Newman v. Google illustrates how disputes over platform moderation can combine group fairness concerns with procedural justice concerns. The plaintiffs claimed that minority creators were treated unequally and that appeals were ineffective or obstructed, which raised questions about voice, transparency, and neutral review.
+In the [lawsuit _Newman v. Google_](https://www.courthousenews.com/wp-content/uploads/2020/06/newman-google.pdf)[^12], Black and Hispanic creators argued that YouTube disproportionately restricted, demonetized, and downranked their videos, and they specifically alleged that the platform interfered with, delayed, or ignored appeals, preventing timely manual review and leaving creators without effective recourse while they lost audience reach and revenue. This case can be understood primarily as a case about alleged unequal treatment in platform moderation and untransparent—procedurally unjust—appeals process. The case was not simply that creators lacked an appeal path, but the complaint centered on a broader claim that YouTube’s moderation systems were not race-neutral and instead treated creators from minority groups differently from similarly situated white creators. The creators ultimately [lost](https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_20-cv-04011/pdf/USCOURTS-cand-3_20-cv-04011-0.pdf)[^13], and the case was dismissed with prejudice, meaning it can not be brought again. Although algorithmic discrimination by race was plausible in theory, the plaintiffs did not come close to showing that they had actually suffered discrimination on the record before the court, according to the judge. Newman v. Google illustrates how disputes over platform moderation can combine group fairness concerns with procedural justice concerns. The plaintiffs claimed that minority creators were treated unequally and that appeals were ineffective or obstructed, which raised questions about voice, transparency, and neutral review.
 
 dfbl-case:
 Heading: Data for Black Lives's effort to build data-based reparations for healthcare
-[Data for Black Lives (D4BL)](https://d4bl.org/) is a movement of activists, organizers, and scientists that challenges the use of data and algorithms as tools of racial oppression and argues for data practices that serve Black communities instead. Its work spans abolition, political education, data governance, and algorithmic justice, and it produces campaigns, reports, events, and datasets. Rather than treating data harms as isolated technical flaws, D4BL places them in the longer history of systemic injustice, from redlining to predictive policing to unequal health outcomes.[^6] One concrete example is its COVID-19 racial disparity data work, including the [D4BL COVID-19 Disparities Tracker](https://d4bl.org/datasets/44-d4-bl-covid-19-disparities-tracker) and related datasets on Black COVID-19 cases and deaths. These projects consolidated and surfaced race-based public health data at a moment when many institutions were failing to make such disparities visible. In doing so, D4BL was not simply collecting data for its own sake. It was using data infrastructure to document harm, support public accountability, and direct attention toward communities bearing disproportionate health burdens. D4BL’s dataset initiatives show what a restorative orientation to data can look like. Its work suggests that just health AI requires more than reducing bias in models. It requires recognizing historical harm, involving affected communities in governance, and building datasets and analytic systems that help repair inequity rather than reproduce it. In that sense, D4BL reflects restorative justice through all three dimensions: creating space for affected communities to shape the conversation, using data to address concrete harm, and pushing for structural transformation in how data systems are governed. The dataset can be found [here](https://docs.google.com/spreadsheets/d/1NFViedF47p-P0MKKl8_O0mKAhba0Yqn200EfUR4GlcQ/edit?gid=0#gid=0).
+[Data for Black Lives (D4BL)](https://d4bl.org/) is a movement of activists, organizers, and scientists that challenges the use of data and algorithms as tools of racial oppression and argues for data practices that serve Black communities instead. Its work spans abolition, political education, data governance, and algorithmic justice, and it produces campaigns, reports, events, and datasets. Rather than treating data harms as isolated technical flaws, D4BL places them in the longer history of systemic injustice, from redlining to predictive policing to unequal health outcomes.[^3] One concrete example is its COVID-19 racial disparity data work, including the [D4BL COVID-19 Disparities Tracker](https://d4bl.org/datasets/44-d4-bl-covid-19-disparities-tracker) and related datasets on Black COVID-19 cases and deaths. These projects consolidated and surfaced race-based public health data at a moment when many institutions were failing to make such disparities visible. In doing so, D4BL was not simply collecting data for its own sake. It was using data infrastructure to document harm, support public accountability, and direct attention toward communities bearing disproportionate health burdens. D4BL’s dataset initiatives show what a restorative orientation to data can look like. Its work suggests that just health AI requires more than reducing bias in models. It requires recognizing historical harm, involving affected communities in governance, and building datasets and analytic systems that help repair inequity rather than reproduce it. In that sense, D4BL reflects restorative justice through all three dimensions: creating space for affected communities to shape the conversation, using data to address concrete harm, and pushing for structural transformation in how data systems are governed. The dataset can be found [here](https://docs.google.com/spreadsheets/d/1NFViedF47p-P0MKKl8_O0mKAhba0Yqn200EfUR4GlcQ/edit?gid=0#gid=0).
 
 Generative-AI-Based-Tutoring-System-for-Upper-Egypt-Community-Schools:
-Heading: Generative AI-Based Tutoring System for Upper Egypt Community Schools[^13]
+Heading: Generative AI-Based Tutoring System for Upper Egypt Community Schools[^17]
 This tutoring system piloted in Egypt brought together teachers and AI experts to build a learning platform for under-resourced schools. The focus was on supporting mostly female students, and teachers were involved throughout the design process to make the platform fit real classroom needs. This tool hit all three pillars of distributive justice: Sufficiency: The platform provides a baseline level of educational support to learners who otherwise have insufficient access to tutoring or quality instruction. Priority: the design and distribution method prioritizes girls in low-resource schools, recognizing that they face urgent, systemic barriers. Equality of Opportunity: Teachers co-designed the system to ensure fair access to meaningful learning, preventing AI from reproducing gendered educational disparities.
 
 data-colonialism:
