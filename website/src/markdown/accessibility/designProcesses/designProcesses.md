@@ -98,7 +98,7 @@ Going more in depth, inclusive design is a **human-centered** approach that cons
 ### Curb Cut Effect
 
 The **curb cut effect** is not a design orientation itself, but an outcome that can result from any of the above approaches. It illustrates how accessibility-focused design can extend benefits far beyond its target audience, showing how designing for a perceived edge case can improve experiences universally.  
-![Curb-cut effect in practice. Wheelchair-inspired curb cuts led to… | by  Takuma Kakehi | UX Collective](/assets/primer-photos/the-curb-cut-effect.png)  
+![Curb-cut effect in practice. Wheelchair-inspired curb cuts led to… | by  Takuma Kakehi | UX Collective](/assets/primer-photos/accessibility/designProcesses/the-curb-cut-effect.png)  
 After World War II, disabled veterans in the United States advocated for curb cuts (short ramps from sidewalks to adjoining streets) to increase their access in the built environment. Advocacy eventually led to legislation mandating curb cuts in federally funded facilities. Curb cuts also benefit people pushing strollers or luggage, demonstrating that when we design for those at the margins, we often create better experiences for everyone.
 
 **Case Study:** {Closed-Captions}
@@ -167,11 +167,11 @@ Mapping:
 
 Feedback:
 Heading: Example of Feedback
-![on and off power switch symbols](/assets/primer-photos/Power-Switch-Symbols-Explained.webp) Visual checkmark indicators serve as feedback for different states of the text after the user sends it When a user sends a message in WhatsApp, the app provides multimodal feedback, including a tactile vibration, a visual checkmark indicator, and an auditory notification that the user can turn on. This multimodal feedback makes sure that users, including those who may be blind, hard of hearing, or easily distracted, can confirm that their text is sent through and understand the system status clearly.
+![on and off power switch symbols](/assets/primer-photos/accessibility/designProcesses/Power-Switch-Symbols-Explained.webp) Visual checkmark indicators serve as feedback for different states of the text after the user sends it When a user sends a message in WhatsApp, the app provides multimodal feedback, including a tactile vibration, a visual checkmark indicator, and an auditory notification that the user can turn on. This multimodal feedback makes sure that users, including those who may be blind, hard of hearing, or easily distracted, can confirm that their text is sent through and understand the system status clearly.
 
 Universal-Symbols:
 Heading: Examples of Affordance and Signifiers
-![on and off power switch symbols](/assets/primer-photos/Power-Switch-Symbols-Explained.webp) Explanation: Example of an Affordance—showing that the button can be turned on and off ![][image2] Explanation: Example of Signifiers—showing that a green button means Submit, while a gray button means an action is not yet available Consider the universal “power” symbol—a circle (O) for “off” and a line (I) for “on.” These shapes indicate the affordance (a button can be pressed) and serve as signifiers that communicate its state. Similarly, a green button on a digital form signifies “Submit” or “Continue,” while a gray, disabled button signifies that an action is not yet available. These digital affordances help users with limited vision or cognitive differences when paired with text labels or screen reader cues.
+![on and off power switch symbols](/assets/primer-photos/accessibility/designProcesses/Power-Switch-Symbols-Explained.webp) Explanation: Example of an Affordance—showing that the button can be turned on and off ![][image2] Explanation: Example of Signifiers—showing that a green button means Submit, while a gray button means an action is not yet available Consider the universal “power” symbol—a circle (O) for “off” and a line (I) for “on.” These shapes indicate the affordance (a button can be pressed) and serve as signifiers that communicate its state. Similarly, a green button on a digital form signifies “Submit” or “Continue,” while a gray, disabled button signifies that an action is not yet available. These digital affordances help users with limited vision or cognitive differences when paired with text labels or screen reader cues.
 
 Universal-Design:
 
