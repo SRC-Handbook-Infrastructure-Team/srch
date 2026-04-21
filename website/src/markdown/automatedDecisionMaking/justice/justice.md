@@ -31,7 +31,7 @@ Key components of process-focused (or procedural) justice are **respect, trustwo
 
 **Respect** captures the idea that all individuals must be treated with dignity. This includes courteous communication, acknowledgment of people's concerns, and the absence of demeaning or dismissive behavior.
 
-**Trustworthiness** refers to whether decision makers convey sincere, benevolent, and fair motives to those impacted by their decisions. People evaluate not only the logic of a decision but also the intentions behind it. Trust is strengthened when decision makers demonstrate concern for stakeholders' well-being and explain their reasoning in ways that signal integrity and accountability. A key aspect of trustworthiness is transparency and right to request explanations for model's performance, like in the {youtube-case|YouTube moderation case}.
+**Trustworthiness** refers to whether decision makers convey sincere, benevolent, and fair motives to those impacted by their decisions. People evaluate not only the logic of a decision but also the intentions behind it. Trust is strengthened when decision makers demonstrate concern for stakeholders' well-being and explain their reasoning in ways that signal integrity and accountability. A key aspect of trustworthiness is transparency and right to request explanations for model's performance, like in the {youtube-case|YouTube moderation case}[^2].
 
 **Voice** emphasizes that everyone affected by a decision is given the opportunity to share their perspective. This does not guarantee that every viewpoint will determine the outcome, but it ensures that the process is participatory rather than unilateral.
 
@@ -71,9 +71,9 @@ Restorative justice can help victims build a constructive relationship or dialog
 
 ## Epistemic Justice
 
-**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^7] At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^8]**
+**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^7]** 
 
-In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}.
+At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^8] In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}[^9][^10].
 
 #### Key AI Questions for Epistemic Justice:
 
@@ -84,24 +84,26 @@ In AI, this manifests through {data-colonialism}, biased training sets, and {heg
 
 ## Structural Justice
 
-**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^11]. For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^12] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies.**
+**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^11].** For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^12] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies. 
 
 #### Key AI Questions for Structural Justice:
 
 - Does the AI reproduce existing power hierarchies or actively challenge them?
 - Are there institutional practices, laws, or economic structures that the AI amplifies that disadvantage certain groups?
 - Does the AI system increase surveillance, monitoring, or control over already marginalized populations?
-- Does the AI rely on data collected through extraction, coercion, or [limited consent](/privacy/consent)?
+- Does the AI rely on data collected through extraction, coercion, or [limited consent](/Privacy/Consent)?
 
 ## Environmental Justice
 
-**Environmental justice examines how environmental benefits, burdens, and risks are distributed across communities, and whether some groups bear disproportionate harms from environmental degradation. When applied to AI, environmental justice assesses how algorithmic systems influence environmental governance, resource allocation, climate risk management, and the ecological footprint of {AI-infrastructure} itself.**
+**Environmental justice examines how environmental benefits, burdens, and risks are distributed across communities, and whether some groups bear disproportionate harms from environmental degradation.** When applied to AI, environmental justice assesses how algorithmic systems influence environmental governance, resource allocation, climate risk management, and the ecological footprint of {AI-infrastructure} itself. 
 
 #### Key AI Questions for Environmental Justice:
 
 - Who bears the environmental costs of AI development? Are these costs geographically or socio-economically concentrated?
 - Are Indigenous and local communities consulted when environmental models rely on land, cultural resources, or ecological knowledge?
 - How are environmental harms and benefits distributed across regions, particularly the Global South versus the Global North?
+
+## Conclusion
 
 ADS systems don’t exist in a vacuum but within the same social, political, and environmental systems that shape human institutions. As a result, questions of justice in AI cannot be reduced to a single definition of fairness or a single technical solution. Instead, they emerge at the intersection of multiple traditions of justice that illuminate different dimensions of how technological systems affect people and communities.
 
@@ -178,7 +180,7 @@ Zurita, Victoria, and Chen Bar-Itzhak. 2024\. "In Search of Epistemic Justice." 
 ## Sidebar
 
 youtube-case:
-Heading: YouTube Content Moderation Appeals (2023)[^2]
+Heading: YouTube Content Moderation Appeals (2023)
 In the [lawsuit _Newman v. Google_](https://www.courthousenews.com/wp-content/uploads/2020/06/newman-google.pdf)[^3], Black and Hispanic creators argued that YouTube disproportionately restricted, demonetized, and downranked their videos, and they specifically alleged that the platform interfered with, delayed, or ignored appeals, preventing timely manual review and leaving creators without effective recourse while they lost audience reach and revenue. This case can be understood primarily as a case about alleged unequal treatment in platform moderation and untransparent—procedurally unjust—appeals process. The case was not simply that creators lacked an appeal path, but the complaint centered on a broader claim that YouTube’s moderation systems were not race-neutral and instead treated creators from minority groups differently from similarly situated white creators. The creators ultimately [lost](https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_20-cv-04011/pdf/USCOURTS-cand-3_20-cv-04011-0.pdf)[^4], and the case was dismissed with prejudice, meaning it can not be brought again. Although algorithmic discrimination by race was plausible in theory, the plaintiffs did not come close to showing that they had actually suffered discrimination on the record before the court, according to the judge. Newman v. Google illustrates how disputes over platform moderation can combine group fairness concerns with procedural justice concerns. The plaintiffs claimed that minority creators were treated unequally and that appeals were ineffective or obstructed, which raised questions about voice, transparency, and neutral review.
 
 dfbl-case:
@@ -196,7 +198,7 @@ hegemonic-definitions-of-accuracy:
 Hegemonic definitions of accuracy or epistemological hegemony refer to situations in which one dominant group’s standards for what counts as true, credible, valid, or “accurate” are treated as neutral and universal, while other ways of knowing or other speakers are discounted. In practice, this means that knowledge is judged not only by evidence, but also by who is speaking, which social perspective is treated as authoritative, and which histories of power shape credibility. An example would be an AI or institutional system that treats mainstream, Western, bureaucratic, or majority-group data categories as the most “accurate” way to describe reality, while dismissing the lived testimony of marginalized people or ignoring Indigenous and community-based understandings. For more information and discussion on this topic, see the “[Round Table: Epistemic Justice](https://youtu.be/S0uQ534Ox9g?si=4TRzMoARVxGvEbZQ)” from the Stanford Humanities Center.
 
 technological-infrastructure:
-Heading: Indigenous Data Sovereignty in Language AI (Papa Reo, Te Hiku Media)[^9][^10]
+Heading: Indigenous Data Sovereignty in Language AI (Papa Reo, Te Hiku Media)
 
 Te Hiku Media, a Māori-led media organization in Aotearoa New Zealand, has developed Papa Reo, a language AI platform grounded in Indigenous knowledge systems and principles of data sovereignty. The project emerged from decades of work to revitalize te reo Māori and responds directly to the limitations of Western-centered AI development, which typically relies on large-scale data extraction, standardization, and centralized control. In contrast, Indigenous approaches emphasize relationality, community accountability, and the right of communities to control how their knowledge is collected, used, and shared. Western data practices often treat knowledge as neutral “data” to be extracted and validated through dominant frameworks, sidelining local epistemologies and reducing communities to sources of input. This reproduces epistemic injustice by privileging Euro-Western standards of accuracy and authority, while silencing or distorting other ways of knowing. In AI, this logic is reflected in the “more is more” paradigm, where large datasets are scraped and aggregated with little regard for consent, context, or community benefit, often reinforcing historical patterns of exclusion and marginalization. Papa Reo offers a different model. Rather than extracting Māori language data into global systems, Te Hiku Media built its own infrastructure for speech recognition and natural language processing, using community-held archives and participatory data collection. Crucially, the project ensures that Māori communities retain ownership and governance over their data, and that the benefits of AI development flow back to them. This includes developing tools tailored to smaller datasets and supporting other Indigenous communities in building their own capabilities, rather than forcing them into dominant technological frameworks. The Papa Reo case demonstrates how Indigenous data governance can actively resist epistemic injustice. It reframes communities not as passive data subjects but as knowledge holders and decision-makers, restores control over meaning-making and representation, and challenges the assumption that openness and scale are inherently just. In doing so, it points toward a broader transformation of AI: from extractive systems that reproduce historical inequities to relational systems that respect sovereignty, enable participation, and sustain cultural knowledge in the digital age. The project can be found here: [https://papareo.io/](https://papareo.io/)
 
