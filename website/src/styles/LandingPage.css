@@ -121,7 +121,7 @@ html.is-landing-page {
 
 .about-section h1:not(:first-of-type) {
   position: relative;
-  padding-top: 2.25rem;
+  padding-top: 72px;
   margin-top: 3rem;
 }
 
