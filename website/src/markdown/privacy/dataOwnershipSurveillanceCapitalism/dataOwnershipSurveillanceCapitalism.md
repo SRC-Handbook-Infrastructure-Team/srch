@@ -29,8 +29,9 @@ In legal and economic contexts, {data-ownership-is-necessary} in order to assign
 
 We will discuss three notions of data ownership and what they each imply for how we should interact with data: data as labor, data as property, and data as an extension of the body or self.
 
-**Figure:** The three notions of data ownership.
 ![An illustration of the three notions of data ownership. Data as labor is depicted as a factory worker standing next to an industrial factory that is emitting 'data partiles.' Data as property is depicted as various objects (boxes and bags) with 'data particles' emenating from them. Data as an extension of the body or self is depicted as a person holding a data particle in their hand.](/assets/primer-photos/privacy/dataOwnership/data_ownership.png)
+
+**Figure:** The three notions of data ownership.
 
 ### Data as labor
 

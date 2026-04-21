@@ -605,7 +605,7 @@ To learn more, check out the [resources](https://epic.org/issues/data-protection
 Individuals, including family members, frequently violate children’s consent by posting content of and about them online. The article “[Influencer Parents and The Kids Who Had Their Childhood Made Into Content](https://www.teenvogue.com/story/influencer-parents-children-social-media-impact)” highlights some examples.
 
 
-human expertise:
+human-expertise:
 Heading:Human expertise 
 For example, [Terms of Service; Didn’t Read (ToS;DR)](https://tosdr.org/en/), founded by attorney Hugo Roy, programmer Michiel de Jong, and web designer Jan-Christoph Borchardt in 2012, is a community project that grades the privacy practices of major websites, apps, and services.
 
