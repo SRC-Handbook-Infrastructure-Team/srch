@@ -93,7 +93,7 @@ Repeated, detailed requests for consent cause many people to experience **consen
 
 Another challenge to informed consent is what scholars refer to as the **aggregation effect**. The consent model for digital privacy asks users to continually make decisions about what usually amounts to relatively small pieces of data. Viewed individually, these data points may not reveal much about a person. But as in a pointillist painting, many small points can, when viewed en masse, form a revealing portrait.[^40] It is particularly challenging to weigh the consequences of the aggregation effect when we do not know who has what data on us, potential {harms-are-distant|harms are distant}, or the circumstances from which negative effects might arise {cannot-be-anticipated|cannot be anticipated}.
 
-![Close-up of a male character in Seurat's painting showing the small, distinct dots of contrasting color characteristic of pointillism.](/assets/primer-photos/parade_de_cirque.png)
+![Close-up of a male character in Seurat's painting showing the small, distinct dots of contrasting color characteristic of pointillism.](/assets/primer-photos/privacy/consent/parade_de_cirque.png)
 
 **Figure:** Detail from *Parade de cirque*, an 1889 painting by the inventor of pointillism, Georges Seurat.
 

@@ -2,7 +2,7 @@
 title: Automated Decision Making
 order: 2
 final: false
-lastUpdated: 2025-11-06
+lastUpdated: 2026-04-21
 ---
 
 Artificial intelligence now shapes how institutions sort, predict, recommend, classify, and decide. It helps determine who is flagged as risky, which applications receive extra scrutiny, what content people see, and how knowledge, creativity, and labor are increasingly mediated by machines. For computer science students, this makes AI not just a technical field, but also a social one. To study or build AI today is to confront questions about power, fairness, responsibility, and public impact. This section introduces core ethical and social questions raised by AI, especially in systems that influence people’s opportunities, treatment, and visibility. Across primers, modules, and teaching resources, the goal is not to treat ethics as an add-on, but as part of what it means to understand AI well.

@@ -2,6 +2,7 @@
 title: Bias in Automated Decision-Making Systems
 order: 1
 final: true
+lastUpdated: 2026-04-21
 ---
 
 ## What is Bias?
@@ -27,7 +28,7 @@ We can organize sources of bias in ADM systems into three categories based on wh
 
 Data Curation occurs when data is gathered, labeled and collected into data sets. Data sets are then employed in model creation to help train models to have proper responses to stimuli. Once models are created, they are then tested on new data sets to ensure that they respond appropriately and accurately before they are then deployed for their intended use. Biases can be introduced throughout all the stages of this process.
 
-![Figure 1 description: A flowchart diagram illustrating sources of bias in machine learning data pipelines, flowing left to right. It begins with a "data generation" box feeding into a globe icon labeled "world," where red bold text marks "HISTORICAL BIAS." An arrow leads to a "population definition & sampling" step connecting to a crowd icon labeled "sample," marked with red bold text "REPRESENTATION BIAS." From there, a "measurement" step feeds into a cylinder labeled "dataset," marked with red bold text "MEASUREMENT BIAS." The dataset then flows through "preprocessing, train/test split" and branches into two outputs: "training data" and "test data." A second parallel lower pathway runs from "population definition & sampling" through "measurement" and "preprocessing, train/test split" to a final output labeled "benchmarks." The three bias types — Historical Bias, Representation Bias, and Measurement Bias — are highlighted in red throughout to indicate key failure points in the pipeline.](/assets/primer-photos/biasOverSystemLifecycle.png)
+![Figure 1 description: A flowchart diagram illustrating sources of bias in machine learning data pipelines, flowing left to right. It begins with a "data generation" box feeding into a globe icon labeled "world," where red bold text marks "HISTORICAL BIAS." An arrow leads to a "population definition & sampling" step connecting to a crowd icon labeled "sample," marked with red bold text "REPRESENTATION BIAS." From there, a "measurement" step feeds into a cylinder labeled "dataset," marked with red bold text "MEASUREMENT BIAS." The dataset then flows through "preprocessing, train/test split" and branches into two outputs: "training data" and "test data." A second parallel lower pathway runs from "population definition & sampling" through "measurement" and "preprocessing, train/test split" to a final output labeled "benchmarks." The three bias types — Historical Bias, Representation Bias, and Measurement Bias — are highlighted in red throughout to indicate key failure points in the pipeline.](/assets/primer-photos/ADM/bias/biasOverSystemLifecycle.png)
 
 **Figure 1:** Bias in Data Curation and Model Generation (adapted from Suresh et al.)_[^12]_
 
@@ -35,9 +36,9 @@ Data Curation occurs when data is gathered, labeled and collected into data sets
 
 Bias can be introduced at the very start of the ADM system lifecycle during **data curation**. Data curation is how data is generated, collected, represented, and measured. **Figure 2** below is a visual representation of bias in data curation, the first half of the ADM system lifecycle shown in **Figure 1**.
 
-![Figure 2 description: A left-to-right flowchart showing sources of bias in machine learning data pipelines. Starting from "data generation" and a globe ("world"), the flow passes through population sampling, measurement, and preprocessing stages before splitting into "training data," "test data," and "benchmarks" outputs. Three bias types are labeled in red at key stages: "Historical Bias" at data generation, "Representation Bias" at population sampling, and "Measurement Bias" at measurement.](/assets/primer-photos/biasInDataGeneration.png)
+![Figure 2 description: A left-to-right flowchart showing sources of bias in machine learning data pipelines. Starting from "data generation" and a globe ("world"), the flow passes through population sampling, measurement, and preprocessing stages before splitting into "training data," "test data," and "benchmarks" outputs. Three bias types are labeled in red at key stages: "Historical Bias" at data generation, "Representation Bias" at population sampling, and "Measurement Bias" at measurement.](/assets/primer-photos/ADM/bias/biasInDataGeneration.png)
 
-**Figure 2:** Bias in Data Generation (from Suresh et al.)[^12]
+**Figure 2:** Bias in Data Generation (adapted from Suresh et al.)[^12]
 
 During data curation, developers' decisions about what data to include, how to define variables, and which populations to represent all reflect **structural** factors, such as existing social hierarchies, institutional priorities, and historical inequities. The "structure" that shapes bias can be defined as the broader social, political, and economic context in which the data is produced.
 
@@ -81,9 +82,9 @@ Historical bias creates the distinction between statistical discrimination and t
 
 Bias can also emerge in model creation: the definition of the model architecture and the training of the weights. Engineers may bring their own biases into the design process, deciding which trade-offs to prioritize and which populations to optimize their model for. Figure 3 below is a visual representation of bias in model creation, the second half of the ADM system lifecycle shown in Figure 1\.
 
-![Figure 3 description: A left-to-right flowchart showing sources of bias in the model training and deployment stage of a machine learning pipeline. Training data feeds into "model learning" (labeled "Learning Bias" in red), while test data and benchmarks feed into "evaluation" (labeled "Evaluation Bias" in red). Both, along with a "model definition" step (labeled "Aggregation Bias" in red), feed into a central "model" block. The model then runs to produce a grid-style "model output," which passes through post-processing and human interpretation before reaching a globe icon representing the "world," with this final stage labeled "Deployment Bias" in red.](/assets/primer-photos/biasInModelTraining.png)
+![Figure 3 description: A left-to-right flowchart showing sources of bias in the model training and deployment stage of a machine learning pipeline. Training data feeds into "model learning" (labeled "Learning Bias" in red), while test data and benchmarks feed into "evaluation" (labeled "Evaluation Bias" in red). Both, along with a "model definition" step (labeled "Aggregation Bias" in red), feed into a central "model" block. The model then runs to produce a grid-style "model output," which passes through post-processing and human interpretation before reaching a globe icon representing the "world," with this final stage labeled "Deployment Bias" in red.](/assets/primer-photos/ADM/bias/biasInModelTraining.png)
 
-**Figure 3:** Bias in Model Creation (from Suresh et al.)[^12]
+**Figure 3:** Bias in Model Creation (adapted from Suresh et al.)[^12]
 
 ### How does bias appear in model creation?
 

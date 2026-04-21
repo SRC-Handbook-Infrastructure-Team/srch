@@ -1,24 +1,26 @@
 ---
 title: Design Processes
-order: 2
+order: 5
 final: false
+lastUpdated: 2026-04-21
 ---
 
 ## Overview: The Purpose of Design Processes
 
 When designing a product, there are many possible routes from ideation to implementation. Design processes provide structure along these routes, offering methods for gathering user needs, testing ideas, and iterating on products through feedback.
 
-Thoughtful design processes that take users' needs into account support **usability** and **accessibility**. Usability refers to the ease of access and use of a product or service, and accessibility includes the evaluation and implementation of accessibility standards. _Understanding Accessibility Standards_ introduces key standards and legal requirements that designers consider. Integrating these standards throughout the iterative design process helps us discover accessibility barriers earlier and reflect critically on these products through an accessibility lens.
+Thoughtful design processes that take users' needs into account support **usability** and **accessibility**. Usability refers to the ease of access and use of a product or service, and accessibility includes the evaluation and implementation of accessibility standards. 
+[Understanding Accessibility Standards](/accessibility/accessibilityStandards) introduces key standards and legal requirements that designers consider. Integrating these standards throughout the iterative design process helps us discover accessibility barriers earlier and reflect critically on these products through an accessibility lens.
 
 ## Core Design Concepts
 
-[Universal Design Principles](https://udl.berkeley.edu/universal-design) ensure that a product is designed for diverse users in terms of accessibility and usability. Its principles offer designers a lens to evaluate their design decisions. It is not a strict checklist that designers must follow every time, but a framework that identifies where a product may unintentionally exclude users. These principles include equitable use, flexibility in use, simple and intuitive use, perceptible information, tolerance for error, low physical effort, and size and space for approach and use.
+[Universal Design Principles](https://udl.berkeley.edu/universal-design) ensure that a product is designed for diverse users in terms of accessibility and usability. Its principles offer designers a lens to evaluate their design decisions. It is not a strict checklist that designers must follow every time, but a framework that identifies where a product may unintentionally exclude users. These principles include equitable use, flexibility in use, simple and intuitive use, perceptible information, tolerance for error, low physical effort, and size and space for approach and use.[^14]
 
 The concepts below build on this foundation at the level of individual design decisions. The following concepts are not drawn directly from the Universal Design framework's principles, which describe what accessible design should achieve, but each connects to the principles in practice: Hick's Law operationalizes simple and intuitive use, while affordances and feedback translate equitable and error-tolerant design into concrete decisions.
 
 ### Simplifying Choices (Hick’s Law)
 
-Hick’s Law (or the Hick-Hyman Law) states that the time it takes to make a decision increases with the number and complexity of the choices.
+Hick’s Law (or the Hick-Hyman Law) states that the time it takes to make a decision increases with the number and complexity of the choices.[^6]
 
 Simplifying choices improves efficiency and reduces cognitive load for users. When interfaces minimize unnecessary decisions, users can act more quickly and confidently. For accessibility, reducing cognitive demands especially supports users with ADHD, memory differences, or cognitive impairments.
 
@@ -28,7 +30,7 @@ Applying Hick's Law reduces confusion and creates interfaces easier for users wi
 
 ### Affordances and Signifiers
 
-An **affordance** is a property of an object that, based on its design, suggests how it can be used. A **signifier** is a perceivable indicator that communicates affordances—it indicates how to perform those actions.
+An **affordance** is a property of an object that, based on its design, suggests how it can be used. A **signifier** is a perceivable indicator that communicates affordances—it indicates how to perform those actions.[^9]
 
 Clear affordances and signifiers make an interface intuitive and easier to use. Accessibility is improved when users can immediately perceive what actions are possible and how to execute them, even when their attention or sensory abilities vary.
 
@@ -38,7 +40,7 @@ Strong affordances and signifiers reduce learning time and prevent user errors, 
 
 ### Mapping
 
-**Mapping** is the connection between controls and functions, which should clearly match so that users can easily predict outcomes.
+**Mapping** is the connection between controls and functions, which should clearly match so that users can easily predict outcomes.[^9]
 
 Intuitive, well-mapped interfaces reduce errors and improve learnability. Mapping supports accessibility by allowing users to understand a system’s functionality without trial-and-error, whereas bad mapping may significantly confuse users.
 
@@ -76,7 +78,7 @@ This orientation helps ensure that a clearly defined group’s needs are met mor
 
 ### Universal Design
 
-**Universal design** is a design that can be accessed, understood, and used to the greatest extent possible by all people regardless of their age, size, ability, or disability.
+**Universal design** is a design that can be accessed, understood, and used to the greatest extent possible by all people regardless of their age, size, ability, or disability.[^4]
 
 Universal design helps reduce the likelihood of excluding users by anticipating any potential variations between users at the early stages of design, ensuring that it is a consistent and accessible experience for everyone.
 
@@ -84,22 +86,24 @@ Universal design helps reduce the likelihood of excluding users by anticipating 
 
 ### Inclusive Design
 
-Where universal design aims to create one solution that works for everyone from the start, **inclusive design** begins by identifying who is currently excluded and designing with them first. The key distinction from a target group approach is not just who is centered, but how: target group defines a population and design for them, while inclusive design treats excluded users as active parictipants in the design process itself.
+Where universal design aims to create one solution that works for everyone from the start, **inclusive design** begins by identifying who is currently excluded and designing with them first. The key distinction from a target group approach is not just who is centered, but how: target group defines a population and designs for them, while inclusive design treats excluded users as active participants in the design process itself.
 
-Going more in depth, inclusive design is a **human-centered** approach that considers the full range of human diversity—including ability, language, culture, gender, age, and other forms of difference. It often begins by focusing on a specific group whose needs are not fully met by existing systems, then extends benefits outward to create solutions usable by a broader range of users.
-
-| Design                | Description                                                                                                                                                                                                                                                                                      |
-| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User-centered design  | Focuses on understanding the goals, preferences, wants, and needs of target users. This data is captured through market research and used to formulate product ideas and improve design iterations.                                                                                              |
-| Human-centered design | Moves beyond individual needs and considers how a product can impact society and the environment. Inclusive design draws from this tradition because it asks not just "how does this user interact with the product" but "what broader conditions are excluding this person in the first place." |
+Going more in depth, inclusive design is a **human-centered** approach that considers the full range of human diversity—including ability, language, culture, gender, age, and other forms of difference.[^4] It often begins by focusing on a specific group whose needs are not fully met by existing systems, then extends benefits outward to create solutions usable by a broader range of users. 
+| Design Approach | Description |
+| :--- | :--- |
+| User&#8209;centered&nbsp;design  | Focuses on understanding the goals, preferences, wants, and needs of target users. This data is captured through market research and used to formulate product ideas and improve design iterations.                                                                                              |
+| Human&#8209;centered&nbsp;design | Moves beyond individual needs and considers how a product can impact society and the environment. Inclusive design draws from this tradition because it asks not just "how does this user interact with the product" but "what broader conditions are excluding this person in the first place."[^13] |
+<!-- The weird &#8209; and &nbsp; are to make those stay on one line -->
 
 **Case Study:** {Inclusive-Design}
 
 ### Curb Cut Effect
 
 The **curb cut effect** is not a design orientation itself, but an outcome that can result from any of the above approaches. It illustrates how accessibility-focused design can extend benefits far beyond its target audience, showing how designing for a perceived edge case can improve experiences universally.  
-![Curb-cut effect in practice. Wheelchair-inspired curb cuts led to… | by  Takuma Kakehi | UX Collective](/assets/primer-photos/the-curb-cut-effect.png)  
-After World War II, disabled veterans in the United States advocated for curb cuts (short ramps from sidewalks to adjoining streets) to increase their access in the built environment. Advocacy eventually led to legislation mandating curb cuts in federally funded facilities. Curb cuts also benefit people pushing strollers or luggage, demonstrating that when we design for those at the margins, we often create better experiences for everyone.
+![Sketch of the curb-cut effect](/assets/primer-photos/accessibility/designProcesses/the-curb-cut-effect.png)  
+**Figure 1:** Sketch of the curb-cut effect (by Jono Hey, [sketchplanations.com](https://sketchplanations.com/the-curb-cut-effect)[^5])
+
+After World War II, disabled veterans in the United States advocated for curb cuts (short ramps from sidewalks to adjoining streets) to increase their access in the built environment. Advocacy eventually led to legislation mandating curb cuts in federally funded facilities.[^10] Curb cuts also benefit people pushing strollers or luggage, demonstrating that when we design for those at the margins, we often create better experiences for everyone.
 
 **Case Study:** {Closed-Captions}
 
@@ -141,7 +145,7 @@ Co-design helps designers better understand user needs, increasing user engageme
 
 ### Arnstein’s Ladder of Participation
 
-{Arnsteins-Ladder|Arnstein’s Ladder} is a framework that clarifies the difference between token participation and real user power in decision-making, helping designers assess the depth and authenticity of their user involvement.
+{Arnsteins-Ladder|Arnstein’s Ladder} is a framework that clarifies the difference between token participation and real user power in decision-making, helping designers assess the depth and authenticity of their user involvement. 
 
 ## Conclusion
 
@@ -149,44 +153,105 @@ Design processes shape not only how a product is made, but also whose needs and 
 
 No single design process guarantees accessibility. Instead, accessibility grows out of an ongoing commitment to involve users early and iteratively. Ultimately, accessible design is not a technical add-on but a reflection of whose voices and experiences are included in shaping our products and systems.
 
+[^1]: Arnstein, S. R. (1969). "A Ladder of Citizen Participation." *Journal of the American Institute of Planners*, 35(4), 216–224. https://doi.org/10.1080/01944366908977225
+
+[^2]: Birkeland, J. (2023, June 5). "Behind the design: Headspace." *Apple Developer*. https://developer.apple.com/news/?id=fkfnhq8u
+
+[^3]: Center for Universal Design, NC State University College of Design. (1997). *The Principles of Universal Design*. https://design.ncsu.edu/research/center-for-universal-design/
+
+[^4]: Centre for Inclusive Design & PwC Australia. (2019). *The Benefit of Designing for Everyone*. https://centreforinclusivedesign.org.au/wp-content/uploads/2021/05/inclusive-design-report-digital-160519.pdf
+
+[^5]: Hey, Jono. (2021). "The Curb-Cut Effect." Sketchplanations. https://sketchplanations.com/the-curb-cut-effect
+
+[^6]: Hick, W. E. (1952). "On the Rate of Gain of Information." *Quarterly Journal of Experimental Psychology, 4*(1), 11–26. https://lawsofux.com/hicks-law/
+
+[^7]: Microsoft. (2021). "Seeing AI App Launches on Android." https://blogs.microsoft.com/accessibility/seeing-ai-app-launches-on-android-including-new-and-updated-features-and-new-languages/
+
+[^8]: Microsoft. (n.d.). "Xbox Adaptive Controller." https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller
+
+[^9]: Norman, D. A. (2013). *The Design of Everyday Things: Revised and Expanded Edition*. Basic Books. https://jnd.org/affordances-and-design/
+
+[^10]: Peterson, Julia. (2015). "Smashing Barriers to Access: Disability Activism and Curb Cuts." *National Museum of American History*. https://americanhistory.si.edu/explore/stories/smashing-barriers-access-disability-activism-and-curb-cuts
+
+[^11]: Scribewire. (2021). *The History of Closed Captioning*. https://scribewire.ca/blog/the-history-of-closed-captioning
+
+[^12]: Shahi, S. (2019). *Co-designing with kids with complex needs*. Inclusive Design Research Centre, OCAD University. https://community-led.design/case-studies/co-designing-with-kids-with-complex-needs/
+
+[^13]: Shark Design. (2024). *User-centered design vs. human-centered design: Which approach is right for you?* https://sharkdesign.com/blog/user-centered-design-vs-human-centered-design-which-approach-is-right-for-you/
+
+[^14]: UC Berkeley Center for Teaching & Learning. (n.d.). *Universal design*. https://udl.berkeley.edu/universal-design
+
+[^15]: Ullal, A., Tauseef, M., Watkins, A., Juckett, L., Maxwell, C., Tate, J., Mion, L. C., & Sarkar, N. (2024). An iterative participatory design approach to develop collaborative augmented reality activities for older adults in long-term care facilities. *Proceedings of the SIGCHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3613904.3642595
+
 ## Sidebar
 
 Simplifying-Choices:
-The settings menus on the Nintendo Switch Lite group options into clear categories (e.g., “Controllers and Sensors,” “System,” “Accessibility Features”). The interface shows only a manageable set of choices at each step. By reducing choice overload, the system supports users who may struggle with dense information or small motor movements.
+The settings menus on the Nintendo Switch group options into clear categories (e.g., “Controllers and Sensors,” “System,” “Accessibility Features”). The interface shows only a manageable set of choices at each step. By reducing choice overload, the system supports users who may struggle with dense information or small motor movements.
 
 Target-Group:
+[Seeing AI](https://blogs.microsoft.com/accessibility/seeing-ai-app-launches-on-android-including-new-and-updated-features-and-new-languages/), a mobile app developed by Microsoft, was designed specifically for people with visual impairments, blindness, or low vision. 
 
-| [Seeing AI](https://blogs.microsoft.com/accessibility/seeing-ai-app-launches-on-android-including-new-and-updated-features-and-new-languages/), a mobile app developed by Microsoft, was designed specifically for people with visual impairments, blindness, or low vision. Implementation: Seeing AI uses a smartphone’s camera and on-device AI to narrate the world to its users. There are different channels for tasks, from short text (reading texts as they appear), documents (guiding the user to frame a full page, then reading it with structure), product barcodes (using beeps to help locate the barcode, then announcing product information), currency recognition, color detection, and even a scene mode that describes the overall scene. The impact: The focused design orientation ensures its target group, blind and low-vision users, can gain greater independence, from reading printed documents and menus to identifying products and understanding their surroundings. Although optimized specifically for this group, many of its features benefit a broader audience. For example, anyone can use it to read text in low-light conditions or quickly scan labels. Designing for a target group is therefore not only essential for meeting specialized needs but can also create innovations that improve usability for all users.
+**Implementation**: Seeing AI uses a smartphone’s camera and on-device AI to narrate the world to its users.[^7] There are different channels for tasks, from short text (reading texts as they appear), documents (guiding the user to frame a full page, then reading it with structure), product barcodes (using beeps to help locate the barcode, then announcing product information), currency recognition, color detection, and even a scene mode that describes the overall scene. 
+
+**The impact**: The focused design orientation ensures its target group, blind and low-vision users, can gain greater independence, from reading printed documents and menus to identifying products and understanding their surroundings. Although optimized specifically for this group, many of its features benefit a broader audience. For example, anyone can use it to read text in low-light conditions or quickly scan labels. Designing for a target group is therefore not only essential for meeting specialized needs but can also create innovations that improve usability for all users.
 
 Inclusive-Design:
+The [Microsoft Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller), a controller that supports gamers with limited mobility, exemplifies inclusive design as it dives into identifying flaws in traditional controllers for its specific audience and designing a more inclusive alternative. 
 
-| The [Microsoft Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller), a controller that supports gamers with limited mobility, exemplifies inclusive design as it dives into identifying flaws in traditional controllers for its specific audience and designing a more inclusive alternative. Implementation: Microsoft partnered directly with disabled gamers and occupational therapists. Through participatory design sessions, they identified barriers in traditional controllers—button reach, grip requirements, and simultaneous input coordination. The Adaptive Controller introduced programmable large-format buttons, multiple input ports for assistive devices, and flexible configurations based on individual needs. Impact: The product dramatically expanded access to gaming for players with diverse motor abilities. At the same time, the modular, customizable design improved gaming experiences for users without disabilities who benefit from alternative control schemes. This demonstrates inclusive design’s core approach: centering marginalized users creates improvements that scale outward.
+**Implementation**: Microsoft partnered directly with disabled gamers and occupational therapists. Through participatory design sessions, they identified barriers in traditional controllers—button reach, grip requirements, and simultaneous input coordination. The Adaptive Controller introduced programmable large-format buttons, multiple input ports for assistive devices, and flexible configurations based on individual needs.[^8] 
+
+**Impact**: The product dramatically expanded access to gaming for players with diverse motor abilities. At the same time, the modular, customizable design improved gaming experiences for users without disabilities who benefit from alternative control schemes. This demonstrates inclusive design’s core approach: centering marginalized users creates improvements that scale outward.
 
 Mapping:
-| [![][image3]](https://nothing.community/d/15751-make-ui-without-needing-quick-settings) Explanation: Example of Natural Mapping—sliding up increases volume while sliding down reduces it A vertical slider for volume control provides natural mapping—sliding up increases the volume, sliding down reduces it. This mapping corresponds to spatial metaphors users already understand. Providing clear visual labels and multimodal cues (e.g., haptic or audio feedback) helps ensure users with varying cultural or sensory backgrounds can understand the control’s behavior.
+![iPhone volume and brightness sliders](/assets/primer-photos/accessibility/designProcesses/mappingExample.png) 
+
+The iPhone volume and brightness sliders are an example of Natural Mapping—sliding up increases volume while sliding down reduces it A vertical slider for volume control provides natural mapping—sliding up increases the volume, sliding down reduces it. This mapping corresponds to spatial metaphors users already understand. 
+
+Providing clear visual labels and multimodal cues (e.g., haptic or audio feedback) helps ensure users with varying cultural or sensory backgrounds can understand the control’s behavior.
 
 Feedback:
 Heading: Example of Feedback
-![on and off power switch symbols](/assets/primer-photos/Power-Switch-Symbols-Explained.webp) Visual checkmark indicators serve as feedback for different states of the text after the user sends it When a user sends a message in WhatsApp, the app provides multimodal feedback, including a tactile vibration, a visual checkmark indicator, and an auditory notification that the user can turn on. This multimodal feedback makes sure that users, including those who may be blind, hard of hearing, or easily distracted, can confirm that their text is sent through and understand the system status clearly.
+![WhatsApp Messages showing different checkmarks for sent, delievered, and read](/assets/primer-photos/accessibility/designProcesses/feedbackExample.png) 
+
+On Whatsapp, Visual checkmark indicators serve as feedback for different states of the text after the user sends it. When a user sends a message, the app provides multimodal feedback, including a tactile vibration, a visual checkmark indicator, and an auditory notification that the user can turn on. This multimodal feedback makes sure that users, including those who may be blind, hard of hearing, or easily distracted, can confirm that their text is sent through and understand the system status clearly.
 
 Universal-Symbols:
 Heading: Examples of Affordance and Signifiers
-![on and off power switch symbols](/assets/primer-photos/Power-Switch-Symbols-Explained.webp) Explanation: Example of an Affordance—showing that the button can be turned on and off ![][image2] Explanation: Example of Signifiers—showing that a green button means Submit, while a gray button means an action is not yet available Consider the universal “power” symbol—a circle (O) for “off” and a line (I) for “on.” These shapes indicate the affordance (a button can be pressed) and serve as signifiers that communicate its state. Similarly, a green button on a digital form signifies “Submit” or “Continue,” while a gray, disabled button signifies that an action is not yet available. These digital affordances help users with limited vision or cognitive differences when paired with text labels or screen reader cues.
+![on and off power switch symbols](/assets/primer-photos/accessibility/designProcesses/affordanceExample.png) 
+Example of an Affordance—showing that the button can be turned on and off 
+
+![Active green submit button and inactive grey submit button](/assets/primer-photos/accessibility/designProcesses/signifierExample.png) Example of Signifiers—showing that a green button means Submit, while a gray button means an action is not yet available Consider the universal “power” symbol—a circle (O) for “off” and a line (I) for “on.” 
+
+These shapes indicate the affordance (a button can be pressed) and serve as signifiers that communicate its state. Similarly, a green button on a digital form signifies “Submit” or “Continue,” while a gray, disabled button signifies that an action is not yet available. These digital affordances help users with limited vision or cognitive differences when paired with text labels or screen reader cues.
 
 Universal-Design:
+[Headspace](https://organizations.headspace.com/blog/leading-in-disability-inclusion-headspace-recognized-as-a-2024-best-place-to-work-by-dei), a meditation and mental health app, was designed with universal accessibility in mind from the start. The design team prioritized creating an experience that would work for users with varying digital literacy, cognitive abilities, and stress levels—recognizing that their target audience (people seeking mental health support) includes many who experience cognitive overload. 
 
-[Headspace](https://organizations.headspace.com/blog/leading-in-disability-inclusion-headspace-recognized-as-a-2024-best-place-to-work-by-dei), a meditation and mental health app, was designed with universal accessibility in mind from the start. The design team prioritized creating an experience that would work for users with varying digital literacy, cognitive abilities, and stress levels—recognizing that their target audience (people seeking mental health support) includes many who experience cognitive overload. Implementation: Headspace uses a calm, minimalist interface—soft colors, simple typography, generous white space, and clean iconography—combined with intuitive, consistent navigation patterns. The app's design accommodates a wide range of users, from individuals with low digital literacy to neurodivergent users to people managing stress, by making meditation and mindfulness content easy to find and use. Impact: [Headspace’s design](https://developer.apple.com/news/?id=fkfnhq8u) intentionally minimizes friction and maximizes usability for everyone. A universally accessible experience benefits all users—not just a select group—and reduces the likelihood of excluding potential users with varying needs or limitations.
+**Implementation**: Headspace uses a calm, minimalist interface—soft colors, simple typography, generous white space, and clean iconography—combined with intuitive, consistent navigation patterns. The app's design accommodates a wide range of users, from individuals with low digital literacy to neurodivergent users to people managing stress, by making meditation and mindfulness content easy to find and use. 
+
+**Impact**: [Headspace’s design](https://developer.apple.com/news/?id=fkfnhq8u) intentionally minimizes friction and maximizes usability for everyone. A universally accessible experience benefits all users—not just a select group—and reduces the likelihood of excluding potential users with varying needs or limitations.[^2]
 
 Closed-Captions:
-Closed captions were originally designed for people who are deaf or hard of hearing. But today, they benefit a much broader audience: people watching videos in noisy environments (like gyms or airports), non-native speakers learning a language, viewers in quiet spaces (like libraries or late at night), and anyone who prefers to read along while watching. This demonstrates the curb cut effect—a feature designed for accessibility becomes useful for many.
+Closed captions were originally designed for people who are deaf or hard of hearing. But today, they benefit a much broader audience: people watching videos in noisy environments (like gyms or airports), non-native speakers learning a language, viewers in quiet spaces (like libraries or late at night), and anyone who prefers to read along while watching. This demonstrates the curb cut effect—a feature designed for accessibility becomes useful for many.[^11]
 
 Participatory-Design:
 Heading: Participatory Design Approach to Develop Collaborative Augmented Reality Activities for Older Adults in Long-Term Care Facilities
-This study explores head-mounted display augmented reality (HMD-AR) as a potential strategy to facilitate social connectedness and mitigate loneliness among older adults in Long Term Care (LTC) residences. Using a participatory design approach, the feedback from the focus group is incorporated through rounds of requirements identification, prototyping, and evaluation. The focus group involves older adults, family members, and LTC staff. Through participatory design, developers designed AR activities such as checkers and virtual fireplace decoration, and tested iterative prototypes. The process demonstrated how active user participation and feedback improve adaptability, accessibility, and engagement for underserved groups. While participatory design has meaningful participation of its user group, they do not co-own the design decisions.
+This study explores head-mounted display augmented reality (HMD-AR) as a potential strategy to facilitate social connectedness and mitigate loneliness among older adults in Long Term Care (LTC) residences. Using a participatory design approach, the feedback from the focus group is incorporated through rounds of requirements identification, prototyping, and evaluation. The focus group involves older adults, family members, and LTC staff. Through participatory design, developers designed AR activities such as checkers and virtual fireplace decoration, and tested iterative prototypes. 
+
+The process demonstrated how active user participation and feedback improve adaptability, accessibility, and engagement for underserved groups. While participatory design has meaningful participation of its user group, they do not co-own the design decisions.[^15]
 
 Co-designing-with-Kids-with-Complex-Needs:
-In this case, researchers collaborated with children with multiple disabilities to design digital learning tools that reflect their daily realities. The co-design process included using tactile materials, visual storytelling, and simplified interaction models to help children express preferences and test early prototypes. Rather than interpreting the children’s needs from observation alone, designers co-created alongside them and their caregivers. The co-design process allowed designers to better match users’ sensory and cognitive needs while also fostering more engagement and a sense of pride among participants. This shared creative authority distinguishes co-design from participatory design. Users here, the children and caregivers, are not just informing and testing the design to improve it, but also shaping the problem, the prototypes, and their meaning together with researchers.
+In this case, researchers collaborated with children with multiple disabilities to design digital learning tools that reflect their daily realities. The co-design process included using tactile materials, visual storytelling, and simplified interaction models to help children express preferences and test early prototypes. Rather than interpreting the children’s needs from observation alone, designers co-created alongside them and their caregivers. The co-design process allowed designers to better match users’ sensory and cognitive needs while also fostering more engagement and a sense of pride among participants. 
+
+This shared creative authority distinguishes co-design from participatory design. Users here, the children and caregivers, are not just informing and testing the design to improve it, but also shaping the problem, the prototypes, and their meaning together with researchers.[^12]
 
 Arnsteins-Ladder:
 Heading: More on Arnstein’s Ladder of Participation 
-Sherry R. Arnstein’s 1969 Ladder of Citizen Participation highlights a key idea in the design process and accessibility: “There is a critical difference between going through the empty ritual of participation and having the real power needed to affect the outcome of the process.” Arnstein outlines eight layers of participation, grouped into three levels: Nonparticipation: Manipulation, Educating Tokenism: Informing, Consultation, Placation Citizen Power: Partnership, Delegated Power, Citizen Control Tokenism describes situations where users are asked what they think, but decision-making remains in the power of someone else. This allows power-holders to claim that “all sides were considered,” even though only some sides ultimately benefit. Arnstein’s Ladder helps us assess where our design processes actually sit on the ladder. This model is helpful for distinguishing the intentions behind user research, participatory design, and co-design—ensuring that participation is actually impactful rather than symbolic.
+Sherry R. Arnstein’s 1969 Ladder of Citizen Participation highlights a key idea in the design process and accessibility: “There is a critical difference between going through the empty ritual of participation and having the real power needed to affect the outcome of the process."[^1] Arnstein outlines eight layers of participation, grouped into three levels: 
+* **Nonparticipation**: Manipulation, Educating 
+* **Tokenism**: Informing, Consultation, Placation 
+* **Citizen Power**: Partnership, Delegated Power, Citizen Control 
+
+Tokenism describes situations where users are asked what they think, but decision-making remains in the power of someone else. This allows power-holders to claim that “all sides were considered,” even though only some sides ultimately benefit. 
+
+Arnstein’s Ladder helps us assess where our design processes actually sit on the ladder. This model is helpful for distinguishing the intentions behind user research, participatory design, and co-design—ensuring that participation is actually impactful rather than symbolic.

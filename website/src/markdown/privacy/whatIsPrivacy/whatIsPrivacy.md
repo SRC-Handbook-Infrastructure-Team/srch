@@ -2,6 +2,7 @@
 title: What is Privacy?
 order: 1
 final: true
+lastUpdated: 2025-04-18
 ---
 
 Here we present some of the answers different thinkers and disciplines give to the question, "What is privacy about?" We do not aim to comprehensively survey theories or take sides in the many debates happening around this topic in philosophy, psychology, anthropology, and other disciplines. Rather, we offer several lenses through which to understand privacy and what it delineates. The goal is to get students thinking critically about privacy and its applications to computer science.
@@ -26,7 +27,7 @@ Taken to its logical extreme, the access-based lens suggests that "an individual
 Control-based approaches **consider privacy in terms of how data is not only accessed but also collected, shared, and used**. Through this lens, privacy is more than just an access gateway that we can open or close. Advocates promote a control-based approach to privacy as empowering people to actively govern their privacy **throughout the data lifecycle**, from creation through destruction. In accordance with this principle, the [European Union's GDPR](https://gdpr.eu/what-is-gdpr/) (General Data Protection Regulation) and similar data privacy regulations (e.g., the California Consumer Privacy Act) require that data subjects maintain a high level of control over their personal information for the duration of its existence.
 
 **Figure:** Diagram of the research data lifecycle from the [Longwood Medical Area Research Data Management Working Group](https://datamanagement.hms.harvard.edu) at Harvard Medical School. Detailed accessible version available online [here](https://datamanagement.hms.harvard.edu/plan-design/biomedical-data-lifecycle#).
-![The Biomedical Data Lifecycle diagram depicts the core stages of the research lifecycle. The center of the wheel has a grey circle labeled Store & Manage. The layer surrounding this is cut into six segments in this order: Plan &  Design, Collect & Create, Analyze & Collaborate, Evaluate & Archive, Share & Disseminate, and Publish & Reuse. Clockwise guiding arrows are at the edge of each segment, showing that one stage leads into the next. The third layer expands on each topic by listing activities or resources that are involved in each of the seven segments in the other two layers.](/assets/primer-photos/dataLifecycle.png)
+![The Biomedical Data Lifecycle diagram depicts the core stages of the research lifecycle. The center of the wheel has a grey circle labeled Store & Manage. The layer surrounding this is cut into six segments in this order: Plan &  Design, Collect & Create, Analyze & Collaborate, Evaluate & Archive, Share & Disseminate, and Publish & Reuse. Clockwise guiding arrows are at the edge of each segment, showing that one stage leads into the next. The third layer expands on each topic by listing activities or resources that are involved in each of the seven segments in the other two layers.](/assets/primer-photos/privacy/whatIsPrivacy/dataLifecycle.png)
 
 Westin defines privacy as "the claim of individuals, groups, or institutions to determine for themselves when, how and to what extent information about them is communicated to others" (1967, 7). Privacy loss is therefore thought of as the loss of control over personal information (Véliz 2024, 75). For example, a {man-in-the-middle-attack} intercepts communications along what was believed to be a private channel, violating the sender's privacy by undermining their ability to control the flow of information.
 
@@ -45,7 +46,7 @@ A lens of privacy focused on the separation of public and private spheres is in 
 Some claim that privacy is about **moderating relationships between different entities by allowing disparate access to one's private sphere**. One recent way of representing this idea is a layered model of privacy (sometimes referred to as "the onion model of privacy"). The layered model presents privacy as nested, with personal and bodily intimacy and privacy at the center. The middle layers are personal relationships, and the outer layer is civil society more broadly. Privacy loss, analogous to removing layers and letting others in, makes us vulnerable. Voluntary disclosure can be viewed as "a gesture of trust that, when received with sensitivity and trustworthiness, strengthens relationships" (Véliz 2024, p. 83).
 
 **Figure:** The layered model of privacy.
-![An illustration of semi-circles in descending size from left to right. An arrow pointing to the largest semi-circle is labeled "Civil society (e.g., things shared with the government)." An arrow pointing to the medium-sized semi-circle is labeled "Personal relationships (e.g., things shared with friends)." An arrow pointing to the smallest semi-circle is labeled "Personal & bodily intimacy (e.g., things shared with life partner)."](/assets/primer-photos/layered_model_of_privacy.png)
+![An illustration of semi-circles in descending size from left to right. An arrow pointing to the largest semi-circle is labeled "Civil society (e.g., things shared with the government)." An arrow pointing to the medium-sized semi-circle is labeled "Personal relationships (e.g., things shared with friends)." An arrow pointing to the smallest semi-circle is labeled "Personal & bodily intimacy (e.g., things shared with life partner)."](/assets/primer-photos/privacy/whatIsPrivacy/layered_model_of_privacy.png)
 
 ### Spheres as action-based
 
@@ -69,7 +70,7 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 
 #### Figure: Table summarizing four views of privacy.
 
-![A table summarizing four views of privacy. It lists that privacy is about access restriction, information flow control, the separation of public and private spheres, and plausible deniability. It lists that someone has privacy if their physical self and information about them is inaccessible to others, they are empowered to control if and how information about them is collected, shared, and used, their personal spaces, relationships, and actions are free from interference, and there is a mathematical guarantee their information or identity is unrecoverable."](/assets/primer-photos/table_of_privacy.png)
+![A table summarizing four views of privacy. It lists that privacy is about access restriction, information flow control, the separation of public and private spheres, and plausible deniability. It lists that someone has privacy if their physical self and information about them is inaccessible to others, they are empowered to control if and how information about them is collected, shared, and used, their personal spaces, relationships, and actions are free from interference, and there is a mathematical guarantee their information or identity is unrecoverable."](/assets/primer-photos/privacy/whatIsPrivacy/table_of_privacy.png)
 
 ## Privacy from whom?
 

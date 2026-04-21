@@ -2,6 +2,7 @@
 title: Value of Privacy
 order: 2
 final: true
+lastUpdated: 2025-04-18
 ---
 
 ## What is privacy good for?
