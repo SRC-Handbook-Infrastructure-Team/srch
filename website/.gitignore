@@ -25,3 +25,4 @@ dist-ssr
 
 # Generated build artifacts
 public/search-index.json
+public/markdown-data.json
