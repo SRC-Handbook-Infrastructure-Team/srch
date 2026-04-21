@@ -2,6 +2,7 @@
 title: Justice in AI
 order: 3
 final: true
+lastUpdated: 2026-04-21
 ---
 
 # Justice in Artificial Intelligence Outline

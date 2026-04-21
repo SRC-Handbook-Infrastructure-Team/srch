@@ -1,7 +1,8 @@
 ---
 title: Design Processes
-order: 2
+order: 5
 final: false
+lastUpdated: 2026-04-21
 ---
 
 ## Overview: The Purpose of Design Processes

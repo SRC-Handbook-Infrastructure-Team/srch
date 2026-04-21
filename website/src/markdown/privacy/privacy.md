@@ -1,7 +1,7 @@
 ---
 title: Privacy
 order: 1
-lastUpdated: 2025-04-15
+lastUpdated: 2026-04-21
 ---
 
 ### Why Privacy?

@@ -2,6 +2,7 @@
 title: Data Ownership and Surveillance Capitalism
 order: 3
 final: true
+lastUpdated: 2026-04-21
 ---
 
 # Data Ownership and Surveillance Capitalism
