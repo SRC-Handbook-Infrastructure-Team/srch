@@ -1,3 +1,121 @@
+import "../styles/MarkdownPage.css";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import { visit } from "unist-util-visit";
+import { useLayout } from "../layouts/LayoutContext";
+import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
+import MarkdownRenderer, {
+  getSections,
+  getContent,
+  getSubsections,
+  getPreloadedMarkdownContent,
+  highlightText,
+} from "../util/MarkdownRenderer";
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function remarkSidebarFootnoteRefs({
+  sectionId,
+  subsectionId,
+  footnoteOriginMap = {},
+} = {}) {
+  return (tree) => {
+    visit(tree, "text", (node, index, parent) => {
+      if (!parent || typeof node.value !== "string" || index == null) return;
+
+      const refRegex = /\[\^([^\]]+)\]/g;
+      let match;
+      let lastIndex = 0;
+      const children = [];
+
+      while ((match = refRegex.exec(node.value)) !== null) {
+        const textBefore = node.value.slice(lastIndex, match.index);
+        if (textBefore) {
+          children.push({ type: "text", value: textBefore });
+        }
+
+        const number = match[1];
+        const origin = footnoteOriginMap[number];
+        const href =
+          origin && origin !== "main" && sectionId && subsectionId
+            ? `/${sectionId}/${subsectionId}/${origin}#user-content-fn-${number}`
+            : `#user-content-fn-${number}`;
+
+        children.push({
+          type: "html",
+          value: `<sup><a href="${escapeHtml(href)}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${escapeHtml(number)}</a></sup>`,
+        });
+
+        lastIndex = match.index + match[0].length;
+      }
+
+      if (!children.length) return;
+
+      const tail = node.value.slice(lastIndex);
+      if (tail) {
+        children.push({ type: "text", value: tail });
+      }
+
+      parent.children.splice(index, 1, ...children);
+      return index + children.length;
+    });
+  };
+}
+
+function renderSidebarHeadingMarkdown(heading, options = {}) {
+  const content = String(heading || "").trim();
+  if (!content) return null;
+
+  return (
+    <ReactMarkdown
+      rehypePlugins={[rehypeRaw]}
+      remarkPlugins={[[remarkSidebarFootnoteRefs, options]]}
+      components={{
+        p: ({ children }) => <>{children}</>,
+        a: ({ children, href, ...props }) => (
+          <a
+            href={href}
+            {...props}
+            style={{
+              color: "var(--color-text-hover)",
+              fontWeight: 700,
+              textDecoration: "none",
+            }}
+          >
+            {children}
+          </a>
+        ),
+        sup: ({ children }) => (
+          <sup
+            style={{
+              display: "inline-block",
+              verticalAlign: "baseline",
+              position: "relative",
+              top: "-0.35em",
+              fontSize: "0.7em",
+              lineHeight: 0,
+            }}
+          >
+            {children}
+          </sup>
+        ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}
+
 /**
  * Builds a footnote origin map for all sidebar drawers on the page.
  * For each sidebar slug, maps footnotes to that slug using the loaded sidebar content.
@@ -19,19 +137,6 @@ function buildSidebarDrawersFootnoteOriginMap(sidebar) {
   }
   return originMap;
 }
-import "../styles/MarkdownPage.css";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
-import { useLayout } from "../layouts/LayoutContext";
-import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
-import MarkdownRenderer, {
-  getSections,
-  getContent,
-  getSubsections,
-  getPreloadedMarkdownContent,
-  highlightText,
-} from "../util/MarkdownRenderer";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * buildFootnoteOriginMap
@@ -505,7 +610,14 @@ function MarkdownPage() {
     const node = (
       <>
         <div className="drawer-meta-label">
-          {highlightText(heading, highlight)}
+          {highlightText(
+            renderSidebarHeadingMarkdown(heading, {
+              sectionId,
+              subsectionId,
+              footnoteOriginMap: drawerFootnoteOriginMap,
+            }),
+            highlight,
+          )}
         </div>
         <div className="drawer-meta-divider" />
         <MarkdownRenderer

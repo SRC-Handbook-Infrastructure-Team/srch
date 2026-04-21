@@ -733,11 +733,8 @@ p > .srch-drawer-link:first-child {
 }
 
 .drawer-meta-label {
-  font: "Funnel Sans";
-  font-size: normal;
-  line-height: 40px;
-  width: 90%;
   line-height: normal;
+  width: 90%;
   font-weight: 600;
   color: var(--color-header);
 }
