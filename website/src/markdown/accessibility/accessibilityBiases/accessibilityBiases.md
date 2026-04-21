@@ -13,13 +13,13 @@ Cognitive biases shape design decisions by influencing how designers interpret u
 
 To understand where these biases enter the design process, it is important to first understand three sets of conceptual ideas that explain why biases are persistent and harmful in design: 1. Mental models and familiarity, 2. The invisibility of bias, and 3. Exclusion.
 
-### Mental models and familiarity
+### Mental Models and Familiarity
 
 Individuals create {mental-models} for how they expect technology to function based on past experiences. These expectations are {judgmental-heuristics}—mental shortcuts that help people make quick decisions by drawing on what has worked before. Heuristics allow us to function efficiently when encountering large amounts of information and stimuli. In design contexts, aligning with well-established patterns and intuitive interactions can minimize confusion and improve usability.[^4] Because we inevitably draw from our own experiences when creating these patterns, however, we can unconsciously treat our own mental models as universal and risk creating systems that only work for people with backgrounds and abilities similar to our own. A hypothetical example of this mental model can be found {mouse|in most designers’ reliance on the mouse for navigation}.
 
 For an activity that demonstrates how mental models vary even for simple everyday tasks, see the {draw-toast|Draw Toast exercise}.
 
-### The invisibility of bias
+### The Invisibility of Bias
 
 Biases often operate unconsciously, making flawed decisions feel intuitively correct to the decision-maker. These mental shortcuts developed as evolutionary adaptations, helping early humans make quick judgments for survival.[^3] Cognitive psychologists have established that biases stem from unconscious, automatic processes that can enable fast and efficient decision-making.[^2] When we rely on familiar patterns or make assumptions about user capabilities, these choices are made {system|rapidly and intuitively}, rarely triggering self-doubt. In design contexts, studies show that designers frequently commit to concrete design concepts from the beginning, possibly ignoring alternative options.[^2]
 
@@ -35,27 +35,27 @@ The biases described in the following section illustrate specific ways this excl
 
 Here are some key cognitive biases that commonly affect design decisions, along with examples illustrating their impact. The term bias here refers to ones that a designer might be subject to that leads to inaccessible and poorly designed products. Each subsection includes a definition and the potential impact. Notably, the following biases is not a comprehensive list of biases—for more, see [this comprehensive list of biases](https://thedecisionlab.com/biases).
 
-### Automation bias
+### Automation Bias
 
 Automation bias is the tendency for people to favor suggestions from automated systems over their own judgment, especially as these technologies become more integrated into daily decision-making. This bias can lead people to overlook errors, ignore contradictory information, or fail to question flawed outputs simply because they trust the perceived authority or objectivity of the system.
 
-### Availability bias
+### Availability Bias
 
 Availability bias is a cognitive shortcut in which people often judge the likelihood or importance of an event based on how easily examples come to mind. This usually means that vivid, recent, or emotionally charged memories can disproportionately influence decision-making regardless of their relevance.
 
-### Choice overload
+### Choice Overload
 
 Choice overload occurs when individuals are confronted with too many options, causing them to experience decision paralysis. The abundance of alternatives can make it difficult to evaluate each option thoroughly, causing cognitive fatigue. As a result, users may struggle to make decisions, often leading to a sense of regret or doubt about their decision, even if the choice made was objectively good. If a poor choice was made due to the difficulty of evaluating alternatives, the user may be less likely to engage with the system in the future.
 
-#### Confirmation bias
+#### Confirmation Bias
 
 Confirmation bias is when individuals seek out, interpret, or remember information in a way that supports their existing beliefs or opinions, often ignoring information that challenges them. This reduces objectivity and may perpetuate errors in judgment or evaluation.
 
-### Framing effect
+### Framing Effect
 
 The framing effect describes how the choice of language, context, and perspective presented alongside information changes how it is perceived, often without the individual being aware of its influence. Situations might be presented with a focus on positive (gain) or negative (loss) aspects. Framing may cause individuals to make decisions based on context cues rather than the information itself, leading them to be dissatisfied with choices or even feel deceived by an interface.
 
-### Implicit bias
+### Implicit Bias
 
 Implicit bias describes the subconscious associations made between certain attributes—such as race, gender, age, or ability—and particular traits or behaviors. Implicit biases can influence decisions in ways that perpetuate inequities, even among individuals who consciously reject discriminatory attitudes.
 
@@ -76,7 +76,7 @@ These biases can aggregate across levels, creating a compound effect.[^1] For ex
 
 This compounding effect helps explain why accessibility problems persist systematically. Individual awareness, while necessary, is not sufficient without addressing team processes, organizational structures, and industry norms. Biases, including ones beyond what we mention in this primer, may operate simultaneously across these levels.
 
-# Conclusion
+## Conclusion
 
 Inaccessible design due to cognitive biases is not inevitable. Rather, accessibility can be achieved by questioning what is “obvious” and addressing our biases. Although bias cannot be eliminated entirely, it is vital to encourage critical awareness and accountability in how design decisions can include or exclude different user groups. The goal is to build the habit of asking whose needs a decision may overlook. Recognizing bias is the first step; the next requires understanding how to translate this awareness into concrete design processes.
 
