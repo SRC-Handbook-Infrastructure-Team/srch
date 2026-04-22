@@ -5,8 +5,6 @@ final: false
 lastUpdated: 2026-04-21
 ---
 
-## Overview: The Purpose of Design Processes
-
 When designing a product, there are many possible routes from ideation to implementation. Design processes provide structure along these routes, offering methods for gathering user needs, testing ideas, and iterating on products through feedback.
 
 Thoughtful design processes that take users' needs into account support **usability** and **accessibility**. Usability refers to the ease of access and use of a product or service, and accessibility includes the evaluation and implementation of accessibility standards. 

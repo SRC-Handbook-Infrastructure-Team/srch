@@ -5,8 +5,6 @@ final: false
 lastUpdated: 2026-04-21
 ---
 
-## Overview
-
 The development of inclusive technology requires thoughtful consideration of how accessibility intersects with other values such as privacy, security, and usability. While these values are often treated as separate goals or controlled by separate teams, managing them does not have to be mutually exclusive with accessibility.[^27] In fact, prioritizing accessible features can create powerful positive externalities, ultimately leading to more innovative and equitable products.
 
 ## Why Accessibility Gets Overlooked

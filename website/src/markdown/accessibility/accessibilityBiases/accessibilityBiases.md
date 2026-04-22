@@ -5,8 +5,6 @@ final: false
 lastUpdated: 2026-04-21
 ---
 
-## Overview: The Importance of Recognizing Biases
-
 One of the biggest challenges to accessible technology is {cognitive-biases}, which are systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.
 
 Cognitive biases shape design decisions by influencing how designers interpret user needs and system requirements. More generally, biases shape what we notice, prioritize, and whose needs we overlook. Accessibility requires recognizing how our instincts about what constitutes normal, intuitive, or good design are shaped by our own abilities and experiences. Understanding what bias is, which specific biases might appear, and how biases manifest can help us question those instincts. Bias recognition must precede bias prevention, because we cannot design accessible technology without first understanding how our assumptions shape design decisions.

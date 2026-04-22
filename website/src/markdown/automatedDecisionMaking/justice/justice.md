@@ -5,10 +5,6 @@ final: true
 lastUpdated: 2026-04-21
 ---
 
-# Justice in Artificial Intelligence Outline
-
-## Introduction
-
 Justice is the idea that individuals should be treated fairly. However, what that means when trying to create the best AI Systems presents many questions, diverging opinions, and diversity in implementation.
 
 While [fairness](/AI/fairness), as currently formalized in AI, relies on mathematical criteria, justice relies on an ever-evolving assumption about what counts as “just.” Justice reflects deeper philosophical tensions about what kind of justice AI systems should aim for: distributive, procedural, or other philosophical approaches. Justice requires tools that actively build on equality and access: Can AI be that tool?

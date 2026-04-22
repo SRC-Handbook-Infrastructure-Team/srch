@@ -172,7 +172,7 @@ html[data-theme="dark"] .topic-card {
 }
 
 html[data-theme="light"] .topic-card {
-  box-shadow: 2px 2px 10px var(--color-shadow);
+  /* box-shadow: 2px 2px 10px var(--color-shadow); */
 }
 
 .topic-card::after {
@@ -224,6 +224,24 @@ html[data-theme="light"] .topic-card {
   height: auto;
   max-width: none;
   max-height: none;
+}
+
+.placeholder-card {
+  box-shadow: none;
+
+  cursor: default;
+}
+
+.placeholder-card:hover {
+  transform: none;
+}
+
+.placeholder-card::before {
+  opacity: 1;
+}
+
+.placeholder-card:hover::before {
+  opacity: 0;
 }
 
 .card-grid {
@@ -281,7 +299,7 @@ html[data-theme="light"] .topic-card {
 
 .card-heading {
   color: var(--color-text);
-  font-size: var(--medium-text);
+  font-size: 24px;
   font-family: var(--title-font);
   font-weight: 700;
   line-height: normal;
@@ -299,10 +317,10 @@ html[data-theme="light"] .topic-card {
   word-wrap: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  min-height: calc(1.45em * 3);
+  min-height: calc(1.45em * 2);
 }
 
 .content-section {

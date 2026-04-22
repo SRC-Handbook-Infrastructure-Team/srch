@@ -4,8 +4,6 @@ order: 5
 lastUpdated: 2026-04-21
 ---
 
-# Consent
-
 What is the best way to protect privacy? For many people, protecting privacy in digital contexts begins and ends with consent. While consent can be a powerful tool, it is not a perfect, universally-applicable solution. In this primer, we explore the strengths and weaknesses of a consent-based model along with some alternative approaches to safeguarding privacy.
 
 ## What is consent?

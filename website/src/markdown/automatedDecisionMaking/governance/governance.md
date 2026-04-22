@@ -126,7 +126,7 @@ Mapping the AI Supply Chain: An Analysis of the Complex Relationships in the AI 
 | Industrial Consortia | U.S. Chamber of Commerce, Information Technology Industry Council (ITI), Chamber of Progress, TechNet, AI-Enabled ICT Workforce Consortium, MIT Generative AI Impact Consortium | Coordinate self-regulation, research, and policy dialogues; preempt regulation by standardizing responsible practices |
 
 ### Academia Overview
-
+can
 Academic institutions occupy a unique position in AI governance as they conduct independent research on AI. Their primary role in the AI governance space includes proposing best practices and governance methods, building relationships with other stakeholders, establishing projects, and serving as consultants and as {testimonials-in-policy-hearings}. 
 
 

@@ -269,7 +269,11 @@ function NavBar() {
                   as="button"
                   type="button"
                   className="nav-dropdown-title nav-link-box"
-                  onClick={(e) => toggleSection("modules", e)}
+                  onClick={(e) => {
+                    e?.stopPropagation();
+                    navigate("/#curriculum");
+                    setOpenSection(null);
+                  }}
                 >
                   <span
                     className="nav-dropdown-title-text"
@@ -526,11 +530,8 @@ function NavBar() {
                   type="button"
                   className="mobile-modules-toggle nav-link-box nav-button"
                   onClick={() => {
-                    const willOpen = !isModulesExpanded;
-                    if (willOpen) {
-                      setIsSearchOpen(false);
-                    }
-                    setIsModulesExpanded(willOpen);
+                    setIsMenuOpen(false);
+                    navigate("/#curriculum");
                   }}
                 >
                   Modules

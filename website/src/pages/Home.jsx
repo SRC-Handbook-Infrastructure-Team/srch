@@ -13,8 +13,10 @@ import carotIconLight from "../assets/carot-icon.svg";
 import carotIconDark from "../assets/carot-icon_white.svg";
 import instaLogoLight from "../assets/instagram-logo.svg";
 import instaLogoDark from "../assets/instagram-logo_white.svg";
+import clockIconLight from "../assets/clock-icon.svg";
+import clockIconDark from "../assets/clock-icon_white.svg";
 import cntrLogo from "../assets/cntr-logo.png";
-import srcLogo from "../assets/src_logo.svg"
+import srcLogo from "../assets/src_logo.svg";
 import SearchBar from "../components/SearchBar";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
@@ -94,6 +96,9 @@ function Home() {
   const getPeopleIcon = () =>
     theme === "dark" ? peopleIconDark : peopleIconLight;
 
+  const getClockIcon = () =>
+    theme === "dark" ? clockIconDark : clockIconLight;
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -103,6 +108,29 @@ function Home() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleHashScroll = () => {
+      if (
+        window.location.hash === "#curriculum" &&
+        curriculumTitleRef.current
+      ) {
+        const navbarHeight = 70;
+        const padding = 100;
+        setTimeout(() => {
+          window.scrollTo({
+            top: window.innerHeight - (navbarHeight + padding),
+            behavior: "smooth",
+          });
+        }, 100);
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashScroll);
+    handleHashScroll();
+
+    return () => window.removeEventListener("hashchange", handleHashScroll);
   }, []);
 
   useEffect(() => {
@@ -207,7 +235,7 @@ function Home() {
           />
         </button>
         <div className="lower-content">
-          <div className="content-section">
+          <div className="content-section" id="curriculum">
             <div className="content-header">
               <div
                 className="section-title"
@@ -247,6 +275,26 @@ function Home() {
                   </button>
                 );
               })}
+              {curriculumCards.length % 2 !== 0 && (
+                <div className="topic-card placeholder-card">
+                  <div className="outline-tip">
+                    <img
+                      src={getClockIcon()}
+                      alt="Coming Soon Icon"
+                      width={75}
+                      height={92}
+                      style={{ opacity: 0.7 }}
+                    />
+                  </div>
+                  <div className="card" style={{ opacity: 0.7 }}>
+                    <div className="card-heading">And more to come...</div>
+                    <div className="topic-subtext">
+                      The SRCH is constantly doing research and writing primers
+                      to expand our content.
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -439,7 +487,9 @@ function Home() {
                   <p className="connect-text">
                     SRC@Brown CS Website:
                     <br />
-                    <span className="connect-link">responsible.cs.brown.edu</span>
+                    <span className="connect-link">
+                      responsible.cs.brown.edu
+                    </span>
                   </p>
                 </div>
               </a>
