@@ -5,6 +5,7 @@ import { Box, Text, VStack, Icon } from "@chakra-ui/react";
 import { LuChevronDown } from "react-icons/lu";
 import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 import {
+  createIdFromHeading,
   getSections,
   getSubsections,
   getContent,
@@ -58,29 +59,50 @@ function indexToLetter(index) {
   return s;
 }
 
-// WHY: Stable in-app slug generation for headings.
-function slugify(text = "") {
-  return text
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+function stripNonBodySections(markdown = "") {
+  let main = String(markdown || "");
+  if (!main.trim()) return "";
+
+  const sidebarMatch = /^##\s*Sidebar\s*$/im.exec(main);
+  if (sidebarMatch) {
+    main = main.slice(0, sidebarMatch.index).trim();
+  }
+
+  return main;
 }
 
-// WHY: Extract only H3–H6 from markdown content to form a contextual TOC per subsection.
-function parseSubsections(content) {
-  const headings = [];
-  if (!content) return headings;
-  const re = /^(#{3,6})\s+(.*)$/gm;
+// WHY: Mirror landing page heading titles (H2 only) for subsection dropdown content.
+function parseSubsections(content = "") {
+  const markdown = stripNonBodySections(content);
+  if (!markdown.trim()) return [];
+
+  const headingRegex = /^##\s+(.+)$/gm;
+  const excludedHeadings = new Set(["further reading", "footnotes", "sidebar"]);
+  const matches = [];
   let match;
-  while ((match = re.exec(content)) !== null) {
-    const level = match[1].length;
-    const text = match[2].trim();
-    if (text) headings.push({ id: slugify(text), text, level });
+
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const title = String(match[1] || "")
+      .replace(/\s+#+\s*$/, "")
+      .trim();
+
+    if (!title || excludedHeadings.has(title.toLowerCase())) continue;
+
+    matches.push({
+      title,
+      index: match.index,
+      bodyStart: headingRegex.lastIndex,
+    });
   }
-  return headings;
+
+  if (matches.length === 0) return [];
+
+  return matches.map((item) => {
+    return {
+      title: item.title,
+      id: createIdFromHeading(item.title),
+    };
+  });
 }
 /* =============================================================================
    Component: ContentsSidebar
@@ -130,6 +152,7 @@ export default function ContentsSidebar({
   );
   const currentSectionId = pathParts[0] || "";
   const currentSubsectionId = pathParts[1] || "";
+  const currentHeadingId = (location.hash || "").replace(/^#/, "");
 
   useEffect(() => {
     if (collapsed) {
@@ -146,6 +169,8 @@ export default function ContentsSidebar({
 
   /* ----------------------------- UI State --------------------------------- */
   const [expandedSections, setExpandedSections] = useState({});
+  const [expandedSubsections, setExpandedSubsections] = useState({});
+  const [scrollActiveHeadingId, setScrollActiveHeadingId] = useState("");
   const [allExpanded, setAllExpanded] = useState(false);
 
   /* =========================================================================
@@ -376,6 +401,15 @@ export default function ContentsSidebar({
     else expandAllSections();
   }, [allExpanded, collapseAllSections, expandAllSections]);
 
+  const toggleSubsectionHeadings = useCallback((sectionId, subsectionId) => {
+    const key = `${sectionId}/${subsectionId}`;
+    setExpandedSubsections((prev) => {
+      // Single-open behavior: opening one subsection closes all others.
+      if (prev[key]) return {};
+      return { [key]: true };
+    });
+  }, []);
+
   // WHY: Keep `allExpanded` derived in sync with the actual map and sections.
   useEffect(() => {
     const ids = sections.map((s) => s.id);
@@ -422,6 +456,77 @@ export default function ContentsSidebar({
     });
   }, [currentSectionId, fetchHeadingsForSection]);
 
+  /**
+   * Auto-expand subsection heading dropdown when navigating to that subsection.
+   *
+   * Rules:
+   * - When the current route specifies a subsectionId,
+   *   ensure that subsection's heading dropdown is expanded.
+   * - If it's already expanded, do nothing.
+   * - Fetch headings for the section if not already loaded.
+   * - This guarantees the heading list is visible when you land on the page.
+   */
+  useEffect(() => {
+    if (!currentSectionId || !currentSubsectionId) return;
+
+    // Ensure headings are fetched for this section
+    fetchHeadingsForSection(currentSectionId);
+
+    const subKey = `${currentSectionId}/${currentSubsectionId}`;
+    setExpandedSubsections((prev) => {
+      if (prev[subKey] && Object.keys(prev).length === 1) return prev;
+      // Route sync should also enforce single-open subsection.
+      return { [subKey]: true };
+    });
+  }, [currentSectionId, currentSubsectionId, fetchHeadingsForSection]);
+
+  useEffect(() => {
+    if (!currentSectionId || !currentSubsectionId) {
+      setScrollActiveHeadingId(currentHeadingId || "");
+      return;
+    }
+
+    const activeSub = (subsections[currentSectionId] || []).find(
+      (sub) => sub.id === currentSubsectionId,
+    );
+
+    const headingIds = (activeSub?.headings || [])
+      .map((h) => h?.id)
+      .filter(Boolean);
+
+    if (headingIds.length === 0) {
+      setScrollActiveHeadingId(currentHeadingId || "");
+      return;
+    }
+
+    const updateActiveHeading = () => {
+      const threshold = 140;
+      let nextActive = headingIds[0];
+
+      for (const id of headingIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) {
+          nextActive = id;
+        }
+      }
+
+      setScrollActiveHeadingId((prev) =>
+        prev === nextActive ? prev : nextActive,
+      );
+    };
+
+    updateActiveHeading();
+
+    window.addEventListener("scroll", updateActiveHeading, { passive: true });
+    window.addEventListener("resize", updateActiveHeading);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveHeading);
+      window.removeEventListener("resize", updateActiveHeading);
+    };
+  }, [currentSectionId, currentSubsectionId, currentHeadingId, subsections]);
+
   // WHY: Section numbers follow the rendered markdown order.
   const resolveDisplayNumber = useCallback((_section, idx) => {
     return idx + 1;
@@ -433,7 +538,7 @@ export default function ContentsSidebar({
      ========================================================================= */
   const NavContent = useCallback(
     () => (
-      <VStack align="stretch">
+      <VStack align="stretch" gap="0rem">
         {sections.map((section, idx) => {
           const sectionSubs = subsections[section.id] || [];
           const hasSubsections = sectionSubs.length > 0;
@@ -453,7 +558,6 @@ export default function ContentsSidebar({
                 <Box
                   display="flex"
                   alignItems="center"
-                  gap="6px"
                   cursor="pointer"
                   role="button"
                   tabIndex={0}
@@ -498,34 +602,109 @@ export default function ContentsSidebar({
                   className="sidebar-subsection-container"
                   align="stretch"
                   mt={1}
+                  gap={"0.25rem"}
                 >
                   {sectionSubs.map((sub, subIdx) => {
                     const isSubActive =
                       isActiveSection && currentSubsectionId === sub.id;
                     const subLetter = indexToLetter(subIdx);
                     const subPrefix = `${displayNumber}.${subLetter}.`;
+                    const subKey = `${section.id}/${sub.id}`;
+                    const hasHeadings =
+                      Array.isArray(sub.headings) && sub.headings.length > 0;
+                    const headingsNeedLoad = sub.headings == null;
+                    const isSubExpanded = !!expandedSubsections[subKey];
+                    const activeHeadingId =
+                      isSubActive && scrollActiveHeadingId
+                        ? scrollActiveHeadingId
+                        : currentHeadingId;
 
                     return (
-                      <Box key={sub.id}>
-                        <Link
-                          className="sidebar-subsection-link"
-                          to={`/${section.id}/${sub.id}`}
-                          onMouseEnter={() =>
-                            warmMarkdownContent(section.id, sub.id)
-                          }
-                          onFocus={() =>
-                            warmMarkdownContent(section.id, sub.id)
-                          }
+                      <Box key={sub.id} className="sidebar-subsection-box">
+                        <Box
+                          className={`sidebar-sub-row ${isSubActive ? "is-active" : ""}`}
                         >
-                          {" "}
-                          <Box className={`sidebar-sub-row`}>
-                            <Text
-                              className={`sidebar-subsection ${isSubActive ? "is-active" : ""}`}
-                            >
+                          <Box
+                            as="button"
+                            type="button"
+                            className="sidebar-subsection-toggle"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              if (headingsNeedLoad) {
+                                fetchHeadingsForSection(section.id);
+                              }
+                              toggleSubsectionHeadings(section.id, sub.id);
+                            }}
+                            aria-label={
+                              isSubExpanded
+                                ? "Collapse subsection headings"
+                                : "Expand subsection headings"
+                            }
+                          >
+                            <Icon
+                              as={LuChevronDown}
+                              transform={
+                                isSubExpanded ? "rotate(180deg)" : undefined
+                              }
+                              transition="transform 0.2s"
+                              w={4}
+                              h={4}
+                              color="currentColor"
+                            />
+                          </Box>
+
+                          <Link
+                            className="sidebar-subsection-link"
+                            to={`/${section.id}/${sub.id}`}
+                            onMouseEnter={() =>
+                              warmMarkdownContent(section.id, sub.id)
+                            }
+                            onFocus={() =>
+                              warmMarkdownContent(section.id, sub.id)
+                            }
+                          >
+                            <Text className="sidebar-subsection">
                               {subPrefix} {sub.title}
                             </Text>
+                          </Link>
+                        </Box>
+                        {hasHeadings && isSubExpanded && (
+                          <Box className="sidebar-subsection-heading-box">
+                            <Box className="sidebar-subsection-heading-list">
+                              {sub.headings.map((heading, headingIdx) => (
+                                <Box
+                                  key={`${sub.id}-heading-${headingIdx}`}
+                                  className={`sidebar-subsection-heading-row ${
+                                    isSubActive &&
+                                    activeHeadingId &&
+                                    heading.id === activeHeadingId
+                                      ? "is-active"
+                                      : ""
+                                  }`}
+                                >
+                                  <Link
+                                    className="sidebar-subsection-heading-link"
+                                    to={`/${section.id}/${sub.id}${heading.id ? `#${heading.id}` : ""}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                    }}
+                                    onMouseEnter={() =>
+                                      warmMarkdownContent(section.id, sub.id)
+                                    }
+                                    onFocus={() =>
+                                      warmMarkdownContent(section.id, sub.id)
+                                    }
+                                  >
+                                    <Text className="sidebar-subsection-heading-title">
+                                      {heading.title}
+                                    </Text>
+                                  </Link>
+                                </Box>
+                              ))}
+                            </Box>
                           </Box>
-                        </Link>
+                        )}
                       </Box>
                     );
                   })}
@@ -542,9 +721,14 @@ export default function ContentsSidebar({
       expandedSections,
       currentSectionId,
       currentSubsectionId,
+      currentHeadingId,
+      scrollActiveHeadingId,
       resolveDisplayNumber,
       navigateToSection,
       toggleSection,
+      fetchHeadingsForSection,
+      expandedSubsections,
+      toggleSubsectionHeadings,
     ],
   );
 

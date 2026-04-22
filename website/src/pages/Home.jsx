@@ -1,5 +1,5 @@
 import "../styles/Home.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import targetIconLight from "../assets/targetIcon.svg";
 import targetIconDark from "../assets/targetIcon_white.svg";
@@ -47,6 +47,7 @@ function truncate(text = "", max = 130) {
 
 function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [curriculumCards, setCurriculumCards] = useState([]);
 
@@ -111,27 +112,34 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    const handleHashScroll = () => {
-      if (
-        window.location.hash === "#curriculum" &&
-        curriculumTitleRef.current
-      ) {
-        const navbarHeight = 70;
-        const padding = 100;
-        setTimeout(() => {
-          window.scrollTo({
-            top: window.innerHeight - (navbarHeight + padding),
-            behavior: "smooth",
-          });
-        }, 100);
+    if (location.pathname !== "/" || location.hash !== "#curriculum") return;
+
+    let attempts = 0;
+    let timer = null;
+
+    const scrollToCurriculum = () => {
+      const target = document.getElementById("curriculum");
+      const offset = 90;
+
+      if (target) {
+        const targetTop =
+          target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < 8) {
+        timer = window.setTimeout(scrollToCurriculum, 50);
       }
     };
 
-    window.addEventListener("hashchange", handleHashScroll);
-    handleHashScroll();
+    scrollToCurriculum();
 
-    return () => window.removeEventListener("hashchange", handleHashScroll);
-  }, []);
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     let isCancelled = false;

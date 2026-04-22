@@ -111,6 +111,20 @@ function NavBar() {
     navigate("/");
   }
 
+  function scrollToCurriculum() {
+    const target = document.getElementById("curriculum");
+    const offset = 90;
+
+    if (target) {
+      const targetTop =
+        target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+      return;
+    }
+
+    navigate("/#curriculum");
+  }
+
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location.pathname]);
@@ -271,7 +285,7 @@ function NavBar() {
                   className="nav-dropdown-title nav-link-box"
                   onClick={(e) => {
                     e?.stopPropagation();
-                    navigate("/#curriculum");
+                    scrollToCurriculum();
                     setOpenSection(null);
                   }}
                 >
@@ -531,7 +545,7 @@ function NavBar() {
                   className="mobile-modules-toggle nav-link-box nav-button"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate("/#curriculum");
+                    scrollToCurriculum();
                   }}
                 >
                   Modules

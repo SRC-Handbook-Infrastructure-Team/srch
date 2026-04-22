@@ -498,6 +498,15 @@ html.is-landing-page {
   gap: 12px;
 }
 
+.landing-outline-subheading-row--clickable {
+  cursor: pointer;
+}
+
+.landing-outline-subheading-row--clickable:hover
+  .landing-outline-subheading-title {
+  text-decoration: underline;
+}
+
 .landing-outline-subheading-dot {
   position: absolute;
   left: -26px;

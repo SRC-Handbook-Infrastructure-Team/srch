@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import MarkdownRenderer, {
+  createIdFromHeading,
   extractFootnotes,
   getContent,
   getSubsections,
@@ -147,6 +148,7 @@ function extractH2Blocks(content = "") {
 
       return {
         title: item.title,
+        id: createIdFromHeading(item.title),
         excerpt,
       };
     })
@@ -343,6 +345,18 @@ function LandingPage() {
     });
   };
 
+  const handleSubheadingNavigation = (subId, headingId, event) => {
+    event.stopPropagation();
+    if (!sectionId || !subId) return;
+
+    if (headingId) {
+      navigate(`/${sectionId}/${subId}#${headingId}`);
+      return;
+    }
+
+    navigate(`/${sectionId}/${subId}`);
+  };
+
   return (
     <>
       <div className="landing-upper-content">
@@ -458,7 +472,14 @@ function LandingPage() {
                             {sub.h2Blocks.map((block, blockIndex) => (
                               <span
                                 key={`${sub.id}-h2-${blockIndex}`}
-                                className="landing-outline-subheading-row"
+                                className="landing-outline-subheading-row landing-outline-subheading-row--clickable"
+                                onClick={(event) =>
+                                  handleSubheadingNavigation(
+                                    sub.id,
+                                    block.id,
+                                    event,
+                                  )
+                                }
                               >
                                 <span
                                   className="landing-outline-subheading-dot"
