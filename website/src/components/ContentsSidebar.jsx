@@ -670,7 +670,11 @@ export default function ContentsSidebar({
                           </Link>
                         </Box>
                         {hasHeadings && isSubExpanded && (
-                          <Box className="sidebar-subsection-heading-box">
+                          <Box
+                            className={`sidebar-subsection-heading-box ${
+                              isSubActive ? "" : "is-inactive"
+                            }`}
+                          >
                             <Box className="sidebar-subsection-heading-list">
                               {sub.headings.map((heading, headingIdx) => (
                                 <Box

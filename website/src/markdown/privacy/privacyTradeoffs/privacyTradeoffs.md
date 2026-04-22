@@ -42,7 +42,7 @@ A fourth view argues that by voluntarily offering information, even private info
 
 A common response to this view is that it mistakenly assumes there is a meaningful option to opt out of existing information-gathering systems. When users are given robust and meaningful opportunities to opt out of data collection, [many choose to do so](https://itif.org/publications/2017/10/06/economics-opt-out-versus-opt-in-privacy-rules/). However, many individuals do not, in fact, have a substantive option to opt out of modern-day surveillance. Technical tools to evade facial recognition or video surveillance are typically expensive or [legally prohibited](https://code.dccouncil.gov/us/dc/council/code/sections/22-3312.03). Additionally, existing covert surveillance systems may be unknown to the general public, and therefore, individuals cannot consent to such programs. Thus, individuals may not have a robust option to opt out of surveillance. 
 
-### Privacy and Security are not always mutually exclusive
+### Privacy and Security Are Not Always Mutually Exclusive
 
 In public debate, privacy and security are often presented as opposing goods, where the trade-off is between two mutually exclusive outcomes: to be safer, we must accept more surveillance; to preserve privacy, we must be willing to accept greater risk. This framing, however, often obscures the reality that in a variety of contexts, privacy and security can reinforce one another. In some cases, {security-necessitates-robust-privacy-protections| security necessitates robust privacy protections} to guard against industrial espionage or unwarranted intrusions into private domains.
 
@@ -52,7 +52,7 @@ In the context of **information warfare**, national security depends on robust e
 
 Privacy is often exchanged for convenience in everyday technologies. Many tools that feel seamless or efficient in practice rely on collecting, linking, and inferring from personal data. In these settings, users receive **faster service** and **greater personalization**. At the same time, however, users give up elements of informational control, since, in these cases, the data that enables convenience must be continuously gathered and analyzed. For example, biometric authentication allows people to unlock devices and board flights, personalized recommendation systems reduce the time spent searching for relevant content, and smart home devices reduce friction in maintaining the home. In each of these cases, convenience is achieved by relinquishing control over data. 
 
-### What does convenience look like in more detail?
+### What Does Convenience Look Like in More Detail?
 
 One aspect of convenience is {speed}, i.e., reducing the time it takes to access a product/service. Users choose to disregard, either consciously or unconsciously, the extensive data policies of the product/service to reduce the time or effort it takes to use it. In such cases, people value the product/service's speed and convenience over the loss of privacy. 
 
@@ -60,7 +60,7 @@ Another aspect of convenience is better service and personalization. Greater acc
 
 Another aspect of convenience is access to core product features or simply the product itself. Many digital products and services condition full access to features on the acceptance of extensive data-collection practices. By default and through consent mechanisms, many platforms make full functionality contingent on data collection. As a result, opting out of tracking can lead to restricted access, degraded service, or additional costs, effectively making data collection a prerequisite for access. For example, the **“consent-or-pay” model** has been increasingly adopted by news organizations. Under this approach, readers must either agree to the use of tracking cookies and personalized advertising or pay a subscription fee to access content without data collection. One such example of this model is the influential German weekly news magazine, [Der Spiegel](https://www.spiegel.de). When opening the page, users must either “pay with data” by consenting to tracking or pay with money. 
 
-### The privacy paradox
+### The Privacy Paradox
 
 The “**privacy paradox**” is one way of describing this tension between privacy and convenience. Over the past three decades, privacy concerns have grown, with people consistently reporting that they prioritize privacy. For example, people [increasingly refuse](https://www.aeaweb.org/articles?id=10.1257/aer.102.3.349) to disclose details like income or zip code in surveys, with overall “**privacy sensitivity**” on the rise. However, in a study conducted by Alessandro Acquisti and his colleagues, when presented with choices with different degrees of privacy, participants typically implicitly assigned limited value to their privacy.[^2] Furthermore, people typically demand more money to give up their data than they are willing to pay to protect it, suggesting that privacy is valued differently depending on how a decision is framed. In other words, the privacy paradox refers to the gap between people’s stated preference for privacy and their actual behavior, which often reveals a willingness to trade privacy for convenience.
 
@@ -93,7 +93,7 @@ Scientific research often depends on access to personal or behavioral data, sett
 * {Urban-planning-research|urban planning research}, and  
 * {Economics-research|economics research}.
 
-### Privacy and Research are not always mutually exclusive
+### Privacy and Research Are Not Always Mutually Exclusive
 
 Although research often requires access to sensitive personal data, privacy and research need not always be in direct conflict. In many cases, researchers can collect detailed information while still implementing {safeguards} that reduce the risk of exposing individuals’ identities. In these cases, privacy risks are mitigated not by eliminating data collection entirely but by controlling how the data are stored, accessed, and shared.
 

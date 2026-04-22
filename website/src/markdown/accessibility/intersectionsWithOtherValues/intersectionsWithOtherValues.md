@@ -37,7 +37,7 @@ For more information on these lenses, please refer to the [What is Accessibility
 
 The following sections explore how accessibility overlaps with values like privacy, security, and usability. Each intersection involves both synergies and tensions. While the examples are not exhaustive, they highlight the key trade-offs and opportunities that technologists must navigate.
 
-## Accessibility & Privacy
+### Accessibility & Privacy
 
 Many assistive technologies function by collecting sensitive data to adapt to a user’s needs, leading to a clash between accessibility and the user’s privacy. This intersection thus raises a question: "What is the privacy cost for access?"
 
@@ -55,7 +55,7 @@ Through the Disability lens, we see that many assistive technologies require per
 
 - **Takeaway:** Accessibility and privacy can be in genuine tension because some disabled users must share more data to access the same service. Better privacy design can reduce this burden, but it does not always erase the underlying tradeoff.
 
-## Accessibility & Security
+### Accessibility & Security
 
 This intersection describes the divergence and convergence between system security and user access. From a Disability lens, security features can cause friction for users with visual, motor, or cognitive impairments. These barriers create equity issues when disabled users face disproportionate difficulty accessing essential services in the name of protecting systems from fraud or abuse. Meanwhile, within the context of Universality, when inaccessible or confusing security features are redesigned to be intuitive and easy to use, they improve usability for disabled users and others, thus strengthening security for everyone.
 
@@ -73,7 +73,7 @@ This intersection describes the divergence and convergence between system securi
 
 - **Takeaway:** When security tools are designed with accessibility in mind, they stop being barriers for disabled users and become clearer, safer protections for everyone.
 
-## Accessibility & Sustainability
+### Accessibility & Sustainability
 
 This intersection connects environmental goals like low energy consumption with equitable access. From the Equity lens, sustainable design for low-bandwidth environments equitably benefits users in developing regions or low-income areas, who are disproportionately impacted by such infrastructure. From the Disability lens, we can see that this lightweight design is critical for assistive tech compatibility. However, some energy-saving features can harm access, creating tensions we must carefully design around. The Universality lens reveals a synergy as well, since efficient code leads to pages that load more quickly, which then increases usability.
 
@@ -87,7 +87,7 @@ This intersection connects environmental goals like low energy consumption with 
 
 - **Takeaway:** Sustainability and accessibility can reinforce each other when we design lightweight, efficient systems. However, we must avoid choices that worsen visibility or usability for disabled users.
 
-## Accessibility & Usability
+### Accessibility & Usability
 
 Accessibility and usability are deeply intertwined. From the Disability lens, accessibility is a prerequisite for usability; a product that cannot be perceived or operated is, by definition, unusable for that person. The Equity lens demands we prioritize this, ensuring usability is not only measured by what makes technology usable for the majority. The Universality lens shows the payoff of how features designed for a specific disability enhance usability for all users in different contexts (e.g., bright sunlight or quiet environments), exemplifying the curb cut effect.[^8]
 
@@ -99,7 +99,7 @@ Accessibility and usability are deeply intertwined. From the Disability lens, ac
 
 - **Takeaway:** In most cases, designing for accessibility simply is designing for usability. Tensions usually arise only when accessible features are implemented in a cluttered or unstructured way.
 
-## Accessibility & Transparency
+### Accessibility & Transparency
 
 This intersection treats transparency not simply as disclosure, but as a form of comprehensibility. Information is only transparent if users can access it, perceive it, and actually understand what it means. From the disability lens, transparency fails when information is technically available but functionally inaccessible—for example, when a chart is visual-only, a video lacks captions or transcripts, or a permission request is written in dense technical language. In such cases, disclosure exists in form but not in practice.[^19] That is, transparency that is not comprehensible is not transparency at all. The Universality lens, furthermore, shows that designing for cognitive accessibility makes systems more transparent and trustworthy for all users, not just specialists.
 
@@ -108,7 +108,7 @@ This intersection treats transparency not simply as disclosure, but as a form of
 
 - **Takeaway:** True transparency is not just about exposing information. Rather, it requires accessible formats and plain language so that disabled and non-expert users can actually understand what is happening.
 
-## Accessibility & Accountability
+### Accessibility & Accountability
 
 Integrating accountability can enable users to support greater accessibility through opportunities for recourse. From the Disability lens, if a reporting form or grievance process is inaccessible (e.g., it uses complex jargon or has a visual CAPTCHA), accountability becomes impossible in practice. This is a failure of equity, as it systemically silences the users most likely to be harmed by design flaws. The Universality lens shows that building an accessible accountability process—using simple language, multi-modal inputs, and clear feedback—makes it easier for all users to report issues, strengthening the feedback loop for the entire system.
 
@@ -118,7 +118,7 @@ Integrating accountability can enable users to support greater accessibility thr
 
 - **Takeaway:** Without accessible feedback channels, accountability is hollow. Accessible reporting tools empower disabled users and improve systems for everyone.
 
-## Accessibility & Safety
+### Accessibility & Safety
 
 This intersection balances protection from harm with open access. From the Disability lens, tensions run both ways. A safety feature, like content moderation, can censor vital disability discourse, while an accessibility feature can create a physical safety risk by exposing private data. The Equity lens asks who is being protected—automated safety tools often fail to protect marginalized users from harm while simultaneously censoring their non-normative content. The Universality lens reveals synergies, where safety tools designed for accessibility (like content warnings) give all users greater control over their experience.[^18]
 

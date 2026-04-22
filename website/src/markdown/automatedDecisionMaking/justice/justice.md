@@ -34,7 +34,7 @@ Key components of process-focused (or procedural) justice are **respect, trustwo
 
 **Neutrality** refers to the expectation that decisions are unbiased. A procedurally just process requires that rules are applied consistently, that decision criteria are clearly explained, and that personal preferences or prejudices do not shape outcomes.
 
-#### Key Questions for Outcome-focused justice (Distributive Justice) in AI:
+#### Key Questions for Outcome-Focused Justice (Distributive Justice) in AI:
 
 - Do particular individuals or communities receive a disproportionate share of resources, opportunities, or risks because of the system’s design?
 - What trade-offs, if any, exist between the three tenets of distributive justice (i.e., sufficiency, priority, and equality of opportunity)?

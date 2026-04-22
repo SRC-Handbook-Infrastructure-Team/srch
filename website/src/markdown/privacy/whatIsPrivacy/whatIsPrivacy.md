@@ -11,18 +11,18 @@ Here we present some of the answers different thinkers and disciplines give to t
 
 Most people colloquially understand privacy as the condition of restricted access. We have privacy when we can close a door, make a friends-only post on social media, or otherwise limit when and where others perceive us. This conception is in line with **access-based approaches**, which cast privacy as about **who has access to an individual and under what conditions**. Having access to an individual could entail having physical proximity to or contact with them, learning information about them, observing them, etc.
 
-### Access as a gateway
+### Access as a Gateway
 
 Through this lens, privacy functions {gate-we-can-open-close-to-others|as a gate we can open or close to others}.
 Using the example of a close friends list on social media, we open the access gateway by adding accounts to that list and close the gateway by removing them.
 
-### Anti-informational definitions of privacy
+### Anti-informational Definitions of Privacy
 
 Taken to its logical extreme, the access-based lens suggests that "an individual enjoys perfect privacy when he is completely inaccessible to others" (Gavison 1980, 428). We therefore lose privacy when our information becomes accessible to others. One way to guarantee data's inaccessibility is to never produce it in the first place, leading some to conclude that privacy is best defined as **protection against the creation of information**. While most scholars have moved away from such anti-informational definitions in recent decades, the idea that privacy is fundamentally opposed to information is earning renewed attention following the publication of Lowry Pressly's [_The Right to Oblivion_](https://www.hup.harvard.edu/books/9780674260528) (2024).
 
 ## Lens 2: Privacy is about the ability to control the flow of information about oneself.
 
-### Classic control-based approaches
+### Classic Control-Based Approaches
 
 Control-based approaches **consider privacy in terms of how data is not only accessed but also collected, shared, and used**. Through this lens, privacy is more than just an access gateway that we can open or close. Advocates promote a control-based approach to privacy as empowering people to actively govern their privacy **throughout the data lifecycle**, from creation through destruction. In accordance with this principle, the [European Union's GDPR](https://gdpr.eu/what-is-gdpr/) (General Data Protection Regulation) and similar data privacy regulations (e.g., the California Consumer Privacy Act) require that data subjects maintain a high level of control over their personal information for the duration of its existence.
 
@@ -33,7 +33,7 @@ Westin defines privacy as "the claim of individuals, groups, or institutions to 
 
 Contrary to an access-based perspective, a control-based approach views the possibility of unauthorized access to information as eroding privacy, even if that information is never actually accessed. We might use the metaphor of a diary to think through the difference. Say someone takes your diary, which is full of all your most private thoughts, from your desk drawer, locks it in a safe without reading it, and throws away the key. From an access-based perspective, you have not lost privacy because no one read your diary. From a control-based perspective, you have lost privacy because the diary is no longer in your possession.
 
-### Contextual integrity
+### Contextual Integrity
 
 In the last decade, Helen Nissenbaum's theory of {contextual-integrity} has gained traction, especially among computer scientists. Contextual integrity is a theory of privacy developed within the landscape of 21st century computing. Nissenbaum posits that privacy is best understood as the "appropriate flow of personal information" (2010, 127). Appropriate flow of information is defined circumstantially according to five parameters: the data subject, sender, recipient, information type, and transmission principle (e.g., confidentially, with notice, with consent). This conception of privacy allows people to define for themselves the boundaries of acceptable data collection, storage, use, and dissemination. It is therefore flexible and responsive to evolving ethical norms.
 
@@ -41,20 +41,20 @@ In the last decade, Helen Nissenbaum's theory of {contextual-integrity} has gain
 
 A lens of privacy focused on the separation of public and private spheres is in line with the idea that certain kinds of information are inherently private. Compared to contextual integrity, this view is more rigid in its approach to boundary-setting. Public-private distinctions have long been thought of in spatial terms. The home, for instance, is a private sphere and the town square a public one. However, modern theories under this umbrella are as concerned with the _who_ and _what_ than the _where_.
 
-### Spheres as relational
+### Spheres as Relational
 
 Some claim that privacy is about **moderating relationships between different entities by allowing disparate access to one's private sphere**. One recent way of representing this idea is a layered model of privacy (sometimes referred to as "the onion model of privacy"). The layered model presents privacy as nested, with personal and bodily intimacy and privacy at the center. The middle layers are personal relationships, and the outer layer is civil society more broadly. Privacy loss, analogous to removing layers and letting others in, makes us vulnerable. Voluntary disclosure can be viewed as "a gesture of trust that, when received with sensitivity and trustworthiness, strengthens relationships" (Véliz 2024, p. 83).
 
 **Figure:** The layered model of privacy.
 ![An illustration of semi-circles in descending size from left to right. An arrow pointing to the largest semi-circle is labeled "Civil society (e.g., things shared with the government)." An arrow pointing to the medium-sized semi-circle is labeled "Personal relationships (e.g., things shared with friends)." An arrow pointing to the smallest semi-circle is labeled "Personal & bodily intimacy (e.g., things shared with life partner)."](/assets/primer-photos/privacy/whatIsPrivacy/layered_model_of_privacy.png)
 
-### Spheres as action-based
+### Spheres as Action-Based
 
 Others think of privacy **being inherent to specific types of actions (i.e., the what)** rather than spatial or relational contexts (i.e., the where and with whom). These thinkers believe privacy is about a **private sphere of action** that should be free from external interference. Examples of activities that are commonly understood to fall within the private sphere of action include voting, making medical decisions, and engaging in consensual sexual activity.
 
 This conception of privacy aligns with the "{constitutionally-protected-reasonable-exprectation-of-privacy}" established in _Katz v. United States_. Privacy rights in certain spheres are inferred from the Bill of Rights and have historically protected autonomy around "child rearing and education, family relationships, procreation, marriage, contraception, and abortion" (Inness 1992, 64).
 
-### Delineating public and private
+### Delineating Public and Private
 
 Public-private distinctions have been continually re-examined throughout history with the proliferation of new technologies. For instance, {Warren-and-Brandeis}' efforts in 1890 to define a legal right to privacy were inspired by the evolution of photographic technology, which could broadcast private or semi-private moments in unprecedented ways. Did the public sphere now include anything the camera's lens could capture? Warren and Brandeis said no. This sort of reasoned delineation between public and private is a key aspect of {developing-appropriate-privacy-protections}.
 
@@ -72,7 +72,7 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 
 ![A table summarizing four views of privacy. It lists that privacy is about access restriction, information flow control, the separation of public and private spheres, and plausible deniability. It lists that someone has privacy if their physical self and information about them is inaccessible to others, they are empowered to control if and how information about them is collected, shared, and used, their personal spaces, relationships, and actions are free from interference, and there is a mathematical guarantee their information or identity is unrecoverable."](/assets/primer-photos/privacy/whatIsPrivacy/table_of_privacy.png)
 
-## Privacy from whom?
+## Privacy from Whom?
 
 Privacy is relational and must be understood with respect to a certain person or entity. The importance of the "privacy from whom?" question is well illustrated in this short example:
 

@@ -5,7 +5,7 @@ final: false
 lastUpdated: 2026-04-21
 ---
 
-One of the biggest challenges to accessible technology is {cognitive-biases}, which are systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.
+One of the biggest challenges to accessible technology is cognitive biases, which are systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.
 
 Cognitive biases shape design decisions by influencing how designers interpret user needs and system requirements. More generally, biases shape what we notice, prioritize, and whose needs we overlook. Accessibility requires recognizing how our instincts about what constitutes normal, intuitive, or good design are shaped by our own abilities and experiences. Understanding what bias is, which specific biases might appear, and how biases manifest can help us question those instincts. Bias recognition must precede bias prevention, because we cannot design accessible technology without first understanding how our assumptions shape design decisions.
 
@@ -13,7 +13,7 @@ To understand where these biases enter the design process, it is important to fi
 
 ### Mental Models and Familiarity
 
-Individuals create {mental-models} for how they expect technology to function based on past experiences. These expectations are {judgmental-heuristics}—mental shortcuts that help people make quick decisions by drawing on what has worked before. Heuristics allow us to function efficiently when encountering large amounts of information and stimuli. In design contexts, aligning with well-established patterns and intuitive interactions can minimize confusion and improve usability.[^4] Because we inevitably draw from our own experiences when creating these patterns, however, we can unconsciously treat our own mental models as universal and risk creating systems that only work for people with backgrounds and abilities similar to our own. A hypothetical example of this mental model can be found {mouse|in most designers’ reliance on the mouse for navigation}.
+Individuals create {mental-models} for how they expect technology to function based on past experiences. These expectations are judgmental heuristics, mental shortcuts that help people make quick decisions by drawing on what has worked before. Heuristics allow us to function efficiently when encountering large amounts of information and stimuli. In design contexts, aligning with well-established patterns and intuitive interactions can minimize confusion and improve usability.[^4] Because we inevitably draw from our own experiences when creating these patterns, however, we can unconsciously treat our own mental models as universal and risk creating systems that only work for people with backgrounds and abilities similar to our own. A hypothetical example of this mental model can be found {mouse|in most designers’ reliance on the mouse for navigation}.
 
 For an activity that demonstrates how mental models vary even for simple everyday tasks, see the {draw-toast|Draw Toast exercise}.
 
@@ -120,14 +120,9 @@ _An update with real-world case study examples for the biases discussed in this 
 
 ## Sidebar
 
-Cognitive-Biases:
-Systematic patterns in how we think that can lead us to overlook certain users' needs or make assumptions about how people interact with systems.
+Mental-Models: 
 
-Mental-Models:
 Internal representations of how individuals expect something to function based on past experiences. We may treat our own mental models as universal and therefore risk creating systems that only work for people with similar backgrounds and abilities to ours.
-
-Judgmental-Heuristics:
-Mental shortcuts that help people make quick decisions by drawing on what has worked before.
 
 mouse:
 Heading: Mouse Reliance for Navigation

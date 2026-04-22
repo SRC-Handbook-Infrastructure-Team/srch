@@ -13,13 +13,13 @@ What is it that people are doing when they generate these data points? Is genera
 
 This primer explores the concept of **data ownership** within the context of {surveillance-capitalism}, a system wherein corporations, largely based in the United States and China, generate significant profit by collecting, processing, and commodifying personal data. Based on how we conceptualize data, we may arrive at different conclusions regarding how data is generated, how data ownership should be decided, and how, if at all, data should be monetized.
 
-## Theory of surveillance capitalism
+## Theory of Surveillance Capitalism
 
 It is often remarked that “if a product is free, you are the product.” This idea traces back to a 1973 art piece titled “[Television Delivers People](https://medium.com/@elali.ahmad/if-youre-not-paying-for-the-product-you-are-the-product-a9d3aa9bbd85)”[^16] by Richard Serra and Carlota Fay Schoolman in which they made the point that television audiences were a product sold to advertisers. In the era before highly targeted advertising, simply having many active users was valuable to advertisers, even without the extensive data collection that characterizes today’s digital landscape. **Surveillance capitalism** represents an evolution of this model—the product is not the user themself but rather their data. For example, on free social networking platforms, companies reap value from their users by building detailed profiles that enable prediction about characteristics and behaviors that may be of interest to those in the market for customers (e.g., advertisers), supporters (e.g., politicians, influencers, or celebrities), {insurance-policy-beneficiaries}, or even targets (e.g., private investigators or law enforcement agencies). Such profiles are typically constructed based on the browsing and purchasing histories and demographic attributes (provided or inferred) of the individual user and of other users they know or resemble. 
 
 As surveillance capitalism currently operates, it relies on the premise that corporations rightfully and fully own the **behavioral data** they collect from users. In order to evaluate whether this is a reasonable premise, we must analyze the broader concept of data ownership. Our conclusions might vary depending on our framing and the type of data considered. How we assess corporate ownership of behavioral data shapes larger questions: Should surveillance capitalism continue in its present form? Would stricter limits on data extraction, alternative business models, or entirely new paradigms better safeguard privacy, autonomy, and individual rights?
 
-## Different ways we can think about data ownership
+## Different Ways We Can Think About Data Ownership
 
 We often think of ownership in terms of property. Ownership of physical property, such as a house, is fairly intuitive because it is tangible. Yet, ownership of intangible property, such as shares of a company, is also widely accepted. Like shares of a company, data is **intangible**, but unlike shares of a company, data can generally be replicated infinitely without reducing its usefulness to others. Data is also **ephemeral**: if data is not collected in the moment it is generated, it may be gone forever. For example, take the number of seconds spent observing an advertisement on a social media platform. If that information is not collected in the moment, it cannot be recovered. Because data is different from more traditional forms of property, data ownership may be different as well. As a result, we may need to think creatively about how ownership should be determined, which may vary across different contexts. 
 
@@ -31,7 +31,7 @@ We will discuss three notions of data ownership and what they each imply for how
 
 **Figure:** The three notions of data ownership.
 
-### Data as labor
+### Data as Labor
 
 First, **data as labor** views the generation of data as a form of work that is currently unpaid. After all, in order for behavioral data to be created, users must engage in some observable activity that creates value for others. This notion would suggest that platforms should compensate users for the value they produce in the form of some kind of “wage for data” and even that “data workers” might have some right to collective bargaining with platforms. 
 
@@ -39,7 +39,7 @@ Ideally, under the notion of data as labor, users would be able to profit throug
 
 In order to align with this notion of data, we might need to legislate data labor rights and rights to collective bargaining. Under this notion of data ownership, the exchange of data for compensation occurs under an ongoing contract. The next notion we will discuss, data as property, aligns more with a model of one-time exchanges of data ownership. 
 
-### Data as property
+### Data as Property
 
 Next, **data as property** treats data as the product of the application of labor to some natural resource, which can then be claimed as private property. This notion is rooted in Lockean philosophy. In his *Second Treatise of Government* (1689),[^12] John Locke argues that private property is obtained legitimately when a person mixes their labor with something that was previously unowned in the state of nature. He justifies this with three reasons: first, he claims that every person owns themself, as well as their own labor, and that when a person expends labor on an unowned object, they extend their self-ownership onto the external world; second, he argues that labor increases the value of things significantly and thus, that the product of that value-creating activity should not be left in common or belong to someone else; and third, he qualifies ownership by requiring that one leaves enough for others and does not waste what they collect. Locke’s labor-mixing theory remains an influential philosophical foundation for modern notions of legitimate ownership. 
 
@@ -49,13 +49,13 @@ If a consensus was reached in which data subjects received some or all ownership
 
 In order to implement this, one approach could be to enact comprehensive data property laws establishing the legal recognition of personal data as ownable assets, reform consent models to require granular permissions, and educate users on data valuation to mitigate the impacts of {the-data-divide}. 
 
-### Data as an extension of the body or self
+### Data as an Extension of the Body or Self
 
 Last, we can think of **data as an extension of the body or self**. Personal data necessarily describes the person it is associated with in some way, so it may be thought of as an intimate part of one’s personal identity. Take, for example, a person’s medical records. Logs of when health visits occurred, for what reason, and what actions were taken are data that certain companies, such as health care providers, may find incredibly valuable. However, that data is also afforded  strict privacy and security protections under current laws like the Health Insurance Portability and Accountability Act of 1996 (HIPAA). Here, monetization of one’s personal data might not make sense as it may {breach-ethical-boundaries}. 
 
 Under the notion of data as an extension of the body or self, we may decide that no one should profit from the commodification of certain data. Then, corporations might only be able to access that data for essential, non-commercial purposes, such as service delivery, with strict prohibitions on sales or predictions based on the data. 
 
-## Applying notions of data ownership
+## Applying Notions of Data Ownership
 
 These three lenses—data as labor, data as property, and data as an extension of the body or self—offer distinct ways to reframe data ownership and guide how society should handle personal data. These notions of data ownership can coexist. It may be the case that some data ownership is best determined by thinking of the data as property, while other data ownership is best determined by thinking of the data as an extension of the body or self. Essentially, we may decide that it is most appropriate to apply different lenses to different kinds of behavioral data.
 
@@ -67,11 +67,11 @@ Finally, we might consider most medical data to fall under the lens of data as a
 
 We do not currently have a solution as to how to best allocate data ownership. The current presumption is that corporations have complete ownership of the data they collect, but this is contentious. As we’ve seen through the examples above, the current state of affairs may not always align with the type of data ownership we want, or who we believe should own this data. Because there is no clear consensus, it is worth considering potential alternatives to the status quo. 
 
-## Alternatives to surveillance capitalism
+## Alternatives to Surveillance Capitalism
 
 Fundamental to surveillance capitalism is the model of data extraction and behavioral model generation. This is far from the only way companies can generate profit. If we were to reject surveillance capitalism, what other options remain for profit generation? Would corporations continue to be able to exist as we know them? Or is surveillance capitalism necessary for the world we have built? Currently, we can observe that some companies are already practicing—and profiting from—alternative models to surveillance capitalism. 
 
-### Profitable business models beyond surveillance capitalism
+### Profitable Business Models Beyond Surveillance Capitalism
 
 #### Subscription-Based Services
 
@@ -93,7 +93,7 @@ Another option adopted by some providers is to release core software as open-sou
 
 Some services opt to use **non-personalized advertisements** based on content or user-declared preferences and supplement their revenue with affiliate partnerships or merchandise, avoiding the need for extensive surveillance to generate revenue. 
 
-### Legal reforms and alternatives to surveillance capitalism
+### Legal Reforms and Alternatives to Surveillance Capitalism
 
 In order to reduce surveillance {within-the-framework-of-a-capitalist-model}, regulatory reforms could be implemented. This would entail modifications to the current system aimed at preserving users’ privacy and autonomy over data relating to them, such as strict privacy laws akin to the EU’s General Data Protection Regulation ([GDPR](https://gdpr-info.eu/)).[^10] 
 

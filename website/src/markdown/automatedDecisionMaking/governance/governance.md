@@ -19,7 +19,7 @@ Existing approaches in AI governance can be framed around three key questions:
 2. **How** are we measuring these things, and finally   
 3. **Who** are the key stakeholders shaping how AI is governed?
 
-### ***What*** is being regulated in AI Governance?
+### _What_ Is Being Regulated in AI Governance?
 
 AI governance targets both the **technical components** of AI systems and the **sociotechnical settings** in which they operate: 
 
@@ -33,7 +33,7 @@ AI governance targets both the **technical components** of AI systems and the **
 
 * **Decision Making**: across various downstream application scenarios, decision-making processes that produce real-world impact on institutions and communities.  
 
-### ***How*** is AI being governed?
+### _How_ Is AI Being Governed?
 
 AI governance operates through multiple, overlapping mechanisms that translate accountability into practice. Generally, there are 5 major layers of governance approaches: technical design, industry standards, economic incentives, legislation and policies, and community conventions.  
 
@@ -65,7 +65,6 @@ Professional, academic, and {civic-communities} establish informal expectations 
 
 
 Together, these mechanisms above express the “how” of governance. Accountability emerges not from any single layer, but from their interaction across technical infrastructure, regulatory bodies, market forces, and community norms. 
-
 
 
 ## Stakeholders in AI Governance

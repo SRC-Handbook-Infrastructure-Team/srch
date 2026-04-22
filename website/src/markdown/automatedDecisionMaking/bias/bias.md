@@ -5,7 +5,7 @@ final: true
 lastUpdated: 2026-04-21
 ---
 
-## What is Bias?
+## What Is Bias?
 
 Automated decision-making (ADM) systems are increasingly embedded in day-to-day life: the Stanford AI index reports that as of 2024, 78% of businesses were working to incorporate AI into operations, that GPT 4 can outperform human doctors in key clinical tasks, and that as of 2025, Waymo provides over 150,000 rides in self-driving cars per week.[^5]
 
@@ -50,7 +50,7 @@ Bias in **data curation** displays itself through **historical bias, representat
 
 One example of historical bias is gender bias due to large language models being trained on {data-that-reflects-historical-sexism}.[^4]
 
-#### Statistical vs. Taste-Based discrimination
+#### Statistical vs. Taste-Based Discrimination
 
 Historical bias creates the distinction between statistical discrimination and taste-based discrimination.
 
@@ -86,7 +86,7 @@ Bias can also emerge in model creation: the definition of the model architecture
 
 **Figure 3:** Bias in Model Creation (adapted from Suresh et al.)[^12]
 
-### How does bias appear in model creation?
+### How Does Bias Appear in Model Creation?
 
 The modeling stage involves countless design choices, so each of these choices can introduce or amplify inequities depending on what the model prioritizes and who it is optimized to serve. Bias in model creation typically appears through four main mechanisms: **aggregation bias, learning bias, evaluation bias, and deployment bias**.
 

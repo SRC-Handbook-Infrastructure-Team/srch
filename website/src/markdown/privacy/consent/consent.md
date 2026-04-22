@@ -6,15 +6,13 @@ lastUpdated: 2026-04-21
 
 What is the best way to protect privacy? For many people, protecting privacy in digital contexts begins and ends with consent. While consent can be a powerful tool, it is not a perfect, universally-applicable solution. In this primer, we explore the strengths and weaknesses of a consent-based model along with some alternative approaches to safeguarding privacy.
 
-## What is consent?
+## What Is Consent?
 
 **Consent** is the process of granting another party special rights and obligations to act in a domain where normally only the **consenter** (i.e., the person giving consent) is allowed to act. In this way, consent transforms the morally unacceptable into the morally acceptable.[^1] For instance, the granting of consent distinguishes a guest from an intruder. As a society, we place importance on consent because it is often “an effective means of respecting individuals as autonomous decision makers with rights of self-determination, including rights to make choices, take or avoid risks, express preferences, and, perhaps most importantly, resist exploitation.”[^2]
 
 We commonly categorize consent as {explicit-tacit-implicit|explicit, tacit, or implicit} based on the level of autonomy granted to the consenter. **Explicit consent** is expressed through opting in and taking affirmative action (e.g., emphatically saying “yes”) to establish consent. **Tacit consent** is expressed through failing to opt out (e.g., remaining silent when offered the chance to object). **Implicit consent** relies on outside interpretation of whether one’s actions are sufficiently indicative of consent (e.g. going to a haunted house indicates agreement to being scared). The idea is that, “by virtue of entering into a situation,” a person has “agreed to the activities that are broadly known to occur in that context.”[^3]
 
-
-
-## Consent and digital privacy
+## Consent and Digital Privacy
 
 As scholar Meg Leta Jones puts it, “Consent is arguably the central moral and legal tenet to both modern privacy and data protection theory, practice, and culture.”[^4] [Article 4](https://gdpr.eu/article-4-definitions/) of the **General Data Protection Regulation (GDPR)** defines consent in the context of data privacy as a “*freely given, specific, informed and unambiguous* indication of the data subject's wishes by which he or she, by a statement or by a clear affirmative action, signifies *agreement to the processing of personal data* relating to him or her” \[emphasis added\]. 
 
@@ -24,7 +22,7 @@ The US perspective on privacy is particularly deferential to consent, taking a *
 
 The US approach stands in contrast to the European Union (EU) system, formalized by the GDPR, which takes **rights-based** **perspective** and treats individuals as {data-subjects|data subjects.} The consent question is separate from the commercial transaction; choosing a certain product or service does not nullify one’s rights to make decisions about their data privacy. Additionally, the EU system is more restrictive in terms of what users can consent to. For instance, under EU law, users cannot consent to a vague statement like “We share your data with our partners” in a privacy policy. On the other hand, under US law, agreeing to such a policy is considered valid consent to any and all third-party data processing.
 
-## FRIES: A framework for thinking about meaningful consent
+## FRIES: A Framework for Thinking About Meaningful Consent
 
 The FRIES acronym was originally created by Planned Parenthood to capture the key elements of consent in sexual interactions. Here, we {adapt-fries|adapt} FRIES into a framework for thinking about what meaningful consent looks like in the context of digital privacy. 
 
@@ -38,7 +36,7 @@ The FRIES acronym was originally created by Planned Parenthood to capture the ke
 
 **S is for specific.** Una Lee and Dann Toliver of the [Consentful Tech Project](https://www.consentfultech.io) explain specificity to mean only using “data the user has directly given, not data acquired through other means like scraping or buying” and “only in ways the user has consented to.”[^13] An important concept here is **granularity**, the idea that data subjects should be allowed to consent or not consent to each data processing operation separately. Under the GDPR, the data processor must specify a legitimate purpose for each operation. This acts as safeguard against **function creep**, defined as “the gradual widening or blurring of purposes for which data is processed.”[^14] 
 
-## Consent in practice
+## Consent in Practice
 
 The design and implementation of digital consent interfaces can either undermine or support meaningful consent. “Design is inherently a persuasive act, where the designer creates intentional change in the world that either directly or indirectly induces behavioral or social change,” write Colin M. Gray and colleagues from Purdue University.[^15] These designs are often discussed through the lens of {behavioral-economics|behavioral economics.} 
 
@@ -46,20 +44,19 @@ The visual presentation of options and default settings selected by the consent 
 
 Conversely, design can be employed in ways that promote meaningful consent. Graphic design techniques like salience, framing, and layering and separation combined with logically structured information delivery can greatly increase the accessibility of privacy policies, empowering informed consenters.[^20] A number of {frameworks-practice|frameworks} have been proposed to formalize such ethically-aware design practices.
 
-## How is consent upheld?
+## How Is Consent Upheld?
 
-### By the free market
+### By the Free Market
 
 In the US, consent is upheld largely through **free market competition**, which incentivizes companies to adopt good consent practices in exchange for economic benefit. The theory is that subverting consent exposes companies to potential legal, financial, and reputational damage.[^26] For instance, companies should have an interest in addressing privacy concerns during development rather than risk public backlash to security breaches during a faster rollout.[^27]
 
 An enormous variety of companies, organizations, and individuals create products and offer services that implicate digital privacy. In the for-profit realm, market participants may use {privacy-selling-point|privacy features as selling points} or offer {privacy-add-on|privacy as an optional, paid add-on.} Other market participants are in the business of privacy itself, for example, providing {personal-data-removal|personal data removal} or {virtual-private-network|virtual private network (VPN)} services. Privacy may be central to the mission of both {for-profit-companies|for-profit companies} and {non-profit-initiatives|non-profit initiatives}, leading these organizations to take a privacy-first approach to development and delivery. 
 
-
-### By users themselves
+### By Users Themselves
 
 When users’ consent is undermined, they may take action by equipping modifications for existing products (e.g., {browser-extensions|browser extensions}) or by educating themselves on {how-to-evade|how to evade insidious tracking techniques}. 
 
-### By the government
+### By the Government
 
 Where market forces and individual action are deemed insufficient to uphold meaningful consent, we rely on **{government-regulation|government regulation}** to do so. Government regulation puts guardrails on consent. It sets limits on what people can consent to, defines legal standards for soliciting and documenting meaningful consent, and {holds-accountable|holds accountable} those who violate consent. 
 
@@ -67,13 +64,11 @@ Despite persistent {lobbying} since the 1970s, the US is one of the few democrac
 
 Regulation also has the potential to influence how we think about and practice digital consent beyond its jurisdictional scope. Legal and political scholars use the terms {brussels-effect|‘Brussels effect’} and {california-effect|‘California effect’} to refer to the way EU and California law, respectively, increase regulatory standards by making compliance with more stringent requirements the easiest path forward for companies that operate in multiple jurisdictions.[^29]
 
-
-
-### By watchdogs
+### By Watchdogs
 
 **Watchdogs** keep tabs on companies and regulators, holding them to account by exposing wrongdoing and compelling transparency. {ngos|Non-governmental organizations (NGOs)}, {intergovernmental-organizations|intergovernmental organizations}, {media-outlets|media outlets}, and {independent-journalists|independent journalists} can all act as watchdogs. Their work helps people make informed decisions about the companies with which they choose to do business, ensuring free market competition respects individual privacy. Watchdogs also attempt to expose flaws in regulatory systems and may advocate for legislative or judicial solutions.
 
-## Criticisms of the consent model for digital privacy
+## Criticisms of the Consent Model for Digital Privacy
 
 Criticisms of the consent model for digital privacy take two general forms. Some scholars disagree with the idea that consent should be the main tool we reach for to protect privacy, while others raise practical concerns about implementation. 
 
@@ -81,13 +76,13 @@ Arguing against consent as the primary mechanism for privacy protection, Daniel 
 
 Taking a step back from these broad critiques, we can identify a number of flaws in current implementations of consent. 
 
-### Informed consent vs. time
+### Informed Consent vs. Time
 
 Many scholars believe that ‘informed consent’ is *not* an achievable standard around which to build regulation. The concern, especially in the era of **Big Data**, is that the consent model places an excessive burden on users, giving them “the responsibility to decide on complex issues they lack the time, or capacity, to fully comprehend and assess.”[^33] Thoroughly evaluating every consent request one encounters would require an unrealistic amount of both time and techno-legal expertise. Research suggests we would have to dedicate a month of work to reading all the privacy policies we are presented with each year.[^34] The average privacy policy has not only quadrupled in length but greatly increased in complexity since the mid-1990s.[^35] 
 
 Repeated, detailed requests for consent cause many people to experience **consent fatigue** (also called consent desensitization), a condition characterized by decreased “motivation and depth of processing,”[^36] which has the ultimate effect of precluding the user’s full engagement.[^37] These factors underlie what communications researchers Jonathan A. Obar and Anne Oeldorf-Hirsch call “**the biggest lie of the internet**”—checking ‘I agree to these terms and conditions’ when, in fact, {we-have-not-even|we have not even read them}.[^38]
 
-### Informed consent vs. aggregation
+### Informed Consent vs. Aggregation
 
 Another challenge to informed consent is what scholars refer to as the **aggregation effect**. The consent model for digital privacy asks users to continually make decisions about what usually amounts to relatively small pieces of data. Viewed individually, these data points may not reveal much about a person. But as in a pointillist painting, many small points can, when viewed en masse, form a revealing portrait.[^40] It is particularly challenging to weigh the consequences of the aggregation effect when we do not know who has what data on us, potential {harms-are-distant|harms are distant}, or the circumstances from which negative effects might arise {cannot-be-anticipated|cannot be anticipated}.
 
@@ -95,21 +90,19 @@ Another challenge to informed consent is what scholars refer to as the **aggrega
 
 **Figure:** Detail from *Parade de cirque*, an 1889 painting by the inventor of pointillism, Georges Seurat.
 
-### Accountability infrastructure
+### Accountability Infrastructure
 
 A further critique is that we lack sufficient **accountability infrastructure** to make our best approximations of informed consent meaningful. For consent to be meaningful, we must trust that there are systems in place to enforce the terms to which we have agreed. In the biomedical context, professional codes of ethics, laws and regulations, oversight bodies (e.g., Institutional Review Boards), medical licensing boards, and avenues for malpractice litigation serve this purpose.[^43] Similar accountability mechanisms are not typically available, at least to most Americans, in the realm of digital privacy and online tracking. What’s more, the harms of privacy violations are difficult to quantify and practically impossible to rectify. Fines and awards of damages have historically {done-little-harm|done little harm to Big Tech’s bottom line} and may be viewed as ‘the cost of doing business’ rather than serious deterrents to unethical behavior.[^44] In light of these facts, some critics refer to our current system as **{consent-theater|consent theater}**, since we enact the process of consent without truly empowering the consenter. Such disillusionment contributes to **{privacy-nihilism|privacy nihilism}** as people feel increasingly {powerless-to-control|powerless to control their data}.
 
-
-
-### Informed consent vs. the illusion of choice
+### Informed Consent vs. The Illusion of Choice
 
 Additionally, the imbalance in **bargaining power** between users and institutions challenges the requirement that consent be **freely given**. “\[T\]o “choose” not to use the Internet is in a very real sense to “choose” not to participate in modern society or the modern economy,” contend legal scholars Neil Richards and Woodrow Hartzog.[^45] This extends to other forms of data processing—for example, {signing-away|signing away privacy rights in exchange for welfare} or {submitting-workplace|submitting to workplace surveillance for fear of losing one’s job}. When it comes to products, terms and policies tend to converge within market segments, becoming “so uniform and standardized that the consumer effectively has no choice.”[^46] 
 
-### Who consents?
+### Who Consents?
 
 Even more concerningly, some individuals affected by the data collection, storage, and processing concerned are not asked for their consent at all. For example, tenants may be living under the gaze of {smart-home-devices|smart home devices} for which their landlord configured the privacy settings.[^48] In our increasingly connected world, **consent by association** with network members is hotly debated. For instance, consent by association is highly relevant in discussions of privacy in {genetic-testing|genetic testing}, {social-media-ecosystems|social media ecosystems}, and {human-subjects|human subjects research}. In some cases, people {may-not-be-aware|may not be aware} data is being collected about them. Finally, individuals (e.g., {children}) may be asked to consent when they do not have the capacity to do so. 
 
-## Strengthening consent
+## Strengthening Consent
 
 Scholars and practitioners have suggested ways to improve digital consent as a privacy-protecting tool. Some of their ideas have been tested and implemented, while others remain theoretical. 
 
@@ -136,7 +129,7 @@ Additionally, **encryption** sets up a system in which authorization is needed t
 
 Finally, **{binary-governance|binary governance}** involves the pairing of data subject rights and data processor obligations within a framework that views privacy as a civic good with collective value. The idea of binary governance is that comprehensive legislation should include not only **negative obligations** (requirements to avoid wrongdoing, e.g., violation of individual rights) but **affirmative obligations** (requirements to take positive action). Examples of affirmative obligations imposed on companies by the GDPR and California Privacy Rights Act (CPRA) include regular {risk-assessments|risk assessments}, data minimization, design specifications for consent interfaces, and storage of consent records.[^67] Another proposal is establishing a **{fiduciary-duty|fiduciary duty}** for data holders that would legally obligate them to act in the best interests of data subjects just as financial fiduciaries are required to act in the best interest of their clients. 
 
-### Alternatives to a consent-based approach to privacy
+### Alternatives to a Consent-Based Approach to Privacy
 
 In its ideal form, meaningful digital consent empowers people to make decisions about their data with the ultimate goal of safeguarding privacy in a manner compatible with their values. However, consent is not the only way to accomplish this end, and, in certain circumstances, alternatives may work better in light of logistical, legal, or ethical considerations.
 

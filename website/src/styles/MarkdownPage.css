@@ -186,8 +186,8 @@ html:not(.left-open) .header-toggle {
   background-color: var(--color-accent-light);
 }
 
-.sidebar-subsection-heading-list {
-  /* border-left: 1px solid var(--color-border); */
+.sidebar-subsection-heading-box.is-inactive {
+  background-color: transparent;
 }
 
 .sidebar-subsection-heading-row {
@@ -228,7 +228,7 @@ html:not(.left-open) .header-toggle {
 .sidebar-subsection-heading-title {
   color: var(--color-header) !important;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2rem;
 }
 

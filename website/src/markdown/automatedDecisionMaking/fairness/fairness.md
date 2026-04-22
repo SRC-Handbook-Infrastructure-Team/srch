@@ -30,13 +30,13 @@ Excluding sensitive attributes appears to help with fair automated-decision maki
 
 Because machine learning models are adept at detecting subtle patterns, they can inadvertently reintroduce group distinctions that a fairness intervention was meant to remove. This dynamic illustrates the **“fairness through unawareness” fallacy**, which is the mistaken belief that removing sensitive attributes ensures fairness. In reality, proxy features can perpetuate discrimination, undermining fairness metrics by indirectly encoding sensitive group membership. Effective fairness strategies, therefore, require thoughtful engagement with multifaceted and sensitive data, especially regarding systemic correlations and injustices.
 
-## Individual Fairness:
+## Individual Fairness
 
 {Individual-fairness} is centered around the idea that **similar individuals should receive similar predictions.** A core component here is the **similarity metric**: which features count, how they are weighted, and how statistical distance is measured. For example, in automated résumé screening, similarity might be defined using education, experience, and skills. According to a determined similarity metric, candidates with similar degrees, work experience, and skill sets should receive similar scores or hiring decisions.
 
 A strength of individual fairness is that if two people have similar profiles, they will receive similar predictions, which helps prevent arbitrary discrimination on an individual level. However, it also brings trade-offs, primarily the assumption that there is a standard of “similarity” that is both fair and measurable. If the chosen metric reflects biased historical data or is a proxy variable for social disadvantage, individual fairness can legitimize and perpetuate existing structural inequities while still appearing formally fair. Because it only looks at an individual level, it might entrench group disparities for protected groups, placing it in conflict with the ideals of group fairness we’ll discuss below. It can also be computationally costly, making it hard to scale in complex systems with many interacting features.
 
-## Group Fairness:
+## Group Fairness
 
 Group fairness is based on the idea that groups of individuals should be treated similarly, acknowledging differences in historical and structural contexts. There are three key criteria: **independence, separation,** and **sufficiency.** Each offers a different interpretation of fairness and carries different assumptions and limitations.
 
