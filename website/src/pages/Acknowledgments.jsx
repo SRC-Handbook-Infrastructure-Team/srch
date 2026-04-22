@@ -282,7 +282,11 @@ function Acknowledgments() {
       <div className="upper-content">
         <div className="upper-text-section">
           <div className="website-title">Meet our team!</div>
-          <div className="info-section"></div>
+          <div className="info-section">
+            This handbook is the result of a collaborative effort across
+            disciplines. We are grateful to the individuals whose insights,
+            feedback, and support shaped its development.
+          </div>
         </div>
       </div>
       <div className="ack-lower-content">

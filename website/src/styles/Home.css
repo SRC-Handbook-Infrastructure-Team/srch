@@ -228,20 +228,36 @@ html[data-theme="light"] .topic-card {
 
 .placeholder-card {
   box-shadow: none;
-
+  background: none;
   cursor: default;
+  outline: none;
 }
 
 .placeholder-card:hover {
-  transform: none;
+  transform: none !important;
+  box-shadow: none;
 }
 
 .placeholder-card::before {
   opacity: 1;
+  outline: 1px solid var(--color-accent) !important;
+  border: 16px;
+}
+.placeholder-card::before,
+.placeholder-card::after {
+  transition: none !important;
+}
+
+.placeholder-card:hover::before {
+  opacity: 1 !important;
 }
 
 .placeholder-card:hover::before {
   opacity: 0;
+}
+
+.placeholder-card:active {
+  outline: 1px solid var(--color-accent) !important;
 }
 
 .card-grid {
@@ -349,7 +365,7 @@ html[data-theme="light"] .topic-card {
 }
 
 .landing-search-container {
-  width: 60%;
+  width: 80%;
   transition: width 0.3s ease;
 }
 
