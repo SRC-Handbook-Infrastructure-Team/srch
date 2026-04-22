@@ -613,7 +613,7 @@ html[data-layout-mode="mobile"] .right-resize-hitbox {
   padding-left: 1.5px !important;
   padding-right: 1.5px !important;
   border-bottom: 1px solid transparent;
-  gap: 6px;
+  gap: 4px;
 }
 
 .srch-drawer-link + .srch-drawer-link {
