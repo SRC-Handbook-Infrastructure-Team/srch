@@ -291,7 +291,7 @@ function Home() {
                       alt="Coming Soon Icon"
                       width={75}
                       height={92}
-                      style={{ opacity: 0.7 }}
+                      style={{ opacity: 0.5 }}
                     />
                   </div>
                   <div className="card" style={{ opacity: 0.7 }}>

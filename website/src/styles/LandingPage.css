@@ -90,7 +90,7 @@ html.is-landing-page {
   gap: 14px;
   margin-top: 20px;
   margin-bottom: 72px;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .about-jump-link {
