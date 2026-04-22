@@ -6,7 +6,7 @@ lastUpdated: 2026-04-21
 
 # What Are The Trade-Offs of Privacy?
 
-As discussed in “[Value of Privacy](/privacy/valueOfPrivacy),” although conceptions of privacy vary, it is widely agreed that it can be useful across a variety of contexts. At the same time, privacy comes with trade-offs: more personal data can be traded in return for greater safety, more personalized services, better research outcomes, or more efficient resource allocation. This primer does not seek to indicate whether a particular privacy trade-off “is worth it.” Instead, it focuses on situations where privacy trade-offs exist and asks a guiding question: “What goods might we trade privacy for?”
+As discussed in [Value of Privacy](/privacy/valueOfPrivacy), although conceptions of privacy vary, it is widely agreed that it can be useful across a variety of contexts. At the same time, privacy comes with trade-offs: more personal data can be traded in return for greater safety, more personalized services, better research outcomes, or more efficient resource allocation. This primer does not seek to indicate whether a particular privacy trade-off “is worth it.” Instead, it focuses on situations where privacy trade-offs exist and asks a guiding question: “What goods might we trade privacy for?”
 
 ## Privacy vs. Security
 

@@ -17,7 +17,7 @@ That is why this section begins from a basic premise: technical systems are neve
 
 ### Recommended Way to Read This Section
 
-The topics we cover are meant to be read together, not in isolation: Justice asks what fairness, equality, legitimacy, and accountability might mean before those ideas are translated into technical systems. Sources of Bias uncover how distortions and inequities emerge throughout the AI pipeline, from data collection and labeling to modeling choices and deployment contexts. Fairness shows efforts to formalize competing goals and why no single metric can resolve every normative tension. Governance draws the previous themes together and asks how institutions should assign responsibility, create oversight, and respond to the real-world harms or limitations of AI systems.
+The topics we cover are meant to be read together, not in isolation: [Justice in AI](automatedDecisionMaking/justice) asks what fairness, equality, legitimacy, and accountability might mean before those ideas are translated into technical systems. [Bias in Automated Decision-Making Systems](automatedDecisionMaking/bias) uncover how distortions and inequities emerge throughout the AI pipeline, from data collection and labeling to modeling choices and deployment contexts. [Algorithmic Fairness](automatedDecisionMaking/fairness) shows efforts to formalize competing goals and why no single metric can resolve every normative tension. [AI Governance](automatedDecisionMaking/governance) draws the previous themes together and asks how institutions should assign responsibility, create oversight, and respond to the real-world harms or limitations of AI systems.
 
 ### Key Definitions
 

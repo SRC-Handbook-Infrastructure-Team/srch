@@ -5,7 +5,7 @@ final: true
 lastUpdated: 2026-04-21
 ---
 
-## How should we think about data in the context of surveillance capitalism?
+## How Should We Think About Data in the Context of Surveillance Capitalism?
 
 Human beings constantly generate data. Some data we might commonly think about generating include our search histories, location tracking, social media interactions, and purchases. Perhaps less obviously, we also generate data on our heart rates, streaming preferences, and political opinions, to name a few examples. These data points hold value for companies and governments. Being able to predict which consumers are more likely to purchase a product or service can reduce advertising costs, allowing companies to narrowly target those who are most likely to generate returns. Similarly, having insight into which voters are most likely to be swayed by a particular political message can allow candidates to more effectively tailor their campaigning. Knowing who was in the vicinity when a crime occurred can assist law enforcement officers in identifying suspects. 
 
