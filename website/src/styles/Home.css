@@ -230,7 +230,6 @@ html[data-theme="light"] .topic-card {
   box-shadow: none;
   background: none;
   cursor: default;
-  outline: none;
 }
 
 .placeholder-card:hover {
