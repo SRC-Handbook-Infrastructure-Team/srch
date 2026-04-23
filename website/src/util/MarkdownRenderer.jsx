@@ -1272,7 +1272,7 @@ function MarkdownRenderer({
               color: BLACK,
               fontFamily: "Be Vietnam Pro, sans-serif",
               lineHeight: "1.6",
-              marginBottom: ".5em",
+              marginBottom: "1em",
             }}
           >
             {highlightText(children, effectiveHighlight)}
