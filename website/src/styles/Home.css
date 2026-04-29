@@ -230,7 +230,6 @@ html[data-theme="light"] .topic-card {
   box-shadow: none;
   background: none;
   cursor: default;
-  outline: none;
 }
 
 .placeholder-card:hover {
@@ -286,6 +285,8 @@ html[data-theme="light"] .topic-card {
   .intro-text {
     text-align: center;
   }
+
+
 }
 
 .outline-tip {
@@ -446,6 +447,12 @@ html[data-theme="light"] .topic-card {
 .learn-more-button:hover {
   background: var(--color-bg-alt);
 }
+.learn-more-button:focus:not(:focus-visible) {
+  outline: 1px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+
 
 .learn-more-text {
   color: var(--color-text);
@@ -603,4 +610,16 @@ html[data-theme="light"] .topic-card {
     width: 80%;
     transition: width 0.3s ease;
   }
+
+  .content-section {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .how-to-section,
+  .learn-more-container, .connect-section {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+
 }

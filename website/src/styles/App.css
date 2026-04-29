@@ -109,6 +109,7 @@ body {
   font-family: "Be Vietnam Pro", sans-serif !important;
   font-size: 16px !important;
   line-height: 28px !important;
+  text-wrap: pretty;
   color: var(--color-text) !important;
   background-color: var(--color-bg) !important;
   margin: 0;
