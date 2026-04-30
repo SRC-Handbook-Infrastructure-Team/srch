@@ -212,7 +212,7 @@ html:not(.left-open) .header-toggle {
 }
 
 .sidebar-subsection-heading-row.is-active::before {
-  background: #d62828;
+  background: var(--color-focus-ring);
 }
 
 .sidebar-subsection-heading-link {
@@ -277,9 +277,9 @@ html:not(.left-open) .header-toggle {
 }
 
 :root[data-theme="dark"] .timeline-block {
-  --timeline-line-color: #5a5a5a;
-  --timeline-pill-border-color: #6a6a6a;
-  --timeline-date-color: #b5b5b5;
+  --timeline-line-color: var(--color-white-50);
+  --timeline-pill-border-color:var(--color-white-50);
+  --timeline-date-color: var(--color-text);
   --timeline-accent-color: var(--color-text-hover);
 }
 

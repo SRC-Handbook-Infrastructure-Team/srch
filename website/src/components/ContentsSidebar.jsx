@@ -760,7 +760,7 @@ export default function ContentsSidebar({
       onKeyDown={onSidebarContainerKeyDown}
     >
       <div className="sidebar-header-controls">
-        <div>
+        <div style={{ position: "sticky" }}>
           <button
             className="sidebar-expand-toggle"
             onClick={toggleExpandCollapse}
