@@ -4,6 +4,29 @@ import fs from "fs";
 import path from "path";
 import { spawnSync } from "child_process";
 
+function copyIndexTo404() {
+  return {
+    name: "copy-index-to-404",
+    apply: "build",
+    writeBundle(options) {
+      const outDir = options.dir || "dist";
+      const indexPath = path.join(outDir, "index.html");
+      const notFoundPath = path.join(outDir, "404.html");
+
+      if (fs.existsSync(indexPath)) {
+        fs.copyFileSync(indexPath, notFoundPath);
+        console.log("✓ 404.html created from index.html");
+      } else {
+        console.warn("index.html not found, skipping 404 copy");
+      }
+    },
+  };
+}
+
+export default defineConfig({
+  plugins: [copyIndexTo404()],
+});
+
 function regenerateMarkdownCaches() {
   const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
   const result = spawnSync(npmCommand, ["run", "export-index"], {
@@ -50,21 +73,3 @@ function markdownCacheWatchPlugin() {
     },
   };
 }
-
-export default defineConfig({
-  plugins: [
-    react(),
-    markdownCacheWatchPlugin(),
-    {
-      name: "copy-index-to-404",
-      apply: "build",
-      closeBundle() {
-        const indexPath = path.join(process.cwd(), "dist/index.html");
-        const notFoundPath = path.join(process.cwd(), "dist/404.html");
-        fs.copyFileSync(indexPath, notFoundPath);
-        console.log("✅ Copied index.html to 404.html");
-      },
-    },
-  ],
-  base: process.env.VITE_BASE || "/",
-});
