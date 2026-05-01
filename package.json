@@ -10,5 +10,8 @@
     "website": "npm run -s --workspace=website dev -- --host localhost --port 5173",
     "website:quiet": "npm run -s --workspace=website dev -- --host localhost --port 5173 > .logs/web.log 2>&1",
     "dev:logs": "tail -f .logs/web.log"
+  },
+  "dependencies": {
+    "lucide-react": "^1.14.0"
   }
 }

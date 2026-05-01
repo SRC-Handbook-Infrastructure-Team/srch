@@ -10,7 +10,7 @@
   background: var(--color-border);
   z-index: -1;
   width: 100vw;
-  height: 1px;
+  height: 2px;
 }
 
 .footer-container {

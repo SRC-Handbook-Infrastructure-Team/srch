@@ -36,7 +36,8 @@
   --color-red-gradient: #c90000;
   --color-subtle-emphasis: #4f3629;
   --color-header: #222222;
-  --color-gray: #00000085;
+  --color-dark-border: #00000085;
+  --color-gray: #70706f;
 
   --x-small-text: 16px;
   --body-text: 16px;
@@ -95,7 +96,7 @@
   --color-red-gradient: #244123;
   --color-subtle-emphasis: #244123;
   --color-header: #e4e4e4;
-  --color-gray: #fffbf6b1;
+  --color-dark-border: #fffbf6b1;
 }
 
 html {

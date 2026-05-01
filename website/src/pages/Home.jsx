@@ -18,6 +18,7 @@ import clockIconDark from "../assets/clock-icon_white.svg";
 import cntrLogo from "../assets/cntr-logo.png";
 import srcLogo from "../assets/src_logo.svg";
 import SearchBar from "../components/SearchBar";
+import { ArrowRight } from "lucide-react";
 import { getSections, getSubsections } from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
 
@@ -258,7 +259,7 @@ function Home() {
             </div>
 
             <div className="card-grid">
-              {curriculumCards.map((card) => {
+              {curriculumCards.map((card, index) => {
                 const icon = getCardIcon(card.id);
                 return (
                   <button
@@ -266,23 +267,35 @@ function Home() {
                     className="topic-card"
                     onClick={() => navigate(card.slug)}
                   >
-                    <div className="outline-tip">
+                    <div className="card-accent" />
+
+                    <span className="card-number">
+                      {String(index + 1).padStart(2, "0")}.
+                    </span>
+
+                    <div className="card-divider" />
+
+                    <div className="card-icon-wrap">
                       {icon ? (
                         <img
                           src={icon.src}
                           alt={icon.alt}
-                          width={75}
-                          height={92}
+                          width={52}
+                          height={52}
                         />
                       ) : null}
                     </div>
-                    <div className="card">
+
+                    <div className="card-body">
                       <div className="card-heading">{card.title}</div>
                       <div className="topic-subtext">{card.description}</div>
                     </div>
+
+                    <ArrowRight className="card-arrow" />
                   </button>
                 );
               })}
+
               {curriculumCards.length % 2 !== 0 && (
                 <div className="topic-card placeholder-card">
                   <div className="outline-tip">
