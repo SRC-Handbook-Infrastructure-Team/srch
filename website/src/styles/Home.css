@@ -142,7 +142,7 @@
 }
 
 .topic-card {
-  width: 100%;
+  width: 90%;
   height: auto;
   display: flex;
   color: var(--color-text);
@@ -151,7 +151,7 @@
   justify-self: center;
   align-items: center;
   gap: 32px;
-  padding: 28px 36px 28px 64px;
+  padding: 20px 28px 20px 56px;
   border-radius: 16px;
   border: 1px solid var(--color-border);
   overflow: hidden;
@@ -311,10 +311,10 @@ html[data-theme="light"] .topic-card {
 }
 
 .card-grid {
-  --card-grid-gap: 26px;
   display: flex;
+  /* grid-template-columns: repeat(2, 1fr); */
   flex-direction: column;
-  gap: var(--card-grid-gap);
+  gap: 20px;
   width: 100%;
   margin: 0 auto;
   align-items: center;
