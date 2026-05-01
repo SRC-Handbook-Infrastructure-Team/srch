@@ -130,11 +130,11 @@
   opacity: 0;
 }
 
-.curriculum-subtext {
+.subtitle {
   width: 100%;
   text-align: center;
   color: var(--color-text);
-  font-size: var(--body-text);
+  font-size: 1.25rem;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -464,7 +464,7 @@ html[data-theme="light"] .topic-card {
 .list-text {
   flex: 1;
   color: var(--color-text);
-  font-size: var(--body-text);
+  font-size: 1.25rem;
   font-family: var(--content-font);
   font-weight: var(--sub-weight);
   line-height: 28px;
@@ -523,7 +523,7 @@ html[data-theme="light"] .topic-card {
   justify-content: center;
   text-align: left;
   color: var(--color-text);
-  font-size: var(--body-text);
+  font-size: 1.25rem;
   font-family: var(--content-font);
   font-weight: 400;
   line-height: 28px;

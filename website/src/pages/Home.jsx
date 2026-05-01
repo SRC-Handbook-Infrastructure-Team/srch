@@ -253,7 +253,7 @@ function Home() {
               >
                 Check Out Our Curriculum
               </div>
-              <div className="curriculum-subtext">
+              <div className="subtitle">
                 Explore our focus areas of socially responsible computing
               </div>
             </div>
@@ -329,7 +329,7 @@ function Home() {
               >
                 Search for Content
               </div>
-              <p className="search-subtitle">
+              <p className="subtitle">
                 Find specific topics, case studies, and resources quickly
               </p>
             </div>
@@ -355,8 +355,7 @@ function Home() {
             <div className="how-to-section">
               <p className="intro-text">
                 Each section contains a series of primers that are loosely
-                aligned with learning objectives in the SRC curriculum.{" "}
-                <br></br> Use them to:
+                aligned with learning objectives in the SRC curriculum. Use them to:
               </p>
 
               <div className="info-list">
@@ -442,7 +441,7 @@ function Home() {
               >
                 Connect with Us
               </div>
-              <p className="search-subtitle">
+              <p className="subtitle">
                 Follow us to receive CNTR and SRC@Brown CS news and updates!
               </p>
             </div>
