@@ -1,18 +1,19 @@
 import "./styles/App.css";
 import ScrollManager from "./components/ScrollManager";
 import ScrollProgressBar from "./components/ScrollProgressBar";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import LandingPage from "./pages/LandingPage";
-import MarkdownPage from "./pages/MarkdownPage";
-import Home from "./pages/Home";
-import Acknowledgments from "./pages/Acknowledgments";
-import SearchResultsPage from "./pages/SearchResultsPage";
-import SidebarLayout from "./layouts/SidebarLayout";
-import About from "./pages/About";
 import { preloadNavigationData } from "./util/MarkdownRenderer";
+
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const MarkdownPage = lazy(() => import("./pages/MarkdownPage"));
+const Home = lazy(() => import("./pages/Home"));
+const Acknowledgments = lazy(() => import("./pages/Acknowledgments"));
+const SearchResultsPage = lazy(() => import("./pages/SearchResultsPage"));
+const SidebarLayout = lazy(() => import("./layouts/SidebarLayout"));
+const About = lazy(() => import("./pages/About"));
 
 function AppRoutes() {
   const location = useLocation();
@@ -43,40 +44,42 @@ function AppRoutes() {
       <ScrollManager />
       <NavBar layoutMode="overlay" />
 
-      {isMarkdownPage ? (
-        <>
-          {!isLandingPage && <ScrollProgressBar />}
-          <SidebarLayout>
+      <Suspense fallback={null}>
+        {isMarkdownPage ? (
+          <>
+            {!isLandingPage && <ScrollProgressBar />}
+            <SidebarLayout>
+              <Routes>
+                <Route path="/:sectionId" element={<LandingPage />} />
+                <Route
+                  path="/:sectionId/:subsectionId"
+                  element={<MarkdownPage />}
+                />
+                <Route
+                  path="/:sectionId/:subsectionId/:term"
+                  element={<MarkdownPage />}
+                />
+              </Routes>
+            </SidebarLayout>
+          </>
+        ) : (
+          <>
             <Routes>
-              <Route path="/:sectionId" element={<LandingPage />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/srch/" element={<Home />} />
+              <Route path="/acknowledgments" element={<Acknowledgments />} />
+              <Route path="/about" element={<About />} />
               <Route
-                path="/:sectionId/:subsectionId"
-                element={<MarkdownPage />}
+                path="/search/:query/:page"
+                element={<SearchResultsPage />}
               />
-              <Route
-                path="/:sectionId/:subsectionId/:term"
-                element={<MarkdownPage />}
-              />
+              <Route path="/search/:query" element={<SearchResultsPage />} />
+              <Route path="/search" element={<SearchResultsPage />} />
             </Routes>
-          </SidebarLayout>
-        </>
-      ) : (
-        <>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/srch/" element={<Home />} />
-            <Route path="/acknowledgments" element={<Acknowledgments />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/search/:query/:page"
-              element={<SearchResultsPage />}
-            />
-            <Route path="/search/:query" element={<SearchResultsPage />} />
-            <Route path="/search" element={<SearchResultsPage />} />
-          </Routes>
-          <Footer />
-        </>
-      )}
+            <Footer />
+          </>
+        )}
+      </Suspense>
     </>
   );
 }

@@ -1,0 +1,125 @@
+.about-lower-content {
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
+
+  background: var(--color-bg);
+  padding-bottom: 72px;
+  padding-right: 250px;
+  padding-left: 250px;
+  padding-top: 0px;
+}
+
+.about-jump-links {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 84px;
+  margin-bottom: 72px;
+  justify-content: center;
+}
+
+.about-jump-link {
+  border: 1px solid var(--color-text-hover);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-hover);
+  font-family: var(--content-font);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 11px 22px;
+}
+
+.about-jump-link:hover {
+  background: var(--color-accent-30);
+}
+
+.about-divider {
+  width: 90%;
+  max-width: 900px;
+  height: 2px;
+  background: var(--color-border);
+  margin: 64px auto;
+  position: relative;
+  left: 0;
+  transform: none;
+}
+
+.about-section h1,
+.about-section h2,
+.about-section h3,
+.about-section h4,
+.about-section h5,
+.about-section h6 {
+  text-align: center !important;
+  font-family: var(--content-font) !important;
+}
+
+.about-section h1:not(:first-of-type) {
+  position: relative;
+  padding-top: 72px;
+  margin-top: 3rem;
+}
+
+.about-section h1:not(:first-of-type)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 2px;
+  background: var(--color-border);
+  transform: translateX(-50%);
+}
+
+.about-section ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.about-section ul li {
+  position: relative;
+  list-style: none !important;
+  padding-left: 1.6rem !important;
+}
+
+.about-section ul li::before {
+  content: "\2192";
+  position: absolute;
+  left: 0.1rem;
+  top: 0.05em;
+  color: var(--color-text-hover);
+  font-weight: 900;
+  font-size: 1.05em;
+  -webkit-text-stroke: 0.2px var(--color-text-hover);
+}
+
+:root[data-theme="dark"] .upper-content {
+  background-image: url("../assets/landing_page_background_gradient_dark.png");
+  background-color: var(--color-bg);
+}
+
+.about-section ul li > p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 48px;
+  }
+  .about-upper-text {
+    width: 80vw;
+    margin-top: 16vh;
+  }
+  .about-lower-content {
+    padding: 48px 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .about-lower-content {
+    padding: 72px 80px;
+  }
+}

@@ -355,7 +355,8 @@ function Home() {
             <div className="how-to-section">
               <p className="intro-text">
                 Each section contains a series of primers that are loosely
-                aligned with learning objectives in the SRC curriculum. Use them to:
+                aligned with learning objectives in the SRC curriculum. Use them
+                to:
               </p>
 
               <div className="info-list">

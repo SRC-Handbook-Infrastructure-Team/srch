@@ -374,9 +374,9 @@ function LandingPage() {
         </div>
       </div>
 
-      <div className="about-lower-content landing-lower-content">
+      <div className="landing-lower-content">
         <div className="landing-content-stack">
-          <section className="about-section landing-content-column">
+          <section className="landing-content-column">
             {mainContent && (
               <Box>
                 <MarkdownRenderer

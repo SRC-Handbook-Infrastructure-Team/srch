@@ -1,66 +1,23 @@
-import "../styles/LandingPage.css";
-import "../styles/MarkdownPage.css";
-import aboutMarkdown from "../markdown/about/about.md?raw";
-import MarkdownRenderer from "../util/MarkdownRenderer";
-
-function stripFrontmatter(markdown) {
-  return String(markdown || "").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
-}
-
-function getAboutContent(markdown) {
-  return stripFrontmatter(markdown).trim();
-}
-
-function createHeadingId(text) {
-  return String(text || "")
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function mapHeadingToButtonLabel(title) {
-  const normalized = String(title || "").toLowerCase();
-
-  if (normalized.includes("socially responsible computing handbook")) {
-    return "What is It?";
-  }
-  if (normalized.includes("how to use")) {
-    return "How to Use It";
-  }
-  if (normalized.includes("living resource")) {
-    return "Project Life";
-  }
-  if (normalized.includes("history of the project")) {
-    return "Project History";
-  }
-  if (normalized.includes("funding")) {
-    return "Funding";
-  }
-  if (normalized.includes("connect")) {
-    return "Connect";
-  }
-
-  return title;
-}
-
-function getAboutHeadingLinks(markdown) {
-  const body = stripFrontmatter(markdown);
-  const headingMatches = Array.from(body.matchAll(/^#\s+(.+)$/gm));
-
-  return headingMatches.map((match) => {
-    const title = (match[1] || "").trim();
-    return {
-      title,
-      id: createHeadingId(title),
-      label: mapHeadingToButtonLabel(title),
-    };
-  });
-}
+import "../styles/About.css";
+import { useState, useEffect } from "react";
+import MarkdownRenderer, {
+  getContent,
+  getAboutHeadingLinks,
+} from "../util/MarkdownRenderer";
 
 export default function About() {
-  const content = getAboutContent(aboutMarkdown);
-  const headingLinks = getAboutHeadingLinks(aboutMarkdown);
+  const [contentData, setContentData] = useState(null);
+
+  useEffect(() => {
+    getContent("about").then((data) => {
+      if (data) setContentData(data);
+    });
+  }, []);
+
+  // getAboutHeadingLinks expects a raw markdown string
+  const headingLinks = contentData
+    ? getAboutHeadingLinks(contentData.content)
+    : [];
 
   const handleJump = (id) => {
     const target = document.getElementById(id);
@@ -104,15 +61,17 @@ export default function About() {
               ))}
             </div>
           )}
-          <MarkdownRenderer
-            content={content}
-            sidebar={{}}
-            sectionId="about"
-            subsectionId=""
-            onDrawerOpen={() => {}}
-            onNavigation={() => {}}
-            highlight={null}
-          />
+          {contentData && (
+            <MarkdownRenderer
+              content={contentData.content}
+              sidebar={contentData.sidebar ?? {}}
+              sectionId="about"
+              subsectionId=""
+              onDrawerOpen={() => {}}
+              onNavigation={() => {}}
+              highlight={null}
+            />
+          )}
         </section>
       </div>
     </>

@@ -203,6 +203,12 @@ html[data-theme="light"] .topic-card {
   transform: scale(1.15);
 }
 
+html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
+  filter: brightness(70%) sepia(100%) hue-rotate(90deg) saturate(57%)
+    brightness(89%);
+  transform: scale(1.15);
+}
+
 .topic-card:hover .card-arrow {
   transform: scale(1.15);
 }
@@ -238,7 +244,7 @@ html[data-theme="light"] .topic-card {
   top: 0;
   bottom: 0;
   width: 26px;
-  background: #8b0000;
+  background: var(--color-text-hover);
 }
 
 .card-icon-wrap {
@@ -277,7 +283,7 @@ html[data-theme="light"] .topic-card {
 }
 
 .placeholder-card {
-  box-shadow: none;
+  box-shadow: none !important;
   background: none;
   cursor: default;
   border: 1px solid var(--color-gray);
@@ -312,7 +318,6 @@ html[data-theme="light"] .topic-card {
 
 .card-grid {
   display: flex;
-  /* grid-template-columns: repeat(2, 1fr); */
   flex-direction: column;
   gap: 20px;
   width: 100%;

@@ -19,6 +19,7 @@ import { LuChevronRight } from "react-icons/lu";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { LuInfo, LuExternalLink } from "react-icons/lu";
 import "../styles/MarkdownTables.css";
+import "../styles/MarkdownPage.css"
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
@@ -166,6 +167,24 @@ function timelineBodyToHtml(markdownBody) {
   flushParagraph();
 
   return blocks.join("\n");
+}
+
+function stripFrontmatter(markdown) {
+  return String(markdown || "").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+}
+
+export function getAboutHeadingLinks(markdown) {
+  const body = stripFrontmatter(markdown);
+  const headingMatches = Array.from(body.matchAll(/^#\s+(.+)$/gm));
+
+  return headingMatches.map((match) => {
+    const title = (match[1] || "").trim();
+    return {
+      title,
+      id: createHeadingId(title),
+      label: mapHeadingToButtonLabel(title),
+    };
+  });
 }
 
 function renderTimelineBlock(blockContent) {
@@ -603,6 +622,39 @@ export async function preloadAllMarkdownContent() {
   })();
 
   return preloadContentPromise;
+}
+
+function createHeadingId(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function mapHeadingToButtonLabel(title) {
+  const normalized = String(title || "").toLowerCase();
+
+  if (normalized.includes("socially responsible computing handbook")) {
+    return "What is It?";
+  }
+  if (normalized.includes("how to use")) {
+    return "How to Use It";
+  }
+  if (normalized.includes("living resource")) {
+    return "Project Life";
+  }
+  if (normalized.includes("history of the project")) {
+    return "Project History";
+  }
+  if (normalized.includes("funding")) {
+    return "Funding";
+  }
+  if (normalized.includes("connect")) {
+    return "Connect";
+  }
+
+  return title;
 }
 
 /* ----------------------------- Content Loader ----------------------------- */

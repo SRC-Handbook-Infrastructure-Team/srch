@@ -6,7 +6,6 @@
   height: var(--ack-upper-height);
   z-index: 0;
 
-  background-image: url("../src/assets/Property 1=Default.png");
   background-size: cover;
   background-position: left center;
   background-repeat: no-repeat;
@@ -15,10 +14,6 @@
   align-items: flex-start;
   padding: 0 var(--ack-hero-paddingX);
   border-top: 1px solid var(--color-bg);
-}
-
-.ack-hero:hover {
-  background-image: url("../src/assets/Property 1=Variant2.png");
 }
 
 .ack-hero .upper-text-section {
@@ -155,22 +150,6 @@
   background-color: var(--color-bg-alt);
   display: block;
 
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-}
-
-.ack-photo-fallback {
-  width: var(--ack-photo-width);
-  height: var(--ack-photo-height);
-  background: var(--color-bg-alt);
-  border-radius: var(--ack-radius);
-
-  -webkit-mask-image: url("../assets/Photo.png");
-  mask-image: url("../assets/Photo.png");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;

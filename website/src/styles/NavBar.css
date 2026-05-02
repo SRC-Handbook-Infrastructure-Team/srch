@@ -61,6 +61,22 @@ html[data-theme="dark"] .top-navbar {
   width: 100%;
 }
 
+.show-base {
+  display: flex;
+}
+.hide-base {
+  display: none;
+}
+
+@media (min-width: 45em) {
+  .show-md {
+    display: flex !important;
+  }
+  .hide-md {
+    display: none !important;
+  }
+}
+
 @media (min-width: 45em) {
   .middle-menu.show-md {
     display: grid !important;

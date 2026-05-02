@@ -23,10 +23,6 @@ function copyIndexTo404() {
   };
 }
 
-export default defineConfig({
-  plugins: [copyIndexTo404()],
-});
-
 function regenerateMarkdownCaches() {
   const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
   const result = spawnSync(npmCommand, ["run", "export-index"], {
@@ -73,3 +69,28 @@ function markdownCacheWatchPlugin() {
     },
   };
 }
+
+export default defineConfig({
+  plugins: [copyIndexTo404(), react(), markdownCacheWatchPlugin()],
+  optimizeDeps: {
+    include: ["react", "react-dom", "react/jsx-runtime"],
+  },
+  ssr: {
+    noExternal: ["@ark-ui/react"],
+  },
+  resolve: {
+    dedupe: ["react", "react-dom"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-markdown": ["react-markdown", "remark-gfm", "rehype-raw"],
+          "vendor-icons": ["react-icons"],
+          "vendor-ui": ["@chakra-ui/react"],
+        },
+      },
+    },
+  },
+});
