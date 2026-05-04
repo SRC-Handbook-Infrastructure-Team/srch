@@ -71,7 +71,7 @@ function markdownCacheWatchPlugin() {
 }
 
 export default defineConfig({
-  base: "/srch/",
+  base: process.env.VITE_BASE || "/",
   plugins: [copyIndexTo404(), react(), markdownCacheWatchPlugin()],
   optimizeDeps: {
     include: ["react", "react-dom", "react/jsx-runtime"],
