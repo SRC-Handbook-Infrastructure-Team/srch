@@ -1,3 +1,8 @@
+/**
+ * Provides reusable sidebar resize and collapse behavior, including pointer and
+ * keyboard interactions plus persisted width management.
+ */
+
 import { useEffect, useRef, useState, useCallback } from "react";
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));

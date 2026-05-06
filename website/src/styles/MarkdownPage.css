@@ -243,6 +243,11 @@ html:not(.left-open) .header-toggle {
   background: var(--color-bg);
 }
 
+.markdown-content:focus,
+.markdown-content:focus-visible {
+  outline: none !important;
+}
+
 .markdown-content img.markdown-content-image {
   box-sizing: border-box;
 }
@@ -278,7 +283,7 @@ html:not(.left-open) .header-toggle {
 
 :root[data-theme="dark"] .timeline-block {
   --timeline-line-color: var(--color-white-50);
-  --timeline-pill-border-color:var(--color-white-50);
+  --timeline-pill-border-color: var(--color-white-50);
   --timeline-date-color: var(--color-text);
   --timeline-accent-color: var(--color-text-hover);
 }
@@ -489,7 +494,15 @@ html:not(.left-open):not(.right-open) body .main-content {
   margin-left: 0 !important;
   padding-left: 8vw;
   padding-right: 8vw;
-  transition: none;
+  transition:
+    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: margin-left, padding-left;
+}
+
+html:not(.left-open):not(.right-open) body .main-content:focus,
+html:not(.left-open):not(.right-open) body .main-content:focus-visible {
+  outline: none !important;
 }
 
 html.is-landing-page:not(.left-open):not(.right-open) body .main-content {
@@ -499,23 +512,12 @@ html.is-landing-page:not(.left-open):not(.right-open) body .main-content {
 
 html.left-open body .main-content {
   margin-left: var(--left-sidebar-width) !important;
-  padding-left: 4vw;
-  padding-right: 4vw;
-  transition: none;
-}
-
-html.left-sidebar-manual-transition:not(.left-open):not(.right-open)
-  body
-  .main-content {
+  padding-left: 8vw;
+  padding-right: 8vw;
   transition:
     margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html.left-sidebar-manual-transition.left-open body .main-content {
-  transition:
-    margin-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: margin-left, padding-left;
 }
 
 html.is-landing-page.left-open body .main-content {
@@ -536,8 +538,8 @@ html.is-landing-page:not(.right-open):not(.left-open) body .main-content {
 
 html.right-open body .main-content {
   margin-right: var(--right-sidebar-width) !important;
-  padding-left: 4vw;
-  padding-right: 4vw;
+  padding-left: 8vw;
+  padding-right: 8vw;
   transition:
     margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -734,7 +736,7 @@ p > .srch-drawer-link:first-child {
 .left-sidebar {
   position: fixed !important;
   top: var(--nav-bar-height) !important;
-  bottom: var(--sidebar-footer-offset, 0px) !important;
+  bottom: 0 !important;
   left: 0 !important;
   height: auto !important;
   background: var(--color-bg) !important;
@@ -766,7 +768,7 @@ p > .srch-drawer-link:first-child {
   width: var(--right-sidebar-width);
   position: fixed !important;
   top: var(--nav-bar-height) !important;
-  bottom: var(--sidebar-footer-offset, 0px) !important;
+  bottom: 0 !important;
   right: 0 !important;
   padding-top: 8px;
   height: auto !important;
@@ -852,7 +854,7 @@ p > .srch-drawer-link:first-child {
 .right-resize-hitbox {
   position: fixed !important;
   top: var(--nav-bar-height) !important;
-  bottom: var(--sidebar-footer-offset, 0px) !important;
+  bottom: 0 !important;
   right: calc(var(--right-sidebar-width) - 6px) !important;
   width: 6px !important;
   transform: translateX(0);
@@ -997,4 +999,63 @@ html[data-layout-mode="overlay"]
   .show-base {
     display: inline-flex !important;
   }
+}
+
+.curriculum-objectives {
+  border-left: 4px solid var(--color-text-hover);
+  padding-left: 12px;
+}
+.curriculum-objectives-inner {
+  gap: 20px;
+  align-items: flex-start;
+}
+.curriculum-objectives-label {
+  color: var(--color-text-hover);
+  font-family: var(--content-font);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.curriculum-objectives-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.curriculum-objective-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.curriculum-objective-code {
+  color: var(--color-text-hover);
+  font-weight: 700;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 6px;
+}
+.curriculum-objective-arrow {
+  color: var(--color-text-hover);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.curriculum-objective-desc {
+  color: var(--color-text);
+  font-family: var(--content-font);
+  font-size: 16px;
+  line-height: 24px;
+}
+.curriculum-objective-desc strong {
+  font-weight: 700;
+}
+
+/* Suppress focus ring on main content containers */
+html body .main-content:focus,
+html body .main-content:focus-visible {
+  outline: none !important;
 }

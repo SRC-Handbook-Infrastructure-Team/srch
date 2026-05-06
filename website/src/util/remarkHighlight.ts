@@ -1,4 +1,7 @@
-// remarkHighlight.ts
+/**
+ * remark plugin that wraps matched terms in <mark> nodes, with optional
+ * section-scoped highlighting for markdown rendering contexts.
+ */
 import type { Plugin } from "unified";
 import type { Root, Parent } from "mdast";
 

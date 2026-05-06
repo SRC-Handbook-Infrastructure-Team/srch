@@ -15,6 +15,8 @@ You can start each markdown file with frontmatter:
 ---
 title: Page Title
 order: 1
+title: Intersections with Other Values
+identifier: "2.c"
 lastUpdated: 2026-04-14
 ---
 ```
@@ -22,7 +24,8 @@ lastUpdated: 2026-04-14
 Use these keys:
 
 - title: the name shown in the left navigation and page header
-- order: where this page appears in the list
+- order: where this page appears in the list, we can't use the identifier as the primers have not been delivered in sequence and some are missing
+- identifier: the specific identifier that allows the code to map the primer to its objectives
 - lastUpdated: shown as Last updated on ... at the top of the page
 
 Plain-language notes:

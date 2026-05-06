@@ -19,7 +19,7 @@ import { LuChevronRight } from "react-icons/lu";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { LuInfo, LuExternalLink } from "react-icons/lu";
 import "../styles/MarkdownTables.css";
-import "../styles/MarkdownPage.css"
+import "../styles/MarkdownPage.css";
 
 /* ----------------------------- Highlight Utility ----------------------------- */
 
@@ -327,10 +327,20 @@ export function parseFrontmatter(content) {
     if (line.trim() === "") return;
     const [key, ...valueParts] = line.split(":");
     const value = valueParts.join(":").trim();
-    if (value === "true") frontmatter[key.trim()] = true;
-    else if (value === "false") frontmatter[key.trim()] = false;
-    else if (!isNaN(Number(value))) frontmatter[key.trim()] = Number(value);
-    else frontmatter[key.trim()] = value;
+    let parsedValue = value;
+    // Strip surrounding single or double quotes if present
+    if (
+      (parsedValue.startsWith('"') && parsedValue.endsWith('"')) ||
+      (parsedValue.startsWith("'") && parsedValue.endsWith("'"))
+    ) {
+      parsedValue = parsedValue.slice(1, -1);
+    }
+
+    if (parsedValue === "true") frontmatter[key.trim()] = true;
+    else if (parsedValue === "false") frontmatter[key.trim()] = false;
+    else if (!isNaN(Number(parsedValue)))
+      frontmatter[key.trim()] = Number(parsedValue);
+    else frontmatter[key.trim()] = parsedValue;
   });
 
   return { content: cleanContent, frontmatter };
@@ -1059,6 +1069,12 @@ function MarkdownRenderer({
       return `<sup id="user-content-fnref-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
     });
 
+    // If references are adjacent like [^1][^2], render them as 1, 2.
+    replaced = replaced.replace(
+      /<\/sup>\s*<sup id="user-content-fnref-/g,
+      '</sup><sup aria-hidden="true" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">,</sup><sup id="user-content-fnref-',
+    );
+
     if (furtherReadingBlock || extractedFurtherReadingBlock) {
       replaced += "\n\n[[CUSTOM_REFERENCES_SECTION]]";
     }
@@ -1522,7 +1538,6 @@ function MarkdownRenderer({
         <th
           className="md-table-header-cell"
           style={{
-            color: BLACK,
             fontFamily: "Be Vietnam Pro, sans-serif",
           }}
           {...props}

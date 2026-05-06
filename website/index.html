@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/assets/srch_logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var html = document.documentElement;
+        var isWide = window.innerWidth - 322 - 300 >= 410;
+
+        html.dataset.layoutMode = isWide ? "wide" : "overlay";
+
+        if (isWide) {
+          html.classList.add("left-open");
+        } else {
+          html.classList.remove("left-open");
+        }
+
+        html.classList.remove("right-open");
+      })();
+    </script>
     <title>SRC Handbook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

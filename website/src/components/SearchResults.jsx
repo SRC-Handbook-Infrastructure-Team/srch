@@ -1,3 +1,8 @@
+/**
+ * Renders grouped search results with highlight context and result metadata so
+ * users can quickly navigate to relevant sections.
+ */
+
 import "../styles/SearchResults.css";
 import React, { useState, useEffect } from "react";
 import { Collapsible, Box } from "@chakra-ui/react";

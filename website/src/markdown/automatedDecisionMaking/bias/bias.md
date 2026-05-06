@@ -1,5 +1,6 @@
 ---
 title: Bias in Automated Decision-Making Systems
+identifier: "3.a"
 order: 1
 final: true
 lastUpdated: 2026-04-21
@@ -64,17 +65,17 @@ Historical bias creates the distinction between statistical discrimination and t
 
 **Sampling Bias:** When the method of data collection systematically excludes members of the target population.
 
-* **Example:** A dataset that does not include hyphenated last names being used to train a name-generation model
+- **Example:** A dataset that does not include hyphenated last names being used to train a name-generation model
 
 **{Underrepresentation-bias}:** When the data available on the target population is insufficient to properly train the model.
 
-* **Example:** A dataset being used to train a model identifying cancer from MRI scans that does not have enough scans of rare cancers.
+- **Example:** A dataset being used to train a model identifying cancer from MRI scans that does not have enough scans of rare cancers.
 
 ### Measurement Bias
 
 **Measurement bias** arises when a variable is chosen to act as a proxy for prediction of an abstract concept, but the proxy is inherently biased. For example, past credit scores are used as a proxy for fiscal responsibility, but minority groups have been historically denied opportunities to build good credit. If the proxies being used by a model are based on a history of discrimination, they can introduce bias into the model.
 
-* **Example:** A case study on {healthcare-risk-assessment} algorithms demonstrates how using money spent on healthcare as a proxy variable for health need can be biased against groups that systematically spend less on healthcare.[^10]
+- **Example:** A case study on {healthcare-risk-assessment} algorithms demonstrates how using money spent on healthcare as a proxy variable for health need can be biased against groups that systematically spend less on healthcare.[^10]
 
 ## Bias in Model Creation
 
@@ -98,9 +99,9 @@ The modeling stage involves countless design choices, so each of these choices c
 
 **Learning bias** occurs when a model's encoded priorities make it practical to overlook a minority group. An objective function to evaluate a model's performance, such as accuracy or mean squared error, might be programmed so that a model can succeed by ignoring or excluding a minority group while still performing well according to the objective function.
 
-* **Example:** say a model is given the objective to get the highest percent correct answers guessing people's ages from photographs. If the model is given 100 subjects to attempt to guess their ages and guesses all 90 White people correctly and all 10 Black people incorrectly, the overall level of accuracy would be 90%. Looking just at the model's accuracy, it may seem like the model is performing well. But, when you look closer, it becomes clear that the model is unable to correctly predict age for _any_ Black people. This model is optimizing for the majority population, ignoring minority group errors and exhibiting learning bias.
+- **Example:** say a model is given the objective to get the highest percent correct answers guessing people's ages from photographs. If the model is given 100 subjects to attempt to guess their ages and guesses all 90 White people correctly and all 10 Black people incorrectly, the overall level of accuracy would be 90%. Looking just at the model's accuracy, it may seem like the model is performing well. But, when you look closer, it becomes clear that the model is unable to correctly predict age for _any_ Black people. This model is optimizing for the majority population, ignoring minority group errors and exhibiting learning bias.
 
-* **Example:** One {case-study-by-MIT-researchers} found learning bias and historical bias to be present in a now-defunct Amazon hiring software.[^8] This demonstrates how two or more biases can occur simultaneously.
+- **Example:** One {case-study-by-MIT-researchers} found learning bias and historical bias to be present in a now-defunct Amazon hiring software.[^8] This demonstrates how two or more biases can occur simultaneously.
 
 ### Evaluation Bias
 
@@ -126,9 +127,7 @@ Researchers have found that facial expression recognition datasets used in model
 | Evaluation Bias     | When evaluation datasets don't reflect the diversity of user population                                                                       | During testing/validation                    |
 | Deployment Bias     | When models are used in contexts different from those they were designed for                                                                  | During deployment/implementation             |
 
-
 Bias can occur at all stages of the automated decision-making system lifecycle, ranging from how data is generated and measured, how models are optimized and evaluated, to where models are deployed. When creating a model, it is essential to critically examine the data input into a model during training and evaluation, as well as the assumptions you approach the project with. By having an awareness of the ways in which ADM systems become biased and examining our own assumptions, we can build ADM systems that serve target populations effectively and fairly.
-
 
 [^1]: Barocas, Solon, and Andrew D. Selbst. "Big Data's Disparate Impact." _California Law Review_ 104, no. 3 (2016): 671\. [https://doi.org/10.15779/Z38BG31](https://doi.org/10.15779/Z38BG31).
 
@@ -159,7 +158,7 @@ Bias can occur at all stages of the automated decision-making system lifecycle, 
 data-that-reflects-historical-sexism:
 Heading: Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes
 
-When training data is input into a word embedding program, words are assigned vector representations within the multi-dimensional space. Associated words are positioned closer to each other in the high-dimensional vector space as a result of shared context. 
+When training data is input into a word embedding program, words are assigned vector representations within the multi-dimensional space. Associated words are positioned closer to each other in the high-dimensional vector space as a result of shared context.
 
 [Garg et. al. (2018)](https://doi.org/10.1073/pnas.1720347115) found that words associated with women are systematically closer to traditionally female occupations, adjectives, and traits than words associated with men are to traditionally female occupations, adjectives, and traits. Similar disparities in distance exist between racial groups and certain occupations, adjectives, and traits. Their work laid the groundwork for subsequent research demonstrating how statistical patterns in training data associated with societal biases can lead to models that encode bias and reproduce it in their output.
 
@@ -178,7 +177,7 @@ Heading: Dissecting racial bias in an algorithm used to manage the health of pop
 case-study-by-MIT-researchers:
 Heading: Hiring Fairly in the Age of Algorithms
 
-[Langenkamp et. al. (2020)](https://arxiv.org/abs/2004.07132) found that starting in 2014, Amazon used an ADM system to filter through resumes and find the best candidates. However, since the model was optimized to choose the best candidates, and in past hiring data, the majority of good candidates had been male, the model learned to use maleness as an indicator that someone would be a good candidate. This led to a model making hiring decisions that systematically disadvantaged women. 
+[Langenkamp et. al. (2020)](https://arxiv.org/abs/2004.07132) found that starting in 2014, Amazon used an ADM system to filter through resumes and find the best candidates. However, since the model was optimized to choose the best candidates, and in past hiring data, the majority of good candidates had been male, the model learned to use maleness as an indicator that someone would be a good candidate. This led to a model making hiring decisions that systematically disadvantaged women.
 
 This study demonstrates learning bias because the model was taught to find the best candidates, so the software came to understand maleness as a factor that contributed to being a good candidate. However, this is simultaneously an example of historical bias, because historical sexism in the field of engineering contributed to the fact that the majority of past engineers hired were male.
 

@@ -1,3 +1,8 @@
+/**
+ * Parses and normalizes highlight targets so routed pages can emphasize matched
+ * terms and anchors in a consistent way.
+ */
+
 const HTML_TAGS_RE = /<[^>]*>/g;
 const MARK_RE = /<mark>(.*?)<\/mark>/gi;
 

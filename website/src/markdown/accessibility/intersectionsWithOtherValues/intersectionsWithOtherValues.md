@@ -1,5 +1,6 @@
 ---
 title: Intersections with Other Values
+identifier: "2.c"
 order: 3
 final: false
 lastUpdated: 2026-04-21
@@ -31,7 +32,7 @@ For more information on these lenses, please refer to the [What is Accessibility
 
 ![Venn diagram showing Disability, Equity, and Universality converging in inclusive design.](/assets/primer-photos/accessibility/intersections-with-other-values/accessibility-intersections-venn.png)
 
-*Figure: Venn diagram showing the three lenses used in this section (Disability, Equity, and Universality) and their convergence in inclusive design.*
+_Figure: Venn diagram showing the three lenses used in this section (Disability, Equity, and Universality) and their convergence in inclusive design._
 
 ## Intersections with Accessibility: Synergies and Tensions
 
@@ -44,14 +45,13 @@ Many assistive technologies function by collecting sensitive data to adapt to a 
 Through the Disability lens, we see that many assistive technologies require personal data to work as intended. This creates an equity imbalance, forcing users with disabilities to give up more privacy than the general population just to participate. Accessible privacy controls can reduce some of this burden by making consent, permissions, and settings easier to understand and manage. However, they do not fully eliminate the tradeoff, because some assistive tools still depend on collecting sensitive data that non-disabled users may never have to disclose.
 
 - **Tension:** Some assistive technologies depend on highly sensitive inputs. Voice assistants rely on microphone access and wake-word systems, which raise concerns about audio capture and downstream data handling. Eye-tracking and other adaptive systems can also involve biometric or behavioral data that may reveal sensitive information. This surveillance model also appears in personalized learning platforms, which monitor reading speed and error frequency to provide cognitive accessibility.[^5]
-
-    - Accessibility settings can also become part of a distinctive device profile, which means that even when a user’s name is unknown, combinations of fonts, settings, and device characteristics may still increase trackability.[^9]
+  - Accessibility settings can also become part of a distinctive device profile, which means that even when a user’s name is unknown, combinations of fonts, settings, and device characteristics may still increase trackability.[^9]
 
 - **Synergy:** Privacy features and accessibility can reinforce each other when controls are understandable and usable. Clear permission prompts, readable privacy notices, and keyboard-accessible settings can improve cognitive accessibility of privacy controls and thus {promote-privacy-protection}.[^6]
 
 ![Diagram showing a privacy-by-design model for a voice-control feature, including user choices about data collection, storage, and processing.](/assets/primer-photos/accessibility/intersections-with-other-values/privacy-by-design-voice-control.png)
 
-*Figure: This figure shows an idealized privacy-by-design model in which users can make clearer choices about how a voice-control feature collects, stores, and processes data.*
+_Figure: This figure shows an idealized privacy-by-design model in which users can make clearer choices about how a voice-control feature collects, stores, and processes data._
 
 - **Takeaway:** Accessibility and privacy can be in genuine tension because some disabled users must share more data to access the same service. Better privacy design can reduce this burden, but it does not always erase the underlying tradeoff.
 
@@ -63,13 +63,13 @@ This intersection describes the divergence and convergence between system securi
 
 ![Example of a CAPTCHA challenge interface.](/assets/primer-photos/accessibility/intersections-with-other-values/captcha-example.png)
 
-*Figure: Example of CAPTCHA.*[^12]
+_Figure: Example of CAPTCHA._[^12]
 
 - **Synergy:** Good security design is accessible. For example, password managers are a powerful tool for security and accessibility, helping people to use more secure passwords without introducing extra cognitive strain. Security becomes more accessible when warnings, authentication steps, and recovery flows use plain language as well as screen-reader-compatible interfaces. This ensures all users, regardless of ability, understand risks and ultimately protect themselves.[^10] The same principle applies to newer, {recaptcha|less interaction-heavy bot defenses}: when systems decrease reliance on puzzle-style challenges and provide accessible fallback options, they can better protect both security and access.
 
 ![Before-and-after comparison of a survey page, showing accessibility improvements such as clearer headings, grouped form fields, explicit labels, and a more readable results table.](/assets/primer-photos/accessibility/intersections-with-other-values/accessible-survey-before-after.png)
 
-*Figure: Example of a before and after of an accessible survey page. The latter shows accessibility improvements through clearer headings, grouped form fields, explicit labels, and a more readable results table.*[^32]
+_Figure: Example of a before and after of an accessible survey page. The latter shows accessibility improvements through clearer headings, grouped form fields, explicit labels, and a more readable results table._[^32]
 
 - **Takeaway:** When security tools are designed with accessibility in mind, they stop being barriers for disabled users and become clearer, safer protections for everyone.
 
@@ -81,7 +81,7 @@ This intersection connects environmental goals like low energy consumption with 
 
 ![iPhone Low Power Mode screen showing dimmed brightness.](/assets/primer-photos/accessibility/intersections-with-other-values/iphone-low-power-mode.png)
 
-*Figure: Low power mode dims brightness on iPhone.*[^23]
+_Figure: Low power mode dims brightness on iPhone._[^23]
 
 - **Synergy:** Sustainable design can be inherently more accessible. Efficient, lightweight code is a sustainable practice that leads to faster-loading pages and reduced data consumption. This is an accessibility win for users on slow internet connections and benefits users with certain cognitive disabilities by providing a responsive experience.[^30]
 
@@ -134,74 +134,73 @@ By analyzing these intersections, we see that the tensions between accessibility
 
 These intersections demonstrate that accessibility is a foundational design principle that strengthens, rather than competes with, other values when it is built in from the start. Designers and policymakers who adopt the three-lens framework can better anticipate trade-offs, build in safeguards, and uncover synergies that benefit not only users with disabilities first, but also everyone else through the curb cut effect. Ultimately, accessibility is not only a legal or ethical requirement, but also a strategic pathway toward more human-centered technologies.
 
-[^1]: Abstracta. “5 Accessibility Heuristic Principles for Better UX.” *Abstracta*, n.d. https://abstracta.us/blog/accessibility-testing/accessibility-heuristic/.
+[^1]: Abstracta. “5 Accessibility Heuristic Principles for Better UX.” _Abstracta_, n.d. https://abstracta.us/blog/accessibility-testing/accessibility-heuristic/.
 
-[^2]: Access Board, U.S. “Revised 508 Standards and 255 Guidelines.” *U.S. Access Board*, n.d. https://www.access-board.gov/ict/.
+[^2]: Access Board, U.S. “Revised 508 Standards and 255 Guidelines.” _U.S. Access Board_, n.d. https://www.access-board.gov/ict/.
 
-[^3]: Alexiou, Gus. “Disfigurement Charity Exposes Rampant Exclusion By AI Facial Recognition Tools.” *Forbes*, February 27, 2025. https://www.forbes.com/sites/gusalexiou/2025/02/27/disfigurement-charity-exposes-rampant-exclusion-by-ai-facial-recognition-tools/.
+[^3]: Alexiou, Gus. “Disfigurement Charity Exposes Rampant Exclusion By AI Facial Recognition Tools.” _Forbes_, February 27, 2025. https://www.forbes.com/sites/gusalexiou/2025/02/27/disfigurement-charity-exposes-rampant-exclusion-by-ai-facial-recognition-tools/.
 
-[^4]: Alharbi, Rahaf, John Tang, and Karl Henderson. "Accessibility Barriers, Conflicts, and Repairs: Understanding the Experience of Professionals with Disabilities in Hybrid Meetings." In *Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems*. 2023. https://doi.org/10.1145/3544548.3581541.
+[^4]: Alharbi, Rahaf, John Tang, and Karl Henderson. "Accessibility Barriers, Conflicts, and Repairs: Understanding the Experience of Professionals with Disabilities in Hybrid Meetings." In _Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems_. 2023. https://doi.org/10.1145/3544548.3581541.
 
-[^5]: American Civil Liberties Union. “The Privacy-Invading Potential of Eye Tracking Technology.” *ACLU*, n.d. https://www.aclu.org/news/national-security/privacy-invading-potential-eye-tracking-technology.
+[^5]: American Civil Liberties Union. “The Privacy-Invading Potential of Eye Tracking Technology.” _ACLU_, n.d. https://www.aclu.org/news/national-security/privacy-invading-potential-eye-tracking-technology.
 
-[^6]: American Foundation for the Blind. “The Talking Book.” *AFB*, n.d. https://afb.org/online-library/unseen-minority-0/chapter-10.
+[^6]: American Foundation for the Blind. “The Talking Book.” _AFB_, n.d. https://afb.org/online-library/unseen-minority-0/chapter-10.
 
-[^7]: AudioEye. “Website Accessibility vs. Lawsuit Costs: Save Money Early.” *AudioEye*, n.d. https://www.audioeye.com/post/website-accessibility-vs-lawsuit-costs/.
+[^7]: AudioEye. “Website Accessibility vs. Lawsuit Costs: Save Money Early.” _AudioEye_, n.d. https://www.audioeye.com/post/website-accessibility-vs-lawsuit-costs/.
 
-[^8]: Bai, Yang. “The Relationship between Website Accessibility and Usability: An Examination of U.S. County Government Online Portals.” *The Electronic Journal of e-Government* 17, no. 1 (2019). https://academic-publishing.org/index.php/ejeg/article/view/666.
+[^8]: Bai, Yang. “The Relationship between Website Accessibility and Usability: An Examination of U.S. County Government Online Portals.” _The Electronic Journal of e-Government_ 17, no. 1 (2019). https://academic-publishing.org/index.php/ejeg/article/view/666.
 
-[^9]: BrowserLeaks. “Font Fingerprinting.” *BrowserLeaks*, n.d. https://browserleaks.com/fonts.
+[^9]: BrowserLeaks. “Font Fingerprinting.” _BrowserLeaks_, n.d. https://browserleaks.com/fonts.
 
-[^10]: Bureau of Internet Accessibility. “Ditch the Fancy Vocabulary for Accessible Language.” *BOIA*, n.d. https://www.boia.org/blog/ditch-the-fancy-vocabulary-for-accessible-language.
+[^10]: Bureau of Internet Accessibility. “Ditch the Fancy Vocabulary for Accessible Language.” _BOIA_, n.d. https://www.boia.org/blog/ditch-the-fancy-vocabulary-for-accessible-language.
 
-[^11]: Bureau of Internet Accessibility. “The Robles v. Domino’s Settlement (And Why It Matters).” *BOIA*, n.d. https://www.boia.org/blog/the-robles-v.-dominos-settlement-and-why-it-matters.
+[^11]: Bureau of Internet Accessibility. “The Robles v. Domino’s Settlement (And Why It Matters).” _BOIA_, n.d. https://www.boia.org/blog/the-robles-v.-dominos-settlement-and-why-it-matters.
 
-[^12]: Cloudflare. “How CAPTCHAs Work | What Does CAPTCHA Mean?” *Cloudflare*, n.d. https://www.cloudflare.com/learning/bots/how-captchas-work/.
+[^12]: Cloudflare. “How CAPTCHAs Work | What Does CAPTCHA Mean?” _Cloudflare_, n.d. https://www.cloudflare.com/learning/bots/how-captchas-work/.
 
-[^13]: Centers for Disease Control and Prevention. “Disability Impacts All of Us Infographic.” *CDC Disability and Health*, n.d. https://www.cdc.gov/disability-and-health/articles-documents/disability-impacts-all-of-us-infographic.html.
+[^13]: Centers for Disease Control and Prevention. “Disability Impacts All of Us Infographic.” _CDC Disability and Health_, n.d. https://www.cdc.gov/disability-and-health/articles-documents/disability-impacts-all-of-us-infographic.html.
 
-[^14]: Future of Privacy Forum. “Contextualizing the Kids Online Safety and Privacy Act: A Deep Dive into the Federal Kids Bill.” *Future of Privacy Forum*, n.d. https://fpf.org/blog/contextualizing-the-kids-online-safety-and-privacy-act-a-deep-dive-into-the-federal-kids-bill/.
+[^14]: Future of Privacy Forum. “Contextualizing the Kids Online Safety and Privacy Act: A Deep Dive into the Federal Kids Bill.” _Future of Privacy Forum_, n.d. https://fpf.org/blog/contextualizing-the-kids-online-safety-and-privacy-act-a-deep-dive-into-the-federal-kids-bill/.
 
-[^15]: Gaggi, Ombretta. "A Study on Accessibility of Google ReCAPTCHA Systems." In *Proceedings of the 2022 Workshop on Open Challenges in Online Social Networks*, 25–30. 2022. https://doi.org/10.1145/3524010.3539498.
+[^15]: Gaggi, Ombretta. "A Study on Accessibility of Google ReCAPTCHA Systems." In _Proceedings of the 2022 Workshop on Open Challenges in Online Social Networks_, 25–30. 2022. https://doi.org/10.1145/3524010.3539498.
 
-[^16]: Hofmann, Megan, Devva Kasnitz, Jennifer Mankoff, and Cynthia L. Bennett. "Living Disability Theory: Reflections on Access, Research, and Design." In *Proceedings of the 22nd International ACM SIGACCESS Conference on Computers and Accessibility*. 2020. https://doi.org/10.1145/3373625.3416996.
+[^16]: Hofmann, Megan, Devva Kasnitz, Jennifer Mankoff, and Cynthia L. Bennett. "Living Disability Theory: Reflections on Access, Research, and Design." In _Proceedings of the 22nd International ACM SIGACCESS Conference on Computers and Accessibility_. 2020. https://doi.org/10.1145/3373625.3416996.
 
-[^17]: Iwarsson, Susanne, and Agneta Ståhl. “Accessibility, Usability and Universal Design—Positioning and Definition of Concepts Describing Person-Environment Relationships.” *Disability and Rehabilitation* 25, no. 2 (2003): 57–66. https://doi.org/10.1080/0963828021000007969.
+[^17]: Iwarsson, Susanne, and Agneta Ståhl. “Accessibility, Usability and Universal Design—Positioning and Definition of Concepts Describing Person-Environment Relationships.” _Disability and Rehabilitation_ 25, no. 2 (2003): 57–66. https://doi.org/10.1080/0963828021000007969.
 
-[^18]: Leça, Matheus de Morais, and Ronnie de Souza Santos. “Towards User-Focused Cross-Domain Testing: Disentangling Accessibility, Usability, and Fairness.” *arXiv* (2025). https://arxiv.org/html/2501.06424v1.
+[^18]: Leça, Matheus de Morais, and Ronnie de Souza Santos. “Towards User-Focused Cross-Domain Testing: Disentangling Accessibility, Usability, and Fairness.” _arXiv_ (2025). https://arxiv.org/html/2501.06424v1.
 
-[^19]: LLYC. “Radical Transparency: How to Make the Most of Technology and Boost Stakeholder Dialogue.” *LLYC IDEAS*, n.d. https://llyc.global/en/ideas/radical-transparency-how-to-make-the-most-of-technology-and-boost-stakeholder-dialogue/.
+[^19]: LLYC. “Radical Transparency: How to Make the Most of Technology and Boost Stakeholder Dialogue.” _LLYC IDEAS_, n.d. https://llyc.global/en/ideas/radical-transparency-how-to-make-the-most-of-technology-and-boost-stakeholder-dialogue/.
 
-[^20]: Martín, Adriana, Alejandra Cechich, and Gustavo Rossi. “Accessibility at Early Stages: Insights from the Designer Perspective.” In *Proceedings of the International Cross-Disciplinary Conference on Web Accessibility (W4A ’11)*. New York: Association for Computing Machinery, 2011. https://doi.org/10.1145/1969289.1969302.
+[^20]: Martín, Adriana, Alejandra Cechich, and Gustavo Rossi. “Accessibility at Early Stages: Insights from the Designer Perspective.” In _Proceedings of the International Cross-Disciplinary Conference on Web Accessibility (W4A ’11)_. New York: Association for Computing Machinery, 2011. https://doi.org/10.1145/1969289.1969302.
 
-[^21]: Nielsen, Jakob. “10 Usability Heuristics for User Interface Design.” *Nielsen Norman Group*, April 24, 1994. Updated January 30, 2024. https://www.nngroup.com/articles/ten-usability-heuristics/.
+[^21]: Nielsen, Jakob. “10 Usability Heuristics for User Interface Design.” _Nielsen Norman Group_, April 24, 1994. Updated January 30, 2024. https://www.nngroup.com/articles/ten-usability-heuristics/.
 
-[^22]: Palo Alto Networks. “Safe Search Enforcement.” *Palo Alto Networks Documentation*, n.d. https://docs.paloaltonetworks.com/advanced-url-filtering/administration/url-filtering-features/safe-search-enforcement.
+[^22]: Palo Alto Networks. “Safe Search Enforcement.” _Palo Alto Networks Documentation_, n.d. https://docs.paloaltonetworks.com/advanced-url-filtering/administration/url-filtering-features/safe-search-enforcement.
 
-[^23]: Payette Forward. “Why Does My iPhone Keep Dimming? Here’s The Truth!” *Payette Forward*, n.d. https://www.payetteforward.com/why-does-my-iphone-keep-dimming-heres-truth/.
+[^23]: Payette Forward. “Why Does My iPhone Keep Dimming? Here’s The Truth!” _Payette Forward_, n.d. https://www.payetteforward.com/why-does-my-iphone-keep-dimming-heres-truth/.
 
-[^24]: Retail TouchPoints. “The Cost of Inaccessibility: Businesses Lose More Than $6.9 Billion Annually.” *Retail TouchPoints*, n.d. https://www.retailtouchpoints.com/executive-viewpoints/the-cost-of-inaccessibility-businesses-lose-more-than-6-9-billion-annually/145764/.
+[^24]: Retail TouchPoints. “The Cost of Inaccessibility: Businesses Lose More Than $6.9 Billion Annually.” _Retail TouchPoints_, n.d. https://www.retailtouchpoints.com/executive-viewpoints/the-cost-of-inaccessibility-businesses-lose-more-than-6-9-billion-annually/145764/.
 
-[^25]: Sustainability Directory. “What Are the Ethical Trade-Offs between Data Accessibility and the Environmental Cost of Storage?” *Sustainability Directory*, n.d. https://lifestyle.sustainability-directory.com/learn/what-are-the-ethical-trade-offs-between-data-accessibility-and-the-environmental-cost-of-storage/.
+[^25]: Sustainability Directory. “What Are the Ethical Trade-Offs between Data Accessibility and the Environmental Cost of Storage?” _Sustainability Directory_, n.d. https://lifestyle.sustainability-directory.com/learn/what-are-the-ethical-trade-offs-between-data-accessibility-and-the-environmental-cost-of-storage/.
 
-[^26]: Sustainability Directory. “Why Is Accessibility Important in Design for Sustainability?” *Sustainability Directory*, n.d. https://lifestyle.sustainability-directory.com/question/why-is-accessibility-important-in-design-for-sustainability/.
+[^26]: Sustainability Directory. “Why Is Accessibility Important in Design for Sustainability?” _Sustainability Directory_, n.d. https://lifestyle.sustainability-directory.com/question/why-is-accessibility-important-in-design-for-sustainability/.
 
-[^27]: TetraLogical. “Sustainable Accessibility in Complex Organisations: Organisational Realities.” *TetraLogical*, November 7, 2025. https://tetralogical.com/blog/2025/11/07/sustainable-accessibility-in-complex-organisations-organisational-realities/.
+[^27]: TetraLogical. “Sustainable Accessibility in Complex Organisations: Organisational Realities.” _TetraLogical_, November 7, 2025. https://tetralogical.com/blog/2025/11/07/sustainable-accessibility-in-complex-organisations-organisational-realities/.
 
-[^28]: Texas A&M University. “Myths about Accessibility.” *Texas A&M University Accessibility Resources*, n.d. https://itaccessibility.tamu.edu/resources/myths_about_accessibility.html.
+[^28]: Texas A&M University. “Myths about Accessibility.” _Texas A&M University Accessibility Resources_, n.d. https://itaccessibility.tamu.edu/resources/myths_about_accessibility.html.
 
-[^29]: Thinking Autism Guide. “Understanding Competing Accessibility Needs.” *Thinking Autism Guide*, October 2018. https://thinkingautismguide.com/2018/10/acknowledging-and-accepting-competing-accessibility.html.
+[^29]: Thinking Autism Guide. “Understanding Competing Accessibility Needs.” _Thinking Autism Guide_, October 2018. https://thinkingautismguide.com/2018/10/acknowledging-and-accepting-competing-accessibility.html.
 
-[^30]: ThoughtLab. “Sustainable Web Design: How Your Website Can Help Save the Planet.” *ThoughtLab*, n.d. https://www.thoughtlab.com/blog/sustainable-web-design-how-your-website-can-help-s/.
+[^30]: ThoughtLab. “Sustainable Web Design: How Your Website Can Help Save the Planet.” _ThoughtLab_, n.d. https://www.thoughtlab.com/blog/sustainable-web-design-how-your-website-can-help-s/.
 
-[^31]: W3C. “Accessibility, Usability, and Inclusion.” *Web Accessibility Initiative (WAI)*, n.d. https://www.w3.org/WAI/fundamentals/accessibility-usability-inclusion/.
+[^31]: W3C. “Accessibility, Usability, and Inclusion.” _Web Accessibility Initiative (WAI)_, n.d. https://www.w3.org/WAI/fundamentals/accessibility-usability-inclusion/.
 
-[^32]: W3C. “Before and After Demonstration: Overview.” *Web Accessibility Initiative (WAI)*, n.d. https://www.w3.org/WAI/demos/bad/.
+[^32]: W3C. “Before and After Demonstration: Overview.” _Web Accessibility Initiative (WAI)_, n.d. https://www.w3.org/WAI/demos/bad/.
 
-[^33]: W3C. “Inaccessibility of CAPTCHA: Alternatives to Visual Turing Tests on the Web.” *W3C Group Draft Note*, December 16, 2021. https://www.w3.org/TR/turingtest/.
+[^33]: W3C. “Inaccessibility of CAPTCHA: Alternatives to Visual Turing Tests on the Web.” _W3C Group Draft Note_, December 16, 2021. https://www.w3.org/TR/turingtest/.
 
-[^34]: World Health Organization. “Disability.” *WHO*, March 7, 2023. https://www.who.int/news-room/fact-sheets/detail/disability-and-health.
-
+[^34]: World Health Organization. “Disability.” _WHO_, March 7, 2023. https://www.who.int/news-room/fact-sheets/detail/disability-and-health.
 
 ## Sidebar
 
@@ -215,7 +214,7 @@ For more, please refer to the [Design Processes](/accessibility/designProcesses)
 CAPTCHA:
 Heading: Why Websites Use CAPTCHAs
 
-CAPTCHAs are typically used to reduce spam, credential stuffing, fake account creation, bulk scraping, and other forms of automated abuse. 
+CAPTCHAs are typically used to reduce spam, credential stuffing, fake account creation, bulk scraping, and other forms of automated abuse.
 
 CAPTCHAs are designed to be specifically hard for bots to complete, which becomes increasingly more difficult as artificial intelligence improves. Many CAPTCHAs have historically been based on distorted text because this is an open problem in AI. CAPTCHAs have also been used to help improve technologies: [digitizing books and providing labels to datasets for machine learning](https://blog.goodaudience.com/how-we-all-helped-unknowingly-google-to-digitize-books-acb45bc65084).
 
@@ -226,7 +225,7 @@ Please see [captcha.net](http://www.captcha.net/) for more about CAPTCHAs.
 accessibility-is-not-one-size-fits-all:
 Heading: Accessibility Is Not Always One-Size-Fits-All
 
-Accessibility is not always a matter of finding one solution that works for everyone. In some cases, different disabled users may have genuinely conflicting access needs. A feature that improves access for one group may create barriers for another. These are known as **access conflicts**.[^4] 
+Accessibility is not always a matter of finding one solution that works for everyone. In some cases, different disabled users may have genuinely conflicting access needs. A feature that improves access for one group may create barriers for another. These are known as **access conflicts**.[^4]
 
 For example, highly detailed screen-reader to make content accessible to blind users may produce overwhelming or inefficient audio output for others. Or, in a more specific example, the sound of a bus's door ramp being lowered to let on a wheel-chair user could cause someone with a syncope (fainting) disorder triggered by loud noises to faint, as Hofmann et al. describe from their lives in "[Living Disability Theory: Reflections on Access, Research, and Design.](https://dl.acm.org/doi/10.1145/3373625.3416996)"[^16]
 

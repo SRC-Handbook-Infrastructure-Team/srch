@@ -454,7 +454,4 @@ fs.writeFileSync(
   "utf8",
 );
 
-console.log(
-  `Exported ${contentArray.length} search blocks to ${SEARCH_INDEX_OUTPUT_PATH}`,
-);
-console.log(`Exported markdown cache to ${MARKDOWN_DATA_OUTPUT_PATH}`);
+/* console output removed */

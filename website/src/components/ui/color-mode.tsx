@@ -1,5 +1,11 @@
 "use client"
 
+/**
+ * Defines color-mode helpers and toggle primitives used by Chakra-based UI
+ * components in this project.
+ */
+
+
 import type { IconButtonProps, SpanProps } from "@chakra-ui/react"
 import { ClientOnly, IconButton, Skeleton, Span } from "@chakra-ui/react"
 import { ThemeProvider, useTheme } from "next-themes"

@@ -1,8 +1,9 @@
 ---
 title: Value of Privacy
+identifier: "1.b"
 order: 2
 final: true
-lastUpdated: 2025-04-18
+lastUpdated: 2025-04-18th
 ---
 
 ## What Is Privacy Good For?

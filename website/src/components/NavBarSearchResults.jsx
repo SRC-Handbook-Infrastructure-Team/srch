@@ -1,3 +1,8 @@
+/**
+ * Renders the navigation bar variant used on search results pages, including
+ * search-specific controls and page-level navigation actions.
+ */
+
 import "../styles/NavBarSearchResults.css";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Collapsible, Skeleton, Stack } from "@chakra-ui/react";

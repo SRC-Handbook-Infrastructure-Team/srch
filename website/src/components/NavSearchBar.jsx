@@ -1,3 +1,8 @@
+/**
+ * Renders the compact search input used in navigation contexts and dispatches
+ * query updates for live or routed search flows.
+ */
+
 import "../styles/SearchBar.css";
 import { Box, Input, IconButton } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";

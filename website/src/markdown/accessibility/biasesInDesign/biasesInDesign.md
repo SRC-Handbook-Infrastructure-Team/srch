@@ -1,5 +1,6 @@
 ---
 title: Biases in Design
+identifier: "2.d"
 order: 4
 final: false
 lastUpdated: 2026-04-21
@@ -80,31 +81,29 @@ Inaccessible design due to cognitive biases is not inevitable. Rather, accessibi
 
 _An update with real-world case study examples for the biases discussed in this primer will be available Fall ‘26._
 
+[^1]: Balarezo, Jose D., Nicolai J. Foss, and Bo Bernhard Nielsen. "Organizational Learning: Understanding Cognitive Barriers and What Organizations Can Do about Them." _Management Learning_ 55, no. 5 (2024): 741–68. https://doi.org/10.1177/13505076231210635.
 
-[^1]: Balarezo, Jose D., Nicolai J. Foss, and Bo Bernhard Nielsen. "Organizational Learning: Understanding Cognitive Barriers and What Organizations Can Do about Them." *Management Learning* 55, no. 5 (2024): 741–68. https://doi.org/10.1177/13505076231210635.
+[^2]: Bellman, Eric. “Amazon, to Win in Booming Rural India, Reinvents Itself.” 2018. _Wall Street Journal_. https://www.wsj.com/articles/amazon-to-win-in-booming-rural-india-reinvents-itself-11546196176.
 
-[^2]: Bellman, Eric. “Amazon, to Win in Booming Rural India, Reinvents Itself.” 2018. *Wall Street Journal*. https://www.wsj.com/articles/amazon-to-win-in-booming-rural-india-reinvents-itself-11546196176.
+[^3]: “Charting the Evolutionary Roots of Cognitive Biases.” 2025. _Vanderbilt Law School_. https://law.vanderbilt.edu/charting-the-evolutionary-roots-of-cognitive-biases/.
 
-[^3]: “Charting the Evolutionary Roots of Cognitive Biases.” 2025. *Vanderbilt Law School*. https://law.vanderbilt.edu/charting-the-evolutionary-roots-of-cognitive-biases/.
-
-[^4]: “Cognitive Biases and Design Research: Using Insights from Behavioral Economics and Cognitive Psychology to Re-evaluate Design Research Methods.” In *Design and Complexity - DRS International Conference 2010*. 2010. https://dl.designresearchsociety.org/drs-conference-papers/drs2010/researchpapers/95/
+[^4]: “Cognitive Biases and Design Research: Using Insights from Behavioral Economics and Cognitive Psychology to Re-evaluate Design Research Methods.” In _Design and Complexity - DRS International Conference 2010_. 2010. https://dl.designresearchsociety.org/drs-conference-papers/drs2010/researchpapers/95/
 
 [^5]: "Draw How To Make Toast: A Simple and Fun Introduction to Systems Thinking." n.d. http://www.drawtoast.com/.
 
-[^6]: “Inclusive Schools: Designing for Disability in Classrooms.” 2022. *HMC Architects*. http://hmcarchitects.com/blog/2020/06/12/inclusive-schools-designing-for-disability-in-classrooms/.
+[^6]: “Inclusive Schools: Designing for Disability in Classrooms.” 2022. _HMC Architects_. http://hmcarchitects.com/blog/2020/06/12/inclusive-schools-designing-for-disability-in-classrooms/.
 
-[^7]: “Innovations in Accessible Elections – Final Report.” n.d. *Center for Civic Design*. https://civicdesign.org/avti/innovations-in-accessible-elections/.
+[^7]: “Innovations in Accessible Elections – Final Report.” n.d. _Center for Civic Design_. https://civicdesign.org/avti/innovations-in-accessible-elections/.
 
-[^8]: Kahneman, Daniel. *Thinking, Fast and Slow*. 1st ed. New York: Farrar, Straus and Giroux, 2011.
+[^8]: Kahneman, Daniel. _Thinking, Fast and Slow_. 1st ed. New York: Farrar, Straus and Giroux, 2011.
 
-[^9]: Kannengiesser, Udo, and John S. Gero. “Design Thinking, Fast and Slow: A Framework for Kahneman’s Dual-System Theory in Design.” *Design Science* 5 (2019): e10. https://doi.org/10.1017/dsj.2019.9.
+[^9]: Kannengiesser, Udo, and John S. Gero. “Design Thinking, Fast and Slow: A Framework for Kahneman’s Dual-System Theory in Design.” _Design Science_ 5 (2019): e10. https://doi.org/10.1017/dsj.2019.9.
 
-[^10]: Pronin, Emily, Daniel Y. Lin, and Lee Ross. "The Bias Blind Spot: Perceptions of Bias in Self Versus Others." *Personality and Social Psychology Bulletin* 28, no. 3 (2002): 369–81. https://doi.org/10.1177/0146167202286008.
+[^10]: Pronin, Emily, Daniel Y. Lin, and Lee Ross. "The Bias Blind Spot: Perceptions of Bias in Self Versus Others." _Personality and Social Psychology Bulletin_ 28, no. 3 (2002): 369–81. https://doi.org/10.1177/0146167202286008.
 
-[^11]: Ravensbergen, Léa, Mathilde Van Liefferinge, Jimenez Isabella, Zhang Merrina, and Ahmed El-Geneidy. "Accessibility by Public Transport for Older Adults: A Systematic Review." *Journal of Transport Geography* 103 (2022): 103408. https://doi.org/10.1016/j.jtrangeo.2022.103408.
+[^11]: Ravensbergen, Léa, Mathilde Van Liefferinge, Jimenez Isabella, Zhang Merrina, and Ahmed El-Geneidy. "Accessibility by Public Transport for Older Adults: A Systematic Review." _Journal of Transport Geography_ 103 (2022): 103408. https://doi.org/10.1016/j.jtrangeo.2022.103408.
 
-[^12]: “Systemic Barriers in the Workplace: Disability Inclusion.” n.d. *Invisible Condition*. https://www.invisiblecondition.com/blog/systemic-barriers-in-the-workplace-disability-inclusion.
-
+[^12]: “Systemic Barriers in the Workplace: Disability Inclusion.” n.d. _Invisible Condition_. https://www.invisiblecondition.com/blog/systemic-barriers-in-the-workplace-disability-inclusion.
 
 ## Further Reading
 
@@ -120,7 +119,7 @@ _An update with real-world case study examples for the biases discussed in this 
 
 ## Sidebar
 
-Mental-Models: 
+Mental-Models:
 
 Internal representations of how individuals expect something to function based on past experiences. We may treat our own mental models as universal and therefore risk creating systems that only work for people with similar backgrounds and abilities to ours.
 
@@ -146,7 +145,7 @@ To understand why these automatic processes may dominate our thinking, we can lo
 In design practices, System 1 drives efficiency but also fuels design fixation, where teams jump directly from “what this should do” to “how it should look,” relying on familiar solutions that feel intuitive.[^9] Studies show that design processes often institutionalize this speed through design catalogs, selection charts, and pattern libraries, which codify past solutions for rapid reuse.
 
 ![Google’s Material Design icon library showing common UI icons.](/assets/primer-photos/accessibility/biases/iconLibrary.png)
-Figure 2\. Google’s Material Design icon library showing common UI icons. 
+Figure 2\. Google’s Material Design icon library showing common UI icons.
 
 The figure above shows Google’s Material Design library, a famous example of a pattern library. Its Figma library has over 3.5 million users. Notice the search icon in the upper left. While widely recognized in the West, UX research has documented that users in some regions of India interpreted this icon as a ping-pong paddle instead of a search tool, highlighting how even standard library icons can lead to miscommunication across cultures.[^2] This demonstrates how accessibility is contextual, and the biases leading to a single design solution may not hold for all users.
 

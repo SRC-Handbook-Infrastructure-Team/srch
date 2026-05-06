@@ -15,7 +15,6 @@ function copyIndexTo404() {
 
       if (fs.existsSync(indexPath)) {
         fs.copyFileSync(indexPath, notFoundPath);
-        console.log("✓ 404.html created from index.html");
       } else {
         console.warn("index.html not found, skipping 404 copy");
       }

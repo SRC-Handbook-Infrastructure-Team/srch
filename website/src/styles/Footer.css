@@ -23,6 +23,25 @@
   background: var(--color-bg);
 }
 
+.footer-container.with-sidebars {
+  --footer-left-inset: 0px;
+  --footer-right-inset: 0px;
+  box-sizing: border-box;
+  padding-left: var(--footer-left-inset);
+  padding-right: var(--footer-right-inset);
+  transition:
+    padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-container.with-sidebars.left-open {
+  --footer-left-inset: var(--left-sidebar-width);
+}
+
+.footer-container.with-sidebars.right-open {
+  --footer-right-inset: var(--right-sidebar-width);
+}
+
 .footer-content {
   display: flex;
   font-size: small;

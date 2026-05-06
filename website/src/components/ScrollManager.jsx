@@ -1,3 +1,8 @@
+/**
+ * Coordinates route-aware scroll restoration so page transitions land users in
+ * expected positions without jarring jumps.
+ */
+
 import { useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 

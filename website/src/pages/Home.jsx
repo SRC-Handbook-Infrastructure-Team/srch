@@ -1,3 +1,8 @@
+/**
+ * Route page for the home experience, including top-level navigation into
+ * modules and search-driven discovery entry points.
+ */
+
 import "../styles/Home.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";

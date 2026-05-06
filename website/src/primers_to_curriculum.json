@@ -1,0 +1,494 @@
+{
+  "Primers": [
+    {
+      "Identifier": "1.a",
+      "Primer Name": "What is Privacy?",
+      "Published": true,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "N/A"
+    },
+    {
+      "Identifier": "1.b",
+      "Primer Name": "Value of Privacy",
+      "Published": true,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.4"
+    },
+    {
+      "Identifier": "1.c",
+      "Primer Name": "Data Ownership and Surveillance Capitalism",
+      "Published": true,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.1"
+    },
+    {
+      "Identifier": "1.d",
+      "Primer Name": "Privacy Trade-Offs",
+      "Published": true,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.6"
+    },
+    {
+      "Identifier": "1.e",
+      "Primer Name": "Consent",
+      "Published": true,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.8"
+    },
+    {
+      "Identifier": "1.f",
+      "Primer Name": "Surveillance",
+      "Published": false,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.7, IV.c.6"
+    },
+    {
+      "Identifier": "1.g",
+      "Primer Name": "Re-identification and Differential Privacy",
+      "Published": false,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.3, II.9"
+    },
+    {
+      "Identifier": "1.h",
+      "Primer Name": "Encryption and Otherwise",
+      "Published": false,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.9"
+    },
+    {
+      "Identifier": "1.i",
+      "Primer Name": "Privacy Regulations",
+      "Published": false,
+      "Section": "Privacy",
+      "Curriculum Objective(s)": "II.5"
+    },
+    {
+      "Identifier": "2.a",
+      "Primer Name": "What is Accessibility?",
+      "Published": true,
+      "Section": "Accessibility",
+      "Curriculum Objective(s)": "III.b.1"
+    },
+    {
+      "Identifier": "2.b",
+      "Primer Name": "Understanding Accessibility Standards",
+      "Published": false,
+      "Section": "Accessibility",
+      "Curriculum Objective(s)": "III.b.2"
+    },
+    {
+      "Identifier": "2.c",
+      "Primer Name": "Intersections with Other Values",
+      "Published": true,
+      "Section": "Accessibility",
+      "Curriculum Objective(s)": "III.b.3"
+    },
+    {
+      "Identifier": "2.d",
+      "Primer Name": "Biases in Design",
+      "Published": true,
+      "Section": "Accessibility",
+      "Curriculum Objective(s)": "III.a.2"
+    },
+    {
+      "Identifier": "2.e",
+      "Primer Name": "Design Processes",
+      "Published": true,
+      "Section": "Accessibility",
+      "Curriculum Objective(s)": "III.a.1"
+    },
+    {
+      "Identifier": "3.a",
+      "Primer Name": "Bias in Automated Decision-Making Systems",
+      "Published": true,
+      "Section": "Automated Decision Making",
+      "Curriculum Objective(s)": "I.b.1"
+    },
+    {
+      "Identifier": "3.b",
+      "Primer Name": "Algorithmic Fairness",
+      "Published": true,
+      "Section": "Automated Decision Making",
+      "Curriculum Objective(s)": "I.b.2"
+    },
+    {
+      "Identifier": "3.c",
+      "Primer Name": "Justice in AI",
+      "Published": true,
+      "Section": "Automated Decision Making",
+      "Curriculum Objective(s)": "I.b.4"
+    },
+    {
+      "Identifier": "3.d",
+      "Primer Name": "AI Governance",
+      "Published": true,
+      "Section": "Automated Decision Making",
+      "Curriculum Objective(s)": "I.b.7"
+    },
+    {
+      "Identifier": "3.e",
+      "Primer Name": "AI Interpretability",
+      "Published": false,
+      "Section": "Automated Decision Making",
+      "Curriculum Objective(s)": "I.b.6"
+    },
+    {
+      "Identifier": "4.a",
+      "Primer Name": "AI Safety",
+      "Published": false,
+      "Section": "Generative AI",
+      "Curriculum Objective(s)": "I.c.1, I.c.2"
+    },
+    {
+      "Identifier": "4.b",
+      "Primer Name": "AI and Labor",
+      "Published": false,
+      "Section": "Generative AI",
+      "Curriculum Objective(s)": "I.c.5"
+    },
+    {
+      "Identifier": "4.c",
+      "Primer Name": "AI and Copyright",
+      "Published": false,
+      "Section": "Generative AI",
+      "Curriculum Objective(s)": "I.c.4"
+    }
+  ],
+  "Curriculum Objectives": [
+    {
+      "Identifier": "I.a.1",
+      "Description": "**Understand** that representing aspects of the world through data is necessarily reductive and incomplete. Developer perspective shapes the choice and design of variables",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.a. Modeling and Analysis"
+    },
+    {
+      "Identifier": "I.a.2",
+      "Description": "Identify variables in datasets that emphasize a particular perspective and the possible impacts of redesigning those datasets",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.a. Modeling and Analysis"
+    },
+    {
+      "Identifier": "I.b.1",
+      "Description": "**Understand** different sources of bias in algorithmic and AI systems (societal vs. dataset vs. system parameters) and their interactions",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.2",
+      "Description": "**Be aware of** and **Understand** metrics to mathematically interpret fairness",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.3",
+      "Description": "**Be aware of approaches** for bias mitigation",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.4",
+      "Description": "**Be aware of** and **Understand** different concepts of justice as they relate to automated decision-making systems",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.5",
+      "Description": "**Understand** context-specific limitations of automated decision-making and **Analyze** when the use of such systems is appropriate and when human decision-making is preferable or required",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.6",
+      "Description": "**Understand** and **Analyze** different standards for interpreting algorithmic and AI decisions: e.g., transparency, explainability",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.b.7",
+      "Description": "**Understand** different methods and strategies for AI governance",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.b. Automated Decision-Making"
+    },
+    {
+      "Identifier": "I.c.1",
+      "Description": "**Understand** the distinct mechanisms by which AI systems can produce harm\n- **Understand** how the unpredictability of generative AI systems and the contexts in which they are deployed means that they cannot, at present, be designed to reliably avoid harmful outcomes",
+      "Category": "I. Data Science and Artificial Intelligence"
+    },
+    {
+      "Identifier": "I.c.2",
+      "Description": "**Be aware of** strategies to identify, evaluate, and mitigate harms stemming from unpredictability in AI systems",
+      "Category": "I. Data Science and Artificial Intelligence"
+    },
+    {
+      "Identifier": "I.c.3",
+      "Description": "**Be aware of** the effects of widespread use of synthetic content on one’s ability to control their likeness and public perception",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.c. Generative AI"
+    },
+    {
+      "Identifier": "I.c.4",
+      "Description": "**Be aware of** the legal frameworks governing copyright and intellectual property as they relate to generative AI\n- **Be aware of** questions about whether AI-generated outputs are copyrightable\n- **Be aware of** questions regarding the legality of training models on copyrighted data",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.c. Generative AI"
+    },
+    {
+      "Identifier": "I.c.5",
+      "Description": "**Be aware of** opportunities and risks of generative AI in future of work (e.g., deskilling, lack of connectivity).",
+      "Category": "I. Data Science and Artificial Intelligence",
+      "Subcategory": "I.c. Generative AI"
+    },
+    {
+      "Identifier": "II.1",
+      "Description": "**Be aware of** the extent of data collection and reliance of technologies on large volumes of personal data\n**Understand** the concept of surveillance capitalism and alternative data-driven economic models",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.2",
+      "Description": "**Understand** and **Identify** different mechanisms of data collection—overt, covert, and from other sources (i.e. via sharing)—and their implications on privacy",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.3",
+      "Description": "**Understand** the limitation of the distinction between sensitive and non-sensitive data, especially considering the potential for re-identification",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.4",
+      "Description": "**Understand** the value and functions of privacy (including short-term and long-term privacy threats)",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.5",
+      "Description": "**Understand** (and **Implement**) key aspects of major privacy regulations, standards, etc. (e.g., CCPA, GDPR, …)",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.6",
+      "Description": "**Analyze** trade-offs between privacy and other values, such as transparency, accountability, safety, or security",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.7",
+      "Description": "**Understand** surveillance and **Identify** instances of data collection that enable surveillance",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.8",
+      "Description": "**Understand** different conceptions of consent, their potential, and limitations, as an instrument for data protection",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "II.9",
+      "Description": "**Be aware of** widely-used privacy-preserving/enhancing technologies (e.g., encryption, differential privacy)\n- **Understand** their limitations\n- **Analyze** prominent controversies surrounding them",
+      "Category": "II. Data Collection, Protection, and Privacy",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "III.a.1",
+      "Description": "**Understand** (and **Implement**) different design processes for evaluating the needs of diverse users and **Analyze** their appropriateness in various contexts",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.a. Responsible Design"
+    },
+    {
+      "Identifier": "III.a.2",
+      "Description": "**Understand** and **Identify** how different biases can influence one’s judgment and shape design decisions",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.a. Responsible Design"
+    },
+    {
+      "Identifier": "III.b.1",
+      "Description": "**Understand** varying definitions and conceptions of accessibility",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.b. Accessibility"
+    },
+    {
+      "Identifier": "III.b.2",
+      "Description": "**Identify** opportunities to apply and Implement standards and best practices for accessibility",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.b. Accessibility"
+    },
+    {
+      "Identifier": "III.b.3",
+      "Description": "**Identify** and **Analyze** intersections between accessibility and other values such as privacy, security, or sustainability",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.b. Accessibility"
+    },
+    {
+      "Identifier": "III.c.1",
+      "Description": "**Be aware of** how technology is used to direct users’ attention and shape their interests, preferences, and desires",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.c. Technology and the Self"
+    },
+    {
+      "Identifier": "III.c.2",
+      "Description": "**Be aware of** the psychological mechanisms and cognitive biases which are exploited in directing user attention (e.g., nudging) and their technical implementations",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.c. Technology and the Self"
+    },
+    {
+      "Identifier": "III.c.3",
+      "Description": "**Analyze** the value of attention and the consequences of yielding control over it",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.c. Technology and the Self"
+    },
+    {
+      "Identifier": "III.c.4",
+      "Description": "**Analyze** the effect of technologies on our self-perception and relationship with ourselves",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.c. Technology and the Self"
+    },
+    {
+      "Identifier": "III.c.5",
+      "Description": "**Analyze** the effect of technologies on the nature and quality of interpersonal relationships",
+      "Category": "III. Design and User Experience",
+      "Subcategory": "III.c. Technology and the Self"
+    },
+    {
+      "Identifier": "IV.a.1",
+      "Description": "**Be aware of** and **Identify** potential environmental impacts of a specific technology: \n- Natural resource consumption\n- Energy consumption\n- E-waste production\n- Pollution\n",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.a. Sustainability"
+    },
+    {
+      "Identifier": "IV.a.2",
+      "Description": "**Understand** how the environmental impacts of technology have disproportionate socio-economic effects on different populations",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.a. Sustainability"
+    },
+    {
+      "Identifier": "IV.a.3",
+      "Description": "**Understand** the need for infrastructural sustainability and the means and challenges of ensuring hardware and software maintenance and preservation\n- **Analyze** software preservation efforts in the context of broader perspectives on preservation (e.g., of cultural heritage)",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.a. Sustainability"
+    },
+    {
+      "Identifier": "IV.a.4",
+      "Description": "**Understand** the need for and challenges of ensuring data sustainability",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.a. Sustainability"
+    },
+    {
+      "Identifier": "IV.b.1",
+      "Description": "**Identify** skills and roles that advancements in specific technologies (e.g. automation, generative AI)  are likely to displace, create, or evolve, and **Analyze** the (socio-)economic implications of these changes",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.b. Technology and Labor"
+    },
+    {
+      "Identifier": "IV.b.2",
+      "Description": "**Be aware of** the (often exploitative) human labor involved in and the physical and psychological effects of:\n- Training AI models (including data labeling and curation)\n- Surveillance\n- Content Moderation\n- Hardware fabrication and resource collection\n- Data generation",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.b. Technology and Labor"
+    },
+    {
+      "Identifier": "IV.c.1",
+      "Description": "**Understand** the effect of content moderation on social pluralism \n- **Analyze** the tensions between free expression of ideas and user safety/comfort in online spaces",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.c.2",
+      "Description": "**Understand** the effects of algorithmic/AI-based curation of information on public discourse (e.g., filter bubbles, echo chambers)",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.c.3",
+      "Description": "**Understand** the role of specific technologies (e.g., social media, generative AI) in spreading misinformation or disinformation\n- **Be aware of** the effect of specific technologies on erosion of trust in individuals, institutions, and providers of information",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.c.4",
+      "Description": "**Be aware of** the potential and limitations of technical and non-technical mitigation approaches to curb the spread of mis-/disinformation",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.c.5",
+      "Description": "**Understand** how technical infrastructure and regulation of that infrastructure shapes the ways in which we communicate and consume information",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.c.6",
+      "Description": "**Be aware of** how sousveillance (watching the watchers), enabled by easy access to recording devices and social networks for distribution, creates transparency and enables individuals and social movements to hold institutions and other powerful actors accountable",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.c. The Internet and Public Discourse"
+    },
+    {
+      "Identifier": "IV.d.1",
+      "Description": "**Understand** the global impacts of technological developments and political and economic power structures that shape them",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.d. Technology, History, and International Relations"
+    },
+    {
+      "Identifier": "IV.d.2",
+      "Description": "**Be aware of** the long-term history of technological development and Analyze the impact of current changes in light of that history",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.d. Technology, History, and International Relations"
+    },
+    {
+      "Identifier": "IV.d.3",
+      "Description": "**Analyze** the impact of technology on military capabilities and conflict",
+      "Category": "IV. Technology in Context",
+      "Subcategory": "IV.d. Technology, History, and International Relations"
+    },
+    {
+      "Identifier": "V.1",
+      "Description": "**Understand** the concept of a stakeholder and Identify various stakeholders in a given project",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.2",
+      "Description": "**Identify** and **Implement** stakeholder needs",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.3",
+      "Description": "**Analyze** how different stakeholders’ needs may conflict and potential resolution strategies",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.4",
+      "Description": "**Understand** how to communicate technical content to non-technical stakeholders",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.5",
+      "Description": "**Analyze** the alignment of a project with stakeholders' intended goals",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.6",
+      "Description": "**Identify** and **Analyze** techno-solutionist attitudes and approaches",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.7",
+      "Description": "**Analyze** the potential impacts of technologies with a broad socio-political view, especially those that are ostensibly designed for social benefit\n- **Analyze** conflicting positions on the extent to which stakeholder requests should be implemented, in cases where stakeholder requests may diverge from what might benefit them (i.e. paternalism versus libertarianism)",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    },
+    {
+      "Identifier": "V.8",
+      "Description": "**Be aware of** responsible disclosure\n- **Be aware of** the existence of mechanisms for reporting technological vulnerabilities to responsible organizations\n- **Analyze** possible impacts of releasing security vulnerabilities publicly ",
+      "Category": "V. Stakeholder Engagement",
+      "Subcategory": "N/A"
+    }
+  ]
+}

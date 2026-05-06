@@ -1,3 +1,8 @@
+/**
+ * Exposes a shared tooltip wrapper around Chakra primitives to keep tooltip
+ * behavior and defaults consistent across the codebase.
+ */
+
 import { Tooltip as ChakraTooltip, Portal } from "@chakra-ui/react"
 import * as React from "react"
 

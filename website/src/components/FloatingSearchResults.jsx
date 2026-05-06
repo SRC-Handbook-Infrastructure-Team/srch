@@ -1,3 +1,8 @@
+/**
+ * Renders the floating search results panel used for quick, contextual navigation
+ * while users browse the handbook.
+ */
+
 import "../styles/FloatingSearchResults.css";
 import React, { useState, useEffect } from "react";
 import { Collapsible, Box } from "@chakra-ui/react";

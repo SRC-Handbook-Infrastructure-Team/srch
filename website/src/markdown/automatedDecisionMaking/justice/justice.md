@@ -1,5 +1,6 @@
 ---
 title: Justice in AI
+identifier: "3.c"
 order: 3
 final: true
 lastUpdated: 2026-04-21
@@ -68,7 +69,7 @@ Restorative justice can help victims build a constructive relationship or dialog
 
 ## Epistemic Justice
 
-**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^4]** 
+**The key theorist of epistemic justice Miranda Fricker explains it through the prism of epistemic injustice. She theorized that epistemic injustice is “wrong done to someone in her capacity as a knower.”[^4]**
 
 At the core of it, epistemic injustice occurs when certain people’s knowledge, experiences, or interpretive frameworks are systematically excluded or devalued. Along with Fricker, many theorists since then, like Revathi Krishnaswamy, Raewyn Connell, Boaventura De Sousa Santos, Victoria Zurita, Chen Bar-Itzhak, and others, have applied epistemic justice frameworks to literature, politics, science, and other domains where marginalization and delegitimating occur towards knowledge and ways of understanding come from non-dominant cultural centers.[^21] In AI, this manifests through {data-colonialism}, biased training sets, and {hegemonic-definitions-of-accuracy}. Algorithmic systems often silence marginalized perspectives by codifying only the dominant worldview, turning epistemic inequality into {technological-infrastructure}[^9][^8].
 
@@ -81,7 +82,7 @@ At the core of it, epistemic injustice occurs when certain people’s knowledge,
 
 ## Structural Justice
 
-**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^14].** For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^2] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies. 
+**Stuctural bias examines not just what an AI system decides, but the wider web of institutions, norms, and power relations it may reinforce. Structural harm emerges when technological systems reproduce social processes that systematically expose some populations to domination, deprivation, or vulnerability while expanding the opportunities of others[^14].** For example, feminist theorists highlight that structural violence is sustained through policies, organizational routines, and cultural norms that constrain autonomy and reproduce inequality, even when no individual intends harm.[^2] Evaluating AI through this lens requires asking not only whether the model is biased, but whose power it extends, whose lives it becomes entangled with, and whose vulnerabilities it amplifies.
 
 #### Key AI Questions for Structural Justice:
 
@@ -92,7 +93,7 @@ At the core of it, epistemic injustice occurs when certain people’s knowledge,
 
 ## Environmental Justice
 
-**Environmental justice examines how environmental benefits, burdens, and risks are distributed across communities, and whether some groups bear disproportionate harms from environmental degradation.** When applied to AI, environmental justice assesses how algorithmic systems influence environmental governance, resource allocation, climate risk management, and the ecological footprint of {AI-infrastructure} itself. 
+**Environmental justice examines how environmental benefits, burdens, and risks are distributed across communities, and whether some groups bear disproportionate harms from environmental degradation.** When applied to AI, environmental justice assesses how algorithmic systems influence environmental governance, resource allocation, climate risk management, and the ecological footprint of {AI-infrastructure} itself.
 
 #### Key AI Questions for Environmental Justice:
 

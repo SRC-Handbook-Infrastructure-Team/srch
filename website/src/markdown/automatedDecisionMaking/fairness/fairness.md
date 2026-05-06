@@ -1,5 +1,6 @@
 ---
 title: Algorithmic Fairness
+identifier: "3.b"
 order: 2
 final: true
 lastUpdated: 2026-04-21

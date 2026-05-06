@@ -1,3 +1,8 @@
+/**
+ * Route page for the landing experience shown at startup, including hero
+ * messaging and primary navigation choices.
+ */
+
 import "../styles/LandingPage.css";
 import "../styles/Home.css";
 import { useEffect, useMemo, useState } from "react";

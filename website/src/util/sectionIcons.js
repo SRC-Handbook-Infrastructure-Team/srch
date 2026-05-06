@@ -1,3 +1,8 @@
+/**
+ * Resolves section icon assets by section id and theme so visual identifiers
+ * remain consistent across navigation and content views.
+ */
+
 const lightIconModules = import.meta.glob("../assets/*-icon.svg", {
   eager: true,
   import: "default",

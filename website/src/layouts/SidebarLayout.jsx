@@ -1,5 +1,17 @@
+/**
+ * Composes the main application shell with left/right sidebars, main content,
+ * resizing behavior, and coordinated panel open/close state.
+ */
+
 import "../styles/MarkdownPage.css";
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import useResizableSidebar from "../hooks/useResizableSidebar";
 import { LayoutContext } from "./LayoutContext";
 import ContentsSidebar from "../components/ContentsSidebar";
@@ -73,7 +85,7 @@ export default function SidebarLayout({ children }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.dataset.layoutMode = layoutMode;
     }
@@ -154,7 +166,7 @@ export default function SidebarLayout({ children }) {
     prevLayoutMode.current = layoutMode;
   }, [layoutMode, leftSidebarCollapsed, leftSidebar]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document !== "undefined") {
       if (
         leftSidebar.width > 0 &&
@@ -270,7 +282,7 @@ export default function SidebarLayout({ children }) {
   }, [isRightOpen]);
 
   // Manage 'right-open' class on <html> when right sidebar is open in wide mode
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document !== "undefined") {
       if (isRightOpen && layoutMode === "wide") {
         document.documentElement.classList.add("right-open");
@@ -312,42 +324,6 @@ export default function SidebarLayout({ children }) {
     },
     [layoutMode, isRightOpen, leftSidebar],
   );
-
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      const header = document.querySelector(".main-shift");
-      const leftSidebarWidth = document.querySelector(".left-sidebar");
-      const rightSidebarWidth = document.querySelector(".right-sidebar");
-      if (!rightSidebarWidth) {
-        if (
-          header &&
-          leftSidebarWidth &&
-          header.offsetWidth + leftSidebarWidth.offsetWidth < 700 &&
-          !leftSidebarCollapsed
-        ) {
-          leftSidebar.toggleCollapsed();
-        }
-      } else {
-        if (computeLayoutMode == "overlay") {
-          if (!leftSidebarCollapsed) {
-            leftSidebar.toggleCollapsed();
-          }
-        } else {
-          if (
-            header &&
-            leftSidebarWidth &&
-            header.offsetWidth +
-              leftSidebarWidth.offsetWidth +
-              rightSidebarWidth.offsetWidth <
-              700 &&
-            !leftSidebarCollapsed
-          ) {
-            leftSidebar.toggleCollapsed();
-          }
-        }
-      }
-    }
-  }, [viewportWidth, leftSidebarCollapsed, leftSidebar]);
 
   const closePanel = useCallback(
     (id) => {

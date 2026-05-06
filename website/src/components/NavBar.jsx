@@ -1,3 +1,8 @@
+/**
+ * Renders the top navigation bar with primary actions, route links, and responsive
+ * controls used throughout the handbook experience.
+ */
+
 import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

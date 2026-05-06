@@ -1,3 +1,8 @@
+/**
+ * Route page for About content, including project framing and static details
+ * about the handbook and its purpose.
+ */
+
 import "../styles/About.css";
 import { useState, useEffect } from "react";
 import MarkdownRenderer, {

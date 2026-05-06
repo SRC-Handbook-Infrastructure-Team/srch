@@ -1,3 +1,8 @@
+/**
+ * Renders the left contents sidebar, including section links, expand/collapse behavior,
+ * and keyboard-friendly navigation for module pages.
+ */
+
 import "../styles/MarkdownPage.css";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";

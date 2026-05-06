@@ -1,3 +1,8 @@
+/**
+ * Renders the main search bar UI and handles query input, keyboard interaction,
+ * and navigation into search results.
+ */
+
 import "../styles/SearchBar.css";
 import { Box, Input, IconButton, Collapsible } from "@chakra-ui/react";
 import { LuSearch, LuX } from "react-icons/lu";

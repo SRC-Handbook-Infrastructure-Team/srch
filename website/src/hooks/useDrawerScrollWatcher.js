@@ -1,3 +1,8 @@
+/**
+ * Watches drawer term navigation and ensures the related inline reference chip
+ * is visible by adjusting scroll position when needed.
+ */
+
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -92,7 +97,6 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
         if (process.env.NODE_ENV !== "production") {
           console.warn("[DrawerScrollWatcher] Chip not found for term:", term);
         }
-        // Mark as handled even if not found, to prevent repeated attempts
         scrolledTermsRef.current.add(term);
         return;
       }
@@ -122,12 +126,7 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
         chipRect.top >= visibleTop - 50 &&
         chipRect.bottom <= visibleBottom + 50;
 
-      if (isVisible) {
-        // Chip is already visible - user probably clicked it, don't scroll
-        if (process.env.NODE_ENV !== "production") {
-          console.log("[DrawerScrollWatcher] Chip visible, no scroll:", term);
-        }
-      } else {
+      if (!isVisible) {
         // Chip is not visible - this is likely direct URL navigation, scroll to it
         const currentScroll =
           scrollContainer === window
@@ -144,14 +143,6 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
           chipCenterRelativeToContainer -
           containerRect.height / 2;
 
-        // // Clamp to valid scroll range
-        // const maxScroll =
-        //   scrollContainer === window
-        //     ? document.documentElement.scrollHeight - window.innerHeight
-        //     : scrollContainer.scrollHeight - scrollContainer.clientHeight;
-
-        // const clampedScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-
         const clampedScroll = targetScroll;
 
         // Perform scroll
@@ -159,14 +150,6 @@ export function useDrawerScrollWatcher({ urlTerm, isReady }) {
           window.scrollTo({ top: clampedScroll, behavior: "auto" });
         } else {
           scrollContainer.scrollTo({ top: clampedScroll, behavior: "auto" });
-        }
-
-        if (process.env.NODE_ENV !== "production") {
-          console.log("[DrawerScrollWatcher] Scrolled to chip:", {
-            term,
-            from: Math.round(currentScroll),
-            to: Math.round(clampedScroll),
-          });
         }
       }
 

@@ -1,5 +1,11 @@
 "use client"
 
+/**
+ * Wraps the application with required UI providers and global context setup
+ * for theming and shared component behavior.
+ */
+
+
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
 import {
   ColorModeProvider,

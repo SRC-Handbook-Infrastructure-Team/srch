@@ -1,4 +1,8 @@
-// src/layouts/LayoutContext.js
+/**
+ * Defines and exports the layout context used to coordinate shared layout state
+ * and panel controls across page and component boundaries.
+ */
+
 import { createContext, useContext } from "react";
 
 /**

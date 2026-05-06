@@ -1,3 +1,8 @@
+/**
+ * Builds and queries the search index, normalizes content for indexing, and
+ * returns ranked results used by search UI components.
+ */
+
 import FlexSearch from "flexsearch";
 import {
   getSections,

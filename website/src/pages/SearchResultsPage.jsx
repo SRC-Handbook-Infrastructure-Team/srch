@@ -1,3 +1,8 @@
+/**
+ * Route page that renders full search results for a query and supports
+ * navigation to matching module sections.
+ */
+
 import "../styles/SearchResultsPage.css";
 import { useParams } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";

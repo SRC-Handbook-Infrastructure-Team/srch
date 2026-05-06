@@ -1,4 +1,7 @@
-// remarkSidebarRef.ts
+/**
+ * remark plugin that converts inline {term|label} markers into custom
+ * sidebar reference nodes used by the markdown renderer.
+ */
 import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type { Text, Parent, Literal } from "mdast";

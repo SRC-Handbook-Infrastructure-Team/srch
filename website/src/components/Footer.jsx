@@ -1,3 +1,8 @@
+/**
+ * Renders the site footer, including module links, quick links, and feedback links.
+ * It also publishes footer height so layout spacing stays consistent.
+ */
+
 import "../styles/Footer.css";
 import { useNavigate } from "react-router-dom";
 import logoLight from "../assets/srch_logo.svg";

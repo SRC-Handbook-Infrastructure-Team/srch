@@ -1,3 +1,8 @@
+/**
+ * Route page that loads and renders module markdown content, sidebar drawers,
+ * curriculum objectives, and cross-linked footnotes.
+ */
+
 import "../styles/MarkdownPage.css";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -5,6 +10,7 @@ import { Box } from "@chakra-ui/react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { visit } from "unist-util-visit";
+import { MdArrowForward } from "react-icons/md";
 import { useLayout } from "../layouts/LayoutContext";
 import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
 import MarkdownRenderer, {
@@ -14,6 +20,7 @@ import MarkdownRenderer, {
   getPreloadedMarkdownContent,
   highlightText,
 } from "../util/MarkdownRenderer";
+import primersData from "../primers_to_curriculum.json";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -129,7 +136,7 @@ function buildSidebarDrawersFootnoteOriginMap(sidebar) {
     const entry = sidebar[slug];
     const contentToShow =
       (typeof entry === "string" ? entry : entry?.content) || "";
-    // Use buildFootnoteOriginMap on this drawer's content, mapping all found footnotes to this slug
+
     const localMap = buildFootnoteOriginMap(contentToShow, {});
     for (const key of Object.keys(localMap)) {
       if (!originMap[key]) originMap[key] = slug;
@@ -288,7 +295,6 @@ function MarkdownPage() {
    * This version reuses the same numbering logic as ContentsSidebar.
    */
 
-  // ----------------- Shared Formatting Helpers (same logic as ContentsSidebar) -----------------
   const SECTION_NUMBER_MAP = {
     privacy: "1",
     accessibility: "2",
@@ -306,27 +312,19 @@ function MarkdownPage() {
     return s;
   }
 
-  // prettify "what-is-privacy" → "What Is Privacy"
   function prettifySlug(slug = "") {
-    return (
-      String(slug)
-        // Insert space between lowercase -> uppercase ("generativeAI" → "generative AI")
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
+    return String(slug)
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
 
-        // Insert space between acronym + word ("AIethics" → "AI ethics")
-        .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
 
-        // Replace hyphens and underscores with spaces
-        .replace(/[-_]+/g, " ")
+      .replace(/[-_]+/g, " ")
 
-        // Collapse any double spaces
-        .replace(/\s+/g, " ")
+      .replace(/\s+/g, " ")
 
-        // Capitalize each word
-        .replace(/\b\w/g, (m) => m.toUpperCase())
+      .replace(/\b\w/g, (m) => m.toUpperCase())
 
-        .trim()
-    );
+      .trim();
   }
 
   function normalizeSectionKey(id) {
@@ -345,11 +343,9 @@ function MarkdownPage() {
     pageTitle,
     subsectionsArr = [],
   ) {
-    // Normalize incoming section id to match our map keys
     const sectionKey = normalizeSectionKey(sectionId);
     const sectionNum = SECTION_NUMBER_MAP[sectionKey] || ""; // empty if unknown (no '?')
 
-    // Find letter for subsection, if any
     let letter = "";
     if (
       subsectionId &&
@@ -360,18 +356,15 @@ function MarkdownPage() {
       if (idx >= 0) letter = indexToLetter(idx);
     }
 
-    // Prefer frontmatter title when present
     const titleText =
       pageTitle && pageTitle.trim()
         ? pageTitle.trim()
         : prettifySlug(subsectionId || sectionId || "");
 
-    // Build the numeric prefix (e.g. "1.a.") only if we have a section number
     const numberedPrefix = sectionNum
       ? sectionNum + (letter ? `.${letter}.` : "")
       : "";
 
-    // If there is a prefix, add " - " after it; otherwise just the title
     return numberedPrefix ? `${numberedPrefix} - ${titleText}` : titleText;
   }
 
@@ -429,6 +422,10 @@ function MarkdownPage() {
   const [pageTitle, setPageTitle] = useState(
     cachedPageContent?.frontmatter?.title || "",
   );
+  const [pageIdentifier, setPageIdentifier] = useState(
+    cachedPageContent?.frontmatter?.identifier || "",
+  );
+  const [curriculumItems, setCurriculumItems] = useState([]);
   const [subsections, setSubsections] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(
     cachedPageContent?.frontmatter?.lastUpdated || "",
@@ -521,10 +518,9 @@ function MarkdownPage() {
     setSidebarFootnoteOriginMap(map);
   }, [sidebar]);
 
-  // Merge main markdown footnotes and sidebar drawer footnotes
   const footnoteOriginMap = useMemo(() => {
     const mainMap = buildFootnoteOriginMap(rawMainMarkdown, sidebar);
-    // Sidebar map takes precedence for keys it defines
+
     return { ...mainMap, ...sidebarFootnoteOriginMap };
   }, [rawMainMarkdown, sidebar, sidebarFootnoteOriginMap]);
 
@@ -600,7 +596,6 @@ function MarkdownPage() {
         ? sidebarEntry
         : sidebarEntry.content) || "";
 
-    // Build the footnote origin map for this drawer's content only
     const drawerFootnoteOriginMap = buildFootnoteOriginMap(contentToShow, {});
 
     const heading =
@@ -642,7 +637,6 @@ function MarkdownPage() {
     if (mainContent && !isLoading) setPreviousPath(location.pathname);
   }, [mainContent, location.pathname, isLoading]);
 
-  // Restore scroll after markdown re-renders (fixes jump)
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.scrollTop = scrollPosRef.current;
@@ -666,23 +660,22 @@ function MarkdownPage() {
           const raw = result.content || "";
           const cleaned = raw.replace(/^\s*#\s[^\n\r]+(\r?\n)+/, "");
           setMainContent(cleaned);
-          // ── Store raw markdown for footnote origin parsing ──
+
           setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
           setPageTitle(result.frontmatter?.title || "");
+          const id = result.frontmatter?.identifier || "";
+          setPageIdentifier(id);
           setAllDefinitions(result.allDefinitions || {});
           setFurtherReadingBlock(result.furtherReadingBlock || null);
 
-          //  Prefer subsection lastUpdated; fallback to section-level lastUpdated
           let lu = result.frontmatter?.lastUpdated || "";
 
           if (!lu) {
             try {
               const parent = await getContent(sectionId);
               lu = parent?.frontmatter?.lastUpdated || "";
-            } catch (e) {
-              // ignore — fallback will simply remain empty
-            }
+            } catch (e) {}
           }
 
           setLastUpdated(lu);
@@ -699,7 +692,6 @@ function MarkdownPage() {
       }
 
       if (sectionId && subsectionId) {
-        //  Performance: fetch content + subsections in parallel to make the H1
         // numbering (letter) available ASAP on direct subsection loads.
         const [result, subs] = await Promise.all([
           getContent(sectionId, subsectionId),
@@ -735,6 +727,7 @@ function MarkdownPage() {
           setRawMainMarkdown(raw);
           setSidebar(result.sidebar || {});
           setPageTitle(result.frontmatter?.title || "");
+          setPageIdentifier(result.frontmatter?.identifier || "");
           setAllDefinitions(result.allDefinitions || {});
           setFurtherReadingBlock(result.furtherReadingBlock || null);
 
@@ -795,6 +788,50 @@ function MarkdownPage() {
       active = false;
     };
   }, [sectionId]);
+
+  // Compute curriculum objectives for the current pageIdentifier
+  useEffect(() => {
+    if (
+      !pageIdentifier ||
+      !primersData ||
+      !Array.isArray(primersData.Primers)
+    ) {
+      setCurriculumItems([]);
+      return;
+    }
+
+    // Normalize identifier in case it contains stray quotes/whitespace
+    const normalizedId = String(pageIdentifier || "")
+      .replace(/^['\"]|['\"]$/g, "")
+      .trim();
+
+    const primer = primersData.Primers.find(
+      (p) => String(p.Identifier || "").trim() === normalizedId,
+    );
+    if (!primer) {
+      setCurriculumItems([]);
+      return;
+    }
+
+    const raw = String(primer["Curriculum Objective(s)"] || "").trim();
+
+    const codes = raw
+      .split(/[,;\n]+/)
+      .map((s) => String(s).trim())
+      .filter(Boolean);
+    const mapped = codes.map((code) => {
+      const found = (primersData["Curriculum Objectives"] || []).find(
+        (o) => String(o.Identifier || "").trim() === String(code).trim(),
+      );
+      return {
+        code,
+        description: found ? found.Description : null,
+      };
+    });
+
+    const final = mapped.filter(Boolean);
+    setCurriculumItems(final);
+  }, [pageIdentifier]);
 
   useEffect(() => {
     if (!urlTerm) {
@@ -967,9 +1004,32 @@ function MarkdownPage() {
           <div className="page-header-row">
             <h1 className="page-title">{formattedTitle}</h1>
           </div>
-          {lastUpdated && (
-            <div className="page-last-updated">
-              Last updated on {formatDate(lastUpdated)}
+          {curriculumItems && curriculumItems.length > 0 && (
+            <div className="curriculum-objectives">
+              <div className="curriculum-objectives-inner">
+                <div className="curriculum-objectives-label">
+                  SRC CURRICULUM LEARNING OBJECTIVE(S):
+                </div>
+
+                <div className="curriculum-objectives-list">
+                  {curriculumItems.map((it, i) => (
+                    <div className="curriculum-objective-row" key={it.code + i}>
+                      <span className="curriculum-objective-code">
+                        {it.code}
+                      </span>
+                      <MdArrowForward className="curriculum-objective-arrow" />
+                      <div className="curriculum-objective-desc">
+                        <ReactMarkdown
+                          rehypePlugins={[rehypeRaw]}
+                          components={{ p: ({ children }) => <>{children}</> }}
+                        >
+                          {it.description || ""}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
           <div className="page-divider markdown-margin" />

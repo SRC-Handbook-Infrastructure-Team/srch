@@ -1,3 +1,8 @@
+/**
+ * Renders and updates the reading progress bar based on current scroll position
+ * within long-form page content.
+ */
+
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
