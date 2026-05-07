@@ -5,11 +5,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import {
-  preloadNavigationData,
-  preloadAllMarkdownContent,
-} from "./util/MarkdownRenderer";
-import { initializeIndex } from "./util/SearchEngine";
+import { preloadNavigationData } from "./util/MarkdownRenderer";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const MarkdownPage = lazy(() => import("./pages/MarkdownPage"));
@@ -43,15 +39,38 @@ function AppRoutes() {
       console.error("Error preloading sidebar navigation:", error);
     });
 
-    // Preload all markdown content in background for smooth transitions
-    preloadAllMarkdownContent().catch((error) => {
-      console.error("Error preloading markdown content:", error);
+    const scheduleWarmup = (task) => {
+      if (typeof window === "undefined") return () => {};
+
+      if (typeof window.requestIdleCallback === "function") {
+        const idleId = window.requestIdleCallback(task);
+        return () => window.cancelIdleCallback(idleId);
+      }
+
+      const timeoutId = window.setTimeout(task, 0);
+      return () => window.clearTimeout(timeoutId);
+    };
+
+    const cancelMarkdownWarmup = scheduleWarmup(() => {
+      import("./util/MarkdownRenderer")
+        .then(({ preloadAllMarkdownContent }) => preloadAllMarkdownContent())
+        .catch((error) => {
+          console.error("Error preloading markdown content:", error);
+        });
     });
 
-    // Initialize search index early for responsive search UI
-    initializeIndex().catch((error) => {
-      console.error("Error initializing search index:", error);
+    const cancelSearchWarmup = scheduleWarmup(() => {
+      import("./util/SearchEngine")
+        .then(({ initializeIndex }) => initializeIndex())
+        .catch((error) => {
+          console.error("Error initializing search index:", error);
+        });
     });
+
+    return () => {
+      cancelMarkdownWarmup();
+      cancelSearchWarmup();
+    };
   }, []);
 
   return (
