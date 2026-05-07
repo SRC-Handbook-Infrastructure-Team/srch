@@ -33,14 +33,12 @@
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     />
-    <!-- Prefetch common assets for faster navigation -->
-    <link rel="prefetch" href="/src/assets/srch_logo.svg" as="image" />
-    <link rel="prefetch" href="/src/assets/srch_logo_white.svg" as="image" />
-    <link
-      rel="prefetch"
-      href="/src/assets/landing-page-background-gradient.png"
-      as="image"
-    />
+    <!-- Preload common assets for faster homepage paint -->
+    <link rel="preload" href="/src/assets/srch_logo.svg" as="image" />
+    <link rel="preload" href="/src/assets/srch_logo_white.svg" as="image" />
+    <!-- Backgrounds: keep prefetch to avoid competing with critical render -->
+    <link rel="prefetch" href="/src/assets/landing-page-background-gradient.png" as="image" />
+    <link rel="prefetch" href="/src/assets/landing_page_background_gradient_dark.png" as="image" />
     <!-- Prefetch precomputed data files for faster loads -->
     <link rel="prefetch" href="/markdown-data.json" as="fetch" />
     <link rel="prefetch" href="/search-index.json" as="fetch" />
