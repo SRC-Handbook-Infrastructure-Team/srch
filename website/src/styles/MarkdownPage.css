@@ -416,6 +416,17 @@ html:not(.left-open) .header-toggle {
   width: calc(100% + (var(--page-pad) * 2)) !important;
   margin-left: calc(-1 * var(--page-pad)) !important;
 }
+.page-header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  white-space: nowrap;
+}
+.page-section-label,
+.page-last-updated {
+  margin: 0;
+}
 .page-header-row {
   position: relative;
   display: flex;

@@ -998,9 +998,16 @@ function MarkdownPage() {
     <div className="markdown-page">
       <Box className="markdown-content">
         <div className="page-header markdown-margin">
-          <p className="page-section-label">
-            {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
-          </p>
+          <div className="page-header-top-row">
+            <p className="page-section-label">
+              {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
+            </p>
+            {lastUpdated && (
+              <p className="page-last-updated">
+                Last updated on {formatDate(lastUpdated)}
+              </p>
+            )}
+          </div>
           <div className="page-header-row">
             <h1 className="page-title">{formattedTitle}</h1>
           </div>
