@@ -5,7 +5,7 @@
       "Primer Name": "What is Privacy?",
       "Published": true,
       "Section": "Privacy",
-      "Curriculum Objective(s)": "N/A"
+      "Curriculum Objective(s)": ""
     },
     {
       "Identifier": "1.b",
@@ -242,55 +242,55 @@
       "Identifier": "II.1",
       "Description": "**Be aware of** the extent of data collection and reliance of technologies on large volumes of personal data\n**Understand** the concept of surveillance capitalism and alternative data-driven economic models",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.2",
       "Description": "**Understand** and **Identify** different mechanisms of data collection—overt, covert, and from other sources (i.e. via sharing)—and their implications on privacy",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.3",
       "Description": "**Understand** the limitation of the distinction between sensitive and non-sensitive data, especially considering the potential for re-identification",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.4",
       "Description": "**Understand** the value and functions of privacy (including short-term and long-term privacy threats)",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.5",
       "Description": "**Understand** (and **Implement**) key aspects of major privacy regulations, standards, etc. (e.g., CCPA, GDPR, …)",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.6",
       "Description": "**Analyze** trade-offs between privacy and other values, such as transparency, accountability, safety, or security",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.7",
       "Description": "**Understand** surveillance and **Identify** instances of data collection that enable surveillance",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.8",
       "Description": "**Understand** different conceptions of consent, their potential, and limitations, as an instrument for data protection",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "II.9",
       "Description": "**Be aware of** widely-used privacy-preserving/enhancing technologies (e.g., encryption, differential privacy)\n- **Understand** their limitations\n- **Analyze** prominent controversies surrounding them",
       "Category": "II. Data Collection, Protection, and Privacy",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "III.a.1",
@@ -446,49 +446,49 @@
       "Identifier": "V.1",
       "Description": "**Understand** the concept of a stakeholder and Identify various stakeholders in a given project",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.2",
       "Description": "**Identify** and **Implement** stakeholder needs",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.3",
       "Description": "**Analyze** how different stakeholders’ needs may conflict and potential resolution strategies",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.4",
       "Description": "**Understand** how to communicate technical content to non-technical stakeholders",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.5",
       "Description": "**Analyze** the alignment of a project with stakeholders' intended goals",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.6",
       "Description": "**Identify** and **Analyze** techno-solutionist attitudes and approaches",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.7",
       "Description": "**Analyze** the potential impacts of technologies with a broad socio-political view, especially those that are ostensibly designed for social benefit\n- **Analyze** conflicting positions on the extent to which stakeholder requests should be implemented, in cases where stakeholder requests may diverge from what might benefit them (i.e. paternalism versus libertarianism)",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     },
     {
       "Identifier": "V.8",
       "Description": "**Be aware of** responsible disclosure\n- **Be aware of** the existence of mechanisms for reporting technological vulnerabilities to responsible organizations\n- **Analyze** possible impacts of releasing security vulnerabilities publicly ",
       "Category": "V. Stakeholder Engagement",
-      "Subcategory": "N/A"
+      "Subcategory": ""
     }
   ]
 }
