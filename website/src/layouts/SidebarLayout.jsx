@@ -281,7 +281,6 @@ export default function SidebarLayout({ children }) {
     prevRightOpenRef.current = isRightOpen;
   }, [isRightOpen]);
 
-  // Manage 'right-open' class on <html> when right sidebar is open in wide mode
   useLayoutEffect(() => {
     if (typeof document !== "undefined") {
       if (isRightOpen && layoutMode === "wide") {
@@ -306,7 +305,6 @@ export default function SidebarLayout({ children }) {
   const openPanel = useCallback(
     (id) => {
       if (id === "left") {
-        // In overlay mode, close right first.
         if (layoutMode === "overlay" && isRightOpen) {
           setIsRightOpen(false);
           setRightContent(null);
@@ -315,7 +313,6 @@ export default function SidebarLayout({ children }) {
           leftSidebar.toggleCollapsed();
         }
       } else if (id === "right") {
-        // In overlay mode, collapse left before opening right.
         if (layoutMode === "overlay" && !leftSidebarCollapsed) {
           leftSidebar.toggleCollapsed();
         }
@@ -394,9 +391,6 @@ export default function SidebarLayout({ children }) {
     }
   }, [animateLeftSidebar]);
 
-  /** Maintain original openRightDrawer / closeRightDrawer API
-   * so existing callers don’t need to change.
-   */
   const closeRightDrawer = useCallback(() => {
     closePanel("right");
   }, [closePanel]);
@@ -409,7 +403,6 @@ export default function SidebarLayout({ children }) {
     [openPanel],
   );
 
-  /** When switching into overlay mode, enforce “only one panel open” */
   useEffect(() => {
     if (layoutMode !== "overlay") return;
     if (!leftSidebarCollapsed && isRightOpen) {

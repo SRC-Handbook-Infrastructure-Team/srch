@@ -515,12 +515,7 @@ function NavBar() {
                 onClick={() => {
                   setIsMenuOpen(false);
                   const firstSection = sections[0];
-                  const sectionSubsections = subsections[firstSection.id];
-                  if (sectionSubsections && sectionSubsections.length > 0) {
-                    navigate(`/${firstSection.id}/${sectionSubsections[0].id}`);
-                  } else {
-                    navigate(`/${firstSection.id}`);
-                  }
+                  if (firstSection) navigate(`/${firstSection.id}`);
                 }}
               >
                 About
@@ -582,17 +577,7 @@ function NavBar() {
                           tabIndex={isModulesExpanded ? 0 : -1}
                           onClick={() => {
                             setIsMenuOpen(false);
-                            const sectionSubsections = subsections[section.id];
-                            if (
-                              sectionSubsections &&
-                              sectionSubsections.length > 0
-                            ) {
-                              navigate(
-                                `/${section.id}/${sectionSubsections[0].id}`,
-                              );
-                            } else {
-                              navigate(`/${section.id}`);
-                            }
+                            navigate(`/${section.id}`);
                             toggleSection(section.id, null);
                           }}
                         >

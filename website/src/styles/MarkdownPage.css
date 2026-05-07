@@ -184,6 +184,8 @@ html:not(.left-open) .header-toggle {
 .sidebar-subsection-heading-box {
   padding: 0.5rem 0 0.5rem 0;
   background-color: var(--color-accent-light);
+  transition: background-color 0.15s ease;
+  contain: layout style;
 }
 
 .sidebar-subsection-heading-box.is-inactive {

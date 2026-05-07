@@ -267,9 +267,7 @@ export function highlightText(node, highlight) {
 export function renumberFootnotes(markdown) {
   if (!markdown || typeof markdown !== "string") return markdown;
 
-  // Match footnote references but not definitions (avoid trailing colon)
   const refRegex = /\[\^([^\]]+)\](?!:)/g;
-  // Match footnote definitions at line start
   const defRegex = /^\[\^([^\]]+)\]:/gm;
 
   const map = new Map();
@@ -328,7 +326,6 @@ export function parseFrontmatter(content) {
     const [key, ...valueParts] = line.split(":");
     const value = valueParts.join(":").trim();
     let parsedValue = value;
-    // Strip surrounding single or double quotes if present
     if (
       (parsedValue.startsWith('"') && parsedValue.endsWith('"')) ||
       (parsedValue.startsWith("'") && parsedValue.endsWith("'"))
@@ -672,17 +669,6 @@ function mapHeadingToButtonLabel(title) {
 /**
  * Extracts footnote definitions from a markdown string.
  *
- * FIX: Replaced broken lookahead regex (?=^\[\^|\n\n|\Z) — \Z is not valid
- * in JavaScript RegExp. The old regex silently failed to capture the LAST
- * footnote definition in a block (no trailing \n\n after it), so e.g. [^9]
- * was always dropped. The new regex uses a negative lookahead on each
- * continuation line instead, which correctly captures every definition
- * including the last one.
- *
- * FIX: The stripped output now also removes the ## Further Reading and
- * ## Footnotes section headings (and all content under ## Further Reading), which
- * previously leaked into the rendered page as visible headings and plain text.
- *
  * Returns { stripped, footnotes } where:
  *   - stripped: markdown with footnote definitions AND reference/footnotes
  *               section headings removed
@@ -755,21 +741,16 @@ export function mergeFootnotes(mainMarkdown, sidebarMap, allDefinitions = {}) {
     });
   }
 
-  // 1. Walk main body first — assigns numbers in reading order
   const updatedMain = renumberText(mainStripped);
 
-  // 2. Walk every sidebar entry — assigns numbers to sidebar-only refs
   const updatedSidebarMap = {};
   for (const [termKey, entry] of Object.entries(sidebarMap || {})) {
     const { stripped: sidebarStripped } = extractFootnotes(entry.content);
     const renumbered = renumberText(sidebarStripped);
     updatedSidebarMap[termKey] = { ...entry, content: renumbered };
   }
-
-  // 3. Any definition in allDefs not yet referenced gets appended at the end
-  //    so all 9 footnotes always appear in the main footnote list.
   for (const key of Object.keys(allDefs)) {
-    assignNumber(key); // no-op if already assigned
+    assignNumber(key);
   }
 
   return { updatedMain, updatedSidebarMap, mergedFootnotes };
@@ -808,15 +789,6 @@ export const getContent = async (sectionId, subsectionId) => {
     } else {
       return null;
     }
-
-    /**
-     * This code looks into all of the filepath and does the following:
-     * looks for the ## Sidebar divider
-     * creates the sidebar dictionary to pull from later (keys stored lowercase)
-     * extracts the Key (identical to the clickable term)
-     * extracts the Value (the paragraphical content)
-     * extracts the Heading (if provided used as the title heading for the sidbar)
-     */
     for (const filePath in allMarkdownFiles) {
       if (filePath.endsWith(path.slice(2))) {
         let content;
@@ -890,14 +862,11 @@ export const getContent = async (sectionId, subsectionId) => {
           return `<sidebar-ref term="${term}"></sidebar-ref>`;
         });
 
-        // Extract lastUpdated from frontmatter if available
         let lastUpdated = null;
 
-        // fontMatter lastUpdated takes precedence
         if (frontmatter.lastUpdated) {
           lastUpdated = frontmatter.lastUpdated;
         } else {
-          // Fallback: look for a line like "_Last updated Month Day Year._" at the end
           const footerMatch = mainContent.match(/_Last updated\s+(.+?)\._/i);
           if (footerMatch) {
             lastUpdated = footerMatch[1].trim();
@@ -1099,15 +1068,9 @@ function MarkdownRenderer({
     [highlight, isDrawerMode],
   );
 
-  /* ------------------------------------------------------------------------
-   * Styling tokens used inside the components map
-   * --------------------------------------------------------------------- */
   const RED = "var(--color-text-hover)";
   const BLACK = "var(--color-text)";
 
-  /* ------------------------------------------------------------------------
-   * Active drawer link state handling
-   * --------------------------------------------------------------------- */
   const observerRef = useRef(null);
   const [activeDrawerLink, setActiveDrawerLinkState] = useState(null);
 
@@ -1717,19 +1680,6 @@ function MarkdownRenderer({
     return () => document.removeEventListener("click", handler);
   }, [onDrawerOpen]);
 
-  /* ─────────────────────────────────────────────────────────────────────────
-   * CustomFootnotesSection
-   *
-   * Renders the unified footnote list at the bottom of the page.
-   *
-   * For each footnote, it looks up the origin in processed.footnoteOriginMap
-   * (which already merges the external map from MarkdownPage with the locally
-   * derived map):
-   *   - origin === "main"  → back-link is a local anchor (#user-content-fnref-N)
-   *   - origin === slug    → back-link navigates to the drawer URL and includes
-   *                          a data-sidebar attribute so the click handler above
-   *                          can intercept it and open the drawer directly.
-   * ───────────────────────────────────────────────────────────────────────── */
   const [showFootnotes, setShowFootnotes] = useState(false);
   const pendingScrollId = useRef(null);
 
@@ -1741,7 +1691,7 @@ function MarkdownRenderer({
         if (href && href.startsWith("#user-content-fn-")) {
           const id = href.slice(1);
           pendingScrollId.current = id;
-          setShowFootnotes(true); // triggers re-render → list mounts
+          setShowFootnotes(true);
         }
       }
     }
@@ -1749,13 +1699,11 @@ function MarkdownRenderer({
     return () => document.removeEventListener("click", handleFootnoteClick);
   }, []);
 
-  // Runs after showFootnotes → true causes the <ol> to mount
   useEffect(() => {
     if (!showFootnotes || !pendingScrollId.current) return;
     const id = pendingScrollId.current;
     pendingScrollId.current = null;
     requestAnimationFrame(() => {
-      // wait one paint for the list to appear
       const el = document.getElementById(id);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
