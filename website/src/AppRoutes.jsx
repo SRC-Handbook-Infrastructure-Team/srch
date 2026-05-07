@@ -6,10 +6,10 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { preloadNavigationData } from "./util/MarkdownRenderer";
+import Home from "./pages/Home";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const MarkdownPage = lazy(() => import("./pages/MarkdownPage"));
-const Home = lazy(() => import("./pages/Home"));
 const Acknowledgments = lazy(() => import("./pages/Acknowledgments"));
 const SearchResultsPage = lazy(() => import("./pages/SearchResultsPage"));
 const SidebarLayout = lazy(() => import("./layouts/SidebarLayout"));
@@ -78,7 +78,7 @@ function AppRoutes() {
       <ScrollManager />
       <NavBar layoutMode="overlay" />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<div style={{ minHeight: "50vh" }} />}>
         {isMarkdownPage ? (
           <>
             {!isLandingPage && <ScrollProgressBar />}
