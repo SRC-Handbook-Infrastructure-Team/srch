@@ -173,9 +173,7 @@ async function resolveSubsectionMarkdown(sectionId, sub) {
     if (typeof fetched?.content === "string" && fetched.content.trim()) {
       return fetched.content;
     }
-  } catch {
-    // Fall back to raw subsection content if cleaned content fetch fails.
-  }
+  } catch {}
 
   if (typeof sub.content === "string" && sub.content.trim()) {
     return sub.content;
@@ -183,8 +181,6 @@ async function resolveSubsectionMarkdown(sectionId, sub) {
 
   return "";
 }
-
-// Convert index to letter: 0->a, 1->b, ... 25->z, 26->aa, etc.
 function indexToLetter(index) {
   let s = "";
   let i = index;

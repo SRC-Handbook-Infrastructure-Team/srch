@@ -1,36 +1,3 @@
-/**
- * ============================================================================
- * Acknowledgments.jsx 
- * ----------------------------------------------------------------------------
- * Purpose
- *   Renders the complete Acknowledgments page as a single-page layout with a
- *   hero section (fixed overlay) and a lower content container that slides
- *   over the hero as the user scrolls—mirroring the Home page feel.
-
-function getIconByTheme(theme, light, dark) {
-  return theme === "dark" ? dark : light;
-
- *        - AI
- *        - Privacy
- *        - Accessibility
- *        - Product
- *        - Additional Contributors (User Studies)
- *        - Additional Contributors (Faculty Advisors)
- *   • Footer at the bottom (logo + modules + quick links + feedback)
- *
- *
-
- *
- * Styling
- *   • All visual styling comes from Acknowledgments.css.
- *   • Critical classes: .ack-card, .ack-card-photo, .ack-photo-fallback,
- *     .ack-card-name, .ack-card-fullname, .ack-card-pronouns, .ack-card-subinfo,
- *     .ack-card-icons, .ack-icon-btn, .ack-hero, .ack-lower-content, .line-divider,
- *     .link-section, .logo-area, .footer-logo, .modules (…and its variants).
- *
- * ============================================================================
- */
-
 import "../styles/Acknowledgments.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
@@ -38,30 +5,9 @@ import { Heading } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import team from "../team.json";
 
-/* =============================================================================
- * Utilities
- * -----------------------------------------------------------------------------
- * Centralize how we compute an image src so it’s easy to swap storage paths.
- * ===========================================================================*/
 function getMemberPhotoSrc(member) {
-  // Current convention: files in public/assets/member-photos
-  // Example: suresh.jpg -> "/assets/member-photos/suresh.jpg"
   return `/assets/member-photos/${member.photo}`;
 }
-
-/* =============================================================================
- * TeamGrid
- * -----------------------------------------------------------------------------
- * Renders a grid of team member cards with consistent formatting.
- * - Sorting is alphabetical by name for stability
- * - Each card:
- *     1) Photo (masked by ../src/assets/Photo.png) or masked gray placeholder
- *     2) Name + Pronoun
- *     3) Position | Degree, GradYear
- *     4) Action icons (email/linkedin/website) if present
- * - All spacing, font sizes, and icon dims are handled via CSS classes.
- *
- * ===========================================================================*/
 function TeamGrid({ filteredTeam, teamName }) {
   const isLeadership = String(teamName || "").toLowerCase() === "leadership";
 
@@ -165,15 +111,6 @@ function TeamGrid({ filteredTeam, teamName }) {
     </div>
   );
 }
-
-/* =============================================================================
- * TeamSection
- * -----------------------------------------------------------------------------
- * Wraps a single team into a titled block. Supports “Active” vs “Past Members”
- * using the string flags "true"/"false" in `active`.
- * - If the team has no members, returns null (no section header).
- * - The divider at the end visually separates sections.
- * ===========================================================================*/
 function TeamSection({ title, teamName }) {
   const targetTeam = String(teamName || "").toLowerCase();
   const members = team.filter(
@@ -241,22 +178,6 @@ function TeamSection({ title, teamName }) {
     </div>
   );
 }
-
-/* =============================================================================
- * Acknowledgments (Default Export)
- * -----------------------------------------------------------------------------
- * Assembles the page:
- *   1)  Hero overlay
- *   2) Lower content that scrolls over hero:
- *        - All team sections (as card grids)
- *        - Two "Additional Contributors" sections as cards:
- *            • User Studies  (team === "additional")
- *            • Faculty Advisors (team === "additional_faculty")
- *        - Footer (logo + modules + quick links + feedback)
- *
- * This implementation ensures “Additional” entries render as full cards using
- * the same styling and placeholder behavior as core teams.
- * ===========================================================================*/
 
 function Acknowledgments() {
   const [theme, setTheme] = useState("light");

@@ -5,7 +5,11 @@ import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import { preloadNavigationData } from "./util/MarkdownRenderer";
+import {
+  preloadNavigationData,
+  preloadAllMarkdownContent,
+} from "./util/MarkdownRenderer";
+import { initializeIndex } from "./util/SearchEngine";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const MarkdownPage = lazy(() => import("./pages/MarkdownPage"));
@@ -34,8 +38,19 @@ function AppRoutes() {
     !isHomePage && !isSearchPage && !isAcknowledgmentsPage && !isAboutPage;
 
   useEffect(() => {
+    // Preload all static data on app startup
     preloadNavigationData().catch((error) => {
       console.error("Error preloading sidebar navigation:", error);
+    });
+
+    // Preload all markdown content in background for smooth transitions
+    preloadAllMarkdownContent().catch((error) => {
+      console.error("Error preloading markdown content:", error);
+    });
+
+    // Initialize search index early for responsive search UI
+    initializeIndex().catch((error) => {
+      console.error("Error initializing search index:", error);
     });
   }, []);
 

@@ -287,6 +287,32 @@ export default function ContentsSidebar({
         setSubsections(subsectionsMap);
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
 
+        // Preload all headings for all subsections to prevent lazy-load flicker
+        const headingsPromises = [];
+        for (const [sectionId, subs] of Object.entries(subsectionsMap)) {
+          subs.forEach((sub) => {
+            headingsPromises.push(
+              getContent(sectionId, sub.id).then((result) => ({
+                sectionId,
+                subId: sub.id,
+                content: result?.content || "",
+              })),
+            );
+          });
+        }
+
+        Promise.all(headingsPromises).then((results) => {
+          if (!isAlive) return;
+          const updatedMap = { ...subsectionsMap };
+          results.forEach(({ sectionId, subId, content }) => {
+            const sub = updatedMap[sectionId]?.find((s) => s.id === subId);
+            if (sub) {
+              sub.headings = parseSubsections(content);
+            }
+          });
+          setSubsections(updatedMap);
+        });
+
         // Metadata-first title: Cache subsection metadata globally
         window.__SRCH_SUBSECTIONS_CACHE__ =
           window.__SRCH_SUBSECTIONS_CACHE__ || {};
@@ -409,7 +435,6 @@ export default function ContentsSidebar({
   const toggleSubsectionHeadings = useCallback((sectionId, subsectionId) => {
     const key = `${sectionId}/${subsectionId}`;
     setExpandedSubsections((prev) => {
-      // Single-open behavior: opening one subsection closes all others.
       if (prev[key]) return {};
       return { [key]: true };
     });
@@ -468,22 +493,30 @@ export default function ContentsSidebar({
    * - When the current route specifies a subsectionId,
    *   ensure that subsection's heading dropdown is expanded.
    * - If it's already expanded, do nothing.
-   * - Fetch headings for the section if not already loaded.
    * - This guarantees the heading list is visible when you land on the page.
    */
   useEffect(() => {
     if (!currentSectionId || !currentSubsectionId) return;
 
-    // Ensure headings are fetched for this section
-    fetchHeadingsForSection(currentSectionId);
-
     const subKey = `${currentSectionId}/${currentSubsectionId}`;
+
     setExpandedSubsections((prev) => {
-      if (prev[subKey] && Object.keys(prev).length === 1) return prev;
-      // Route sync should also enforce single-open subsection.
+      // Already expanded to this exact subsection
+      if (prev[subKey] && Object.keys(prev).length === 1) {
+        return prev;
+      }
+      // Need to expand this subsection
       return { [subKey]: true };
     });
-  }, [currentSectionId, currentSubsectionId, fetchHeadingsForSection]);
+  }, [currentSectionId, currentSubsectionId]);
+
+  /**
+   * Fetch headings when navigating to a new subsection.
+   */
+  useEffect(() => {
+    if (!currentSectionId) return;
+    fetchHeadingsForSection(currentSectionId);
+  }, [currentSectionId, fetchHeadingsForSection]);
 
   useEffect(() => {
     if (!currentSectionId || !currentSubsectionId) {
@@ -636,9 +669,6 @@ export default function ContentsSidebar({
                             onClick={(e) => {
                               e.stopPropagation();
                               e.preventDefault();
-                              if (headingsNeedLoad) {
-                                fetchHeadingsForSection(section.id);
-                              }
                               toggleSubsectionHeadings(section.id, sub.id);
                             }}
                             aria-label={
@@ -674,44 +704,46 @@ export default function ContentsSidebar({
                             </Text>
                           </Link>
                         </Box>
-                        {hasHeadings && isSubExpanded && (
+                        {isSubExpanded && (
                           <Box
                             className={`sidebar-subsection-heading-box ${
                               isSubActive ? "" : "is-inactive"
                             }`}
                           >
-                            <Box className="sidebar-subsection-heading-list">
-                              {sub.headings.map((heading, headingIdx) => (
-                                <Box
-                                  key={`${sub.id}-heading-${headingIdx}`}
-                                  className={`sidebar-subsection-heading-row ${
-                                    isSubActive &&
-                                    activeHeadingId &&
-                                    heading.id === activeHeadingId
-                                      ? "is-active"
-                                      : ""
-                                  }`}
-                                >
-                                  <Link
-                                    className="sidebar-subsection-heading-link"
-                                    to={`/${section.id}/${sub.id}${heading.id ? `#${heading.id}` : ""}`}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                    }}
-                                    onMouseEnter={() =>
-                                      warmMarkdownContent(section.id, sub.id)
-                                    }
-                                    onFocus={() =>
-                                      warmMarkdownContent(section.id, sub.id)
-                                    }
+                            {hasHeadings && (
+                              <Box className="sidebar-subsection-heading-list">
+                                {sub.headings.map((heading, headingIdx) => (
+                                  <Box
+                                    key={`${sub.id}-heading-${headingIdx}`}
+                                    className={`sidebar-subsection-heading-row ${
+                                      isSubActive &&
+                                      activeHeadingId &&
+                                      heading.id === activeHeadingId
+                                        ? "is-active"
+                                        : ""
+                                    }`}
                                   >
-                                    <Text className="sidebar-subsection-heading-title">
-                                      {heading.title}
-                                    </Text>
-                                  </Link>
-                                </Box>
-                              ))}
-                            </Box>
+                                    <Link
+                                      className="sidebar-subsection-heading-link"
+                                      to={`/${section.id}/${sub.id}${heading.id ? `#${heading.id}` : ""}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                      }}
+                                      onMouseEnter={() =>
+                                        warmMarkdownContent(section.id, sub.id)
+                                      }
+                                      onFocus={() =>
+                                        warmMarkdownContent(section.id, sub.id)
+                                      }
+                                    >
+                                      <Text className="sidebar-subsection-heading-title">
+                                        {heading.title}
+                                      </Text>
+                                    </Link>
+                                  </Box>
+                                ))}
+                              </Box>
+                            )}
                           </Box>
                         )}
                       </Box>

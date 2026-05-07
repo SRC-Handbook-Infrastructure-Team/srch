@@ -19,7 +19,6 @@ export default function About() {
     });
   }, []);
 
-  // getAboutHeadingLinks expects a raw markdown string
   const headingLinks = contentData
     ? getAboutHeadingLinks(contentData.content)
     : [];
