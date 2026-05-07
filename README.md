@@ -88,6 +88,8 @@ The code and content of our website is public, and we happily welcome contributi
 
 The project uses a website-focused frontend layout with content stored in markdown files.
 
+For a full high-level and file-by-file architecture walkthrough, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 1. Primary app source: [website/src](website/src)
 2. Primer content: [website/src/markdown](website/src/markdown)
 3. Page components: [website/src/pages](website/src/pages)
