@@ -144,6 +144,7 @@ html.is-landing-page {
   padding-top: 0;
   padding-left: clamp(24px, 5vw, 80px);
   padding-right: clamp(24px, 5vw, 80px);
+  padding-bottom: 50px;
 }
 
 .landing-title {
@@ -548,6 +549,8 @@ html.is-landing-page {
   .landing-title {
     align-items: center;
     gap: 12px;
+    font-size: clamp(2.4rem, 7vw, 3rem);
+    line-height: 1.05;
   }
   .landing-outline {
     margin-top: 40px;
@@ -589,7 +592,7 @@ html.is-landing-page {
   }
 
   .landing-outline-card-title {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .landing-outline-collapse-icon {
@@ -614,7 +617,7 @@ html.is-landing-page {
   }
 
   .landing-outline-subheading-title {
-    font-size: var(--body-text);
+    font-size: 0.95rem;
   }
 
   .landing-outline-card-preview {
