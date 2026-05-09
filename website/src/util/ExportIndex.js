@@ -27,6 +27,18 @@ const MARKDOWN_DATA_OUTPUT_PATH = path.join(
   __dirname,
   "../../public/markdown-data.json",
 );
+const SRC_PRECOMPUTED_OUTPUT_PATH = path.join(
+  __dirname,
+  "../../src/util/precomputed-markdown-data.js",
+);
+const SRC_PRECOMPUTED_GENERATED_PATH = path.join(
+  __dirname,
+  "../../src/util/precomputed-markdown-data.generated.js",
+);
+const SRC_PRECOMPUTED_JSON_PATH = path.join(
+  __dirname,
+  "../../src/util/precomputed-markdown-data.json",
+);
 
 /* ----------------------------- Utilities ----------------------------- */
 
@@ -218,6 +230,28 @@ function parseMarkdownContentForRuntime(cleanContent, frontmatter = {}) {
     return `<sidebar-ref term="${term}"></sidebar-ref>`;
   });
 
+  // Extract Objectives block if present (H2 heading 'Objectives')
+  let objectives = [];
+  try {
+    const objHeadingRegex = /^##\s*Objectives\s*$/im;
+    const objMatch = cleanContent.match(objHeadingRegex);
+    if (objMatch) {
+      const after = cleanContent.slice(objMatch.index + objMatch[0].length);
+      const lines = after.split(/\r?\n/);
+      const collected = [];
+      for (const line of lines) {
+        if (/^##\s+/.test(line)) break;
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        // support list items and plain paragraphs
+        collected.push(trimmed.replace(/^[\-*+]\s*/, ""));
+      }
+      objectives = collected;
+    }
+  } catch (e) {
+    objectives = [];
+  }
+
   let lastUpdated = null;
   if (frontmatter.lastUpdated) {
     lastUpdated = frontmatter.lastUpdated;
@@ -233,6 +267,7 @@ function parseMarkdownContentForRuntime(cleanContent, frontmatter = {}) {
     sidebar,
     allDefinitions,
     furtherReadingBlock,
+    objectives,
     frontmatter: { ...frontmatter, lastUpdated },
   };
 }
@@ -352,7 +387,6 @@ function buildContentArray() {
   for (const section of rawSections) {
     const sectionDir = path.join(MARKDOWN_DIR, section.id);
 
-    // Load subsections
     const subsectionDirs = fs
       .readdirSync(sectionDir, { withFileTypes: true })
       .filter(
@@ -453,5 +487,23 @@ fs.writeFileSync(
   JSON.stringify(markdownData),
   "utf8",
 );
-
-/* console output removed */
+try {
+  const moduleContents = `// Auto-generated precomputed markdown data.\nexport default ${JSON.stringify(
+    markdownData,
+  )};\n`;
+  fs.writeFileSync(SRC_PRECOMPUTED_GENERATED_PATH, moduleContents, "utf8");
+  try {
+    fs.writeFileSync(
+      SRC_PRECOMPUTED_JSON_PATH,
+      JSON.stringify(markdownData),
+      "utf8",
+    );
+  } catch (e) {
+  }
+  try {
+    fs.writeFileSync(SRC_PRECOMPUTED_OUTPUT_PATH, moduleContents, "utf8");
+  } catch (e) {
+  }
+  console.log("Wrote precomputed module to", SRC_PRECOMPUTED_GENERATED_PATH);
+} catch (e) {
+}

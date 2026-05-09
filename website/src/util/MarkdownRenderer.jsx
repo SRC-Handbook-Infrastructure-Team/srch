@@ -8,6 +8,7 @@
 
 import React from "react";
 import { useMemo, useRef, useState, useEffect } from "react";
+import precomputedBuild from "./precomputed-markdown-data.json";
 import ReactMarkdown from "react-markdown";
 import { Link as RouterLink } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
@@ -476,6 +477,12 @@ let precomputedMarkdownData = null;
 let precomputedMarkdownDataPromise = null;
 
 async function loadPrecomputedMarkdownData() {
+  // Prefer build-time precomputed data if it was generated and bundled.
+  if (precomputedBuild) {
+    precomputedMarkdownData = precomputedBuild;
+    return precomputedMarkdownData;
+  }
+
   if (precomputedMarkdownData) return precomputedMarkdownData;
   if (precomputedMarkdownDataPromise) return precomputedMarkdownDataPromise;
 
@@ -773,6 +780,7 @@ export const getContent = async (sectionId, subsectionId) => {
           sidebar: precomputedContent.sidebar || {},
           allDefinitions: precomputedContent.allDefinitions || {},
           furtherReadingBlock: precomputedContent.furtherReadingBlock || null,
+          objectives: precomputedContent.objectives || [],
           frontmatter: precomputedContent.frontmatter || {},
         };
 

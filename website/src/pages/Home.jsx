@@ -24,7 +24,11 @@ import cntrLogo from "../assets/cntr-logo.png";
 import srcLogo from "../assets/src_logo.svg";
 import SearchBar from "../components/SearchBar";
 import { ArrowRight } from "lucide-react";
-import { getSections, getSubsections } from "../util/MarkdownRenderer";
+import {
+  getSections,
+  getSubsections,
+  getPreloadedNavigationData,
+} from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
 
 function getFirstParagraph(markdown = "") {
@@ -149,6 +153,32 @@ function Home() {
 
   useEffect(() => {
     let isCancelled = false;
+
+    try {
+      const preloaded = getPreloadedNavigationData();
+      if (
+        preloaded &&
+        Array.isArray(preloaded.sections) &&
+        preloaded.sections.length > 0
+      ) {
+        const sortedSections = [...preloaded.sections].sort(
+          (a, b) => (a.order || 999) - (b.order || 999),
+        );
+
+        const cardsFromPreloaded = sortedSections
+          .map((section) => ({
+            id: section.id,
+            title: section.title || section.id,
+            slug: `/${section.id}`,
+            description: truncate(getFirstParagraph(section.content)),
+          }))
+          .filter(Boolean);
+
+        if (cardsFromPreloaded.length > 0) {
+          setCurriculumCards(cardsFromPreloaded);
+        }
+      }
+    } catch (e) {}
 
     const loadCurriculumCards = async () => {
       try {
