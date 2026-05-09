@@ -5,7 +5,11 @@ import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import { preloadNavigationData } from "./util/MarkdownRenderer";
+import {
+  preloadNavigationData,
+  preloadAllMarkdownContent,
+} from "./util/MarkdownData";
+import { initializeIndex } from "./util/SearchEngine";
 import Home from "./pages/Home";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
@@ -52,19 +56,15 @@ function AppRoutes() {
     };
 
     const cancelMarkdownWarmup = scheduleWarmup(() => {
-      import("./util/MarkdownRenderer")
-        .then(({ preloadAllMarkdownContent }) => preloadAllMarkdownContent())
-        .catch((error) => {
-          console.error("Error preloading markdown content:", error);
-        });
+      preloadAllMarkdownContent().catch((error) => {
+        console.error("Error preloading markdown content:", error);
+      });
     });
 
     const cancelSearchWarmup = scheduleWarmup(() => {
-      import("./util/SearchEngine")
-        .then(({ initializeIndex }) => initializeIndex())
-        .catch((error) => {
-          console.error("Error initializing search index:", error);
-        });
+      initializeIndex().catch((error) => {
+        console.error("Error initializing search index:", error);
+      });
     });
 
     return () => {

@@ -28,7 +28,7 @@ import {
   getSections,
   getSubsections,
   getPreloadedNavigationData,
-} from "../util/MarkdownRenderer";
+} from "../util/MarkdownData";
 import { getSectionIconById } from "../util/sectionIcons";
 
 function getFirstParagraph(markdown = "") {

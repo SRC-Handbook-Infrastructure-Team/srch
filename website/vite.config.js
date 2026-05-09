@@ -82,6 +82,9 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   build: {
+    // The precomputed markdown payload is intentionally large and split into its
+    // own chunk. Raise the warning threshold so routine builds stay signal-rich.
+    chunkSizeWarningLimit: 1300,
     rollupOptions: {
       output: {
         manualChunks: {

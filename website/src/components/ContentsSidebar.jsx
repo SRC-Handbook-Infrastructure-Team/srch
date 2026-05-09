@@ -16,7 +16,7 @@ import {
   getContent,
   warmMarkdownContent,
   getPreloadedNavigationData,
-} from "../util/MarkdownRenderer";
+} from "../util/MarkdownData";
 
 /* =============================================================================
    ContentsSidebar

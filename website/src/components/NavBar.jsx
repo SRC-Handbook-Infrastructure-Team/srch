@@ -14,7 +14,7 @@ import {
   getPreloadedNavigationData,
   preloadNavigationData,
   warmMarkdownContent,
-} from "../util/MarkdownRenderer";
+} from "../util/MarkdownData";
 import { NavSearchBar } from "../components/NavSearchBar";
 import NavBarSearchResults from "./NavBarSearchResults";
 import logoLight from "../assets/srch_logo.svg";

@@ -9,7 +9,7 @@ import {
   getSubsections,
   getContent,
   createIdFromHeading,
-} from "./MarkdownRenderer.jsx";
+} from "./MarkdownData";
 
 const index = new FlexSearch.Document({
   document: {

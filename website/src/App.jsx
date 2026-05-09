@@ -4,7 +4,7 @@ import "./styles/App.css";
 import { Provider } from "./components/ui/provider";
 import { useEffect } from "react";
 import AppRoutes from "./AppRoutes";
-import { preloadNavigationData } from "./util/MarkdownRenderer";
+import { preloadNavigationData } from "./util/MarkdownData";
 
 function App() {
   useEffect(() => {

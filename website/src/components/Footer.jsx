@@ -12,7 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   getPreloadedNavigationData,
   preloadNavigationData,
-} from "../util/MarkdownRenderer";
+} from "../util/MarkdownData";
 import { getSectionIconById } from "../util/sectionIcons";
 
 function Footer({
