@@ -53,7 +53,6 @@ import {
    ========================================================================== */
 
 /* ----------------------------- Helpers ------------------------------------ */
-// WHY: Produce a, b, c... aa, ab... for subsection labels.
 function indexToLetter(index) {
   let s = "";
   let i = index;
@@ -76,7 +75,6 @@ function stripNonBodySections(markdown = "") {
   return main;
 }
 
-// WHY: Mirror landing page heading titles (H2 only) for subsection dropdown content.
 function parseSubsections(content = "") {
   const markdown = stripNonBodySections(content);
   if (!markdown.trim()) return [];
@@ -221,7 +219,6 @@ export default function ContentsSidebar({
           return;
         }
 
-        // 1) Fetch sections
         const sectionsData = await getSections();
         const sortedSections = Array.isArray(sectionsData)
           ? [...sectionsData].sort(
@@ -229,7 +226,6 @@ export default function ContentsSidebar({
             )
           : [];
 
-        // 2) Fetch subsections in PARALLEL for speed
         const subFetches = sortedSections.map((section) =>
           getSubsections(section.id),
         );
@@ -237,7 +233,6 @@ export default function ContentsSidebar({
 
         if (!isAlive) return;
 
-        // 3) Sanitize + normalize subsections per section
         const subsectionsMap = {};
         const expandStateMap = {};
 
@@ -261,7 +256,6 @@ export default function ContentsSidebar({
                     .replace(/([A-Z])/g, " $1")
                     .replace(/[-_]/g, " ")
                     .replace(/\b\w/g, (m) => m.toUpperCase()),
-                // WHY: headings are lazy; null signals "not loaded yet".
                 headings: null,
                 order: typeof s.order === "number" ? s.order : 999,
               }))
@@ -269,7 +263,6 @@ export default function ContentsSidebar({
 
             if (sanitized.length > 0) {
               subsectionsMap[section.id] = sanitized;
-              // WHY: auto-expand current route's section on initial load for a better UX.
               if (section.id === currentSectionId)
                 expandStateMap[section.id] = true;
             }
@@ -287,7 +280,6 @@ export default function ContentsSidebar({
         setSubsections(subsectionsMap);
         setExpandedSections((prev) => ({ ...prev, ...expandStateMap }));
 
-        // Preload all headings for all subsections to prevent lazy-load flicker
         const headingsPromises = [];
         for (const [sectionId, subs] of Object.entries(subsectionsMap)) {
           subs.forEach((sub) => {
@@ -313,7 +305,6 @@ export default function ContentsSidebar({
           setSubsections(updatedMap);
         });
 
-        // Metadata-first title: Cache subsection metadata globally
         window.__SRCH_SUBSECTIONS_CACHE__ =
           window.__SRCH_SUBSECTIONS_CACHE__ || {};
 
@@ -344,7 +335,6 @@ export default function ContentsSidebar({
     return () => {
       isAlive = false;
     };
-    // WHY: currentSectionId can change with URL; we re-run to ensure auto-expansion sync.
   }, [currentSectionId, navigate, hasFetchedData]);
 
   /* =========================================================================
@@ -394,13 +384,11 @@ export default function ContentsSidebar({
       setExpandedSections((prev) => {
         const nextOpen = !prev[sectionId];
 
-        // When expanding: do NOT close other sections
         if (nextOpen) {
           fetchHeadingsForSection(sectionId);
           return { ...prev, [sectionId]: true };
         }
 
-        // When collpasing: collapse only this section
         const copy = { ...prev };
         delete copy[sectionId];
         return copy;
@@ -410,7 +398,6 @@ export default function ContentsSidebar({
   );
 
   const expandAllSections = useCallback(() => {
-    // Expand all sections at once; lazily load headings for each.
     const next = Object.fromEntries(sections.map((s) => [s.id, true]));
     setExpandedSections(next);
     sections.forEach((s) => fetchHeadingsForSection(s.id));
@@ -418,7 +405,6 @@ export default function ContentsSidebar({
   }, [sections, fetchHeadingsForSection]);
 
   const collapseAllSections = useCallback(() => {
-    // Keep ONLY the active (route) section open, if any.
     if (currentSectionId) {
       setExpandedSections({ [currentSectionId]: true });
     } else {
@@ -434,13 +420,34 @@ export default function ContentsSidebar({
 
   const toggleSubsectionHeadings = useCallback((sectionId, subsectionId) => {
     const key = `${sectionId}/${subsectionId}`;
+
     setExpandedSubsections((prev) => {
-      if (prev[key]) return {};
+      if (prev[key] && Object.keys(prev).length === 1) {
+        return {};
+      }
+
+      if (Object.keys(prev).length > 0 && !prev[key]) {
+        return {};
+      }
+
       return { [key]: true };
+    });
+    window.requestAnimationFrame(() => {
+      setExpandedSubsections((prev) => {
+        if (prev[key] && Object.keys(prev).length === 1) return prev;
+        return { [key]: true };
+      });
     });
   }, []);
 
-  // WHY: Keep `allExpanded` derived in sync with the actual map and sections.
+  const navigateToSubsection = useCallback(
+    (sectionId, subsectionId) => {
+      toggleSubsectionHeadings(sectionId, subsectionId);
+      navigate(`/${sectionId}/${subsectionId}`);
+    },
+    [navigate, toggleSubsectionHeadings],
+  );
+
   useEffect(() => {
     const ids = sections.map((s) => s.id);
     const allAreExpanded =
@@ -448,14 +455,6 @@ export default function ContentsSidebar({
     if (allAreExpanded !== allExpanded) setAllExpanded(allAreExpanded);
   }, [sections, expandedSections, allExpanded]);
 
-  /**
-   * Navigate to a section landing page.
-   *
-   * IMPORTANT:
-   * - This function is *purely* about navigation.
-   * - It does NOT expand UI state anymore.
-   * - UI state is synced from the URL instead (see useEffect below).
-   */
   const navigateToSection = useCallback(
     (sectionId) => {
       navigate(`/${sectionId}`);
@@ -463,56 +462,31 @@ export default function ContentsSidebar({
     [navigate],
   );
 
-  /**
-   * Sync UI-expanded section state to match the current URL.
-   *
-   * Rules:
-   * - When the current route specifies a sectionId,
-   *   ensure that section is expanded.
-   * - If it's already expanded, do nothing.
-   * - This guarantees UI always reflects the route,
-   *   even if navigation occurred elsewhere.
-   */
   useEffect(() => {
     if (!currentSectionId) return;
 
     setExpandedSections((prev) => {
       if (prev[currentSectionId]) return prev;
 
-      // Expand section lazily when reached via navigation
       fetchHeadingsForSection(currentSectionId);
 
       return { ...prev, [currentSectionId]: true };
     });
   }, [currentSectionId, fetchHeadingsForSection]);
 
-  /**
-   * Auto-expand subsection heading dropdown when navigating to that subsection.
-   *
-   * Rules:
-   * - When the current route specifies a subsectionId,
-   *   ensure that subsection's heading dropdown is expanded.
-   * - If it's already expanded, do nothing.
-   * - This guarantees the heading list is visible when you land on the page.
-   */
   useEffect(() => {
     if (!currentSectionId || !currentSubsectionId) return;
 
     const subKey = `${currentSectionId}/${currentSubsectionId}`;
 
     setExpandedSubsections((prev) => {
-      // Already expanded to this exact subsection
       if (prev[subKey] && Object.keys(prev).length === 1) {
         return prev;
       }
-      // Need to expand this subsection
       return { [subKey]: true };
     });
   }, [currentSectionId, currentSubsectionId]);
 
-  /**
-   * Fetch headings when navigating to a new subsection.
-   */
   useEffect(() => {
     if (!currentSectionId) return;
     fetchHeadingsForSection(currentSectionId);
@@ -565,15 +539,10 @@ export default function ContentsSidebar({
     };
   }, [currentSectionId, currentSubsectionId, currentHeadingId, subsections]);
 
-  // WHY: Section numbers follow the rendered markdown order.
   const resolveDisplayNumber = useCallback((_section, idx) => {
     return idx + 1;
   }, []);
 
-  /* =========================================================================
-     NavContent: Renders the vertical nav list. Pure-presentational except for
-     event handlers, which call into the pure UI methods or navigation.
-     ========================================================================= */
   const NavContent = useCallback(
     () => (
       <VStack align="stretch" gap="0rem">
@@ -581,7 +550,7 @@ export default function ContentsSidebar({
           const sectionSubs = subsections[section.id] || [];
           const hasSubsections = sectionSubs.length > 0;
           const isExpanded = !!expandedSections[section.id];
-          const isActiveSection = currentSectionId === section.id; // route-aware
+          const isActiveSection = currentSectionId === section.id;
           const isLandingPage = isActiveSection && !currentSubsectionId;
           const displayNumber = resolveDisplayNumber(section, idx);
 
@@ -692,6 +661,10 @@ export default function ContentsSidebar({
                           <Link
                             className="sidebar-subsection-link"
                             to={`/${section.id}/${sub.id}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigateToSubsection(section.id, sub.id);
+                            }}
                             onMouseEnter={() =>
                               warmMarkdownContent(section.id, sub.id)
                             }
@@ -770,6 +743,7 @@ export default function ContentsSidebar({
       fetchHeadingsForSection,
       expandedSubsections,
       toggleSubsectionHeadings,
+      navigateToSubsection,
     ],
   );
 
