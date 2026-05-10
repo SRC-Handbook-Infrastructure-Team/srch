@@ -240,7 +240,7 @@ html:not(.left-open) .header-toggle {
   font-weight: 600;
 }
 .markdown-content {
-  padding-top: 20px;
+  padding-top: 24px;
   padding-bottom: 10px;
   background: var(--color-bg);
 }
@@ -409,7 +409,7 @@ html:not(.left-open) .header-toggle {
   height: 2px;
   background: var(--color-subtle-emphasis);
   border: 0;
-  margin: 12px 0 24px;
+  margin: 24px 0 24px;
 }
 .page-divider--fullbleed {
   transform: none !important;
@@ -437,7 +437,7 @@ html:not(.left-open) .header-toggle {
 }
 .page-last-updated {
   font-family: var(--content-font);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 20px;
   font-weight: 400;
   color: var(--color-header);
@@ -1016,11 +1016,12 @@ html[data-layout-mode="overlay"]
 
 .curriculum-objectives {
   border-left: 4px solid var(--color-text-hover);
-  padding-left: 12px;
+  padding-left: 24px;
 }
 .curriculum-objectives-inner {
   gap: 20px;
   align-items: flex-start;
+
 }
 .curriculum-objectives-label {
   color: var(--color-text-hover);
@@ -1029,7 +1030,8 @@ html[data-layout-mode="overlay"]
   letter-spacing: 0.12em;
   font-size: 1rem;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 12px;
+  margin-bottom: 2px;
 }
 .curriculum-objectives-list {
   flex: 1 1 auto;
@@ -1047,7 +1049,7 @@ html[data-layout-mode="overlay"]
   font-weight: 700;
   text-decoration-line: underline;
   text-decoration-style: dotted;
-  text-underline-offset: 6px;
+  text-underline-offset: 4px;
 }
 .curriculum-objective-arrow {
   color: var(--color-text-hover);
@@ -1061,7 +1063,7 @@ html[data-layout-mode="overlay"]
   color: var(--color-text);
   font-family: var(--content-font);
   font-size: 16px;
-  line-height: 24px;
+  line-height: 20px;
 }
 .curriculum-objective-desc strong {
   font-weight: 700;
