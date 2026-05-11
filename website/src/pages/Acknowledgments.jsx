@@ -3,6 +3,7 @@ import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import GridBackground from "../components/GridBackground";
 import team from "../team.json";
 
 function getMemberPhotoSrc(member) {
@@ -196,20 +197,30 @@ function Acknowledgments() {
           : "light";
     setTheme(initialTheme);
     root.setAttribute("data-theme", initialTheme);
+
+    const observer = new MutationObserver(() => {
+      const currentTheme = root.getAttribute("data-theme");
+      if (currentTheme && currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
     <>
-      <div className="upper-content">
-        <div className="upper-text-section">
-          <div className="website-title">Meet our team!</div>
-          <div className="info-section">
-            This handbook is the result of a collaborative effort across
-            disciplines. We are grateful to the individuals whose insights,
-            feedback, and support shaped its development.
-          </div>
-        </div>
-      </div>
+      <GridBackground
+        height="600px"
+        theme={theme}
+        title="Meet our team!"
+        subtitle="This handbook is the result of a collaborative effort across disciplines. We are grateful to the individuals whose insights, feedback, and support shaped its development."
+      />
       <div className="ack-lower-content">
         <TeamSection title="Leadership" teamName="leadership" />
         <TeamSection title="Product Team" teamName="product" />

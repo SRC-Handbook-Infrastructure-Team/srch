@@ -6,6 +6,7 @@
 import "../styles/Home.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import GridBackground from "../components/GridBackground";
 import targetIconLight from "../assets/targetIcon.svg";
 import targetIconDark from "../assets/targetIcon_white.svg";
 import bookIconLight from "../assets/bookIcon.svg";
@@ -65,6 +66,17 @@ function Home() {
   const curriculumTitleRef = useRef(null);
 
   const [theme, setTheme] = useState("light");
+  const [isMobileLayout, setIsMobileLayout] = useState(window.innerWidth < 800);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileLayout(window.innerWidth < 800);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const root = document.documentElement;
     if (!root) return;
@@ -254,19 +266,12 @@ function Home() {
   return (
     <div className="layout">
       <div className="body">
-        <div className="upper-content">
-          <div className="upper-text-section">
-            <div className="website-title">Brown SRC Handbook</div>
-            <div className="info-section">
-              This Handbook is your guide to integrating ethics, responsibility,
-              and social awareness into computer science teaching. Whether you
-              are an instructor designing a syllabus, a TA leading discussions,
-              or a student exploring what impact your work can have, this site
-              offers curated modules, case studies, discussion prompts, and
-              resource tools.
-            </div>
-          </div>
-        </div>
+        <GridBackground
+          height="600px"
+          theme={theme === "dark" ? "dark" : "light"}
+          title="Brown SRC Handbook"
+          subtitle="This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you are an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools."
+        />
         <button
           className="scroll-caret-button"
           onClick={handleScrollClick}
@@ -297,42 +302,85 @@ function Home() {
               {curriculumCards.map((card, index) => {
                 const icon = getCardIcon(card.id);
                 return (
-                  <button
-                    key={card.id}
-                    className="topic-card"
-                    onClick={() => navigate(card.slug)}
-                  >
-                    <div className="card-accent" />
+                  <div key={card.id}>
+                    {isMobileLayout ? (
+                      <button
+                        className="topic-card"
+                        onClick={() => navigate(card.slug)}
+                      >
+                        <div className="topic-card-flex">
+                          <div className="card-accent" />
 
-                    <span className="card-number">
-                      {String(index + 1).padStart(2, "0")}.
-                    </span>
+                          <div className="card-info">
+                            <span className="card-number">
+                              {String(index + 1).padStart(2, "0")}.
+                            </span>
 
-                    <div className="card-divider" />
+                            <div className="card-icon-wrap">
+                              {icon ? (
+                                <img
+                                  src={icon.src}
+                                  alt={icon.alt}
+                                  width={52}
+                                  height={52}
+                                />
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="card-divider" />
+                          <div>
+                            <div className="card-body">
+                              <div className="card-heading">{card.title}</div>
+                              <div className="topic-subtext-mobile">
+                                {card.description}
+                              </div>
+                            </div>
+                            <div className="card-arrow-wrap">
+                              <ArrowRight className="card-arrow" />
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    ) : (
+                      <button
+                        className="topic-card topic-card-flex"
+                        onClick={() => navigate(card.slug)}
+                      >
+                        <div className="card-accent" />
 
-                    <div className="card-icon-wrap">
-                      {icon ? (
-                        <img
-                          src={icon.src}
-                          alt={icon.alt}
-                          width={52}
-                          height={52}
-                        />
-                      ) : null}
-                    </div>
+                        <span className="card-number">
+                          {String(index + 1).padStart(2, "0")}.
+                        </span>
 
-                    <div className="card-body">
-                      <div className="card-heading">{card.title}</div>
-                      <div className="topic-subtext">{card.description}</div>
-                    </div>
+                        <div className="card-divider" />
 
-                    <ArrowRight className="card-arrow" />
-                  </button>
+                        <div className="card-icon-wrap">
+                          {icon ? (
+                            <img
+                              src={icon.src}
+                              alt={icon.alt}
+                              width={52}
+                              height={52}
+                            />
+                          ) : null}
+                        </div>
+
+                        <div className="card-body">
+                          <div className="card-heading">{card.title}</div>
+                          <div className="topic-subtext">
+                            {card.description}
+                          </div>
+                        </div>
+
+                        <ArrowRight className="card-arrow" />
+                      </button>
+                    )}
+                  </div>
                 );
               })}
 
               {curriculumCards.length % 2 !== 0 && (
-                <div className="topic-card placeholder-card">
+                <div className="topic-card topic-card-flex placeholder-card">
                   <div className="outline-tip">
                     <img
                       src={getClockIcon()}

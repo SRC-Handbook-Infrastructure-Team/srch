@@ -1,0 +1,119 @@
+/* GridBackground Component Styles
+ *
+ * Features:
+ * - fadeInGrid: Text fade-in animation (0.8s) that triggers after page load to mask
+ *   the initial square color transitions (0.6s each)
+ * - grid-overlay: Gradient from transparent to --color-bg for readability over colors
+ * - grid-background-ready: Class applied when component is ready; enables animations
+ *   and text fade-in for smooth page-load experience
+ * - Distance-based color blending calculated in JS (max 300px from text box)
+ */
+
+@keyframes fadeInGrid {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.grid-background-container {
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+/* FIX: Use repeat(var(--num-cols), exact px) so every square is exactly
+   squareSize wide/tall. auto-fit + minmax stretches squares and breaks
+   the coordinate math used to detect text overlap. */
+.grid-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+
+  display: grid;
+  grid-template-columns: repeat(var(--num-cols, 19), var(--square-size, 48px));
+  grid-template-rows: repeat(auto-fill, var(--square-size, 48px));
+  gap: 0;
+}
+
+.grid-square {
+  width: var(--square-size, 48px);
+  height: var(--square-size, 48px);
+  /* Smooth color transitions (0.6s) on all updates: page load, resizing, hover, and
+     distance-based blending adjustments. */
+  transition: background-color 0.6s ease;
+}
+
+.grid-square:hover {
+  opacity: 0.9;
+}
+
+/* Gradient overlay: fades from transparent (top) to --color-bg (bottom)
+   for text readability over the colored squares. Does not interfere with interactions. */
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0.5;
+  background: linear-gradient(to bottom, transparent, var(--color-bg));
+  pointer-events: none;
+}
+
+.grid-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.grid-text-box {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  opacity: 0;
+}
+
+/* Text fades in (0.8s) after page load, synchronized with square color transitions (0.6s)
+   to create a smooth visual experience as the grid settles into place. */
+.grid-background-ready .grid-text-box {
+  animation: fadeInGrid 0.8s ease forwards;
+}
+
+.grid-text-box h1 {
+  font-family: var(--title-font, sans-serif);
+  font-weight: 700;
+  font-size: 6vw;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+.grid-text-box p {
+  font-family: var(--content-font, sans-serif);
+  font-size: var(--body-text, 1rem);
+  line-height: 1.6;
+  color: var(--color-text);
+  margin: 0;
+  width: auto;
+  max-width: 100%;
+}
