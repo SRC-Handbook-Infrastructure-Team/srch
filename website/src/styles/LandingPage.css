@@ -271,6 +271,12 @@ html.is-landing-page {
   transform: translateY(-1px);
 }
 
+:root[data-theme="dark"] .landing-outline-row:hover .landing-outline-card {
+  border-color: var(--color-accent);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
 .landing-outline-row:focus,
 .landing-outline-row:focus-visible {
   outline: none !important;

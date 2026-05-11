@@ -5,6 +5,7 @@
 
 import "../styles/About.css";
 import { useState, useEffect } from "react";
+import GridBackground from "../components/GridBackground";
 import MarkdownRenderer, {
   getContent,
   getAboutHeadingLinks,
@@ -12,12 +13,45 @@ import MarkdownRenderer, {
 
 export default function About() {
   const [contentData, setContentData] = useState(null);
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     getContent("about").then((data) => {
       if (data) setContentData(data);
     });
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    const storedTheme = window.localStorage.getItem("srch-theme");
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : prefersDark
+          ? "dark"
+          : "light";
+
+    setTheme(initialTheme);
+
+    const observer = new MutationObserver(() => {
+      const currentTheme = root.getAttribute("data-theme");
+      if (currentTheme && currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, [theme]);
 
   const headingLinks = contentData
     ? getAboutHeadingLinks(contentData.content)
@@ -33,21 +67,12 @@ export default function About() {
 
   return (
     <>
-      <div className="upper-content">
-        <div className="upper-text-section">
-          <div className="website-title" id="about-title">
-            About the SRC Handbook
-          </div>
-          <div className="info-section">
-            This Handbook is your guide to integrating ethics, responsibility,
-            and social awareness into computer science teaching. Whether you are
-            an instructor designing a syllabus, a TA leading discussions, or a
-            student exploring what impact your work can have, this site offers
-            curated modules, case studies, discussion prompts, and resource
-            tools.
-          </div>
-        </div>
-      </div>
+      <GridBackground
+        height="600px"
+        theme={theme}
+        title="About the SRC Handbook"
+        subtitle="This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you are an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools."
+      />
 
       <div className="about-lower-content">
         <section className="about-section">
