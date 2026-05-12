@@ -75,6 +75,7 @@
 
   --cs-ease: 180ms ease;
   --page-pad: min(150px, 10vw);
+  --button-hover-translate-y: -4px;
 }
 
 :root[data-theme="dark"] {
@@ -129,7 +130,38 @@ button {
   font-weight: 500;
   font-family: "Be Vietnam Pro", sans-serif !important;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition:
+    border-color 0.25s,
+    transform 0.2s ease;
+}
+
+.generic-button:focus:not(:focus-visible) {
+  outline: 1px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.generic-button {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--color-text-hover);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-hover);
+  font-family: var(--content-font);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 11px 22px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.generic-button:hover {
+  transform: translateY(var(--button-hover-translate-y));
+  background-color: var(--color-text-hover);
+  color: var(--color-bg);
 }
 
 button:focus,

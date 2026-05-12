@@ -6,7 +6,6 @@
 import "../styles/Home.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import GridBackground from "../components/GridBackground";
 import targetIconLight from "../assets/targetIcon.svg";
 import targetIconDark from "../assets/targetIcon_white.svg";
 import bookIconLight from "../assets/bookIcon.svg";
@@ -15,8 +14,6 @@ import lightbulbIconLight from "../assets/lightbulbIcon.svg";
 import lightbulbIconDark from "../assets/lightbulbIcon_white.svg";
 import peopleIconLight from "../assets/peopleIcon.svg";
 import peopleIconDark from "../assets/peopleIcon_white.svg";
-import carotIconLight from "../assets/carot-icon.svg";
-import carotIconDark from "../assets/carot-icon_white.svg";
 import instaLogoLight from "../assets/instagram-logo.svg";
 import instaLogoDark from "../assets/instagram-logo_white.svg";
 import clockIconLight from "../assets/clock-icon.svg";
@@ -31,6 +28,7 @@ import {
   getPreloadedNavigationData,
 } from "../util/MarkdownData";
 import { getSectionIconById } from "../util/sectionIcons";
+import { LuChevronDown } from "react-icons/lu";
 
 function getFirstParagraph(markdown = "") {
   const text = String(markdown)
@@ -56,6 +54,25 @@ function truncate(text = "", max = 130) {
   return `${value.slice(0, max).trimEnd()}...`;
 }
 
+function getInitialTheme() {
+  if (typeof document === "undefined") return "light";
+
+  const root = document.documentElement;
+  const attrTheme = root?.getAttribute("data-theme");
+  if (attrTheme === "light" || attrTheme === "dark") return attrTheme;
+
+  const storedTheme = window.localStorage.getItem("srch-theme");
+  const prefersDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  return storedTheme === "light" || storedTheme === "dark"
+    ? storedTheme
+    : prefersDark
+      ? "dark"
+      : "light";
+}
+
 function Home() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,7 +82,7 @@ function Home() {
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const curriculumTitleRef = useRef(null);
 
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(getInitialTheme);
   const [isMobileLayout, setIsMobileLayout] = useState(window.innerWidth < 800);
 
   useEffect(() => {
@@ -80,22 +97,13 @@ function Home() {
   useEffect(() => {
     const root = document.documentElement;
     if (!root) return;
-    const storedTheme = window.localStorage.getItem("srch-theme");
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme =
-      storedTheme === "light" || storedTheme === "dark"
-        ? storedTheme
-        : prefersDark
-          ? "dark"
-          : "light";
+    const initialTheme = getInitialTheme();
     setTheme(initialTheme);
     root.setAttribute("data-theme", initialTheme);
 
     const observer = new MutationObserver(() => {
       const currentTheme = root.getAttribute("data-theme");
-      if (currentTheme && currentTheme !== theme) {
+      if (currentTheme) {
         setTheme(currentTheme);
       }
     });
@@ -104,10 +112,8 @@ function Home() {
       attributeFilter: ["data-theme"],
     });
     return () => observer.disconnect();
-  }, [theme]);
+  }, []);
 
-  const getCarotIcon = () =>
-    theme === "dark" ? carotIconDark : carotIconLight;
   const getInstaLogo = () =>
     theme === "dark" ? instaLogoDark : instaLogoLight;
 
@@ -266,21 +272,14 @@ function Home() {
   return (
     <div className="layout">
       <div className="body">
-        <GridBackground
-          height="600px"
-          theme={theme === "dark" ? "dark" : "light"}
-          title="Brown SRC Handbook"
-          subtitle="This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you are an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools."
-        />
         <button
           className="scroll-caret-button"
           onClick={handleScrollClick}
           aria-label={isScrolledDown ? "Scroll to top" : "Scroll to curriculum"}
         >
-          <img
-            src={getCarotIcon()}
-            alt="Scroll"
+          <LuChevronDown
             className={`scroll-caret-icon ${isScrolledDown ? "hidden" : ""}`}
+            size="36"
           />
         </button>
         <div className="lower-content">
@@ -500,17 +499,11 @@ function Home() {
             </div>
             <div className="learn-more-container">
               <button
-                className="learn-more-button"
+                className="generic-button"
                 onClick={() => navigate("/about")}
               >
-                <span className="learn-more-text">Learn more</span>
-                <img
-                  src={getCarotIcon()}
-                  className="button-icon"
-                  alt="Arrow for the Learn More Button"
-                  width={24}
-                  height={24}
-                />
+                <span>Learn More</span>
+                <LuChevronDown className="button-icon" size="24" />
               </button>
             </div>
           </div>

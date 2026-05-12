@@ -161,6 +161,11 @@
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
+  transition: transform 0.2s ease;
+}
+
+.ack-card-photo:hover {
+  transform: translateY(var(--button-hover-translate-y));
 }
 
 .ack-card-name {
@@ -221,6 +226,7 @@
 .ack-icon-btn:hover {
   color: var(--color-bg);
   background-color: var(--color-accent);
+  transform: translateY(-2px);
 }
 
 .ack-icon-btn:active {

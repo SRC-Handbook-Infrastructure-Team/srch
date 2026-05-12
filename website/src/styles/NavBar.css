@@ -1,10 +1,10 @@
+
 .top-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   margin: 0;
-  height: auto;
   display: block;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -13,6 +13,7 @@
   overflow: visible;
   background-color: var(--color-bg);
   z-index: 50;
+  min-height: var(--nav-bar-height);
   box-shadow: 2px 2px 5px var(--color-shadow);
   border-bottom: none;
 }
@@ -342,6 +343,13 @@ mark {
   transition:
     transform 0.22s cubic-bezier(0.22, 0.7, 0.36, 0.7),
     opacity 0.18s ease-out;
+}
+
+.top-navbar[data-menu-open="true"]
+  + .mobile-menu-collapsible
+  .mobile-menu-panel {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 html[data-theme="dark"] .mobile-menu-panel {

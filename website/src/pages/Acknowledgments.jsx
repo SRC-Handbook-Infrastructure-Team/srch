@@ -2,8 +2,7 @@ import "../styles/Acknowledgments.css";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import GridBackground from "../components/GridBackground";
+import { useState } from "react";
 import team from "../team.json";
 
 function getMemberPhotoSrc(member) {
@@ -181,46 +180,8 @@ function TeamSection({ title, teamName }) {
 }
 
 function Acknowledgments() {
-  const [theme, setTheme] = useState("light");
-  useEffect(() => {
-    const root = document.documentElement;
-    if (!root) return;
-    const storedTheme = window.localStorage.getItem("srch-theme");
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme =
-      storedTheme === "light" || storedTheme === "dark"
-        ? storedTheme
-        : prefersDark
-          ? "dark"
-          : "light";
-    setTheme(initialTheme);
-    root.setAttribute("data-theme", initialTheme);
-
-    const observer = new MutationObserver(() => {
-      const currentTheme = root.getAttribute("data-theme");
-      if (currentTheme && currentTheme !== theme) {
-        setTheme(currentTheme);
-      }
-    });
-
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
-      <GridBackground
-        height="600px"
-        theme={theme}
-        title="Meet our team!"
-        subtitle="This handbook is the result of a collaborative effort across disciplines. We are grateful to the individuals whose insights, feedback, and support shaped its development."
-      />
       <div className="ack-lower-content">
         <TeamSection title="Leadership" teamName="leadership" />
         <TeamSection title="Product Team" teamName="product" />

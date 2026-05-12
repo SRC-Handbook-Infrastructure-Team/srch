@@ -81,7 +81,7 @@ html[data-theme="light"] .searchbar-container {
 }
 
 .searchbar-input::placeholder {
-  color: var(--color-text-gray) !important;
+  color: var(--color-text) !important;
   font-family: var(--content-font);
   opacity: 1;
 }

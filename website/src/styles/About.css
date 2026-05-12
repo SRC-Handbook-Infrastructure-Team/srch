@@ -20,21 +20,6 @@
   justify-content: center;
 }
 
-.about-jump-link {
-  border: 1px solid var(--color-text-hover);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-text-hover);
-  font-family: var(--content-font);
-  font-size: 1.1rem;
-  font-weight: 500;
-  line-height: 1;
-  padding: 11px 22px;
-}
-
-.about-jump-link:hover {
-  background: var(--color-accent-30);
-}
 
 .about-divider {
   width: 90%;
@@ -118,7 +103,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .about-lower-content {
     padding: 72px 80px;
   }

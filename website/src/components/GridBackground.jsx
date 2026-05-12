@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
 import "../styles/GridBackground.css";
 
 /**
@@ -74,7 +74,20 @@ export default function GridBackground({
   const containerRef = useRef(null);
   const textBoxRef = useRef(null);
   const [textBoxBounds, setTextBoxBounds] = useState(null);
-  const [dimensions, setDimensions] = useState({ numCols: 0, numRows: 0 });
+  const [dimensions, setDimensions] = useState(() => {
+    if (typeof window === "undefined") {
+      return { numCols: 0, numRows: 0 };
+    }
+
+    const parsedHeight =
+      typeof height === "string" ? parseInt(height, 10) : Number(height);
+    const containerHeight = Number.isFinite(parsedHeight) ? parsedHeight : 0;
+
+    return {
+      numCols: Math.ceil(window.innerWidth / squareSize),
+      numRows: Math.ceil(containerHeight / squareSize),
+    };
+  });
   const [isReady, setIsReady] = useState(false);
   const [boundsInitialized, setBoundsInitialized] = useState(false);
 
@@ -121,7 +134,7 @@ export default function GridBackground({
     return () => cancelAnimationFrame(timer);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateDimensions = () => {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.offsetWidth;
@@ -158,7 +171,7 @@ export default function GridBackground({
     });
   }, [numCols, numRows, pattern, paletteColors.join(",")]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!textBoxRef.current || !containerRef.current) return;
 
     const updateTextBoxBounds = () => {
@@ -180,7 +193,7 @@ export default function GridBackground({
       setBoundsInitialized(true);
     };
 
-    const frameId = requestAnimationFrame(updateTextBoxBounds);
+    updateTextBoxBounds();
 
     window.addEventListener("resize", updateTextBoxBounds);
     window.addEventListener("scroll", updateTextBoxBounds);
@@ -190,7 +203,6 @@ export default function GridBackground({
     observer.observe(textBoxRef.current);
 
     return () => {
-      cancelAnimationFrame(frameId);
       window.removeEventListener("resize", updateTextBoxBounds);
       window.removeEventListener("scroll", updateTextBoxBounds);
       observer.disconnect();

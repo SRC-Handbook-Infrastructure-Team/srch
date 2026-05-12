@@ -22,6 +22,25 @@ import logoDark from "../assets/srch_logo_white.svg";
 
 const themeStorageKey = "srch-theme";
 
+function getInitialTheme() {
+  if (typeof document === "undefined") return "light";
+
+  const root = document.documentElement;
+  const attrTheme = root?.getAttribute("data-theme");
+  if (attrTheme === "light" || attrTheme === "dark") return attrTheme;
+
+  const storedTheme = window.localStorage.getItem(themeStorageKey);
+  const prefersDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  return storedTheme === "light" || storedTheme === "dark"
+    ? storedTheme
+    : prefersDark
+      ? "dark"
+      : "light";
+}
+
 function NavBar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,7 +53,7 @@ function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModulesExpanded, setIsModulesExpanded] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(getInitialTheme);
   const getLogo = () => (theme === "dark" ? logoDark : logoLight);
 
   const [sections, setSections] = useState([]);
@@ -48,16 +67,7 @@ function NavBar() {
     const root = document.documentElement;
     if (!root) return;
 
-    const storedTheme = window.localStorage.getItem(themeStorageKey);
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme =
-      storedTheme === "light" || storedTheme === "dark"
-        ? storedTheme
-        : prefersDark
-          ? "dark"
-          : "light";
+    const initialTheme = getInitialTheme();
     setTheme(initialTheme);
     root.setAttribute("data-theme", initialTheme);
   }, []);
