@@ -253,7 +253,6 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
 
 .card-divider {
   width: 1px;
-  /* height: 100px; */
   background-color: #d1d5db;
   flex-shrink: 0;
   transition: background-color 0.2s ease;

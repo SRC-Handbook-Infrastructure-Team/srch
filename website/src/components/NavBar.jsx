@@ -109,11 +109,10 @@ function NavBar() {
 
   function handleLogoClick() {
     if (currentPath === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
+      window.location.reload();
+    } else {
+      window.location.href = "/";
     }
-
-    navigate("/");
   }
 
   function scrollToCurriculum() {
