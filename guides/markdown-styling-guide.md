@@ -101,6 +101,7 @@ Rules:
 - Keys are matched without case sensitivity.
 - Heading sets the drawer title shown to users.
 - Drawer body text continues until the next key line.
+- If you include a header in the drawer body markdown, make sure it is h4 (#### Header).
 
 To open a drawer from body text, use curly braces:
 

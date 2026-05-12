@@ -59,37 +59,33 @@ These definitions of accessibility are just three conceptions amid an entire fie
 we-are-familiar-with:
 Heading: Familiar Case Studies
 
-## Case Study: WCAG 1.2.1 Audio-only and Video-only (Pre-recorded)
+#### Case Study: WCAG 1.2.1 Audio-only and Video-only (Pre-recorded)
 
 “A transcript is provided for audio-only content and a transcript or audio description is provided for video-only content.”[^8]
 
 While this feature undoubtedly aids users with visual or hearing impairment, it also has the ability to benefit every user. Consider being in a library, and needing to listen to an audio clip for class. If you did not have headphones available, or the internet connection was making the video lag, you would be able to use the transcript instead.
 
-## Case Study: High Contrast Screen Settings
+#### Case Study: High Contrast Screen Settings
 
 The option to change one’s screen to high contrast is available on many of the most common operating systems—i.e. Linux, MacOS, and Windows. Students themselves use this feature since it is a default when they work on IDEs such as VSCode. While we may not think of high contrast as an explicit accessibility feature, it is built to make character distinction easier and less visually taxing than standard white or light screens with dark text.
 
 In-practice:
-Heading: Universal Design Case Study
-
-## Case Study: iPhone Home Screens
+Heading: Universal Design Case Study: iPhone Home Screens
 
 iPhone home screens are both easy to navigate (they are compatible with screen readers and other assistive technology) and customizable. That way, there exists a convention users are familiar with (icons corresponding to apps that are clickable), while giving agency to users to format their device as they best see fit.
 
 perspectives:
-Heading: Disability Case Study
-
-## Case Study: Hackathons[^1]
+Heading: Disability Case Study: Hackathons[^1]
 
 Hackathons hosted by organizations where the prompt is a well-intentioned call to create some technology meant to aid disabled people can be more harmful than helpful. These events often frame the users of this technology as fixed and separate from those designing the technology. Further, by framing the invention of assistive technology (or otherwise) in the brief span of a Hackathon, these events hide the extended, exhaustive process that goes into creating technology by and for disabled people.
 
 can-be-addressed:
-Heading: Equity Case Study
+Heading: Equity Case Studies
 
-## Case Study: Unified Payments Interface[^5] [^2]
+#### Case Study: Unified Payments Interface[^5] [^2]
 
 In 2016, the National Payments Corporation of India established the Unified Payments Interface (UPI), a single page mobile application that facilitates payment between parties in an efficient, accessible manner. UPI is managed by the Reserve Bank of India and partners with a variety of banks to allow users to access the service. UPI has been credited for including marginalized parties in a digital landscape with its ease and convenience of use, bolstering the Indian economy and reducing the cash-digital divide.
 
-## Case Study: Black Girls Code [^6]
+#### Case Study: Black Girls Code [^6]
 
 Black Girls Code is an organization that promotes the education of Black girls and young women in computation and technology. They recognize that only 2% of jobs in the tech sector are held by Black women and aim to improve those numbers.
