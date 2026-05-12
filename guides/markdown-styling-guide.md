@@ -17,7 +17,7 @@ title: Page Title
 order: 1
 title: Intersections with Other Values
 identifier: "2.c"
-lastUpdated: 2026-04-14
+lastUpdated: April 14, 2026
 ---
 ```
 

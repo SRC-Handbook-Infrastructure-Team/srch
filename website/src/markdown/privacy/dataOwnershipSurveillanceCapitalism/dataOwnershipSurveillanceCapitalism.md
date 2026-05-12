@@ -3,7 +3,7 @@ title: Data Ownership and Surveillance Capitalism
 identifier: "1.c"
 order: 3
 final: true
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 ## How Should We Think About Data in the Context of Surveillance Capitalism?

@@ -226,7 +226,6 @@
 .ack-icon-btn:hover {
   color: var(--color-bg);
   background-color: var(--color-accent);
-  transform: translateY(-2px);
 }
 
 .ack-icon-btn:active {

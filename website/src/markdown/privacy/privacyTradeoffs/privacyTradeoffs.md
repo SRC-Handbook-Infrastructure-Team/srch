@@ -2,7 +2,7 @@
 title: Privacy Trade-Offs
 identifier: "1.d"
 order: 4
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 # What Are The Trade-Offs of Privacy?

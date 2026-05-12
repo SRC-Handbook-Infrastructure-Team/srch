@@ -11,6 +11,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { visit } from "unist-util-visit";
 import { MdArrowForward } from "react-icons/md";
+import { LuBriefcase } from "react-icons/lu";
 import { useLayout } from "../layouts/LayoutContext";
 import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
 import MarkdownRenderer, {
@@ -20,7 +21,27 @@ import MarkdownRenderer, {
   getPreloadedMarkdownContent,
   highlightText,
 } from "../util/MarkdownRenderer";
+import { getSectionIconById } from "../util/sectionIcons";
 import primersData from "../primers_to_curriculum.json";
+
+function getInitialTheme() {
+  if (typeof document === "undefined") return "light";
+
+  const root = document.documentElement;
+  const attrTheme = root?.getAttribute("data-theme");
+  if (attrTheme === "light" || attrTheme === "dark") return attrTheme;
+
+  const storedTheme = window.localStorage.getItem("srch-theme");
+  const prefersDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  return storedTheme === "light" || storedTheme === "dark"
+    ? storedTheme
+    : prefersDark
+      ? "dark"
+      : "light";
+}
 
 function escapeHtml(value) {
   return String(value || "")
@@ -430,6 +451,7 @@ function MarkdownPage() {
   const [lastUpdated, setLastUpdated] = useState(
     cachedPageContent?.frontmatter?.lastUpdated || "",
   );
+  const [theme, setTheme] = useState(getInitialTheme);
   const [mainFootnotes, setMainFootnotes] = useState([]);
   const [allDefinitions, setAllDefinitions] = useState(
     cachedPageContent?.allDefinitions || {},
@@ -440,6 +462,9 @@ function MarkdownPage() {
   const [furtherReadingBlock, setFurtherReadingBlock] = useState(
     cachedPageContent?.furtherReadingBlock || null,
   );
+  const sectionIconSrc = sectionId
+    ? getSectionIconById(sectionId, theme)
+    : null;
 
   useDrawerScrollWatcher({
     urlTerm,
@@ -517,6 +542,25 @@ function MarkdownPage() {
     const map = buildSidebarDrawersFootnoteOriginMap(sidebar);
     setSidebarFootnoteOriginMap(map);
   }, [sidebar]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root) return;
+
+    const getCurrentTheme = () => root.getAttribute("data-theme") || "light";
+    setTheme(getCurrentTheme());
+
+    const observer = new MutationObserver(() => {
+      setTheme(getCurrentTheme());
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const footnoteOriginMap = useMemo(() => {
     const mainMap = buildFootnoteOriginMap(rawMainMarkdown, sidebar);
@@ -601,32 +645,46 @@ function MarkdownPage() {
     const heading =
       (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
       String(term).replace(/-/g, " ");
+    const headingText = String(heading || "")
+      .replace(/:$/, "")
+      .trim();
 
     const node = (
       <>
         <div className="drawer-meta-label">
-          {highlightText(
-            renderSidebarHeadingMarkdown(heading, {
-              sectionId,
-              subsectionId,
-              footnoteOriginMap: drawerFootnoteOriginMap,
-            }),
-            highlight,
-          )}
+          <span className="drawer-meta-label-row">
+            <LuBriefcase
+              className="drawer-meta-label-icon"
+              aria-hidden="true"
+            />
+            <span>CASE STUDY</span>
+          </span>
+          <span className="drawer-heading-title-row">
+            {highlightText(
+              renderSidebarHeadingMarkdown(heading, {
+                sectionId,
+                subsectionId,
+                footnoteOriginMap: drawerFootnoteOriginMap,
+              }),
+              highlight,
+            )}
+          </span>
         </div>
         <div className="drawer-meta-divider" />
-        <MarkdownRenderer
-          content={contentToShow}
-          sidebar={{}}
-          sectionId={sectionId}
-          subsectionId={subsectionId}
-          onDrawerOpen={handleDrawerOpen}
-          onNavigation={handleNavigation}
-          highlight={highlight}
-          urlTerm={urlTerm}
-          mergedSidebar={allPageFootnotes}
-          footnoteOriginMap={drawerFootnoteOriginMap}
-        />
+        <div className="drawer-markdown-content">
+          <MarkdownRenderer
+            content={contentToShow}
+            sidebar={{}}
+            sectionId={sectionId}
+            subsectionId={subsectionId}
+            onDrawerOpen={handleDrawerOpen}
+            onNavigation={handleNavigation}
+            highlight={highlight}
+            urlTerm={urlTerm}
+            mergedSidebar={allPageFootnotes}
+            footnoteOriginMap={drawerFootnoteOriginMap}
+          />
+        </div>
       </>
     );
 
@@ -1000,7 +1058,17 @@ function MarkdownPage() {
         <div className="page-header markdown-margin">
           <div className="page-header-top-row">
             <p className="page-section-label">
-              {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
+              {sectionIconSrc && (
+                <img
+                  className="page-section-label-icon"
+                  src={sectionIconSrc}
+                  alt=""
+                  aria-hidden="true"
+                />
+              )}
+              <span>
+                {sectionId ? prettifySlug(sectionId).toUpperCase() : ""}
+              </span>
             </p>
             {lastUpdated && (
               <p className="page-last-updated">

@@ -3,7 +3,7 @@ title: Justice in AI
 identifier: "3.c"
 order: 3
 final: true
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 Justice is the idea that individuals should be treated fairly. However, what that means when trying to create the best AI Systems presents many questions, diverging opinions, and diversity in implementation.

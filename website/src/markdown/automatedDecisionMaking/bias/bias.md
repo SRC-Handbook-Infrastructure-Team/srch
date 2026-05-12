@@ -3,7 +3,7 @@ title: Bias in Automated Decision-Making Systems
 identifier: "3.a"
 order: 1
 final: true
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 ## What Is Bias?

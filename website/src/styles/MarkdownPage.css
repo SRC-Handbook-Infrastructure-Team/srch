@@ -19,14 +19,13 @@
   top: 1px;
 }
 .drawer-content {
-  padding: 12px !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
 }
-.drawer-header {
-  font-family: var(--content-font) !important;
-
-  padding: 10px 12px !important;
-  background: var(--color-bg) !important;
-  border-bottom: 1px solid !important;
+.drawer-markdown-content {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  padding-top: 0.5rem !important;
 }
 
 .header-toggle {
@@ -426,6 +425,17 @@ html:not(.left-open) .header-toggle {
 .page-section-label,
 .page-last-updated {
   margin: 0;
+}
+.page-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.page-section-label-icon {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  object-fit: contain;
 }
 .page-header-row {
   position: relative;
@@ -838,11 +848,33 @@ p > .srch-drawer-link:first-child {
   width: 90%;
   font-weight: 600;
   color: var(--color-header);
+  padding-right: 0.5rem;
+  padding-left: 1.5rem;
+}
+.drawer-meta-label-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.drawer-heading-title-row {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.drawer-meta-label-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
 }
 
 .drawer-meta-divider {
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 0.5rem;
   height: 2px;
   background: var(--color-subtle-emphasis);
 }
@@ -1021,7 +1053,6 @@ html[data-layout-mode="overlay"]
 .curriculum-objectives-inner {
   gap: 20px;
   align-items: flex-start;
-
 }
 .curriculum-objectives-label {
   color: var(--color-text-hover);

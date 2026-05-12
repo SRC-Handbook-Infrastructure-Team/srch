@@ -3,7 +3,7 @@ title: AI Governance
 identifier: "3.d"
 order: 4
 final: true
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 As AI systems scale in power and impact, so does the urgency to ensure they are aligned with legal standards and public accountability. Therefore, the need for effective AI governance has become critical to direct how these systems are developed, deployed, and overseen.

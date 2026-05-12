@@ -3,7 +3,7 @@ title: Biases in Design
 identifier: "2.d"
 order: 4
 final: false
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 One of the biggest challenges to accessible technology is cognitive biases, which are systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.

@@ -3,7 +3,7 @@ title: Design Processes
 identifier: "2.e"
 order: 5
 final: false
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 When designing a product, there are many possible routes from ideation to implementation. Design processes provide structure along these routes, offering methods for gathering user needs, testing ideas, and iterating on products through feedback.

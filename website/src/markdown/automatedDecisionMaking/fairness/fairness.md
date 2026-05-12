@@ -3,7 +3,7 @@ title: Algorithmic Fairness
 identifier: "3.b"
 order: 2
 final: true
-lastUpdated: 2026-04-21
+lastUpdated: April 21, 2026
 ---
 
 In cases where machines replace humans in making high-impact decisions, it is important for their outcomes to remain fair. But what does algorithmic fairness actually mean?
