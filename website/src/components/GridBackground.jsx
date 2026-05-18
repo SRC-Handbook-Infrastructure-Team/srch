@@ -1,30 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
 import "../styles/GridBackground.css";
 
-/**
- * GridBackground Component
- * Reusable grid background with colored squares, title, and subtitle.
- *
- * Features:
- * - Distance-based color blending: Squares near the text box blend toward --color-bg,
- *   while squares further away display full palette colors (max 300px distance)
- * - Gradient overlay: Fades from transparent at top to --color-bg at bottom for readability
- * - Theme-aware: Uses CSS custom property --color-bg instead of hardcoded white/colors
- * - Smooth animations: Color transitions (0.6s) on all changes, text fades in (0.8s) on page load
- *
- * Props:
- * - title: Page title (required)
- * - subtitle: Page subtitle (optional)
- * - children: Additional content to render below title/subtitle
- * - height: Height of the container (default: "600px")
- * - squareSize: Size of each grid square in pixels (default: 48)
- * - colors: Array of colors to use in the grid
- * - pattern: Optional pattern for square colors ("random", "gradient", or array of specific positions)
- * - theme: "light" or "dark" - adjusts default colors
- * - titleClass: CSS class for title styling
- * - subtitleClass: CSS class for subtitle styling
- */
-
 function parseCssColorToRgb(colorValue) {
   const value = String(colorValue || "").trim();
   if (!value) return null;
@@ -59,37 +35,46 @@ function parseCssColorToRgb(colorValue) {
 
   return null;
 }
+
 export default function GridBackground({
-  title,
+  title = null,
   subtitle = null,
   children = null,
-  height = "600px",
+  showOverlay = false,
+  height = 600,
   squareSize = 48,
   colors = null,
   pattern = "random",
   theme = "light",
   titleClass = "website-title",
   subtitleClass = "info-section",
+  titleIcon = null,
 }) {
   const containerRef = useRef(null);
   const textBoxRef = useRef(null);
   const [textBoxBounds, setTextBoxBounds] = useState(null);
   const [dimensions, setDimensions] = useState(() => {
-    if (typeof window === "undefined") {
-      return { numCols: 0, numRows: 0 };
-    }
-
-    const parsedHeight =
-      typeof height === "string" ? parseInt(height, 10) : Number(height);
-    const containerHeight = Number.isFinite(parsedHeight) ? parsedHeight : 0;
+    if (typeof window === "undefined")
+      return { numCols: 0, numRows: 0, gridTemplateColumns: "" };
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const floorCols = Math.max(1, Math.floor(w / squareSize));
+    const leftover = Math.round(w - floorCols * squareSize);
+    const useExtra = leftover >= 8; // avoid tiny extra slices
+    const numCols = floorCols + (useExtra ? 1 : 0);
+    const gridTemplateColumns = useExtra
+      ? `repeat(${floorCols}, ${squareSize}px) ${leftover}px`
+      : `repeat(${floorCols}, ${squareSize}px)`;
 
     return {
-      numCols: Math.ceil(window.innerWidth / squareSize),
-      numRows: Math.ceil(containerHeight / squareSize),
+      numCols,
+      numRows: Math.max(1, Math.ceil(h / squareSize)),
+      gridTemplateColumns,
     };
   });
   const [isReady, setIsReady] = useState(false);
   const [boundsInitialized, setBoundsInitialized] = useState(false);
+  const resolvedHeight = typeof height === "string" ? height : `${height}px`;
 
   const lightColors = [
     "#9f1f2a",
@@ -128,58 +113,86 @@ export default function GridBackground({
   const paletteColors = colors || (theme === "dark" ? darkColors : lightColors);
 
   useEffect(() => {
-    const timer = requestAnimationFrame(() => {
-      setIsReady(true);
-    });
+    const timer = requestAnimationFrame(() => setIsReady(true));
     return () => cancelAnimationFrame(timer);
   }, []);
 
   useLayoutEffect(() => {
     const updateDimensions = () => {
       if (!containerRef.current) return;
-      const containerWidth = containerRef.current.offsetWidth;
-      const containerHeight =
-        typeof height === "string" ? parseInt(height, 10) : height;
+      // use bounding rect for subpixel accuracy
+      const rect = containerRef.current.getBoundingClientRect();
+      const containerWidth = rect.width;
+      const containerHeight = rect.height;
+
+      const floorCols = Math.max(1, Math.floor(containerWidth / squareSize));
+      const leftover = Math.round(containerWidth - floorCols * squareSize);
+      const useExtra = leftover >= 8; // threshold to avoid thin slivers
+      const numCols = floorCols + (useExtra ? 1 : 0);
+      const gridTemplateColumns = useExtra
+        ? `repeat(${floorCols}, ${squareSize}px) ${leftover}px`
+        : `repeat(${floorCols}, ${squareSize}px)`;
 
       setDimensions({
-        numCols: Math.ceil(containerWidth / squareSize),
-        numRows: Math.ceil(containerHeight / squareSize),
+        numCols,
+        numRows: Math.max(1, Math.ceil(containerHeight / squareSize)),
+        gridTemplateColumns,
       });
     };
 
     updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, [squareSize, height]);
 
-  const { numCols, numRows } = dimensions;
+    // run a few delayed updates to catch initial layout changes / class transitions
+    const timers = [];
+    timers.push(setTimeout(updateDimensions, 50));
+    timers.push(setTimeout(updateDimensions, 250));
+
+    // also run a couple of rAFs to catch paint-driven layout adjustments
+    let raf1 = requestAnimationFrame(() => {
+      updateDimensions();
+      raf1 = requestAnimationFrame(updateDimensions);
+    });
+
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      timers.forEach((t) => clearTimeout(t));
+      if (raf1) cancelAnimationFrame(raf1);
+    };
+  }, [squareSize]);
+
+  const { numCols, numRows, gridTemplateColumns } = dimensions;
   const totalSquares = numCols * numRows;
 
   const squareColors = useMemo(() => {
     if (numCols === 0 || numRows === 0) return [];
     const total = numCols * numRows;
-
     return Array.from({ length: total }, (_, index) => {
-      if (pattern === "random") {
+      if (pattern === "random")
         return paletteColors[Math.floor(Math.random() * paletteColors.length)];
-      }
       if (Array.isArray(pattern)) {
-        const patternItem = pattern.find((item) => item.index === index);
-        return patternItem ? patternItem.color : paletteColors[0];
+        const p = pattern.find((it) => it.index === index);
+        return p ? p.color : paletteColors[0];
       }
       return paletteColors[index % paletteColors.length];
     });
   }, [numCols, numRows, pattern, paletteColors.join(",")]);
 
+  // No animations: use the static precomputed squareColors for rendering.
+
   useLayoutEffect(() => {
-    if (!textBoxRef.current || !containerRef.current) return;
+    if (!containerRef.current) return;
 
     const updateTextBoxBounds = () => {
-      if (!textBoxRef.current || !containerRef.current) return;
+      if (!containerRef.current) return;
+      if (!textBoxRef.current) {
+        setTextBoxBounds(null);
+        setBoundsInitialized(true);
+        return;
+      }
 
       const containerRect = containerRef.current.getBoundingClientRect();
       const textBoxRect = textBoxRef.current.getBoundingClientRect();
-
       const relX = textBoxRect.left - containerRect.left;
       const relY = textBoxRect.top - containerRect.top;
 
@@ -189,19 +202,15 @@ export default function GridBackground({
         width: textBoxRect.width,
         height: textBoxRect.height,
       });
-
       setBoundsInitialized(true);
     };
 
     updateTextBoxBounds();
-
     window.addEventListener("resize", updateTextBoxBounds);
     window.addEventListener("scroll", updateTextBoxBounds);
-
     const observer = new ResizeObserver(updateTextBoxBounds);
     observer.observe(containerRef.current);
-    observer.observe(textBoxRef.current);
-
+    if (textBoxRef.current) observer.observe(textBoxRef.current);
     return () => {
       window.removeEventListener("resize", updateTextBoxBounds);
       window.removeEventListener("scroll", updateTextBoxBounds);
@@ -213,35 +222,27 @@ export default function GridBackground({
     if (typeof document === "undefined") return null;
     const root = document.documentElement;
     if (!root) return null;
-
     const backgroundColor = getComputedStyle(root)
       .getPropertyValue("--color-bg")
       .trim();
     return parseCssColorToRgb(backgroundColor);
   }, [theme]);
-  const getSquareColor = (index) => {
-    if (!textBoxBounds) return squareColors[index] ?? paletteColors[0];
 
+  const computeDisplayColor = (index, baseArray) => {
+    const baseHex = (baseArray && baseArray[index]) || paletteColors[0];
+    if (!textBoxBounds) return baseHex;
     const row = Math.floor(index / numCols);
     const col = index % numCols;
-
     const squareCenterX = col * squareSize + squareSize / 2;
     const squareCenterY = row * squareSize + squareSize / 2;
-
     const { x: txX, y: txY, width: txW, height: txH } = textBoxBounds;
-
     const closestX = Math.max(txX, Math.min(squareCenterX, txX + txW));
     const closestY = Math.max(txY, Math.min(squareCenterY, txY + txH));
-
     const dx = squareCenterX - closestX;
     const dy = squareCenterY - closestY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-
     const maxDistance = 300;
     const blendFactor = Math.min(1, distance / maxDistance);
-
-    const baseColor = squareColors[index] ?? paletteColors[0];
-
     const hexToRgb = (hex) => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
@@ -252,10 +253,8 @@ export default function GridBackground({
           }
         : null;
     };
-
-    const rgb = hexToRgb(baseColor);
-    if (!rgb || !backgroundRgb) return baseColor;
-
+    const rgb = hexToRgb(baseHex);
+    if (!rgb || !backgroundRgb) return baseHex;
     const r = Math.round(
       backgroundRgb.r + (rgb.r - backgroundRgb.r) * blendFactor,
     );
@@ -265,21 +264,37 @@ export default function GridBackground({
     const b = Math.round(
       backgroundRgb.b + (rgb.b - backgroundRgb.b) * blendFactor,
     );
-
     return `rgb(${r}, ${g}, ${b})`;
   };
+
+  const getSquareColor = (index) => {
+    return computeDisplayColor(index, squareColors);
+  };
+
+  // No animations here — grid is static.
+
+  // Styles: apply explicit height only when there is NO text/title. When there is text,
+  // use minHeight so content sits inside the visuals and can grow naturally.
+  const containerStyle = {
+    "--square-size": `${squareSize}px`,
+    "--num-cols": numCols,
+  };
+  if (title) {
+    containerStyle.minHeight = resolvedHeight;
+  } else {
+    containerStyle.height = resolvedHeight;
+  }
 
   return (
     <div
       ref={containerRef}
-      className={`grid-background-container${isReady && boundsInitialized ? " grid-background-ready" : ""}`}
-      style={{
-        height,
-        "--square-size": `${squareSize}px`,
-        "--num-cols": numCols,
-      }}
+      className={`grid-background-container${isReady && boundsInitialized ? " grid-background-ready" : ""}${!title ? " grid-background-no-text" : ""}${showOverlay ? " grid-background-show-overlay" : ""}`}
+      style={containerStyle}
     >
-      <div className="grid-background">
+      <div
+        className="grid-background"
+        style={gridTemplateColumns ? { gridTemplateColumns } : undefined}
+      >
         {Array.from({ length: totalSquares }).map((_, index) => (
           <div
             key={index}
@@ -288,12 +303,21 @@ export default function GridBackground({
           />
         ))}
       </div>
+
       <div className="grid-overlay" />
+
       <div className="grid-content">
-        <div ref={textBoxRef} className="grid-text-box">
-          <h1 className={titleClass}>{title}</h1>
-          {subtitle && <p className={subtitleClass}>{subtitle}</p>}
-        </div>
+        {title && (
+          <div ref={textBoxRef} className="grid-text-box">
+            <h1 className={titleClass}>
+              {titleIcon && (
+                <span className="grid-title-icon">{titleIcon}</span>
+              )}
+              {title}
+            </h1>
+            {subtitle && <p className={subtitleClass}>{subtitle}</p>}
+          </div>
+        )}
         {children}
       </div>
     </div>

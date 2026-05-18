@@ -301,7 +301,7 @@ function Home() {
               {curriculumCards.map((card, index) => {
                 const icon = getCardIcon(card.id);
                 return (
-                  <div key={card.id}>
+                  <div key={card.id} className="topic-card-row">
                     {isMobileLayout ? (
                       <button
                         className="topic-card"

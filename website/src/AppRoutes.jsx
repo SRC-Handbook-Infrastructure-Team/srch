@@ -61,7 +61,6 @@ function AppRoutes() {
         };
 
   useEffect(() => {
-    // Preload all static data on app startup
     preloadNavigationData().catch((error) => {
       console.error("Error preloading sidebar navigation:", error);
     });

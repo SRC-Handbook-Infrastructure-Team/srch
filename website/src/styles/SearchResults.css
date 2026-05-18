@@ -99,6 +99,8 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 8px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-subtle-emphasis);
 }
 
@@ -162,9 +164,14 @@
   transition: all 0.2s;
 }
 
+:root[data-theme="dark"] .pages-row {
+  border: 2px solid var(--color-border);
+  box-shadow: none;
+}
+
 .page-number {
   cursor: pointer;
-  color: var(--color-subtle-emphasis);
+  color: var(--color-text);
   user-select: none;
   outline: none;
   font-size: 1rem;
@@ -184,7 +191,7 @@
 
 .page-nav {
   cursor: pointer;
-  color: var(--color-subtle-emphasis);
+  color: var(--color-text);
   height: 34px;
   text-align: center;
   font-size: 1rem;
@@ -200,6 +207,11 @@
   background: transparent;
   border: none;
   cursor: pointer;
+}
+
+:root[data-theme="dark"] .page-nav {
+  border: 2px solid var(--color-border);
+  box-shadow: none;
 }
 
 .page-nav[aria-disabled="true"] {

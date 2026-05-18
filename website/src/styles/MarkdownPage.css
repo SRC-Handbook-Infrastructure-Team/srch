@@ -528,10 +528,7 @@ html:not(.left-open):not(.right-open) body .main-content:focus-visible {
   outline: none !important;
 }
 
-html.is-landing-page:not(.left-open):not(.right-open) body .main-content {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
+
 
 html.left-open body .main-content {
   margin-left: var(--left-sidebar-width) !important;
@@ -543,9 +540,6 @@ html.left-open body .main-content {
   will-change: margin-left, padding-left;
 }
 
-html.is-landing-page.left-open body .main-content {
-  padding-left: 0 !important;
-}
 
 html:not(.right-open):not(.left-open) body .main-content {
   margin-right: 0 !important;
@@ -555,9 +549,7 @@ html:not(.right-open):not(.left-open) body .main-content {
     padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html.is-landing-page:not(.right-open):not(.left-open) body .main-content {
-  padding-right: 0 !important;
-}
+
 
 html.right-open body .main-content {
   margin-right: var(--right-sidebar-width) !important;

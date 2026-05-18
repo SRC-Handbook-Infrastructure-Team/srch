@@ -132,6 +132,10 @@
   word-wrap: break-word;
 }
 
+.topic-card-row {
+  width: 100%;
+}
+
 .topic-card-flex {
   display: flex;
   gap: 32px;
@@ -317,6 +321,8 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-left: 2rem;
+  padding-right: 2rem;
   width: 80%;
   align-items: center;
 }
@@ -334,6 +340,11 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
     padding-right: 18px;
   }
 
+  .grid-text-box {
+    padding: 18px !important;
+    width: 100% !important;
+  }
+
   .cntr-link-area {
     width: 100% !important;
   }
@@ -349,6 +360,8 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   .card-grid {
     width: 100%;
     grid-template-columns: 1fr;
+    padding-left: 0;
+    padding-right: 0;
     justify-content: center;
     align-items: stretch;
     gap: 16px;
@@ -434,8 +447,6 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
 .content-section {
   width: 80%;
   padding-bottom: 84px;
-  padding-left: 2rem;
-  padding-right: 2rem;
   align-self: center;
   justify-content: center;
   flex-direction: column;
@@ -514,6 +525,7 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
 }
 
 .learn-more-container {
+  width: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -582,11 +594,6 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   height: var(--ack-upper-height);
   z-index: 0;
 
-  background-image: url("../assets/landing-page-background-gradient.png");
-  background-size: cover;
-  background-position: left center;
-  background-repeat: no-repeat;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -594,11 +601,6 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   gap: var(--medium-gap);
 
   border-top: 1px solid white;
-}
-
-:root[data-theme="dark"] .upper-content {
-  background-image: url("../assets/landing_page_background_gradient_dark.png");
-  background-color: var(--color-bg);
 }
 
 .upper-text-section {
@@ -630,8 +632,10 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
 }
 
 .grid-text-box {
-  padding: 2vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   margin-top: 17vh;
-  margin-left: 17vw;
-  margin-right: 30vw;
+  width: 64%;
 }

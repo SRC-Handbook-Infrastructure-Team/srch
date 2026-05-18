@@ -19,6 +19,7 @@ import MarkdownRenderer, {
   warmMarkdownContent,
 } from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
+import GridBackground from "../components/GridBackground";
 
 function prettifySlug(slug = "") {
   return String(slug)
@@ -360,17 +361,20 @@ function LandingPage() {
 
   return (
     <>
-      <div className="landing-upper-content">
-        <div className="landing-upper-text-section">
-          <div className="landing-title" id="landing-title">
-            {sectionIcon && (
-              <img
-                className="landing-primer-icon"
-                src={sectionIcon}
-                alt={`${formattedTitle} icon`}
-              />
-            )}
-            <span>{formattedTitle}</span>
+      <div className="landing-page">
+        <GridBackground height="130px" theme={theme} showOverlay={true} />
+        <div className="landing-upper-content">
+          <div className="landing-upper-text-section">
+            <div className="landing-title" id="landing-title">
+              {sectionIcon && (
+                <img
+                  className="landing-primer-icon"
+                  src={sectionIcon}
+                  alt={`${formattedTitle} icon`}
+                />
+              )}
+              <span>{formattedTitle}</span>
+            </div>
           </div>
         </div>
       </div>

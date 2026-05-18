@@ -81,11 +81,6 @@
   -webkit-text-stroke: 0.2px var(--color-text-hover);
 }
 
-:root[data-theme="dark"] .upper-content {
-  background-image: url("../assets/landing_page_background_gradient_dark.png");
-  background-color: var(--color-bg);
-}
-
 .about-section ul li > p {
   margin: 0;
 }
