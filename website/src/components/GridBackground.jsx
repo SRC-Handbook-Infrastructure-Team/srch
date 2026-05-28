@@ -50,6 +50,8 @@ export default function GridBackground({
   subtitleClass = "info-section",
   titleIcon = null,
 }) {
+  const textMaskPaddingX = Math.max(96, Math.round(squareSize * 2));
+  const textMaskPaddingY = Math.max(72, Math.round(squareSize * 1.5));
   const containerRef = useRef(null);
   const textBoxRef = useRef(null);
   const [textBoxBounds, setTextBoxBounds] = useState(null);
@@ -60,7 +62,7 @@ export default function GridBackground({
     const h = window.innerHeight;
     const floorCols = Math.max(1, Math.floor(w / squareSize));
     const leftover = Math.round(w - floorCols * squareSize);
-    const useExtra = leftover >= 8; // avoid tiny extra slices
+    const useExtra = leftover >= 8;
     const numCols = floorCols + (useExtra ? 1 : 0);
     const gridTemplateColumns = useExtra
       ? `repeat(${floorCols}, ${squareSize}px) ${leftover}px`
@@ -120,14 +122,13 @@ export default function GridBackground({
   useLayoutEffect(() => {
     const updateDimensions = () => {
       if (!containerRef.current) return;
-      // use bounding rect for subpixel accuracy
       const rect = containerRef.current.getBoundingClientRect();
       const containerWidth = rect.width;
       const containerHeight = rect.height;
 
       const floorCols = Math.max(1, Math.floor(containerWidth / squareSize));
       const leftover = Math.round(containerWidth - floorCols * squareSize);
-      const useExtra = leftover >= 8; // threshold to avoid thin slivers
+      const useExtra = leftover >= 8;
       const numCols = floorCols + (useExtra ? 1 : 0);
       const gridTemplateColumns = useExtra
         ? `repeat(${floorCols}, ${squareSize}px) ${leftover}px`
@@ -142,12 +143,10 @@ export default function GridBackground({
 
     updateDimensions();
 
-    // run a few delayed updates to catch initial layout changes / class transitions
     const timers = [];
     timers.push(setTimeout(updateDimensions, 50));
     timers.push(setTimeout(updateDimensions, 250));
 
-    // also run a couple of rAFs to catch paint-driven layout adjustments
     let raf1 = requestAnimationFrame(() => {
       updateDimensions();
       raf1 = requestAnimationFrame(updateDimensions);
@@ -178,8 +177,6 @@ export default function GridBackground({
     });
   }, [numCols, numRows, pattern, paletteColors.join(",")]);
 
-  // No animations: use the static precomputed squareColors for rendering.
-
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
@@ -197,10 +194,10 @@ export default function GridBackground({
       const relY = textBoxRect.top - containerRect.top;
 
       setTextBoxBounds({
-        x: relX,
-        y: relY,
-        width: textBoxRect.width,
-        height: textBoxRect.height,
+        x: relX - textMaskPaddingX,
+        y: relY - textMaskPaddingY,
+        width: textBoxRect.width + textMaskPaddingX * 2,
+        height: textBoxRect.height + textMaskPaddingY * 2,
       });
       setBoundsInitialized(true);
     };
@@ -216,7 +213,7 @@ export default function GridBackground({
       window.removeEventListener("scroll", updateTextBoxBounds);
       observer.disconnect();
     };
-  }, [squareSize, numCols, numRows]);
+  }, [squareSize, numCols, numRows, textMaskPaddingX, textMaskPaddingY]);
 
   const backgroundRgb = useMemo(() => {
     if (typeof document === "undefined") return null;
@@ -271,10 +268,6 @@ export default function GridBackground({
     return computeDisplayColor(index, squareColors);
   };
 
-  // No animations here — grid is static.
-
-  // Styles: apply explicit height only when there is NO text/title. When there is text,
-  // use minHeight so content sits inside the visuals and can grow naturally.
   const containerStyle = {
     "--square-size": `${squareSize}px`,
     "--num-cols": numCols,
@@ -308,14 +301,16 @@ export default function GridBackground({
 
       <div className="grid-content">
         {title && (
-          <div ref={textBoxRef} className="grid-text-box">
-            <h1 className={titleClass}>
-              {titleIcon && (
-                <span className="grid-title-icon">{titleIcon}</span>
-              )}
-              {title}
-            </h1>
-            {subtitle && <p className={subtitleClass}>{subtitle}</p>}
+          <div className="grid-overlay-box">
+            <div ref={textBoxRef} className="grid-text-box">
+              <h1 className={titleClass}>
+                {titleIcon && (
+                  <span className="grid-title-icon">{titleIcon}</span>
+                )}
+                {title}
+              </h1>
+              {subtitle && <p className={subtitleClass}>{subtitle}</p>}
+            </div>
           </div>
         )}
         {children}

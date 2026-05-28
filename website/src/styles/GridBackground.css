@@ -73,6 +73,14 @@
   padding: 0;
 }
 
+.grid-overlay-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 100%;
+}
+
 .grid-text-box {
   position: relative;
   z-index: 2;

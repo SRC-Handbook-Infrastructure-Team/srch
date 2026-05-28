@@ -41,9 +41,11 @@
   }
 
   .grid-text-box {
+    margin-right: 0 !important;
     margin-left: 1vw !important;
     margin-right: 1vw !important;
   }
+
 }
 
 .intro-text,
@@ -340,9 +342,17 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
     padding-right: 18px;
   }
 
-  .grid-text-box {
+  .grid-overlay-box {
     padding: 18px !important;
     width: 100% !important;
+  }
+
+  .grid-content {
+    margin-right: 0 !important;
+  }
+   .grid-text-box {
+    padding: 18px;
+    margin-right: 0 !important;
   }
 
   .cntr-link-area {
@@ -631,11 +641,15 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   margin: 0;
 }
 
-.grid-text-box {
+.grid-overlay-box {
   padding-top: 2rem;
   padding-bottom: 2rem;
   padding-left: 2rem;
   padding-right: 2rem;
   margin-top: 17vh;
   width: 64%;
+}
+
+.grid-text-box {
+  margin-right: 10rem;
 }

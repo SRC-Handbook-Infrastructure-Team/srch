@@ -44,7 +44,7 @@ function AppRoutes() {
 
   const gridConfig = isHomePage
     ? {
-        title: "Brown SRC Handbook",
+        title: <>Brown SRC Handbook</>,
         subtitle:
           "This Handbook is your guide to integrating ethics, responsibility, and social awareness into computer science teaching. Whether you are an instructor designing a syllabus, a TA leading discussions, or a student exploring what impact your work can have, this site offers curated modules, case studies, discussion prompts, and resource tools.",
       }
