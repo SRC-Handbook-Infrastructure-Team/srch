@@ -62,7 +62,7 @@
     "linkedin": "https://www.linkedin.com/in/hiimconnor/",
     "website": "https://hiimconnor.com",
     "photo": "cflick.JPG",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Aanya Hudda",
@@ -114,19 +114,19 @@
     "linkedin": "https://www.linkedin.com/in/dxhw/",
     "website": "",
     "photo": "doren.JPG",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Jiayi Wu",
     "email": "jiayi_wu4@brown.edu",
     "pronouns": "she/they",
-    "position": "Team Member",
-    "team": "ai",
+    "position": "SRCH Liaison",
+    "team": "leadership",
     "gradYear": "2028",
-    "degree": "Undergraduate Student in Mathematics-Computer Science & Urban Studies",
+    "degree": "Undergraduate Student in Mathematics-Computer Science",
     "linkedin": "https://www.linkedin.com/in/jiayiw005/",
     "website": "https://cntr.brown.edu/people/jiayi-wu",
-    "photo": "jiayi.png",
+    "photo": "jwu.png",
     "active": "true"
   },
   {
@@ -166,7 +166,7 @@
     "linkedin": "https://www.linkedin.com/in/tiffany-tran-9a2174247/",
     "website": "",
     "photo": "tiffany.jpeg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Samdeet Khan",
@@ -270,7 +270,7 @@
     "linkedin": "https://www.linkedin.com/in/peyton-luiz/",
     "website": "",
     "photo": "peyton.jpg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Ethan Schenker",
@@ -349,7 +349,7 @@
     "linkedin": "https://www.linkedin.com/in/andrew-junwon-lee/",
     "website": "",
     "photo": "jun.jpg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Jo Gasior-Kavishe",
@@ -472,35 +472,35 @@
   {
     "name": "Dawson Lin",
     "email": "dawson_a_lin@brown.edu",
-    "pronouns": "he/him",
+    "pronouns": "he/him/his",
     "position": "Team Member",
     "team": "privacy",
     "gradYear": "2027",
     "degree": "Undergraduate Student in Philosophy",
     "linkedin": "",
     "website": "https://cntr.brown.edu/people/dawson-lin",
-    "photo": "dawson-lin.jpg",
+    "photo": "",
     "active": "true"
   },
   {
     "name": "Sasha Oquendo",
     "email": "sasha_oquendo@brown.edu",
     "pronouns": "she/her",
-    "position": "Team Member",
+    "position": "Team Lead",
     "team": "privacy",
     "gradYear": "2027",
-    "degree": "Undergraduate Student in Business Economics & Computer Science",
+    "degree": "Undergraduate Student in Business Economics and Computer Science",
     "linkedin": "",
     "website": "https://cntr.brown.edu/people/sasha-oquendo",
-    "photo": "sasha-oquendo.jpg",
+    "photo": "soquendo.jpg",
     "active": "true"
   },
   {
     "name": "Sonya Rashkovan",
     "email": "sofiia_rashkovan@brown.edu",
     "pronouns": "she/her",
-    "position": "Team Lead",
-    "team": "ai",
+    "position": "SRCH Project Director",
+    "team": "leadership",
     "gradYear": "2027",
     "degree": "Undergraduate Student in Anthropology & Data Fluency",
     "linkedin": "",
@@ -519,7 +519,7 @@
     "linkedin": "https://www.linkedin.com/in/alex-hogue",
     "website": "https://cntr.brown.edu/people/alexandra-hogue",
     "photo": "alexandra-hogue.jpg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Brooke Wangenheim",
@@ -532,7 +532,7 @@
     "linkedin": "https://www.linkedin.com/in/brooke-wangenheim/",
     "website": "https://cntr.brown.edu/people/brooke-wangenheim",
     "photo": "brooke-wangenheim.jpeg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "William Tolmie",
@@ -545,7 +545,7 @@
     "linkedin": "https://www.linkedin.com/in/willtolmie/",
     "website": "https://willtolmie.github.io/home/",
     "photo": "will-tolmie.JPG",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Dennis Wang",
@@ -597,7 +597,7 @@
     "linkedin": "",
     "website": "https://cntr.brown.edu/people/richard-zhang",
     "photo": "richard-zhang.jpg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Nava Litt",
@@ -606,10 +606,10 @@
     "position": "Team Member",
     "team": "ai",
     "gradYear": "2029",
-    "degree": "Undergraduate Student in Philosophy, Politics, and Economics",
+    "degree": "Undergraduate Student in Politics, Philosophy and Economics",
     "linkedin": "https://www.linkedin.com/in/nava-litt-52bb91257/",
-    "website": "",
-    "photo": "nava-litt.JPG",
+    "website": "https://cntr.brown.edu/people/nava-litt",
+    "photo": "",
     "active": "true"
   },
   {
@@ -623,7 +623,7 @@
     "linkedin": "https://www.linkedin.com/in/rehma-saqib-70ba7625b/",
     "website": "",
     "photo": "rehma-saqib.jpeg",
-    "active": "true"
+    "active": "false"
   },
   {
     "name": "Rehma Saqib",
@@ -636,6 +636,175 @@
     "linkedin": "https://www.linkedin.com/in/rehma-saqib-70ba7625b/",
     "website": "",
     "photo": "rehma-saqib.jpeg",
+    "active": "false"
+  },
+  {
+    "name": "Stephen Porder",
+    "email": "stephen_porder@brown.edu",
+    "pronouns": "",
+    "position": "Faculty Advisor",
+    "team": "leadership",
+    "gradYear": "",
+    "degree": "Acacia Professor of Ecology, Evolutionary and Organismal Biology and Environment and Society, Associate Provost for Sustainability",
+    "linkedin": "",
+    "website": "https://porderlab.org/?page_id=14",
+    "photo": "sporder.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Hannah Magino",
+    "email": "hannah_magino@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Lead",
+    "team": "ai",
+    "gradYear": "2028",
+    "degree": "Undergraduate Student in Computer Science and STS",
+    "linkedin": "https://www.linkedin.com/in/hannah-magino/",
+    "website": "https://cntr.brown.edu/people/hannah-magino",
+    "photo": "hannah-magino.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Ava Karousos",
+    "email": "ava_karousos@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Lead",
+    "team": "sustainability",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Economics and Psychology",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/ava-karousos",
+    "photo": "akarousos.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Anish Mitagar",
+    "email": "anish_mitagar@brown.edu",
+    "pronouns": "",
+    "position": "Team Member",
+    "team": "ai",
+    "gradYear": "2027",
+    "degree": "Masters Student in AI, Governance, Safety",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/anish-mitagar",
+    "photo": "",
+    "active": "true"
+  },
+  {
+    "name": "Sharanya Jain",
+    "email": "sharanya_jain@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "ai",
+    "gradYear": "2028",
+    "degree": "Undergraduate Student in Computer Science and Business-Economics",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/sharanya-jain",
+    "photo": "sjain.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Krish Nambiar",
+    "email": "krish_nambiar@brown.edu",
+    "pronouns": "he/him/his",
+    "position": "Team Member",
+    "team": "sustainability",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Computer Science-Economics",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/krish-nambiar",
+    "photo": "krish-nambiar.JPG",
+    "active": "true"
+  },
+  {
+    "name": "Indy Nijjar",
+    "email": "inderjot_nijjar@brown.edu",
+    "pronouns": "he/him/his",
+    "position": "Team Member",
+    "team": "sustainability",
+    "gradYear": "2029",
+    "degree": "Undergraduate Student in International and Public Affairs, Computer Science-Economics",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/indy-nijjar",
+    "photo": "inijjar.png",
+    "active": "true"
+  },
+  {
+    "name": "Mira Needlman",
+    "email": "mira_needlman@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "sustainability",
+    "gradYear": "2028",
+    "degree": "Undergraduate Student in Engineering",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/mira-needlman",
+    "photo": "mneedlman.jpeg",
+    "active": "true"
+  },
+  {
+    "name": "Julia Belle Reyfman",
+    "email": "julia_belle_reyfman@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "privacy",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in International and Public Affairs, Data Fluency Certificate",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/julia-belle-reyfman",
+    "photo": "",
+    "active": "true"
+  },
+  {
+    "name": "Jasmin Elias Contreras",
+    "email": "jasmin_elias_contreras@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "privacy",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Economics and Computer Science",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/jasmin-elias-contreras",
+    "photo": "jcontreras.png",
+    "active": "true"
+  },
+  {
+    "name": "Maja Mishevska",
+    "email": "maja_mishevska@brown.edu",
+    "pronouns": "she/her",
+    "position": "Product Engineer",
+    "team": "product",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Computer Science & Gender and Sexuality Studies",
+    "linkedin": "https://www.linkedin.com/in/maja-mishevska/",
+    "website": "https://cntr.brown.edu/people/maja-mishevska",
+    "photo": "mmishevska.png",
+    "active": "true"
+  },
+  {
+    "name": "Elif Cebe",
+    "email": "elif_cebe@brown.edu",
+    "pronouns": "she/her",
+    "position": "Product Engineer",
+    "team": "product",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Computer Science-Economics & International and Public Affairs",
+    "linkedin": "https://www.linkedin.com/in/elif-cebe/",
+    "website": "https://cntr.brown.edu/people/elif-cebe",
+    "photo": "ecebe.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Joy Zou",
+    "email": "jiangyi_zou@brown.edu",
+    "pronouns": "she/they",
+    "position": "Product Designer",
+    "team": "product",
+    "gradYear": "2029",
+    "degree": "Undergraduate Student in Computer Science, International & Public Affairs",
+    "linkedin": "",
+    "website": "https://cntr.brown.edu/people/joy-zou-0",
+    "photo": "",
     "active": "true"
   }
 ]

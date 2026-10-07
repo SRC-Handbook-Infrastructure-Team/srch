@@ -1,5 +1,6 @@
 import "../styles/Acknowledgments.css";
 import { MdEmail } from "react-icons/md";
+import { LuUserRound } from "react-icons/lu";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import { Heading } from "@chakra-ui/react";
 import { useState } from "react";
@@ -10,6 +11,9 @@ function getMemberPhotoSrc(member) {
 }
 function TeamGrid({ filteredTeam, teamName }) {
   const isLeadership = String(teamName || "").toLowerCase() === "leadership";
+  const showPhotoPlaceholder = !["additional", "additional_faculty"].includes(
+    String(teamName || "").toLowerCase(),
+  );
 
   const sortedTeam = [...filteredTeam].sort((a, b) => {
     const aPosition = String(a.position || "").toLowerCase();
@@ -39,14 +43,21 @@ function TeamGrid({ filteredTeam, teamName }) {
 
         return (
           <div key={`${member.name}-${idx}`} className="ack-card">
-            {photoSrc && (
+            {photoSrc ? (
               <img
                 className="ack-card-photo"
                 src={photoSrc}
                 alt={member.name}
                 decoding="async"
               />
-            )}
+            ) : showPhotoPlaceholder ? (
+              <div
+                className="ack-card-photo ack-card-photo-placeholder"
+                aria-hidden="true"
+              >
+                <LuUserRound />
+              </div>
+            ) : null}
 
             <div className="ack-card-name">
               <span className="ack-card-fullname">{member.name}</span>
@@ -112,16 +123,18 @@ function TeamGrid({ filteredTeam, teamName }) {
   );
 }
 function TeamSection({ title, teamName }) {
+  const [showPast, setShowPast] = useState(false);
+
   const targetTeam = String(teamName || "").toLowerCase();
   const members = team.filter(
     (m) => String(m.team || "").toLowerCase() === targetTeam,
   );
   if (members.length === 0) return null;
 
-  const [showPast, setShowPast] = useState(false);
-
   const active = members.filter(
-    (m) => String(m.active).toLowerCase() === "true",
+    (m) =>
+      String(m.active).toLowerCase() === "true" ||
+      String(m.active || "").trim() === "",
   );
   const inactive = members.filter(
     (m) => String(m.active).toLowerCase() === "false",
@@ -139,10 +152,7 @@ function TeamSection({ title, teamName }) {
         {title}
       </Heading>
 
-      <TeamGrid
-        filteredTeam={active.length > 0 ? active : members}
-        teamName={teamName}
-      />
+      <TeamGrid filteredTeam={active} teamName={teamName} />
 
       {inactive.length > 0 && (
         <>
@@ -185,9 +195,10 @@ function Acknowledgments() {
       <div className="ack-lower-content">
         <TeamSection title="Leadership" teamName="leadership" />
         <TeamSection title="Product Team" teamName="product" />
-        <TeamSection title="Accessibility Team" teamName="accessibility" />
         <TeamSection title="AI Team" teamName="ai" />
         <TeamSection title="Privacy Team" teamName="privacy" />
+        <TeamSection title="Sustainability Team" teamName="sustainability" />
+        <TeamSection title="Accessibility Team" teamName="accessibility" />
         <TeamSection
           title="Additional Contributors — User Studies"
           teamName="additional"

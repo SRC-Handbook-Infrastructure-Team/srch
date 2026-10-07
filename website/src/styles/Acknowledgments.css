@@ -168,6 +168,20 @@
   transform: translateY(var(--button-hover-translate-y));
 }
 
+.ack-card-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.ack-card-photo-placeholder svg {
+  width: 40%;
+  height: 40%;
+  stroke-width: 1.5;
+}
+
 .ack-card-name {
   display: flex;
   align-items: baseline;

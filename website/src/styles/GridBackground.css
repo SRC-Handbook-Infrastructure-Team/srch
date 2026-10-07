@@ -116,6 +116,13 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 768px) {
+  .grid-text-box h1 {
+    font-size: clamp(3rem, 8vw, 4rem);
+    line-height: 1.15;
+  }
+}
+
 .grid-text-box p {
   font-family: var(--content-font, sans-serif);
   font-size: var(--body-text, 1rem);
