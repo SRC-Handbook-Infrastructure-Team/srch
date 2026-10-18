@@ -16,7 +16,7 @@ This primer explores the concept of **data ownership** within the context of {su
 
 ## Theory of Surveillance Capitalism
 
-It is often remarked that “if a product is free, you are the product.” This idea traces back to a 1973 art piece titled “[Television Delivers People](https://medium.com/@elali.ahmad/if-youre-not-paying-for-the-product-you-are-the-product-a9d3aa9bbd85)”[^16] by Richard Serra and Carlota Fay Schoolman in which they made the point that television audiences were a product sold to advertisers. In the era before highly targeted advertising, simply having many active users was valuable to advertisers, even without the extensive data collection that characterizes today’s digital landscape. **Surveillance capitalism** represents an evolution of this model—the product is not the user themself but rather their data. For example, on free social networking platforms, companies reap value from their users by building detailed profiles that enable prediction about characteristics and behaviors that may be of interest to those in the market for customers (e.g., advertisers), supporters (e.g., politicians, influencers, or celebrities), {insurance-policy-beneficiaries}, or even targets (e.g., private investigators or law enforcement agencies). Such profiles are typically constructed based on the browsing and purchasing histories and demographic attributes (provided or inferred) of the individual user and of other users they know or resemble.
+It is often remarked that “if a product is free, you are the product.” This idea traces back to a 1973 art piece titled “[Television Delivers People](https://medium.com/@elali.ahmad/if-youre-not-paying-for-the-product-you-are-the-product-a9d3aa9bbd85)”[^16] by Richard Serra and Carlota Fay Schoolman in which they made the point that television audiences were a product sold to advertisers. In the era before highly targeted advertising, simply having many active users was valuable to advertisers, even without the extensive data collection that characterizes today’s digital landscape. **Surveillance capitalism** represents an evolution of this model—the product is not the user themself but rather their data. For example, on free social networking platforms, companies reap value from their users by building detailed profiles that enable prediction about characteristics and behaviors that may be of interest to those in the market for customers (e.g., advertisers), supporters (e.g., politicians, influencers, or celebrities), {sleep-apnea-devices-and-insurance-providers|insurance policy beneficiaries}, or even targets (e.g., private investigators or law enforcement agencies). Such profiles are typically constructed based on the browsing and purchasing histories and demographic attributes (provided or inferred) of the individual user and of other users they know or resemble.
 
 As surveillance capitalism currently operates, it relies on the premise that corporations rightfully and fully own the **behavioral data** they collect from users. In order to evaluate whether this is a reasonable premise, we must analyze the broader concept of data ownership. Our conclusions might vary depending on our framing and the type of data considered. How we assess corporate ownership of behavioral data shapes larger questions: Should surveillance capitalism continue in its present form? Would stricter limits on data extraction, alternative business models, or entirely new paradigms better safeguard privacy, autonomy, and individual rights?
 
@@ -28,7 +28,7 @@ In legal and economic contexts, {data-ownership-is-necessary} in order to assign
 
 We will discuss three notions of data ownership and what they each imply for how we should interact with data: data as labor, data as property, and data as an extension of the body or self.
 
-![An illustration of the three notions of data ownership. Data as labor is depicted as a factory worker standing next to an industrial factory that is emitting 'data partiles.' Data as property is depicted as various objects (boxes and bags) with 'data particles' emenating from them. Data as an extension of the body or self is depicted as a person holding a data particle in their hand.](/assets/primer-photos/privacy/dataOwnership/data_ownership.png)
+![An illustration of the three notions of data ownership. Data as labor is depicted as a factory worker standing next to an industrial factory that is emitting 'data particles.' Data as property is depicted as various objects (boxes and bags) with 'data particles' emanating from them. Data as an extension of the body or self is depicted as a person holding a data particle in their hand.](/assets/primer-photos/privacy/dataOwnership/data_ownership.png)
 
 **Figure:** The three notions of data ownership.
 
@@ -44,7 +44,7 @@ In order to align with this notion of data, we might need to legislate data labo
 
 Next, **data as property** treats data as the product of the application of labor to some natural resource, which can then be claimed as private property. This notion is rooted in Lockean philosophy. In his _Second Treatise of Government_ (1689),[^12] John Locke argues that private property is obtained legitimately when a person mixes their labor with something that was previously unowned in the state of nature. He justifies this with three reasons: first, he claims that every person owns themself, as well as their own labor, and that when a person expends labor on an unowned object, they extend their self-ownership onto the external world; second, he argues that labor increases the value of things significantly and thus, that the product of that value-creating activity should not be left in common or belong to someone else; and third, he qualifies ownership by requiring that one leaves enough for others and does not waste what they collect. Locke’s labor-mixing theory remains an influential philosophical foundation for modern notions of legitimate ownership.
 
-To think about how Locke’s principles can be applied to data ownership in the modern world, we will use the example of a user viewing an advertisement on a social media platform. The primary argument we will consider is that the social media platform is doing labor by observing how long the user spends viewing the advertisement—after all, they must write the code to do so, store that information somewhere, and track it—and thus the social media platform would have legitimate ownership over the data instead. Here, the ephemerality of data becomes especially relevant, as without the platform doing the labor of capturing the data, it could not be monetized. In order to effectively make use of the notion of data as property, a consensus would need to be reached on what qualifies as sufficient labor to establish ownership. {Another-argument} is that users are mixing some of their own labor during the process of data generation. This argument is currently debated in the literature, but it might seem that at best in this case, the result would be mixed ownership between the user and the social media platform once both parties have mixed their labor.
+To think about how Locke’s principles can be applied to data ownership in the modern world, we will use the example of a user viewing an advertisement on a social media platform. The primary argument we will consider is that the social media platform is doing labor by observing how long the user spends viewing the advertisement—after all, they must write the code to do so, store that information somewhere, and track it—and thus the social media platform would have legitimate ownership over the data instead. Here, the ephemerality of data becomes especially relevant, as without the platform doing the labor of capturing the data, it could not be monetized. In order to effectively make use of the notion of data as property, a consensus would need to be reached on what qualifies as sufficient labor to establish ownership. {user-labor-and-data-ownership|Another argument} is that users are mixing some of their own labor during the process of data generation. This argument is currently debated in the literature, but it might seem that at best in this case, the result would be mixed ownership between the user and the social media platform once both parties have mixed their labor.
 
 If a consensus was reached in which data subjects received some or all ownership over the data relating to them, then market-based solutions like **'data marketplaces'** could be formed, where corporations could purchase permission to use data from their owners. These data marketplaces [already exist](https://aws.amazon.com/data-exchange/?trk=6fc00089-b729-4209-a46c-8e96bb51c476&sc_channel=ps&ef_id=Cj0KCQiA_8TJBhDNARIsAPX5qxS5d6rncj2KEqqydZS2mR5Dwi5BqauLFVBjNYoHPmRZsYzifICrpEUaAgRHEALw_wcB:G:s&s_kwcid=AL!4422!3!658520966831!!!g!!!19852662473!149878723820&gad_campaignid=19852662473&gbraid=0AAAAADjHtp9SPixwsiyT3jRRK9UHo13Qy&gclid=Cj0KCQiA_8TJBhDNARIsAPX5qxS5d6rncj2KEqqydZS2mR5Dwi5BqauLFVBjNYoHPmRZsYzifICrpEUaAgRHEALw_wcB)[^4] between corporations and would only need to be extended to individuals. This would likely increase user agency as it would give individuals more control over whom their data is sold to or whether it is sold at all. It would also shift some profits from data toward users, compared to the status quo under surveillance capitalism, where profits go entirely to corporations.
 
@@ -52,7 +52,7 @@ In order to implement this, one approach could be to enact comprehensive data pr
 
 ### Data as an Extension of the Body or Self
 
-Last, we can think of **data as an extension of the body or self**. Personal data necessarily describes the person it is associated with in some way, so it may be thought of as an intimate part of one’s personal identity. Take, for example, a person’s medical records. Logs of when health visits occurred, for what reason, and what actions were taken are data that certain companies, such as health care providers, may find incredibly valuable. However, that data is also afforded strict privacy and security protections under current laws like the Health Insurance Portability and Accountability Act of 1996 (HIPAA). Here, monetization of one’s personal data might not make sense as it may {breach-ethical-boundaries}.
+Last, we can think of **data as an extension of the body or self**. Personal data necessarily describes the person it is associated with in some way, so it may be thought of as an intimate part of one’s personal identity. Take, for example, a person’s medical records. Logs of when health visits occurred, for what reason, and what actions were taken are data that certain companies, such as health care providers, may find incredibly valuable. However, that data is also afforded strict privacy and security protections under current laws like the Health Insurance Portability and Accountability Act of 1996 (HIPAA). Here, monetization of one’s personal data might not make sense as it may {health-insurance-market|breach ethical boundaries}.
 
 Under the notion of data as an extension of the body or self, we may decide that no one should profit from the commodification of certain data. Then, corporations might only be able to access that data for essential, non-commercial purposes, such as service delivery, with strict prohibitions on sales or predictions based on the data.
 
@@ -96,7 +96,7 @@ Some services opt to use **non-personalized advertisements** based on content or
 
 ### Legal Reforms and Alternatives to Surveillance Capitalism
 
-In order to reduce surveillance {within-the-framework-of-a-capitalist-model}, regulatory reforms could be implemented. This would entail modifications to the current system aimed at preserving users’ privacy and autonomy over data relating to them, such as strict privacy laws akin to the EU’s General Data Protection Regulation ([GDPR](https://gdpr-info.eu/)).[^10]
+In order to reduce surveillance {alternatives-to-capitalist-data-ownership|within the framework of a capitalist model}, regulatory reforms could be implemented. This would entail modifications to the current system aimed at preserving users’ privacy and autonomy over data relating to them, such as strict privacy laws akin to the EU’s General Data Protection Regulation ([GDPR](https://gdpr-info.eu/)).[^10]
 
 Taken maximally, we might decide that some data should not exist at all. As we have seen through our discussion of the ephemerality of data, data is something that must be captured in order for it to be used. If we decide that certain data should not be used, we can prohibit the creation of that kind of data.
 
@@ -105,8 +105,6 @@ Another legal framework for data handling is the **commons-based approach**. Und
 [^1]: Ada Lovelace Institute. 2021\. “The data divide.” adalovelaceinstitute. https://www.adalovelaceinstitute.org/report/the-data-divide/.
 
 [^2]: Allen, Marshall. 2018\. “You Snooze, You Lose: Insurers Make The Old Adage Literally True.” ProPublica. https://www.propublica.org/article/you-snooze-you-lose-insurers-make-the-old-adage-literally-true.
-
-[^3]: Allen, Marshall. 2018\. “You Snooze, You Lose: Insurers Make The Old Adage Literally True.” ProPublica. https://www.propublica.org/article/you-snooze-you-lose-insurers-make-the-old-adage-literally-true.
 
 [^4]: Amazon Web Services, Inc. 2026\. “AWS Data Exchange.” aws. https://aws.amazon.com/data-exchange/?trk=6fc00089-b729-4209-a46c-8e96bb51c476\&sc\_channel=ps\&ef\_id=Cj0KCQiA\_8TJBhDNARIsAPX5qxS5d6rncj2KEqqydZS2mR5Dwi5BqauLFVBjNYoHPmRZsYzifICrpEUaAgRHEALw\_wcB:G:s\&s\_kwcid=AL\!4422\!3\!658520966831\!\!\!g\!\!\!19852662473\!14987872382.
 
@@ -130,41 +128,39 @@ Another legal framework for data handling is the **commons-based approach**. Und
 
 [^14]: Resnik, David B. 2013\. “Charging Smokers Higher Health Insurance Rates: Is it Ethical?” The Hastings Center for Bioethics. https://www.thehastingscenter.org/charging-smokers-higher-health-insurance-rates-is-it-ethical/.
 
-[^15]: “What You Need to Know about Surveillance Capitalism.” Wellesley. https://www.wellesley.edu/news/what-you-need-to-know-about-surveillance-capitalism.
+[^15]: Wellesley College. “What You Need to Know about Surveillance Capitalism.” 2020. https://www.wellesley.edu/news/what-you-need-to-know-about-surveillance-capitalism.
 
-[^16]: Whitney Museum of American Art. 2026\. “Television Delivers People Dec 12, 2007–Feb 17, 2008.” Whitney.org. https://whitney.org/exhibitions/television-delivers-people.Wellesley College. 2020\.
+[^16]: Whitney Museum of American Art. “Television Delivers People.” Exhibition, December 12, 2007–February 17, 2008. https://whitney.org/exhibitions/television-delivers-people.
 
 ## Sidebar
 
 surveillance-capitalism:
-Heading: Surveillance Capitalism
+Heading: Note: Surveillance Capitalism
 The term “surveillance capitalism” was coined by Shoshana Zuboff. Zuboff uses the term to refer to a new economic model in which corporations claim ownership “of private human experience as free raw material for translation into behavioral data.”[^15] We can see how the social media example fits into this framework: User engagement is the “raw material” used by the platform to create behavioral models that predict users’ future purchases.
 
-Insurance-Policy-Beneficiaries:
-In 2018, users of breathing machines with sleep apnea discovered the machines were secretly sending reports detailing their sleep quality and usage of the machine to their insurance providers, and even that their insurers could use this information to [deny payment](https://www.propublica.org/article/you-snooze-you-lose-insurers-make-the-old-adage-literally-true).[^2]
+sleep-apnea-devices-and-insurance-providers:
+CaseStudy: privacy/dataOwnershipSurveillanceCapitalism/sleep-apnea-devices-and-insurance-providers
 
-Data-Ownership-Is-Necessary:
+data-ownership-is-necessary:
+Heading: Note: Is Data Ownership Necessary?
 In this primer, we assume data ownership exists. An argument can be made that data ownership does not make sense philosophically. This may be because data can depend on multiple people or entities and the contexts in which it is generated, or because some data is deeply personal to data subjects in ways such that we may not feel comfortable assigning ownership rights. One such argument is made by legal scholar Lothar Determann in the article [“No One Owns Data.”](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3123957)[^8]
 
-Universal-Data-Dividends:  
-In 2019, California’s Governor Gavin Newsom delivered a [State of the State Address](https://www.gov.ca.gov/2019/02/12/state-of-the-state-address/),[^9] where he expressed the view that “consumers should also be able to share in the wealth that is created from their data” and announced that he asked his team “to develop a proposal for a new Data Dividend for Californians.” As of 2025, California has no data dividends program. In 2020, Democratic presidential primary candidate Andrew Yang launched a [Data Dividend Project](https://www.datadividendproject.com/aboutus),[^7] which is geared towards protecting individuals from the sharing and sale of their personal data and promises to assist individuals in being paid for the use of their data, should they choose to allow its use. In practice, it functions more like a platform for organizing class action lawsuits than a true data dividend system. It does not prevent companies from misusing data, but rather provides a potential avenue to compensation after the misuse has occurred. The concept of data dividends has existed in public policy spheres for some time now. In California, official discussions of data dividends have centered around proactive policy, while Andrew Yang’s project focuses on legal remedies. Neither of these examples perfectly conforms to the theory of data dividends, which may be influenced by the fact that they exist within the United States legal framework.
+universal-data-dividends:
+CaseStudy: privacy/dataOwnershipSurveillanceCapitalism/universal-data-dividends
 
-Another-Argument:
-Heading: User Labor
+user-labor-and-data-ownership:
+Heading: Note: User Labor and Data Ownership
 If the information about the time a user spends viewing the advertisement is taken to be the “unowned resource” in this case, then the user could be said to be doing labor by choosing to watch the advertisement. Under this view, the user would then have some degree of legitimate ownership over the resultant data.
 
-The-Data-Divide:
+the-data-divide:
+Heading: Note: The Data Divide
 The [data divide](https://www.adalovelaceinstitute.org/report/the-data-divide/)[^1] refers to the idea that there is an unequal relationship between those who are represented by and able to shape data-driven technologies and those who are not. This divide falls roughly along the lines of those who are and are not capable of collecting and managing large quantities of data, and it exists because some lack access to the necessary technology, some lack the knowledge and skills necessary to use digital technologies, and some do not find using digital technologies to be acceptable or comfortable. The existence of the data divide makes it more difficult for some individuals to understand the value of the data they have and bargain accordingly.
 
-Breach-ethical-boundaries:
-Heading: The Health Insurance Market
-One such example is present in the market for health insurance. Insurance providers find significant value in consumers’ health data, as it enables them to charge consumers based on their expected health costs. For very healthy individuals, this might be attractive as it would promise lower premiums. However, vulnerable individuals (like those who are elderly or chronically ill) might be priced out of the market entirely if the premiums offered to them by health insurance providers are too high for them to afford. This might intuitively feel unfair. Bioethicist David B. Resnik writes about some arguments for and against charging smokers higher health insurance rates in “[Charging Smokers Higher Health Insurance Rates: Is it Ethical?](https://www.thehastingscenter.org/charging-smokers-higher-health-insurance-rates-is-it-ethical/)”,[^14] ultimately concluding that the practice is unethical. However, [some studies](https://onlinelibrary.wiley.com/doi/full/10.1111/rmir.12249)[^6] suggest that banning the use of relevant information on a consumer’s identity may lead to [adverse selection](https://www.investopedia.com/terms/a/adverseselection.asp)[^11] in insurance markets, a process in which prices may rise intolerably high for all consumers.
+health-insurance-market:
+CaseStudy: privacy/dataOwnershipSurveillanceCapitalism/health-insurance-market
 
-secretly-sent-reports:
-In 2018, users of breathing machines with sleep apnea discovered the machines were secretly sending reports detailing their sleep quality and usage of the machine to their insurance providers, and even that their insurers could use this information to [deny payment](https://www.propublica.org/article/you-snooze-you-lose-insurers-make-the-old-adage-literally-true).[^3]
-
-Within-the-framework-of-a-capitalist-model:
-Heading: Beyond the capitalist model
+alternatives-to-capitalist-data-ownership:
+Heading: Note: Alternatives to Capitalist Data Ownership
 Some alternatives outside of the capitalist model include:
 
 **Digital Socialism:** James Muldoon discusses the possibility of treating data as a public resource managed by the state or collectives, with profits reinvested in society (e.g., national data funds) in his article ["Data-Owning Democracy or Digital Socialism?"](https://www.tandfonline.com/doi/full/10.1080/13698230.2022.2120737#abstract)[^13] This approach emphasizes equitable access and the elimination of private extraction.

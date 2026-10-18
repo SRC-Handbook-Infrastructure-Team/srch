@@ -1,0 +1,6 @@
+---
+title: "Case Studies: Early Alerts for Epidemics"
+tags: ["privacy", "privacyTradeoffs"]
+---
+
+Search history and other online data have been used to [provide early alerts for epidemics](https://www.heinz.cmu.edu/~acquisti/papers/AcquistiTaylorWagman-JEL-2016.pdf). Projects such as [Google Flu Trends](https://datacollaboratives.org/cases/google-flu-trends.html), [HealthMap](https://www.healthmap.org/en/), and the [Program for Monitoring Emerging Diseases](https://www.promedmail.org) use search history coupled with news reports to produce early warnings about seasonal influenza and emerging outbreaks. These initiatives show how repurposed personal data can support public health goals, but it can also easily be used for a variety of unanticipated inferences, such as [social mapping](https://www.nytimes.com/2006/08/09/technology/a-face-is-exposed-for-aol-searcher-no-4417749.html), [political and religious affiliation identification](https://www.pnas.org/doi/10.1073/pnas.1218772110), or [creditworthiness](https://www.wsj.com/articles/SB10001424052748703294904575385532109190198?gaa_at=eafs&gaa_n=AWEtsqdoHMLyc-wkuHO141C-tWQ7S6TRK0uSe1ls3evXBRPaIJXY0y1mzOZVt6Djb1I%3D&gaa_ts=699e5f2f&gaa_sig=dWchPyT4YTeMDyMDz1w4H5Q8zNeuL84QRSCTcb7mncZLQ0zVuSwcJxw022RpHKW5Mgn1iu1yikMUmEgb70pU4Q%3D%3D).

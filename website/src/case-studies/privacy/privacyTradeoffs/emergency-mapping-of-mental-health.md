@@ -1,0 +1,6 @@
+---
+title: "Case Study: Emergency Mapping of Mental Health"
+tags: ["privacy", "privacyTradeoffs"]
+---
+
+Another opportunity in public health is [emergency mapping of mental health](https://arxiv.org/pdf/1612.00323) using behavioral data collected via smartphones and social media. Currently, the traditional model of care relies on periodic self-reports of symptoms, which suffer from subjectivity, memory biases, and the patient's current mood. Furthermore, individuals with mental conditions usually seek care once a crisis has already happened. Access to novel behavioral data, such as search history and social media posts, may be used to monitor mental health-related symptoms outside a clinical setting without relying on self-reported data. Several studies have shown that digital behavioral data can be utilized to recognize bipolar disorders, mood, and stress. Additionally, researchers at Harvard University used Twitter data, noting affect, linguistic style, and context, to reliably [detect the onset of depression](https://arxiv.org/pdf/1608.07740) several months before diagnosis. While these uses of behavioral data may one day enable more proactive support and treatment, they also enable inferences about highly sensitive details that individuals may never want disclosed.

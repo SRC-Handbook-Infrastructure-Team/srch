@@ -16,8 +16,8 @@ At its core, AI governance is about accountability – the principle that AI “
 
 Existing approaches in AI governance can be framed around three key questions:
 
-1. **What** are we concerned about, and what are you measuring for, then
-2. **How** are we measuring these things, and finally
+1. **What** are we concerned about, and what are we measuring?
+2. **How** are we measuring these things?
 3. **Who** are the key stakeholders shaping how AI is governed?
 
 ### _What_ Is Being Regulated in AI Governance?
@@ -42,9 +42,9 @@ AI governance operates through multiple, overlapping mechanisms that translate a
 
 Governance by code embeds oversight directly into the technical stack, through how data is curated, how models are trained, and who controls access to compute.
 
-**{Data-governance}** encompasses filtering, anonymization, and bias mitigation at the dataset level.
+**{data-governance|Data governance}** encompasses filtering, anonymization, and bias mitigation at the dataset level.
 
-**{Algorithmic-governance}** influences model behavior through architectural choices, safety constraints, and transparency features.
+**{algorithmic-governance|Algorithmic governance}** influences model behavior through architectural choices, safety constraints, and transparency features.
 
 #### Governance by Coordination: Industry Standards
 
@@ -52,7 +52,7 @@ Governance by coordination refers to voluntary or semi-formal **{standards}** th
 
 #### Governance by Market: Economic Incentives
 
-{Market-forces} and procurement choices pressure organizations to align with governance norms. Funding mechanisms and liability regimes determine who can afford responsible development, which means accountability is (always) also an economic question. In particular, {procurement-governance} uses the purchasing power of large institutions (especially governments) to enforce responsible AI practices by making them a condition of access to public contracts.
+{market-forces|Market forces} and procurement choices pressure organizations to align with governance norms. Funding mechanisms and liability regimes determine who can afford responsible development, which means accountability is (always) also an economic question. In particular, {procurement-governance} uses the purchasing power of large institutions (especially governments) to enforce responsible AI practices by making them a condition of access to public contracts.
 
 #### Governance by Law: Legislation and Policies
 
@@ -76,7 +76,7 @@ The major stakeholders involved in AI governance can be divided into four catego
 
 Governments are central to AI governance, while the approach differs significantly by region. While the EU has adopted a comprehensive, horizontal strategy (a single cross-sector law applying to all AI uses), China has taken a more centralized, state-led regulatory approach. In contrast, in the United States, government involvement in AI governance has spanned multiple levels but remains highly _decentralized_. While dozens of AI-related bills have been introduced in Congress, there is no unified, horizontal AI law akin to the EU AI Act. Instead, the US has taken a more fragmented, sector-specific vertical approach (separate rules for each industry or use case, such as healthcare or hiring). This decentralization gives agencies and state governments room to experiment, but also creates ambiguity around enforcement and consistency.
 
-The government stakeholder landscape can be segmented into **three areas**:
+The government stakeholder landscape can be segmented into **four areas**:
 
 1. **National/regional governments**: the national executive and legislative bodies.
 2. **Regulatory organizations:** independent agencies and commissions that enforce laws and have developed guidelines around some aspects of AI use
@@ -85,15 +85,15 @@ The government stakeholder landscape can be segmented into **three areas**:
 
 #### National/Regional Legislation
 
-National and regional {AI-legislation} represents the most direct form of governance by law. They usually define permissible uses, accountability mechanisms, and enforcement structures. Notably, these legislative approaches may vary dramatically across jurisdictions, reflecting different regulatory philosophies.
+National and regional {ai-legislation|AI legislation} represents the most direct form of governance by law. It usually defines permissible uses, accountability mechanisms, and enforcement structures. Notably, these legislative approaches may vary dramatically across jurisdictions, reflecting different regulatory philosophies.
 
 #### Regulatory Organizations
 
-{Regulatory-organizations} usually play the role of translating legislation into enforceable practice through investigation, rulemaking, and adjudication. Unlike legislatures that set broad mandates, these agencies develop technical standards, conduct audits, and impose penalties for non-compliance.
+{regulatory-organizations|Regulatory organizations} usually play the role of translating legislation into enforceable practice through investigation, rulemaking, and adjudication. Unlike legislatures that set broad mandates, these agencies develop technical standards, conduct audits, and impose penalties for non-compliance.
 
 #### US State and Local Governments
 
-In the absence of federal legislation, {US-state-governments} have become active AI governance actors. These interventions vary widely by state and often target specific use cases. See Understanding AI Legislation: The CNTR AISLE Framework[^61] and US State AI Governance Legislation Tracker[^63] for more information.
+In the absence of federal legislation, {us-state-governments|US state governments} have become active AI governance actors. These interventions vary widely by state and often target specific use cases. See Understanding AI Legislation: The CNTR AISLE Framework[^61] and US State AI Governance Legislation Tracker[^63] for more information.
 
 #### Standard-Setting Bodies
 
@@ -101,11 +101,9 @@ Alongside legislative actors and regulatory agencies, AI governance relies on {s
 
 ### Industry Overview
 
-In the context of AI governance, companies are a primary industry stakeholder that needs to comply; therefore, they are usually one of the most powerful forces shaping the landscape.
+In the context of AI governance, companies are primary industry stakeholders that need to comply with governance requirements; therefore, they are usually one of the most powerful forces shaping the landscape.
 
-Industry stakeholders can range from frontier model developers to infrastructure providers and model deployers. Unlike the government that operates through legislation, its decisions around model training, release, and deployment govern AI through code, scale, and market influence.
-
-[image 2]
+Industry stakeholders can range from frontier model developers to infrastructure providers and model deployers. Unlike governments, which operate through legislation, industry stakeholders govern AI through code, scale, and market influence, including their decisions about model training, release, and deployment.
 
 Mapping the AI Supply Chain: An Analysis of the Complex Relationships in the AI Ecosystem[^40]
 
@@ -114,13 +112,12 @@ Mapping the AI Supply Chain: An Analysis of the Complex Relationships in the AI 
 | Frontier Developers           | OpenAI, Anthropic, Google, Meta                                                                                                                                                 | Train and release cutting-edge general-purpose foundation models and often set de facto standards in the absence of regulation                              |
 | Infrastructure Providers      | Google Cloud, Microsoft Azure, AWS, NVIDIA                                                                                                                                      | Control access to critical infrastructure for building AI systems: compute, storage, and data                                                               |
 | Model Deployers               | Amazon (E-Commerce), Walmart (Retail); JPMorgan, Upstart (Finance); Tesla (Auto)                                                                                                | Integrate AI models into their services across domains, often without developing models in-house                                                            |
-| Venture Capitals and Startups | a16z, Sequoia, Y Combinator                                                                                                                                                     | Play an indirect but influential role in shaping governance norms by founding startups, lobbying for innovation-friendly policies, and resisting regulation |
+| Venture Capital Firms and Startup Accelerators | a16z, Sequoia, Y Combinator                                                                                                                                                     | Play an indirect but influential role in shaping governance norms by funding startups, lobbying for innovation-friendly policies, and resisting regulation |
 | Industrial Consortia          | U.S. Chamber of Commerce, Information Technology Industry Council (ITI), Chamber of Progress, TechNet, AI-Enabled ICT Workforce Consortium, MIT Generative AI Impact Consortium | Coordinate self-regulation, research, and policy dialogues; preempt regulation by standardizing responsible practices                                       |
 
 ### Academia Overview
 
-can
-Academic institutions occupy a unique position in AI governance as they conduct independent research on AI. Their primary role in the AI governance space includes proposing best practices and governance methods, building relationships with other stakeholders, establishing projects, and serving as consultants and as {testimonials-in-policy-hearings}.
+Academic institutions occupy a unique position in AI governance as they conduct independent research on AI. Their primary role in the AI governance space includes proposing best practices and governance methods, building relationships with other stakeholders, establishing projects, and serving as consultants and {testimonials-in-policy-hearings|providing testimony at policy hearings}.
 
 | University                 | Lab/Center/Initiative                                                            |
 | :------------------------- | :------------------------------------------------------------------------------- |
@@ -136,7 +133,7 @@ Academic institutions occupy a unique position in AI governance as they conduct 
 
 Civil society stakeholders include any independent groups (separate from government or industry organizations, for example) that have a shared collective interest, which in this context is AI governance. These can include non-profit organizations, think tanks, and independent research institutes that have a variety of political perspectives and orientations.
 
-For civil-society organizations, they range from broad civil rights groups like American Civil Liberties Union (ACLU)[^9] and Center for Democracy and Technology (CDT)[^20] to think tanks like the Brookings Institution[^54], the Cato Institute[^55], the American Enterprise Institute (AEI)[^53] and the Heritage Foundation[^57], to groups with a more specific technical focus like the AI Now Institute[^52], as well as university-housed think tanks like Center for Security and Emerging Technology (CSET)[^23] and Center for Information Technology Policy (CITP)[^22].
+For civil society organizations, they range from broad civil rights groups like American Civil Liberties Union (ACLU)[^9] and Center for Democracy and Technology (CDT)[^20] to think tanks like the Brookings Institution[^54], the Cato Institute[^55], the American Enterprise Institute (AEI)[^53] and the Heritage Foundation[^57], to groups with a more specific technical focus like the AI Now Institute[^52], as well as university-housed think tanks like Center for Security and Emerging Technology (CSET)[^23] and Center for Information Technology Policy (CITP)[^22].
 
 Media and journalism organizations serve as information intermediaries in AI governance. They investigate industry practices, translate technical developments for various audiences, and hold both companies and regulators accountable. They range from technology-focused publications like WIRED[^65] to policy-focused ones like Tech Policy Press[^51], to specialized independent outlets like 404 Media[^1].
 
@@ -298,50 +295,38 @@ Moving forward, successful AI governance will depend on building institutional c
 
 ## Sidebar
 
-Data-governance:
-Heading: A case study of data governance
-**Privacy-enhancing technologies (PETs)** enable data analysis while protecting individual privacy through methods like differential privacy, federated learning, and homomorphic encryption. For example, the US Census Bureau adopted differential privacy for the 2020 Census[^62]. By adding carefully calibrated statistical noise to aggregate data releases, the Bureau ensured that no individual’s information could be reverse-engineered from public statistics.
+data-governance:
+CaseStudy: automatedDecisionMaking/governance/data-governance
 
-Algorithmic-governance:
-Heading: A case study of algoirthmic governance
-**Reinforcement Learning from Human Feedback (RLHF)**[^49] and Anthropic’s Constitutional AI[^11] exemplify governance-by-design, encoding normative values into training objectives. In RLHF, models are aligned with human preferences by learning from ranked responses, usually with safety and helpfulness as guiding principles. In particular, Constitutional AI builds on this by replacing human raters with a “constitution” of ethical criteria for the model to critique and refine its own outputs. Overall, these design-based approaches operationalize governance goals into the model’s objective function, shifting oversight upstream into the development process.
+algorithmic-governance:
+CaseStudy: automatedDecisionMaking/governance/algorithmic-governance
 
 standards:
-Heading: Two types of standards in AI governance by coordination
-**Principles-based standards** usually articulate high-level values that organizations should aim to uphold. For instance, the OECD AI Principles[^60] established principal values for innovative and trustworthy AI, including human-centered values, transparency, robustness, accountability, and respect for human rights. **Procedural standards** offer structured guidance on how to identify, manage, and regulate risks and harms throughout the AI lifecycle. For example, the NIST AI Risk Management Framework (AI RMF)[^59] provides a structured, procedural guidance for organizations to identify, assess, and manage AI risks throughout the model lifecycle. It is distinguished from principle-based approaches by offering a concrete methodology that maps risks to organizational contexts. Among various procedural standards, AI Impact Assessment (AIIA)[^5] represents a special mechanism that systematically evaluates potential harms before deployment. Typically, AIIAs involve documenting the system’s purpose and context, identifying affected stakeholders, analyzing risks across dimensions, and establishing ongoing monitoring protocols.
+CaseStudy: automatedDecisionMaking/governance/standards
 
-Market-forces:
-Heading: A case study of market forces influencing AI governance
-Venture capital firm Andreessen Horowitz (a16z)[^10] shows how market actors shape governance through strategic advocacy against regulation. Through white papers, Congressional testimony, and public campaigns, a16z has lobbied for "innovation-friendly" policies that minimize compliance burdens on startups, arguing that heavy-handed regulation would disadvantage US competitiveness and concentrate power in incumbent tech giants who can afford compliance costs.
+market-forces:
+CaseStudy: automatedDecisionMaking/governance/market-forces
 
 procurement-governance:
-Heading: A case study of procurement governance
-Government procurement functions as a powerful market-based governance mechanism by making responsible AI practices a condition of accessing public contracts. For example, California’s GenAI procurement guidelines[^19] require risk assessments conducted by state agencies and vendor disclosures about AI capabilities. The mechanism shifts accountability upstream by requiring compliance during development rather than after deployment.
+CaseStudy: automatedDecisionMaking/governance/procurement-governance
 
 binding-rules:
-Heading: A case study of legally binding rules in AI governance
-The EU Artificial Intelligence Act[^33], which entered into force in August 2024, marks the world’s first comprehensive horizontal AI regulation. It introduces a risk-based framework that classifies AI systems into four risk tiers: minimal, limited, high, and prohibited. The Act creates enforcement through both national authorities and significant fines, which sets a potential “Brussels Effect[^14]” where global companies adopt EU standards internationally In the US, the legislative landscape is much more fragmented. Both Virginia’s HB2094[^64] and Colorado’s AI Act[^26] adopt a decision-centric consumer-protection approach, defining AI risk through consequential decision-making capabilities and concrete involvement.
+CaseStudy: automatedDecisionMaking/governance/binding-rules
 
 civic-communities:
-Heading: A case study of civic advocacy in AI governance
-Founded by Joy Buolamwini, the Algorithmic Justice League (AJL)[^7]’s campaign against facial recognition bias pushed both corporate reform and municipal legislation. AJL initially exposed severe accuracy disparities in commercial facial recognition systems through research, which catalyzed corporate responses from IBM[^38], Amazon[^8], and Microsoft[^41], as well as legislative actions, with multiple US cities banning government use of the technology.
+CaseStudy: automatedDecisionMaking/governance/civic-communities
 
-AI-legislation:
-Heading: Case studies of AI legislation
-European Union The EU AI Act[^33] is the world’s first comprehensive horizontal AI regulation. It categorizes systems into risk tiers and imposes requirements accordingly, such as transparency, documentation, and liability structures. China In 2021, China introduced binding AI regulations through the Cyberspace Administration of China (CAC)[^27], targeting recommendation algorithms, deepfakes, and generative AI. United States No national AI law equivalent to the EU AI Act currently exists; instead, executive actions like EO 14110[^35] aim to coordinate federal agency efforts on AI safety, transparency, and equity.
+ai-legislation:
+CaseStudy: automatedDecisionMaking/governance/ai-legislation
 
-Regulatory-organizations:
-Heading: Case studies of regulatory organizations
-United States Federal Trade Commission (FTC)[^36]: Addresses and prevents deceptive and unfair practices in AI systems through consumer protection and competition laws. See the FTC’s Artificial Intelligence tag page[^37]. Department of Justice (DOJ)[^28]: Enforces anti-discrimination and antitrust law as it intersects with AI use, combating criminal misuses of AI and ensuring its deployment aligns with legal and ethical principles. See the DOJ’s Artificial Intelligence Strategy[^29]. Equal Employment Opportunity Commission (EEOC)[^31]: Ensures that AI tools used in employment decisions do not create barriers or perpetuate bias based on protected characteristics, applying existing federal anti-discrimination laws. See the EEOC’s role in AI[^30]. Europe The EU Commission[^34], with support from the EU AI Office[^32], creates and enforces AI legislation like the AI Act, while national regulatory ss are responsible for implementing and overseeing the rules at the Member State level. See the Overview of all AI Act National Implementation Plans[^48]. China Cyberspace Administration of China (CAC)[^27]: Formulates and enforces rules on AI development and use, with a strong focus on content moderation, data security, and generative AI usage. Ministry of Industry and Information Technology (MIIT)[^42]: Guides national AI development through strategic initiatives: industry standards, computing infrastructure, ethical guidelines, fostering innovation ecosystems, etc.
+regulatory-organizations:
+CaseStudy: automatedDecisionMaking/governance/regulatory-organizations
 
-US-state-governments:
-Heading: Case studies of state-level AI legislation
-California Introduced several landmark bills focusing on high-risk AI systems, deepfake disclosure, and safety audits, most notably the Transparency in Frontier Artificial Intelligence Act (SB 53), making it the first US state to directly regulate the safety of powerful AI models. The state has implemented an extensive suite of laws focusing on transparency[^16], consumer protection[^18], and the use of AI in specific sectors like healthcare[^15] and employment[^17]. New York City Regulates AI through its landmark Automated Employment Decision Tools (AEDT)[^46] law, requiring employers to conduct annual bias audits, notify candidates about automated employment decision tool usage, and allow candidates to request alternative processing. The city also launched an AI Action Plan[^45] in 2023 to govern its own use of AI and support agency implementation.
+us-state-governments:
+CaseStudy: automatedDecisionMaking/governance/us-state-governments
 
 standard-setting-bodies:
-Heading: Case studies of standard-setting bodies in AI governance
-The National Institute of Standards and Technology (NIST)[^43] introduced the AI Risk Management Framework (AI RMF)[^59] that helps organizations identify, assess, and manage risks associated with AI systems across sectors. The framework effectively translates abstract principles like “trustworthiness” into concrete, assessable organizational practices. The Center for AI Standards and Innovation (CAISI), established within NIST, represents a federal effort to build technical capacity for evaluating frontier AI models and developing safety standards. Similarly, in the UK, emerging bodies like the AI Security Institute (AISI)[^6] are tasked with model evaluation and ecosystem oversight. It is worth noting that AISI has secured voluntary commitments from major AI developers to provide early access to models for pre-deployment safety testing, which is a significant governance innovation that addresses the information asymmetry between industry and government stakeholders.
+CaseStudy: automatedDecisionMaking/governance/standard-setting-bodies
 
 testimonials-in-policy-hearings:
-Heading: A case study of testimonials from academic institutions in AI governance
-This response[^2] from the Association of American Universities (AAU) to the Trump administration’s RFI on the AI Action plan shows what American universities/research institutions seek from the government in the context of AI development. AAU’s “overarching recommendation for the new AI Action Plan is to pursue a focused initiative to accelerate AI for discovery” and that “this initiative should seek to align government investments with industry, universities, and other stakeholders to develop the tools, practices, partnerships, and infrastructure to catalyze scientific progress using AI.”
+CaseStudy: automatedDecisionMaking/governance/testimonials-in-policy-hearings

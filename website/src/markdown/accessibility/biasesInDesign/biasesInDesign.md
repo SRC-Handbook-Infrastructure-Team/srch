@@ -6,7 +6,7 @@ final: false
 lastUpdated: April 21, 2026
 ---
 
-One of the biggest challenges to accessible technology is cognitive biases, which are systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.
+One of the biggest challenges to accessible technology is cognitive bias, which involves systematic patterns in how we think that can lead us to overlook certain users’ needs or make assumptions about how people interact with systems. As discussed in [What is Accessibility?](/accessibility/whatIsAccessibility), accessibility encompasses three interconnected dimensions: Universality, Disability, and Equity. Cognitive bias undermines accessibility across all three dimensions and can cause even well-meaning designers to unintentionally create barriers for users.
 
 Cognitive biases shape design decisions by influencing how designers interpret user needs and system requirements. More generally, biases shape what we notice, prioritize, and whose needs we overlook. Accessibility requires recognizing how our instincts about what constitutes normal, intuitive, or good design are shaped by our own abilities and experiences. Understanding what bias is, which specific biases might appear, and how biases manifest can help us question those instincts. Bias recognition must precede bias prevention, because we cannot design accessible technology without first understanding how our assumptions shape design decisions.
 
@@ -14,13 +14,13 @@ To understand where these biases enter the design process, it is important to fi
 
 ### Mental Models and Familiarity
 
-Individuals create {mental-models} for how they expect technology to function based on past experiences. These expectations are judgmental heuristics, mental shortcuts that help people make quick decisions by drawing on what has worked before. Heuristics allow us to function efficiently when encountering large amounts of information and stimuli. In design contexts, aligning with well-established patterns and intuitive interactions can minimize confusion and improve usability.[^4] Because we inevitably draw from our own experiences when creating these patterns, however, we can unconsciously treat our own mental models as universal and risk creating systems that only work for people with backgrounds and abilities similar to our own. A hypothetical example of this mental model can be found {mouse|in most designers’ reliance on the mouse for navigation}.
+Individuals create {mental-models} for how they expect technology to function based on past experiences. These expectations are judgmental heuristics, mental shortcuts that help people make quick decisions by drawing on what has worked before. Heuristics allow us to function efficiently when encountering large amounts of information and stimuli. In design contexts, aligning with well-established patterns and intuitive interactions can minimize confusion and improve usability.[^4] Because we inevitably draw from our own experiences when creating these patterns, however, we can unconsciously treat our own mental models as universal and risk creating systems that only work for people with backgrounds and abilities similar to our own. A hypothetical example of this mental model can be found {mouse-reliance-for-navigation|in most designers’ reliance on the mouse for navigation}.
 
 For an activity that demonstrates how mental models vary even for simple everyday tasks, see the {draw-toast|Draw Toast exercise}.
 
 ### The Invisibility of Bias
 
-Biases often operate unconsciously, making flawed decisions feel intuitively correct to the decision-maker. These mental shortcuts developed as evolutionary adaptations, helping early humans make quick judgments for survival.[^3] Cognitive psychologists have established that biases stem from unconscious, automatic processes that can enable fast and efficient decision-making.[^2] When we rely on familiar patterns or make assumptions about user capabilities, these choices are made {system|rapidly and intuitively}, rarely triggering self-doubt. In design contexts, studies show that designers frequently commit to concrete design concepts from the beginning, possibly ignoring alternative options.[^2]
+Biases often operate unconsciously, making flawed decisions feel intuitively correct to the decision-maker. These mental shortcuts developed as evolutionary adaptations, helping early humans make quick judgments for survival.[^3] Cognitive psychologists have established that biases stem from unconscious, automatic processes that can enable fast and efficient decision-making.[^2] When we rely on familiar patterns or make assumptions about user capabilities, these choices are made {system-1-and-system-2-thinking|rapidly and intuitively}, rarely triggering self-doubt. In design contexts, studies show that designers frequently commit to concrete design concepts from the beginning, possibly ignoring alternative options.[^2]
 
 Additionally, individuals often under-detect their own biases compared to those of others, causing a “bias blind spot”[^10] where people recognize bias in others more readily than in themselves. This creates a challenge in design contexts: we may acknowledge that the bias affects the field generally while remaining unaware of how it shapes our decisions. Even when we become aware that we have made an assumption, we may not recognize it as bias if the assumption aligns with professional training, industry standards, or widely accepted design principles.
 
@@ -32,7 +32,7 @@ The biases described in the following section illustrate specific ways this excl
 
 ## Understanding Key Biases in Design
 
-Here are some key cognitive biases that commonly affect design decisions, along with examples illustrating their impact. The term bias here refers to ones that a designer might be subject to that leads to inaccessible and poorly designed products. Each subsection includes a definition and the potential impact. Notably, the following biases is not a comprehensive list of biases—for more, see [this comprehensive list of biases](https://thedecisionlab.com/biases).
+Here are some key cognitive biases that commonly affect design decisions, along with examples illustrating their impact. Here, the term bias refers to cognitive biases that can influence designers and lead to inaccessible or poorly designed products. Each subsection includes a definition and the potential impact. Notably, the following list of biases is not comprehensive—for more, see [this comprehensive list of biases](https://thedecisionlab.com/biases).
 
 ### Automation Bias
 
@@ -46,7 +46,7 @@ Availability bias is a cognitive shortcut in which people often judge the likeli
 
 Choice overload occurs when individuals are confronted with too many options, causing them to experience decision paralysis. The abundance of alternatives can make it difficult to evaluate each option thoroughly, causing cognitive fatigue. As a result, users may struggle to make decisions, often leading to a sense of regret or doubt about their decision, even if the choice made was objectively good. If a poor choice was made due to the difficulty of evaluating alternatives, the user may be less likely to engage with the system in the future.
 
-#### Confirmation Bias
+### Confirmation Bias
 
 Confirmation bias is when individuals seek out, interpret, or remember information in a way that supports their existing beliefs or opinions, often ignoring information that challenges them. This reduces objectivity and may perpetuate errors in judgment or evaluation.
 
@@ -119,26 +119,19 @@ _An update with real-world case study examples for the biases discussed in this 
 
 ## Sidebar
 
-Mental-Models:
+mental-models:
+Heading: Note: Mental Models
 
 Internal representations of how individuals expect something to function based on past experiences. We may treat our own mental models as universal and therefore risk creating systems that only work for people with similar backgrounds and abilities to ours.
 
-mouse:
-Heading: Mouse Reliance for Navigation
-A designer who primarily uses a mouse may create an interface with hover-dependent menus and drag-and-drop functionality, assuming these interactions are intuitive. When they rely solely on their own mental model of interaction, they risk excluding users who navigate with keyboards, screen readers, or voice commands. This design solution is only effective for people with similar motor abilities and preferences, reflecting a bias in the designer’s mental model and thus overlooking users with needs that differ from the designer’s.
+mouse-reliance-for-navigation:
+CaseStudy: accessibility/biasesInDesign/mouse-reliance-for-navigation
 
 draw-toast:
-Heading: Draw Toast: A Mental Model Exercise
-Want to see mental models in action?
-Try this exercise: take 30 seconds to sketch how you make toast. Now compare your drawing with someone else’s. You’ll likely find significant variation, showing how differently we might conceptualize the same routine task.
+CaseStudy: accessibility/biasesInDesign/draw-toast
 
-From the Draw Toast website: “\[drawings range from\] crisp and clear to cluttered and confused and from those that look at the whole system to those that pick out a single component. The point is to highlight the biases. No single drawing is complete or comprehensive. Each simply represents a point of view.”[^5]
-
-In design, we might assume our toast-making process is universal, but users might have completely different mental models. Get step-by-step instructions for the activity at [http://www.drawtoast.com/](http://www.drawtoast.com/). ![Examples of the toast-making process](/assets/primer-photos/accessibility/biases/drawToast.png)
-Figure 1\. Examples of the toast-making process.
-
-system:
-Heading: System 1 and System 2 Thinking
+system-1-and-system-2-thinking:
+Heading: Note: System 1 and System 2 Thinking
 
 To understand why these automatic processes may dominate our thinking, we can look to Kahneman’s dual-system theory. The theory provides a two-system basis for human decision-making: System 1 for fast, intuitive thinking and System 2 for slow, deliberate reasoning. For further elaboration on the mechanisms of these two systems, see Kahneman’s _Thinking Fast and Slow_.[^8]
 

@@ -48,7 +48,7 @@ The SRC Handbook is currently organized into four core modules: Privacy, Accessi
 
 ## Project History
 
-SRCH was founded in May 2024 by Michelle L. Ding (Brown University Class of 2025, Current Ph.D Student), with advisors Julia Netter and Suresh Venkatasubramanian.
+SRCH was founded in May 2024 by Michelle L. Ding (Brown University Class of 2025, current Ph.D. student), with advisors Julia Netter and Suresh Venkatasubramanian.
 
 Milestones:
 
@@ -77,7 +77,7 @@ If you are a funder or want to discuss financial support, please contact:
 
 ## Contributing
 
-The code and content of our website is public, and we happily welcome contributions to either.
+The code and content of our website are public, and we happily welcome contributions to either.
 
 ### Contribution Types
 
@@ -97,6 +97,7 @@ For a full high-level and file-by-file architecture walkthrough, see [codebase-a
 5. Styles: [website/src/styles](website/src/styles)
 6. Markdown rendering logic: [website/src/util](website/src/util)
 7. Public assets: [website/public](website/public)
+8. Editable case studies: [website/src/case-studies](website/src/case-studies)
 
 ### How To Contribute
 

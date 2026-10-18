@@ -1,4 +1,6 @@
 import { getPlaintextFromMarkdown, getDrawerSearchTitle, splitSearchBibliography } from "./searchText.js";
+import { composeCaseStudyMarkdown } from "./caseStudyContent.js";
+import { loadCaseStudyFiles } from "./caseStudyFiles.js";
 /**
  * ExportIndex.js
  *
@@ -20,6 +22,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const MARKDOWN_DIR = path.join(__dirname, "../markdown");
+const caseStudies = loadCaseStudyFiles();
 const SEARCH_INDEX_OUTPUT_PATH = path.join(
   __dirname,
   "../../public/search-index.json",
@@ -350,7 +353,7 @@ function buildContentArray() {
     const sectionFile = path.join(sectionDir, `${sectionId}.md`);
     if (!fs.existsSync(sectionFile)) continue;
 
-    const rawContent = fs.readFileSync(sectionFile, "utf8");
+    const rawContent = composeCaseStudyMarkdown(fs.readFileSync(sectionFile, "utf8"), caseStudies);
     const { content: cleanContent, frontmatter } = parseFrontmatter(rawContent);
 
     rawSections.push({
@@ -394,7 +397,7 @@ function buildContentArray() {
       const subFile = path.join(sectionDir, subsectionId, `${subsectionId}.md`);
       if (!fs.existsSync(subFile)) continue;
 
-      const subRaw = fs.readFileSync(subFile, "utf8");
+      const subRaw = composeCaseStudyMarkdown(fs.readFileSync(subFile, "utf8"), caseStudies);
       const { content: subClean, frontmatter: subFm } =
         parseFrontmatter(subRaw);
 

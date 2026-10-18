@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import fs from "fs";
 import path from "path";
+import process from "node:process";
 import { spawnSync } from "child_process";
 
 function copyIndexTo404() {
@@ -41,11 +42,14 @@ function markdownCacheWatchPlugin() {
     apply: "serve",
     configureServer(server) {
       const markdownRoot = path.resolve(process.cwd(), "src/markdown");
+      const caseStudiesRoot = path.resolve(process.cwd(), "src/case-studies");
+      server.watcher.add(caseStudiesRoot);
 
       const isMarkdownSource = (filePath) => {
         const normalized = path.resolve(filePath);
         return (
-          normalized.startsWith(markdownRoot) && normalized.endsWith(".md")
+          (normalized.startsWith(markdownRoot + path.sep) && normalized.endsWith(".md")) ||
+          (normalized.startsWith(caseStudiesRoot + path.sep) && normalized.endsWith(".md"))
         );
       };
 

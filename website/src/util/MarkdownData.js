@@ -5,6 +5,8 @@
  * pages/components don't pull markdown rendering libraries into the startup bundle.
  */
 
+import { allMarkdownFiles } from "./caseStudySources.js";
+
 export function createIdFromHeading(text) {
   if (!text) return "";
   return text
@@ -49,10 +51,7 @@ export function parseFrontmatter(content) {
   return { content: cleanContent, frontmatter };
 }
 
-export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
-  query: "?raw",
-  import: "default",
-});
+export { allMarkdownFiles };
 
 let preloadedNavigationData = null;
 let preloadNavigationPromise = null;

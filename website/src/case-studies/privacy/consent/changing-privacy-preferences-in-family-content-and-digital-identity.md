@@ -1,0 +1,8 @@
+---
+title: "Case Studies: Changing Privacy Preferences in Family Content and Digital Identity"
+tags: ["privacy", "consent"]
+---
+
+One recent trend in users’ preferences is growing opposition to ‘mommy bloggers,’ family vloggers, and other parent influencers who publicly share details of their children’s lives. As explored in the article “[Influencer Parents and The Kids Who Had Their Childhood Made Into Content](https://www.teenvogue.com/story/influencer-parents-children-social-media-impact),” some content creators are changing course and not posting their kids anymore after learning, sometimes firsthand, about [the risks ‘sharenting’ poses](https://www.newyorker.com/culture/cultural-comment/instagram-facebook-and-the-perils-of-sharenting). For further reading, check out this [blog post](https://www.laurenbeechingpr.com/blog/is-family-vlogging-on-its-way-out-the-ethical-dilemma-of-monetising-childhood) examining consent and the ethics of family vlogging.
+
+Another example of user preferences shifting due to privacy and safety concerns is a transgender person wanting to erase their pre-transition digital footprint to avoid being outed or discriminated against. The articles “[Taking Control of Your Digital Identity](https://translifeline.org/taking-control-of-your-digital-identity/)” by Trans Lifeline and “[Standing Up for LGBTQ+ Digital Safety this International Day Against Homophobia](https://www.eff.org/uk/deeplinks/2025/05/standing-lgbtq-digital-safety-international-day-against-homophobia?language=uk)” from the Electronic Frontier Foundation (EFF) offer digital harm prevention tips and resources.

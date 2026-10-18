@@ -15,7 +15,6 @@ You can start each markdown file with frontmatter:
 ---
 title: Page Title
 order: 1
-title: Intersections with Other Values
 identifier: "2.c"
 lastUpdated: April 14, 2026
 ---

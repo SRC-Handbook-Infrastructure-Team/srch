@@ -10,7 +10,7 @@ The development of inclusive technology requires thoughtful consideration of how
 
 ## Why Accessibility Gets Overlooked
 
-Companies often fail to prioritize accessibility due to a combination of organizational culture and prejudices. A common barrier is the mistaken belief that accessibility features only serve a small fraction of the population, which leads to them getting deprioritized.[^28] In reality, this overlooks a large share of the population: the World Health Organization estimates that about 1.3 billion people globally experience significant disability,[^34] and the Center for Disease Control reports that more than 1 in 4 US adults have a disability.[^13] These figures also exclude many temporary and situational impairments (e.g., injury or pregnancy) that can affect usability.
+Companies often fail to prioritize accessibility due to a combination of organizational culture and prejudices. A common barrier is the mistaken belief that accessibility features only serve a small fraction of the population, which leads to them getting deprioritized.[^28] In reality, this overlooks a large share of the population: the World Health Organization estimates that about 1.3 billion people globally experience significant disability,[^34] and the Centers for Disease Control and Prevention reports that more than 1 in 4 US adults have a disability.[^13] These figures also exclude many temporary and situational impairments (e.g., injury or pregnancy) that can affect usability.
 
 Another barrier is the belief that accessibility is too expensive or too time-consuming, especially when it is treated as a retrofit rather than a core design requirement. However, accessible features can be more costly to implement or lower quality when added at the end of production rather than integrated into the design process from the start.[^7]
 
@@ -59,7 +59,7 @@ _Figure: This figure shows an idealized privacy-by-design model in which users c
 
 This intersection describes the divergence and convergence between system security and user access. From a Disability lens, security features can cause friction for users with visual, motor, or cognitive impairments. These barriers create equity issues when disabled users face disproportionate difficulty accessing essential services in the name of protecting systems from fraud or abuse. Meanwhile, within the context of Universality, when inaccessible or confusing security features are redesigned to be intuitive and easy to use, they improve usability for disabled users and others, thus strengthening security for everyone.
 
-- **Tension:** Security features are frequently prime examples of inaccessible design. {CAPTCHA} (Completely Automated Public Turing test to tell Computers and Humans Apart) is a well-known example: visual challenges can be unusable for blind or low-vision users, while audio alternatives may still exclude some users or remain difficult in practice.[^33] Biometric authentication can also create barriers. Some users cannot reliably use fingerprint or facial recognition systems, which sheds light on the need for increasingly non-biometric alternatives.[^3]
+- **Tension:** Security features are frequently prime examples of inaccessible design. {captcha|CAPTCHA} (Completely Automated Public Turing test to tell Computers and Humans Apart) is a well-known example: visual challenges can be unusable for blind or low-vision users, while audio alternatives may still exclude some users or remain difficult in practice.[^33] Biometric authentication can also create barriers. Some users cannot reliably use fingerprint or facial recognition systems, which sheds light on the need for increasingly non-biometric alternatives.[^3]
 
 ![Example of a CAPTCHA challenge interface.](/assets/primer-photos/accessibility/intersections-with-other-values/captcha-example.png)
 
@@ -205,14 +205,14 @@ These intersections demonstrate that accessibility is a foundational design prin
 ## Sidebar
 
 curb-cut-effect:
-Heading: Curb Cut Effect
+Heading: Note: Curb Cut Effect
 
 A curb cut is the sloped section built into a sidewalk curb to make it easier for wheelchair users to move between the sidewalk and the street. The idea is that a design created for disabled users often ends up helping many others, too. In this guide, that same logic applies to digital design.
 
 For more, please refer to the [Design Processes](/accessibility/designProcesses) primer.
 
-CAPTCHA:
-Heading: Why Websites Use CAPTCHAs
+captcha:
+Heading: Note: Why Websites Use CAPTCHAs
 
 CAPTCHAs are typically used to reduce spam, credential stuffing, fake account creation, bulk scraping, and other forms of automated abuse.
 
@@ -223,23 +223,11 @@ Here, the problem is not the security goal itself. Rather, the problem is that m
 Please see [captcha.net](http://www.captcha.net/) for more about CAPTCHAs.
 
 accessibility-is-not-one-size-fits-all:
-Heading: Accessibility Is Not Always One-Size-Fits-All
+CaseStudy: accessibility/intersectionsWithOtherValues/accessibility-is-not-one-size-fits-all
 
-Accessibility is not always a matter of finding one solution that works for everyone. In some cases, different disabled users may have genuinely conflicting access needs. A feature that improves access for one group may create barriers for another. These are known as **access conflicts**.[^4]
-
-For example, highly detailed screen-reader to make content accessible to blind users may produce overwhelming or inefficient audio output for others. Or, in a more specific example, the sound of a bus's door ramp being lowered to let on a wheel-chair user could cause someone with a syncope (fainting) disorder triggered by loud noises to faint, as Hofmann et al. describe from their lives in "[Living Disability Theory: Reflections on Access, Research, and Design.](https://dl.acm.org/doi/10.1145/3373625.3416996)"[^16]
-
-As such, accessibility should not be understood as a single fixed standard or a universal design choice that automatically serves all disabled people equally. Instead, accessible design requires acknowledging trade-offs, offering meaningful alternatives where possible, and ultimately avoiding the assumption that one user profile represents disability as a whole.
-
-As one disability advocate notes, efforts to make something “fully accessible” can become overly prescriptive and may actually end up erasing disabled people whose needs do not fit that model. Indeed, designers should approach it as an ongoing process of negotiating competing access needs with humility and care.[^29]
-
-Promote-Privacy-Protection:
+promote-privacy-protection:
+Heading: Note: Accessible Consent and Privacy Protection
 For more, please see the [Consent](/privacy/consent) primer in the privacy section.
 
 recaptcha:
-Heading: Improved CAPTCHA Techniques
-Due to a number of problems with existing CAPTCHAs, including inaccessibility and poor efficacy, Google has been working to develop [improved forms of CAPTCHAs](https://developers.google.com/recaptcha/docs/versions) that record and analyze the behavior of website users to determine if they are human. Some of these upgrades to the system have been improvements to accessibility, allowing users with visual and/or hearing impairments to easily complete CAPTCHA tasks.
-
-However, these upgraded CAPTCHAs can continue to raise accessibility concerns. For example, Google's reCAPTCHA v2 asked users to click a checkbox, recording their actions as they did so. This task still renders these CAPTCHAs inaccessible for some groups. For example, visually impaired users often prefer keyboard navigation to the use of a mouse, which is more likely to be detected by the test as automated behavior. In addition, the fallback to these systems remains traditional CAPTCHAs, adding more layers of barriers rather than removing them.
-
-More recent work by Google with their 'reCAPTCHA v3,' which tracks and analyzes user behavior _without_ the additional checkbox-marking challenge has been more successful in making CAPTCHA accessible. In their 2022 study, Gaggi found that there was no clear influence of visual impairment on ability to pass these new tests, with a success rate of 99.42% across all groups.[^15]
+CaseStudy: accessibility/intersectionsWithOtherValues/recaptcha

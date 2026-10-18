@@ -14,10 +14,10 @@ Decisions made by ADM systems, like human decision-making, can be flawed. One of
 
 Ultimately, society benefits from processes and decision makers that minimize bias. Understanding the ways in which ADM systems can be biased and the harms that may arise from those biases allows one to make informed decisions about whether imperfect ADM outcomes or imperfect human decision-making would ultimately lead to minimizing bias.
 
-For example, judges are imperfect decision makers. They often let high-risk defendants out on bail; some are prone to being overly strict, all get hungry. Legal scholar Cass Sunstein argues that when evaluating the use of an AI risk prediction model in the justice system, the model should be evaluated against the imperfection of the current system.[^11] Evaluating systems of decision-making and attempting to implement systems that minimize biases can help reduce harms caused by bias.
+For example, judges are imperfect decision makers. They often let high-risk defendants out on bail; some are prone to being overly strict, and all get hungry. Legal scholar Cass Sunstein argues that when evaluating the use of an AI risk prediction model in the justice system, the model should be evaluated against the imperfection of the current system.[^11] Evaluating systems of decision-making and attempting to implement systems that minimize biases can help reduce harms caused by bias.
 
 **Types of Potential Harm from Bias in Automated Decision-Making Systems:**  
-Biases in ADM systems can lead to material harm to people's health and livelihood making it essential that ADM system creators and implementers are aware of the potential biases that may arise.
+Biases in ADM systems can lead to material harm to people's health and livelihood, making it essential that ADM system creators and implementers are aware of the potential biases that may arise.
 
 **Allocative Harm** occurs when biased systems deny individuals or groups access to resources, opportunities, or benefits.
 
@@ -49,7 +49,7 @@ Bias in **data curation** displays itself through **historical bias, representat
 
 **Historical bias** occurs when a model's data reflects societal stereotypes. Even if a dataset perfectly reflects reality, it can still be historically biased because it reflects prejudices that exist in the real world.
 
-One example of historical bias is gender bias due to large language models being trained on {data-that-reflects-historical-sexism}.[^4]
+One example of historical bias is gender bias due to large language models being trained on {gender-and-ethnic-bias-in-word-embeddings|data that reflects historical sexism}.[^4]
 
 #### Statistical vs. Taste-Based Discrimination
 
@@ -67,7 +67,7 @@ Historical bias creates the distinction between statistical discrimination and t
 
 - **Example:** A dataset that does not include hyphenated last names being used to train a name-generation model
 
-**{Underrepresentation-bias}:** When the data available on the target population is insufficient to properly train the model.
+**{underrepresentation-bias|Underrepresentation bias}:** When the data available on the target population is insufficient to properly train the model.
 
 - **Example:** A dataset being used to train a model identifying cancer from MRI scans that does not have enough scans of rare cancers.
 
@@ -101,13 +101,13 @@ The modeling stage involves countless design choices, so each of these choices c
 
 - **Example:** say a model is given the objective to get the highest percent correct answers guessing people's ages from photographs. If the model is given 100 subjects to attempt to guess their ages and guesses all 90 White people correctly and all 10 Black people incorrectly, the overall level of accuracy would be 90%. Looking just at the model's accuracy, it may seem like the model is performing well. But, when you look closer, it becomes clear that the model is unable to correctly predict age for _any_ Black people. This model is optimizing for the majority population, ignoring minority group errors and exhibiting learning bias.
 
-- **Example:** One {case-study-by-MIT-researchers} found learning bias and historical bias to be present in a now-defunct Amazon hiring software.[^8] This demonstrates how two or more biases can occur simultaneously.
+- **Example:** One {hiring-fairly-in-the-age-of-algorithms|case study by MIT researchers} found learning bias and historical bias to be present in Amazon’s now-defunct hiring software.[^8] This demonstrates how two or more biases can occur simultaneously.
 
 ### Evaluation Bias
 
 **Evaluation bias** occurs _after_ model creation, when evaluation benchmark datasets are input to train a model, but they do not represent the user population. Many ADM systems are evaluated on narrow or sanitized datasets, which creates a misleadingly positive picture of model performance. When models perform positively on sanitized datasets, engineers do not work to further improve model performance. When such models are then deployed in more diverse, uncontrolled environments, they perform worse than developers intended.
 
-Researchers have found that facial expression recognition datasets used in model evaluation do not contain the diversity of faces that exist in the target population. This has caused companies to output models that do not correctly recognize diverse faces with a high level of accuracy.[^2] This was discovered by Joy Buolamwini in her MIT thesis {Gender-Shades}.
+Researchers have found that facial expression recognition datasets used in model evaluation do not contain the diversity of faces that exist in the target population. This has caused companies to output models that do not correctly recognize diverse faces with a high level of accuracy.[^2] This was discovered by Joy Buolamwini in her MIT thesis {gender-shades|Gender Shades}.
 
 ## Bias in Model Deployment
 
@@ -155,33 +155,17 @@ Bias can occur at all stages of the automated decision-making system lifecycle, 
 
 ## Sidebar
 
-data-that-reflects-historical-sexism:
-Heading: Word Embeddings Quantify 100 Years of Gender and Ethnic Stereotypes
+gender-and-ethnic-bias-in-word-embeddings:
+CaseStudy: automatedDecisionMaking/bias/gender-and-ethnic-bias-in-word-embeddings
 
-When training data is input into a word embedding program, words are assigned vector representations within the multi-dimensional space. Associated words are positioned closer to each other in the high-dimensional vector space as a result of shared context.
-
-[Garg et. al. (2018)](https://doi.org/10.1073/pnas.1720347115) found that words associated with women are systematically closer to traditionally female occupations, adjectives, and traits than words associated with men are to traditionally female occupations, adjectives, and traits. Similar disparities in distance exist between racial groups and certain occupations, adjectives, and traits. Their work laid the groundwork for subsequent research demonstrating how statistical patterns in training data associated with societal biases can lead to models that encode bias and reproduce it in their output.
-
-Underrepresentation-bias:
-Heading: Representation Bias in Image-Generating Software
-
-[Huang and Huang (2025)](https://doi.org/10.1007/s00146-025-02533-1) found that with Generative Adversarial Networks (GANs), a type of image-generating AI software, models will exacerbate societal biases and improperly represent minority groups. For example, if a GAN is asked to create images of engineers, it will overwhelmingly generate images of White males. This is because images of White males were the primary images in the dataset that the model was trained on. In their analysis of AI image-generating software, the models were shown to underrepresent minority groups because the training datasets did not include sufficient representation of minorities.
-
-When datasets overrepresent some demographics and underrepresent others, the resulting model will learn unevenly, performing well for majority groups but poorly for individuals from underrepresented or minority groups.
+underrepresentation-bias:
+CaseStudy: automatedDecisionMaking/bias/underrepresentation-bias
 
 healthcare-risk-assessment:
-Heading: Dissecting racial bias in an algorithm used to manage the health of populations
+CaseStudy: automatedDecisionMaking/bias/healthcare-risk-assessment
 
-[Obermeyer et al. (2019)](https://www.science.org/doi/10.1126/science.aax2342) found that to assess patient need, many hospitals use risk assessment software. One variable imputed into risk assessment models is healthcare spending. In the software studied by Obermeyer et. al., healthcare spending was used as a proxy in an algorithm that predicts health need to identify patients who will benefit most from healthcare programs. Because Black patients spend less on healthcare due to socioeconomic and systemic barriers, Black patients at a given risk score are significantly sicker than White patients with the same score. This is an example of measurement bias because the proxy variable, cost, was a poor measure of the target variable, health need.
+hiring-fairly-in-the-age-of-algorithms:
+CaseStudy: automatedDecisionMaking/bias/hiring-fairly-in-the-age-of-algorithms
 
-case-study-by-MIT-researchers:
-Heading: Hiring Fairly in the Age of Algorithms
-
-[Langenkamp et. al. (2020)](https://arxiv.org/abs/2004.07132) found that starting in 2014, Amazon used an ADM system to filter through resumes and find the best candidates. However, since the model was optimized to choose the best candidates, and in past hiring data, the majority of good candidates had been male, the model learned to use maleness as an indicator that someone would be a good candidate. This led to a model making hiring decisions that systematically disadvantaged women.
-
-This study demonstrates learning bias because the model was taught to find the best candidates, so the software came to understand maleness as a factor that contributed to being a good candidate. However, this is simultaneously an example of historical bias, because historical sexism in the field of engineering contributed to the fact that the majority of past engineers hired were male.
-
-Gender-Shades:
-Heading: Intersectional Accuracy Disparities in Commercial Gender Classification
-
-[Buolamwini and Gebru (2018)](https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf) created a dataset of thousands of pictures of male and female faces drawn from parliament members from across the world with a range of skin tones. They then assessed the efficacy of facial recognition technologies from IBM, Microsoft, and Face++ at recognizing faces and genders. While they found that models had a high level of overall accuracy, when looking at model accuracy by race and gender, they found that the models were only about 65-80% accurate in detecting dark-skinned, female faces as opposed to light-skinned male faces, with which all three models had an over 99% accuracy rate.
+gender-shades:
+CaseStudy: automatedDecisionMaking/bias/gender-shades

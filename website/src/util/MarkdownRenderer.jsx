@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { allMarkdownFiles } from "./caseStudySources.js";
 import { useMemo, useRef, useState, useEffect } from "react";
 import precomputedBuild from "./precomputed-markdown-data.json";
 import ReactMarkdown from "react-markdown";
@@ -346,10 +347,7 @@ export function parseFrontmatter(content) {
 
 /* ----------------------------- Markdown Imports ----------------------------- */
 
-export const allMarkdownFiles = import.meta.glob("../markdown/**/*.md", {
-  query: "?raw",
-  import: "default",
-});
+export { allMarkdownFiles };
 
 /* ----------------------------- Section Loaders ----------------------------- */
 
@@ -939,6 +937,17 @@ export const parseSubsections = (content) => {
 
 /* ----------------------------- Markdown Renderer ----------------------------- */
 
+function footnoteReturnHref(number, origin, sidebar, sectionId, subsectionId) {
+  if (origin && origin !== "main" && sectionId && subsectionId) {
+    const entry = sidebar?.[origin];
+    const body = typeof entry === "string" ? entry : entry?.content || "";
+    const headingOnly = !body.includes(`[^${number}]`);
+    const prefix = `user-content-drawer-${origin}-fnref${headingOnly ? "-heading" : ""}`;
+    return `/${sectionId}/${subsectionId}/${origin}#${prefix}-${number}`;
+  }
+  return `#user-content-fnref-${number}`;
+}
+
 function MarkdownRenderer({
   content,
   sidebar,
@@ -950,7 +959,11 @@ function MarkdownRenderer({
   urlTerm,
   furtherReadingBlock = null,
   footnoteOriginMap: externalOriginMap = {},
+  allDefinitions = {},
+  referenceIdPrefix = "user-content-fnref",
+  includeReferences = true,
 }) {
+  const rendererRef = useRef(null);
   const processed = useMemo(() => {
     if (!content)
       return { main: "", sidebar: {}, footnotes: [], footnoteOriginMap: {} };
@@ -1018,6 +1031,13 @@ function MarkdownRenderer({
       }
     }
 
+    for (const [key, definition] of Object.entries(allDefinitions)) {
+      if (!footnotesMap.has(key)) {
+        footnotesMap.set(key, { num: key, content: definition, from: "main" });
+        localOriginMap[key] = "main";
+      }
+    }
+
     const mergedOriginMap = { ...localOriginMap, ...externalOriginMap };
 
     const footnotes = Array.from(footnotesMap.values()).sort(
@@ -1038,18 +1058,14 @@ function MarkdownRenderer({
 
     const refRegex = /\[\^([0-9]+)\]/g;
     replaced = replaced.replace(refRegex, (m, n) => {
-      const origin = mergedOriginMap[n];
-      let href = `#user-content-fn-${n}`;
-      if (origin && origin !== "main" && sectionId && subsectionId) {
-        href = `/${sectionId}/${subsectionId}/${origin}#user-content-fn-${n}`;
-      }
-      return `<sup id="user-content-fnref-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
+      const href = `#user-content-fn-${n}`;
+      return `<sup id="${referenceIdPrefix}-${n}"><a href="${href}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${n}</a></sup>`;
     });
 
     // If references are adjacent like [^1][^2], render them as 1, 2.
     replaced = replaced.replace(
-      /<\/sup>\s*<sup id="user-content-fnref-/g,
-      '</sup><sup aria-hidden="true" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">,</sup><sup id="user-content-fnref-',
+      /<\/sup>\s*(<sup id="[^"]+-fnref(?:-heading)?-\d+">)/g,
+      '</sup><sup aria-hidden="true" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">,</sup>$1',
     );
 
     if (furtherReadingBlock || extractedFurtherReadingBlock) {
@@ -1065,9 +1081,9 @@ function MarkdownRenderer({
   }, [
     content,
     externalOriginMap,
-    sectionId,
-    subsectionId,
     furtherReadingBlock,
+    allDefinitions,
+    referenceIdPrefix,
   ]);
 
   const isDrawerMode = sidebar && Object.keys(sidebar).length === 0;
@@ -1371,13 +1387,7 @@ function MarkdownRenderer({
           const match = id.match(/\d+/);
           if (match) number = match[0];
         }
-        let backHref = number ? `#user-content-fnref-${number}` : null;
-        if (number) {
-          const origin = processed.footnoteOriginMap[number];
-          if (origin && origin !== "main" && sectionId && subsectionId) {
-            backHref = `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${number}`;
-          }
-        }
+        const backHref = number ? footnoteReturnHref(number, processed.footnoteOriginMap[number], sidebar, sectionId, subsectionId) : null;
         return (
           <li
             id={id}
@@ -1673,7 +1683,7 @@ function MarkdownRenderer({
   useEffect(() => {
     const handler = (e) => {
       const a = e.target.closest("a[data-sidebar]");
-      if (a) {
+      if (a && rendererRef.current?.contains(a)) {
         e.preventDefault();
         const sidebarKey = a.getAttribute("data-sidebar");
         if (onDrawerOpen && sidebarKey) {
@@ -1693,14 +1703,15 @@ function MarkdownRenderer({
   const location = useLocation();
 
   useEffect(() => {
-    if (!isDrawerMode && location.hash === "#bibliography") {
+    if (includeReferences && location.hash === "#bibliography") {
       pendingScrollId.current = "bibliography";
       setShowFootnotes(true);
     }
-  }, [isDrawerMode, location.hash, content]);
+  }, [includeReferences, location.hash, content]);
 
 
   useEffect(() => {
+    if (!includeReferences) return;
     function handleFootnoteClick(e) {
       const a = e.target.closest('a[href^="#user-content-fn-"]');
       if (a) {
@@ -1714,7 +1725,7 @@ function MarkdownRenderer({
     }
     document.addEventListener("click", handleFootnoteClick);
     return () => document.removeEventListener("click", handleFootnoteClick);
-  }, []);
+  }, [includeReferences]);
 
   useEffect(() => {
     if (!showFootnotes || !pendingScrollId.current) return;
@@ -1731,7 +1742,7 @@ function MarkdownRenderer({
   }, [showFootnotes]);
 
   function CustomFootnotesSection() {
-    if (!processed.footnotes.length) return null;
+    if (!includeReferences || !processed.footnotes.length) return null;
     return (
       <section id="bibliography" data-footnotes className="footnotes">
         <button
@@ -1781,10 +1792,7 @@ function MarkdownRenderer({
                 const origin = processed.footnoteOriginMap[f.num];
                 const isSidebarLinked =
                   origin && origin !== "main" && sectionId && subsectionId;
-                const backHref = isSidebarLinked
-                  ? `/${sectionId}/${subsectionId}/${origin}#user-content-fnref-${f.num}`
-                  : `#user-content-fnref-${f.num}`;
-                const localAnchor = `user-content-fnref-${f.num}`;
+                const backHref = footnoteReturnHref(f.num, origin, sidebar, sectionId, subsectionId);
                 return (
                   <li
                     key={f.num}
@@ -1802,7 +1810,6 @@ function MarkdownRenderer({
                   >
                     <a
                       href={backHref}
-                      id={isSidebarLinked ? localAnchor : undefined}
                       aria-label={`Back to reference ${f.num}`}
                       style={{
                         position: "absolute",
@@ -1939,7 +1946,7 @@ function MarkdownRenderer({
     );
   }
 
-  return <div>{renderWithFootnotes(processed.main)}</div>;
+  return <div ref={rendererRef}>{renderWithFootnotes(processed.main)}</div>;
 }
 
 export default MarkdownRenderer;

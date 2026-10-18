@@ -11,7 +11,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { visit } from "unist-util-visit";
 import { MdArrowForward } from "react-icons/md";
-import { LuBriefcase } from "react-icons/lu";
+import { LuBriefcase, LuStickyNote } from "react-icons/lu";
 import { useLayout } from "../layouts/LayoutContext";
 import { useDrawerScrollWatcher } from "../hooks/useDrawerScrollWatcher";
 import MarkdownRenderer, {
@@ -23,6 +23,7 @@ import MarkdownRenderer, {
 } from "../util/MarkdownRenderer";
 import { getSectionIconById } from "../util/sectionIcons";
 import primersData from "../primers_to_curriculum.json";
+import { drawerAliases } from "../util/drawerAliases.js";
 
 function getInitialTheme() {
   if (typeof document === "undefined") return "light";
@@ -52,11 +53,7 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function remarkSidebarFootnoteRefs({
-  sectionId,
-  subsectionId,
-  footnoteOriginMap = {},
-} = {}) {
+function remarkSidebarFootnoteRefs({ referenceIdPrefix } = {}) {
   return (tree) => {
     visit(tree, "text", (node, index, parent) => {
       if (!parent || typeof node.value !== "string" || index == null) return;
@@ -73,15 +70,12 @@ function remarkSidebarFootnoteRefs({
         }
 
         const number = match[1];
-        const origin = footnoteOriginMap[number];
-        const href =
-          origin && origin !== "main" && sectionId && subsectionId
-            ? `/${sectionId}/${subsectionId}/${origin}#user-content-fn-${number}`
-            : `#user-content-fn-${number}`;
+        const href = `#user-content-fn-${number}`;
+        const referenceId = `${referenceIdPrefix}-${number}`;
 
         children.push({
           type: "html",
-          value: `<sup><a href="${escapeHtml(href)}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${escapeHtml(number)}</a></sup>`,
+          value: `<sup id="${escapeHtml(referenceId)}"><a href="${escapeHtml(href)}" style="color: var(--color-text-hover); font-weight: bold; text-decoration: none;">${escapeHtml(number)}</a></sup>`,
         });
 
         lastIndex = match.index + match[0].length;
@@ -123,8 +117,9 @@ function renderSidebarHeadingMarkdown(heading, options = {}) {
             {children}
           </a>
         ),
-        sup: ({ children }) => (
+        sup: ({ children, id }) => (
           <sup
+            id={id}
             style={{
               display: "inline-block",
               verticalAlign: "baseline",
@@ -158,7 +153,8 @@ function buildSidebarDrawersFootnoteOriginMap(sidebar) {
     const contentToShow =
       (typeof entry === "string" ? entry : entry?.content) || "";
 
-    const localMap = buildFootnoteOriginMap(contentToShow, {});
+    const heading = typeof entry === "object" ? entry?.heading || "" : "";
+    const localMap = buildFootnoteOriginMap(heading + "\n" + contentToShow, {});
     for (const key of Object.keys(localMap)) {
       if (!originMap[key]) originMap[key] = slug;
     }
@@ -407,7 +403,36 @@ function MarkdownPage() {
   const { sectionId, subsectionId, term: urlTerm } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const cachedContent = useRef({});
+  const aliasTarget =
+    drawerAliases[
+      `${sectionId}/${subsectionId}/${String(urlTerm || "").toLowerCase()}`
+    ];
+
+  useEffect(() => {
+    if (!aliasTarget) return;
+    const oldKey = String(urlTerm).toLowerCase();
+    const hash = location.hash.replace(
+      `#user-content-drawer-${oldKey}-fnref-`,
+      `#user-content-drawer-${aliasTarget}-fnref-`,
+    );
+    navigate(
+      {
+        pathname: `/${sectionId}/${subsectionId}/${aliasTarget}`,
+        search: location.search,
+        hash,
+      },
+      { replace: true, state: location.state },
+    );
+  }, [
+    aliasTarget,
+    sectionId,
+    subsectionId,
+    urlTerm,
+    location.search,
+    location.hash,
+    location.state,
+    navigate,
+  ]);
   const pageScrollRef = useRef(0);
   const notifyError = useCallback((title, description) => {
     console.error(`${title}: ${description}`);
@@ -452,7 +477,6 @@ function MarkdownPage() {
     cachedPageContent?.frontmatter?.lastUpdated || "",
   );
   const [theme, setTheme] = useState(getInitialTheme);
-  const [mainFootnotes, setMainFootnotes] = useState([]);
   const [allDefinitions, setAllDefinitions] = useState(
     cachedPageContent?.allDefinitions || {},
   );
@@ -474,7 +498,6 @@ function MarkdownPage() {
   const contentRef = useRef(null);
   const scrollPosRef = useRef(0);
   const pendingScrollRestoreRef = useRef(null);
-  const mergedFootnotesRef = useRef([]);
   const formattedTitle = useMemo(() => {
     const fastSubs = getFastCachedSubsections(sectionId);
     return getFormattedTitle(
@@ -564,55 +587,21 @@ function MarkdownPage() {
 
   const footnoteOriginMap = useMemo(() => {
     const mainMap = buildFootnoteOriginMap(rawMainMarkdown, sidebar);
-
-    return { ...mainMap, ...sidebarFootnoteOriginMap };
+    const origins = { ...mainMap, ...sidebarFootnoteOriginMap };
+    const mainText = rawMainMarkdown.replace(
+      /^\[\^([^\]]+)\]:\s*(.*(?:\n(?!\[\^|\s*$).*)*)/gm,
+      "",
+    );
+    for (const match of mainText.matchAll(/\[\^([^\]]+)\](?!:)/g)) {
+      origins[match[1]] = "main";
+    }
+    return origins;
   }, [rawMainMarkdown, sidebar, sidebarFootnoteOriginMap]);
-
-  function getCacheKey(section, subsection = null) {
-    return subsection ? `${section}/${subsection}` : section;
-  }
-  const stableOnFootnotesReady = useCallback(
-    (fns) => onFootnotesReadyRef.current(fns),
-    [],
-  );
-
-  const onFootnotesReadyRef = useRef(null);
-  onFootnotesReadyRef.current = (fns) => {
-    mergedFootnotesRef.current = fns;
-    setMainFootnotes(fns);
-  };
-  async function getCachedContent(section, subsection = null) {
-    const cacheKey = getCacheKey(section, subsection);
-    if (cachedContent.current[cacheKey]) return cachedContent.current[cacheKey];
-    const result = await getContent(section, subsection);
-    if (result) cachedContent.current[cacheKey] = result;
-    return result;
-  }
-
-  function getSidebarContent(
-    term,
-    targetSectionId = sectionId,
-    targetSubsectionId = subsectionId,
-  ) {
+  function getSidebarContent(term) {
     const key = (term || "").toString().toLowerCase();
     if (sidebar && sidebar[key]) return sidebar[key];
-    const cacheKey = getCacheKey(targetSectionId, targetSubsectionId);
-    const storedContent = cachedContent.current[cacheKey];
-    if (storedContent && storedContent.sidebar) {
-      const maybe = storedContent.sidebar[key];
-      if (maybe) return maybe;
-    }
     return null;
   }
-
-  const allPageFootnotes = useMemo(() => {
-    if (!allDefinitions || Object.keys(allDefinitions).length === 0) return [];
-    return Object.entries(allDefinitions).map(([key, content], i) => ({
-      key,
-      content,
-      number: i + 1,
-    }));
-  }, [allDefinitions]);
 
   /**
    * Pure UI helper: given a term key, render its content into the right drawer.
@@ -640,7 +629,7 @@ function MarkdownPage() {
         ? sidebarEntry
         : sidebarEntry.content) || "";
 
-    const drawerFootnoteOriginMap = buildFootnoteOriginMap(contentToShow, {});
+    const referenceIdPrefix = `user-content-drawer-${key}-fnref`;
 
     const heading =
       (typeof sidebarEntry === "object" && sidebarEntry.heading) ||
@@ -648,23 +637,21 @@ function MarkdownPage() {
     const headingText = String(heading || "")
       .replace(/:$/, "")
       .trim();
+    const isNote = /^Note:/i.test(headingText);
+    const displayHeading = isNote ? heading.replace(/^Note:\s*/i, "") : heading;
+    const DrawerIcon = isNote ? LuStickyNote : LuBriefcase;
 
     const node = (
       <>
         <div className="drawer-meta-label">
           <span className="drawer-meta-label-row">
-            <LuBriefcase
-              className="drawer-meta-label-icon"
-              aria-hidden="true"
-            />
-            <span>CASE STUDY</span>
+            <DrawerIcon className="drawer-meta-label-icon" aria-hidden="true" />
+            <span>{isNote ? "NOTE" : "CASE STUDY"}</span>
           </span>
           <span className="drawer-heading-title-row">
             {highlightText(
-              renderSidebarHeadingMarkdown(heading, {
-                sectionId,
-                subsectionId,
-                footnoteOriginMap: drawerFootnoteOriginMap,
+              renderSidebarHeadingMarkdown(displayHeading, {
+                referenceIdPrefix: `${referenceIdPrefix}-heading`,
               }),
               highlight,
             )}
@@ -681,8 +668,8 @@ function MarkdownPage() {
             onNavigation={handleNavigation}
             highlight={highlight}
             urlTerm={urlTerm}
-            mergedSidebar={allPageFootnotes}
-            footnoteOriginMap={drawerFootnoteOriginMap}
+            referenceIdPrefix={referenceIdPrefix}
+            includeReferences={false}
           />
         </div>
       </>
@@ -750,33 +737,7 @@ function MarkdownPage() {
       }
 
       if (sectionId && subsectionId) {
-        // numbering (letter) available ASAP on direct subsection loads.
-        const [result, subs] = await Promise.all([
-          getContent(sectionId, subsectionId),
-          getSubsections(sectionId).catch(() => []),
-        ]);
-
-        if (Array.isArray(subs)) {
-          const validSubs = subs
-            .filter((s) => s && s.id && typeof s.id === "string")
-            .filter(
-              (s) => !s.id.startsWith(".") && s.id.toLowerCase() !== "drawer",
-            )
-            .map((s) => ({
-              ...s,
-              title:
-                (s.title && String(s.title).trim()) ||
-                String(s.id || "")
-                  .replace(/[-_]/g, " ")
-                  .replace(/\b\w/g, (m) => m.toUpperCase()),
-            }))
-            .sort(
-              (a, b) =>
-                (Number.isFinite(a.order) ? a.order : 999) -
-                (Number.isFinite(b.order) ? b.order : 999),
-            );
-          setSubsections(validSubs);
-        }
+        const result = await getContent(sectionId, subsectionId);
 
         if (result) {
           const raw = result.content || "";
@@ -816,6 +777,7 @@ function MarkdownPage() {
   }, [sectionId, subsectionId, navigate, notifyError, previousPath]);
 
   useEffect(() => {
+    setSubsections([]);
     if (!sectionId) return;
     let active = true;
     getSubsections(sectionId)
@@ -892,6 +854,7 @@ function MarkdownPage() {
   }, [pageIdentifier]);
 
   useEffect(() => {
+    if (aliasTarget) return;
     if (!urlTerm) {
       closeRightDrawer();
       return;
@@ -911,7 +874,7 @@ function MarkdownPage() {
     openGlobalDrawerForTerm(key, {
       silent: true,
     });
-  }, [urlTerm, sidebar]);
+  }, [urlTerm, sidebar, aliasTarget]);
 
   const checkAndNavigate = useCallback(
     async (path) => {
@@ -1121,8 +1084,6 @@ function MarkdownPage() {
               highlight={highlight}
               urlTerm={urlTerm}
               allDefinitions={allDefinitions}
-              onFootnotesReady={stableOnFootnotesReady}
-              extraFootnotes={allPageFootnotes.slice(mainFootnotes.length)}
               footnoteOriginMap={footnoteOriginMap}
               furtherReadingBlock={furtherReadingBlock}
             />

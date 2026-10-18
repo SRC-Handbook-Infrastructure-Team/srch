@@ -38,9 +38,9 @@ As part of this process, the SRCH team relies on a broad team of undergraduate a
 
 ![Michelle L. Ding](/assets/member-photos/michelle.png "wrap-right")
 
-SRCH was founded by Michelle L. Ding (Brown University Class of 2025, Current Ph.D Student), with advisors Julia Netter and Suresh Venkatasubramanian.
+SRCH was founded by Michelle L. Ding (Brown University Class of 2025, Current Ph.D. student), with advisors Julia Netter and Suresh Venkatasubramanian.
 
-As a former Socially Responsible Computing Teaching Assistant (STA), Michelle saw the need for a curated library of resources for STAs to support them in teaching socio-technical topics like privacy, AI governance, accessibility, sustainability, and more. She also saw the need for more opportunities for students to get involved with socio-technical research on campus, receive mentorship from interdisciplinary faculty, and grow in community with like-minded students. The result is the SRC Handbook: a project that aims to improve the quality of socially computing education taught in Brown University's Computer Science courses by building a dedicated pipeline from current sociotechnical research to the CS classroom.
+As a former Socially Responsible Computing Teaching Assistant (STA), Michelle saw the need for a curated library of resources for STAs to support them in teaching socio-technical topics like privacy, AI governance, accessibility, sustainability, and more. She also saw the need for more opportunities for students to get involved with socio-technical research on campus, receive mentorship from interdisciplinary faculty, and grow in community with like-minded students. The result is the SRC Handbook: a project that aims to improve the quality of socially responsible computing education taught in Brown University's Computer Science courses by building a dedicated pipeline from current sociotechnical research to the CS classroom.
 
 [Fall 2024]
 Michelle, Julia, and Suresh recruited the first cohort of students into the project for the privacy and product teams. The privacy team developed the first set of primers and the product team developed a prototype and conducted user studies with STAs.
@@ -62,7 +62,7 @@ The handbook is hosted by [Brown University](http://brown.edu) and supported by 
 
 We are excited to hear about how SRCH is being used\! If you are using SRCH for your work and would like to let us know, we would love to hear from you at [src_handbook@brown.edu](mailto:src_handbook@brown.edu).
 
-The code and content of our website is public, and we happily welcome contributions to either. Please visit our [Github repository](https://github.com/SRC-Handbook-Infrastructure-Team/srch) for more information.
+The code and content of our website are public, and we happily welcome contributions to either. Please visit our [GitHub repository](https://github.com/SRC-Handbook-Infrastructure-Team/srch) for more information.
 
 This work is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 

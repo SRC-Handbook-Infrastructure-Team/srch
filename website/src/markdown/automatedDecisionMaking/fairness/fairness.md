@@ -22,7 +22,7 @@ Algorithmic fairness is built on the notion of **comparative fairness**, which d
 
 **Sensitive attributes** distinguish the groups whose treatments one wants to assess and potentially correct, e.g., race, gender, or other data points considered personal or private. Many fairness definitions explicitly require knowledge of sensitive attributes, and they are necessary for identifying disparities, measuring fairness across groups, or implementing fairness interventions.
 
-Excluding sensitive attributes appears to help with fair automated-decision making. If our model doesn't receive any information about sensitive attributes, how could it treat groups defined by said attributes unfairly? However, sensitive attributes are often encoded within other variables, an issue known as the **{proxy-problem}**. Even when sensitive attributes are excluded from a model, other variables may act as proxies because they correlate strongly with protected characteristics. Example proxies for sensitive attributes include:
+Excluding sensitive attributes appears to help with fair automated decision-making. If our model doesn't receive any information about sensitive attributes, how could it treat groups defined by said attributes unfairly? However, sensitive attributes are often encoded within other variables, an issue known as the **{proxy-problem}**. Even when sensitive attributes are excluded from a model, other variables may act as proxies because they correlate strongly with protected characteristics. Example proxies for sensitive attributes include:
 
 - Zip codes as a proxy for race or income due to residential segregation
 - Credit history as a proxy for socioeconomic status
@@ -33,7 +33,7 @@ Because machine learning models are adept at detecting subtle patterns, they can
 
 ## Individual Fairness
 
-{Individual-fairness} is centered around the idea that **similar individuals should receive similar predictions.** A core component here is the **similarity metric**: which features count, how they are weighted, and how statistical distance is measured. For example, in automated résumé screening, similarity might be defined using education, experience, and skills. According to a determined similarity metric, candidates with similar degrees, work experience, and skill sets should receive similar scores or hiring decisions.
+{individual-fairness|Individual fairness} is centered around the idea that **similar individuals should receive similar predictions.** A core component here is the **similarity metric**: which features count, how they are weighted, and how statistical distance is measured. For example, in automated résumé screening, similarity might be defined using education, experience, and skills. According to a determined similarity metric, candidates with similar degrees, work experience, and skill sets should receive similar scores or hiring decisions.
 
 A strength of individual fairness is that if two people have similar profiles, they will receive similar predictions, which helps prevent arbitrary discrimination on an individual level. However, it also brings trade-offs, primarily the assumption that there is a standard of “similarity” that is both fair and measurable. If the chosen metric reflects biased historical data or is a proxy variable for social disadvantage, individual fairness can legitimize and perpetuate existing structural inequities while still appearing formally fair. Because it only looks at an individual level, it might entrench group disparities for protected groups, placing it in conflict with the ideals of group fairness we’ll discuss below. It can also be computationally costly, making it hard to scale in complex systems with many interacting features.
 
@@ -48,7 +48,7 @@ To illustrate these concepts below, we can imagine an automated loan approval mo
 
 ### Independence
 
-{Independence} requires that **predicted outcomes are statistically independent of sensitive attributes**; in other words, model predictions should not change depending on a person’s sensitive attributes.
+{independence|Independence} requires that **predicted outcomes are statistically independent of sensitive attributes**; in other words, model predictions should not change depending on a person’s sensitive attributes.
 
 Metrics such as **demographic parity** compare positive outcomes across groups, which, in the loan approval example, would be the outcome of getting approved or getting a high score. To satisfy independence, the approval rates should be very similar across groups.
 
@@ -60,12 +60,12 @@ Independence is a helpful tool in looking at predicted outcomes. However, it ass
 
 ### Separation
 
-{Separation} requires that **predictions are conditionally independent of group membership given the true outcome**. In other words, individuals with the same actual outcome—in this case, whether an applicant is “qualified” according to ground truth data—should receive similar prediction behavior across groups. Truly unqualified people should have similar outcomes, and truly qualified people should as well. This is measured using group-specific outcome rates, including:
+{separation|Separation} requires that **predictions are conditionally independent of group membership given the true outcome**. In other words, individuals with the same actual outcome—in this case, whether an applicant is “qualified” according to ground truth data—should receive similar prediction behavior across groups. Truly unqualified people should have similar outcomes, and truly qualified people should as well. This is measured using group-specific outcome rates, including:
 
 |                 | Approved / Scored High    | Not Approved / Scored Low                                         |
 | :-------------- | :------------------------ | :---------------------------------------------------------------- |
 | **Qualified**   | True Positive Rate (TPR)  | False Negative Rate (FNR): (complement of TPR, equal to 1 \- TPR) |
-| **Unqualified** | False Positive Rate (FPR) | True Negative Rate (TPR) (complement of FPR, equal to 1 \- FPR)   |
+| **Unqualified** | False Positive Rate (FPR) | True Negative Rate (TNR) (complement of FPR, equal to 1 \- FPR)   |
 
 The primary separation metrics assess parity across true positive rates and false positive rates to determine the difference between various groups, often summarized as an overall **equalized-odds gap**. To satisfy separation, these rates must be consistent across groups.
 
@@ -77,7 +77,7 @@ Separation discerns predictions across groups given their true outcome, which ca
 
 ### Sufficiency
 
-{Sufficiency} requires that the **true outcome is conditionally independent of group membership given the predicted outcome**. In practice, this means that for individuals who receive the same predicted score or label, their probability of the actual outcome should be the same across groups. In other words, a given score must represent the same level of underlying qualification regardless of group membership.
+{sufficiency|Sufficiency} requires that the **true outcome is conditionally independent of group membership given the predicted outcome**. In practice, this means that for individuals who receive the same predicted score or label, their probability of the actual outcome should be the same across groups. In other words, a given score must represent the same level of underlying qualification regardless of group membership.
 
 Sufficiency is evaluated using group-wise calibration metrics, including **positive predictive value (PPV)**, which is the proportion of approved or high-scoring applicants who are truly qualified, and **negative predictive value (NPV)**, which is the proportion of denied or low-scoring applicants who are truly unqualified. These are computed separately by group and compared for parity. Perfect sufficiency implies that calibration curves overlap across groups or that PPV and NPV gaps are near zero.
 
@@ -95,13 +95,13 @@ Because the criteria are mutually exclusive, choosing which to enforce is not ju
 
 Their fundamental incompatibility manifests as practical trade-offs among fairness goals and other system objectives. Common trade-offs include:
 
-- {Independence-vs-Separation}: equalizing predicted outcomes across groups (independence) typically requires accepting unequal error rates, while equalizing error rates (separation) typically produces unequal outcomes — and when base rates differ between groups, satisfying both simultaneously is mathematically impossible.
+- {independence-vs-separation|Independence vs Separation}: equalizing predicted outcomes across groups (independence) typically requires accepting unequal error rates, while equalizing error rates (separation) typically produces unequal outcomes — and when base rates differ between groups, satisfying both simultaneously is mathematically impossible.
 
-- {Separation-vs-Sufficiency}: Equalizing error rates (separation) may conflict with ensuring that prediction scores mean the same thing across groups (sufficiency).
+- {separation-vs-sufficiency|Separation vs Sufficiency}: Equalizing error rates (separation) may conflict with ensuring that prediction scores mean the same thing across groups (sufficiency).
 
-- {Accuracy-vs-Fairness}: Accuracy focuses on prediction performance (e.g., minimizing overall error). Fairness adjustments may require introducing constraints that degrade performance for some groups to satisfy fairness criteria.
+- {accuracy-vs-fairness|Accuracy vs Fairness}: Accuracy focuses on prediction performance (e.g., minimizing overall error). Fairness adjustments may require introducing constraints that degrade performance for some groups to satisfy fairness criteria.
 
-- {Individual-vs-Group-Fairness}: Satisfying group fairness often requires treating individuals differently to compensate for historical inequality, which violates individual fairness principles. Enforcing individual fairness can perpetuate group disparities if the similarity metric is derived from biased data.
+- {individual-vs-group-fairness|Individual vs Group Fairness}: Satisfying group fairness often requires treating individuals differently to compensate for historical inequality, which violates individual fairness principles. Enforcing individual fairness can perpetuate group disparities if the similarity metric is derived from biased data.
 
 The impossibility theorem reframes fairness as a space of constrained choices. While {recent-research} focuses on reconciling and satisfying approximate fairness across multiple metrics, every fairness intervention still prioritizes some interpretation of equality over another. Understanding these trade-offs is essential for principled design: it clarifies that algorithmic fairness is less about finding a universal solution and more about making explicit, defensible decisions about which kinds of fairness to pursue and why.
 
@@ -147,7 +147,7 @@ Algorithmic fairness attempts to reconcile the technical logic of machine learni
 ## Sidebar
 
 proxy-problem:
-Heading: The Proxy Problem
+Heading: Note: The Proxy Problem
 The proxy problem arises when features in a dataset encode information about sensitive attributes indirectly through statistical correlation. Even if protected variables such as race, gender, or age are excluded, the joint distribution of other variables often contains enough signal to allow a model to infer them. In large datasets, these correlations can be subtle and nonlinear, amplified by the capacity of modern learning algorithms to detect complex dependencies. These proxies mean that prediction can be influenced by sensitive attributes, even if excluded.
 
 Formally, if a sensitive attribute _A_ is not included in the feature set _X_, but some subset of _X_ still provides information about _A_, then the model’s prediction function _f(X)_ will depend on _A_ indirectly.
@@ -171,83 +171,83 @@ Various mitigation strategies aim to reduce this dependence:
 However, these techniques rely on assumptions about the data-generating process and causal structure, and they rarely remove proxy influence completely. Because social and economic variables are deeply correlated, proxy effects are often unavoidable. Effective fairness assessment must therefore consider both explicit use of sensitive attributes and their indirect presence throughout the feature space.
 
 individual-fairness:
-Heading: Individual fairness
+Heading: Note: Individual Fairness
 
-### Formal definition:
+#### Formal definition:
 
 For a prediction function _Ŷ_ \= _f(X)_, and a task-specific similarity metric _d(·,·)_ over individuals, the model should satisfy a Lipschitz-style condition: | _f(xi​)−f(xj​)_ | ≤ L ⋅ _d (xi​,xj​)_ for all individuals _xi_, _xj_. The closer two individuals are according to the similarity metric, the more similar their predicted outcomes must be.
 
-### Common Metrics:
+#### Common Metrics:
 
 1. Lipschitz violations: Proportion or magnitude of prediction differences exceeding the similarity bound.
-2. Pairwise consistency metrics: Frequency of near-neighbor pairs with large score gaps or conflicting decisions. x
+2. Pairwise consistency metrics: Frequency of near-neighbor pairs with large score gaps or conflicting decisions.
 3. Ranking stability measures: Evaluations of whether individuals with similar feature profiles receive comparable rankings or thresholded decisions.
 
-### Key assumption:
+#### Key assumption:
 
 A valid, ethically defensible, and task-relevant similarity metric exists that captures which characteristics should matter for the decision and how much they should matter relative to one another.
 
-### Limitations:
+#### Limitations:
 
 - Heavily depends on how similarity is defined; if the chosen metric is derived from historically biased data or includes proxy features correlated with protected characteristics, the fairness constraint can perpetuate structural inequities while appearing formally neutral.
 - Does not guarantee group-level parity and may entrench disparities across protected groups.
 - Potentially substantial computational overhead, as pairwise or neighborhood-based fairness checks scale poorly to large datasets.
 
 independence:
-Heading: Independence
+Heading: Note: Independence
 
-### Formal definition:
+#### Formal definition:
 
-Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction*,* independence holds when _Ŷ_ ⊥ _A._[^1]
+Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction, independence holds when _Ŷ_ ⊥ _A._[^1]
 
-### Common Metrics:
+#### Common Metrics:
 
 - Demographic parity difference: Difference in positive outcome rates across groups. These can be compared with minimum/maximum, pairwise differences, or using a reference group. Smaller values indicate greater parity.
 - Demographic parity ratio: Ratio of positive outcome rates across groups. Values closer to 1 indicate greater parity.
 - Mean score difference: Gap between average predicted scores across groups for continuous predictions.
 
-### Key Assumption:
+#### Key Assumption:
 
 Differences in outcome rates across groups reflect inherent unfairness, not legitimate differences in qualifications or risk.
 
-### Limitations:
+#### Limitations:
 
 - Does not distinguish between disparities arising from bias and those arising from genuine differences in predictive features.
 - Allows false positive and negative rates to be unevenly distributed.
 - Can reduce predictive accuracy by forcing equal selection rates across dissimilar populations.
 
 separation:
-Heading: Separation
+Heading: Note: Separation
 
-### Formal definition:
+#### Formal definition:
 
-Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction*,* separation holds when _Ŷ_ ⊥ \*A | Y.\*[^1]
+Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction, separation holds when Ŷ ⊥ A | Y.[^1]
 
-### Common Metrics:
+#### Common Metrics:
 
 - True Positive Rate (TPR) difference (equal opportunity): Difference in correctly approved qualified individuals across groups. Values closer to 0 indicate greater parity.
 - False Positive Rate (FPR) difference: Difference in incorrectly approved unqualified individuals across groups. Values closer to 0 indicate greater parity.
 - False Negative Rate (FNR) difference: Difference in incorrectly denied qualified individuals across groups. Values closer to 0 indicate greater parity.
 - Equalized odds difference: Combined measure of TPR and FPR differences, often taking their maximum. Values closer to 0 indicate greater parity.
 
-### Key assumption:
+#### Key assumption:
 
 Differences in error rates across groups are unfair, even if true outcome rates differ between groups.
 
-### Limitations:
+#### Limitations:
 
 - Requires access to accurate ground truth labels, which may themselves be biased or socially constructed.
 - Treats all misclassification errors as equivalent regardless of their real-world impact.
 - Conflicts with sufficiency when outcome base rates differ across groups.
 
 sufficiency:
-Heading: Sufficiency
+Heading: Note: Sufficiency
 
-### Formal definition:
+#### Formal definition:
 
-Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction*,* sufficiency holds when _Y_ ⊥ \*A | Ŷ\*[^1]
+Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sensitive attribute, and _Ŷ_ \= _f (X)_ is the prediction, sufficiency holds when Y ⊥ A | Ŷ.[^1]
 
-### Common metrics:
+#### Common metrics:
 
 - Positive predictive value (PPV) gap: Difference in true qualification rates among approved or high-score individuals across groups.
 - Negative predictive value (NPV) gap: Difference in true unqualification rates among denied or low-score individuals across groups.
@@ -255,11 +255,11 @@ Where _X_ is the space of feature vectors, _Y_ is the true outcome, _A_ is a sen
 - Calibration curves / reliability diagrams: Visual checks of probability alignment across groups.
 - Brier score or log loss by group: Measures of probabilistic prediction quality across demographic strata.
 
-### Key assumption:
+#### Key assumption:
 
 Prediction scores represent true and comparable probabilities across all groups and can be meaningfully interpreted as equal estimates of underlying risk.
 
-### Limitations:
+#### Limitations:
 
 - Assumes probability estimates are well-calibrated and comparable across groups.
 - Permits disparities in selection rates and error burdens across demographic groups.
@@ -267,18 +267,18 @@ Prediction scores represent true and comparable probabilities across all groups 
 - Depends on accurate ground-truth labels, which may embed social, historical, or measurement bias.
 
 the-impossibility-theorem:
-Heading: The Impossibility Theorem
+Heading: Note: The Impossibility Theorem
 The impossibility theorem in algorithmic fairness formalizes the claim that standard group fairness criteria—independence, separation, and sufficiency—cannot all hold simultaneously except under restrictive or trivial conditions. The result follows from the probabilistic relationships among the sensitive attribute (_A_), the true outcome (_Y_), and the model prediction (_Ŷ_). Each fairness criterion specifies a conditional independence constraint, as defined above:
 
 - Independence: _Ŷ_ is independent of _A → Ŷ ⟂ A_
-- Separation: _Ŷ_ is independent of A given the true outcome \*Y → Ŷ ⟂ A | Y\*
+- Separation: _Ŷ_ is independent of _A_ given the true outcome _Y_ → Ŷ ⟂ A | Y
 - Sufficiency: _Y_ is independent of A given the prediction _Ŷ → Y ⟂ A | Ŷ_
 
 Each expresses a different fairness intuition: equality of outcomes, equality of errors, and equality of interpretation.
 
 The conflict arises because these conditional independence relations cannot all hold simultaneously unless group base rates _P(Y_\=1 _ | A)_ are equal or the model is perfectly accurate (_Ŷ \= Y_).
 
-### Mathematical outline:
+#### Mathematical outline:
 
 Let the model output a score _S \= f(X)_, estimating _P(Y=1 | X)_.
 
@@ -292,72 +292,20 @@ Likewise, enforcing independence alongside either sufficiency or separation gene
 
 Similarly, independence and sufficiency can only hold together when the true outcome _Y_ carries no information about _A_. Because real datasets almost always exhibit different base rates and imperfect accuracy, these constraints cannot all be satisfied at once.
 
-Independence-vs-Separation:
-Heading: Independence vs. separation
+independence-vs-separation:
+CaseStudy: automatedDecisionMaking/fairness/independence-vs-separation
 
-### Domain:
+separation-vs-sufficiency:
+CaseStudy: automatedDecisionMaking/fairness/separation-vs-sufficiency
 
-Lending (loan approvals)
+accuracy-vs-fairness:
+CaseStudy: automatedDecisionMaking/fairness/accuracy-vs-fairness
 
-### Study:
-
-[“Equality of Opportunity in Supervised Learning”](https://arxiv.org/pdf/1610.02413) by Hardt, Price & Srebro (2016) [^2]
-
-### Summary:
-
-The authors present a post-processing method for classifiers that adjusts decision thresholds group-by-group so as to equalize false-positive and false-negative rates across groups. Essentially, they enforce the separation criterion (equal error rates) rather than the independence criterion (equal approval rates irrespective of group).
-
-### Why separation was chosen:
-
-In the lending context, the authors argue that it is unfair if one demographic group faces systematically higher error rates (e.g., being wrongly denied or wrongly approved) even if the overall approval rate is the same. Prioritizing equal error rates ensures more equitable treatment conditional on “would repay” vs “would default.”
-
-### Trade-off illustrated:
-
-By choosing separation, the authors implicitly accept differences in approval rates across groups (thus violating independence). This shows how the technical choice of fairness metric reflects a policy decision about whether we care more about outcome-parity or error-parity.
-
-Separation-vs-Sufficiency:
-
-### Domain:
-
-Insurance (premium pricing / risk prediction)
-
-### Study:
-
-[“An Ethical Argument for a Group Fairness Definition Insurers Can Use”](https://link.springer.com/article/10.1007/s13347-023-00624-9) by Baumann & Loi (2023) [^3]
-
-### Summary:
-
-The authors examine algorithmic risk scoring for insurance premiums and argue that the most appropriate fairness metric in this domain is sufficiency (calibration), so a predicted risk score should mean the same thing across demographic groups. They critique both independence and separation as normatively and mathematically ill-fitting for insurance. Why sufficiency was chosen: In insurance, predicted risk scores are used to set premiums or underwriting decisions; thus, fairness demands that those scores correspond to actual risk equivalently for all groups. Focusing on separation (equal error rates) could force distortions in the calibration of risk scores—undermining the actuarial validity of pricing. Trade-off illustrated: By choosing sufficiency, the authors accept that error rates or outcome distributions might differ across groups. This reinforces how the fairness criterion selection is a technical decision that encodes value judgments about what fairness means in that domain. |
-
-Accuracy-vs-Fairness:
-Heading: Accuracy vs. Fairness
-
-### Domain:
-
-Criminal Justice
-
-### Study:
-
-“[Fairness in Criminal Justice Risk Assessments: The State of the Art](https://arxiv.org/abs/1703.09207)” by Berk et al. (2017) [^4]
-
-### Summary:
-
-This study examines how different definitions of algorithmic fairness apply to criminal justice risk assessment tools, including systems that predict reoffending risk to guide bail, parole, or sentencing decisions. They show empirically that when base rates differ across demographic groups, achieving statistical fairness typically requires reducing predictive accuracy. Enforcing fairness constraints can shift decision thresholds, altering false positive and false negative rates and producing less precise predictions overall. Trade-off illustrated: The study demonstrates that optimizing purely for accuracy tends to reproduce historical disparities present in the data, while optimizing for fairness may lower overall predictive performance. Balancing these goals requires explicitly deciding how much accuracy one is willing to sacrifice for fairer outcomes, again making fairness a normative and policy choice instead of a purely technical parameter. |
-
-Individual-vs-Group-Fairness:
-Heading: Individual vs. Group Fairness
-
-## Domain:
-
-General predictive classification tasks
-Study: [“A Unified Approach to Quantifying Algorithmic Unfairness: Measuring Individual & Group Unfairness via Inequality Indices”](https://doi.org/10.48550/arXiv.1807.00787) by Speicher et al. (2018) [^5]
-
-### Summary:
-
-This paper proposes a quantitative framework that measures unfairness using economic inequality indices. They define “benefit” values for individuals based on algorithmic outcomes and decompose overall unfairness into between-group (group unfairness) and within-group (individual unfairness) components. Through experiments, they show that optimizing for group-level parity can unintentionally increase within-group inequality, meaning individuals inside the same group are treated less consistently. Trade-off illustrated: Pursuing group fairness improves equality between demographic groups but can worsen fairness within those groups. The study demonstrates that no algorithm can simultaneously optimize both. |
+individual-vs-group-fairness:
+CaseStudy: automatedDecisionMaking/fairness/individual-vs-group-fairness
 
 recent-research:
-Heading: Pushing The Boundaries of the Impossibility Theorem
+Heading: Note: Research on the Limits of the Impossibility Theorem
 Recent works have sought to push the boundaries of the impossibility theorem:
 
 In [“The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice,”](https://dl.acm.org/doi/pdf/10.1145/3593013.3594007) Bell et al. (2023)[^6] show that if fairness metrics are treated as approximate rather than exact constraints, many models can satisfy multiple fairness criteria simultaneously. Using analytical arguments and experiments, the authors argue that the impossibility theorem is less restrictive in practice, and approximate fairness along multiple metrics is often achievable.
