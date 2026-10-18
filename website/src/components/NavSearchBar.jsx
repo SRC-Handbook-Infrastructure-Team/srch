@@ -8,6 +8,7 @@ import { Box, Input, IconButton } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { canSearch } from "../util/searchQuery.js";
 function NavSearchBar({
   searchQuery,
   setSearchQuery,
@@ -29,6 +30,7 @@ function NavSearchBar({
   }, [isSearchOpen]);
 
   function search() {
+    if (!canSearch(searchQuery)) return;
     navigate(`/search/${encodeURIComponent(searchQuery)}`);
     setIsSearchOpen(false);
   }
@@ -46,6 +48,7 @@ function NavSearchBar({
           aria-label="Run search"
           className="searchbar-toggle-button toggle-button"
           onClick={search}
+          disabled={!canSearch(searchQuery)}
         >
           <LuSearch />
         </IconButton>

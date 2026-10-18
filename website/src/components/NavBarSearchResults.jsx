@@ -8,6 +8,7 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Collapsible, Skeleton, Stack } from "@chakra-ui/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
+import { canSearch } from "../util/searchQuery.js";
 import { getHighlightTargetsFromSnippet } from "../util/highlightTargets";
 
 const ResultSnippet = React.memo(({ snippet, maxResults }) => {
@@ -54,12 +55,13 @@ export const NavBarSearchResults = React.memo(
     }, []);
 
     useLayoutEffect(() => {
-      if (!searchQuery.length) {
+      if (!canSearch(searchQuery)) {
         setIsLoading(false);
         setSearchResults(null);
         return;
       }
 
+      let cancelled = false;
       setIsLoading(true);
       setSearchResults(null);
 
@@ -69,16 +71,22 @@ export const NavBarSearchResults = React.memo(
             search(searchQuery, true),
             new Promise((res) => setTimeout(res, 400)),
           ]);
-          setSearchResults(results);
-          setIsLoading(false);
+          if (!cancelled) {
+            setSearchResults(results);
+            setIsLoading(false);
+          }
         }
       };
 
       const debounceTimer = setTimeout(doSearch, 0);
-      return () => clearTimeout(debounceTimer);
+      return () => {
+        cancelled = true;
+        clearTimeout(debounceTimer);
+      };
     }, [searchQuery, isIndexInitialized]);
 
     function handleViewAllClick() {
+      if (!canSearch(searchQuery)) return;
       navigate(`/search/${encodeURIComponent(searchQuery)}`);
       if (setIsSearchOpen != null) setIsSearchOpen(false);
     }
@@ -86,7 +94,7 @@ export const NavBarSearchResults = React.memo(
     const hasResults = Boolean(searchResults && searchResults.length > 0);
     const showLoadingOrResults = isLoading || hasResults;
     const showNoResults =
-      searchQuery.length > 0 &&
+      canSearch(searchQuery) &&
       isIndexInitialized &&
       !isLoading &&
       searchResults != null &&
@@ -94,10 +102,10 @@ export const NavBarSearchResults = React.memo(
 
     return (
       <div className="results-window-nav-bar">
-        {show && showNoResults && (
+        {show && canSearch(searchQuery) && showNoResults && (
           <div className="results-view-all-nav-bar">No results found</div>
         )}
-        <Collapsible.Root open={show && showLoadingOrResults}>
+        <Collapsible.Root open={show && canSearch(searchQuery) && showLoadingOrResults}>
           <Collapsible.Content>
             {isLoading ? (
               <Stack gap="10px" marginTop="1rem">
@@ -132,7 +140,7 @@ export const NavBarSearchResults = React.memo(
                         <div
                           className="results-item-nav-bar"
                           role="link"
-                          tabIndex={searchQuery.length > 0 ? 0 : -1}
+                          tabIndex={canSearch(searchQuery) ? 0 : -1}
                           aria-label={`Open ${doc.title || "result"} in ${doc.sectionTitle || doc.section || "section"}`}
                           onClick={() => {
                             const targetPath = `/${doc.section}/${doc.subsection || ""}${
@@ -215,10 +223,7 @@ export const NavBarSearchResults = React.memo(
                                 "Unnamed Section"}
                             </div>
                             <div className="results-title-nav-bar">
-                              {doc.title ===
-                              snippetToRender.replace(/<[^>]*>/g, "")
-                                ? "Section Header"
-                                : doc.title || "Unnamed Header"}
+                              {doc.title || doc.subsectionTitle || "Unnamed Header"}
                             </div>
                           </div>
                           <ResultSnippet

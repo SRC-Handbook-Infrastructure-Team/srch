@@ -9,6 +9,7 @@ import { LuSearch, LuX } from "react-icons/lu";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FloatingSearchResults from "./FloatingSearchResults";
+import { canSearch } from "../util/searchQuery.js";
 
 function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const containerRef = useRef(null);
@@ -35,7 +36,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
   const handleContainerClick = () => setShowResults(true);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && canSearch(searchQuery)) {
       navigate(`/search/${encodeURIComponent(searchQuery)}`);
     }
   };
@@ -49,7 +50,12 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
       <IconButton
         aria-label="Run search"
         className="searchbar-toggle-button toggle-button"
-        onClick={() => navigate(`/search/${encodeURIComponent(searchQuery)}`)}
+        onClick={() => {
+          if (canSearch(searchQuery)) {
+            navigate(`/search/${encodeURIComponent(searchQuery)}`);
+          }
+        }}
+        disabled={!canSearch(searchQuery)}
       >
         <LuSearch size="1em" />
       </IconButton>
@@ -77,7 +83,7 @@ function SearchBar({ searchQuery, setSearchQuery, maxResults }) {
           </Collapsible.Content>
         </Collapsible.Root>
       </Box>
-      <Collapsible.Root open={showResults}>
+      <Collapsible.Root open={showResults && canSearch(searchQuery)}>
         <Collapsible.Content>
           <FloatingSearchResults
             searchQuery={searchQuery}

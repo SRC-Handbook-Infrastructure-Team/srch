@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import { Collapsible, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { initializeIndex, search } from "../util/SearchEngine";
+import { canSearch } from "../util/searchQuery.js";
 import { getHighlightTargetsFromSnippet } from "../util/highlightTargets";
 
 const classSuffix = (className, floating) =>
@@ -98,18 +99,26 @@ export const SearchResults = React.memo(
     }, []);
 
     useEffect(() => {
+      if (!canSearch(searchQuery)) {
+        setSearchResults(null);
+        return;
+      }
+      let cancelled = false;
       const doSearch = async () => {
-        if (searchQuery.length && isIndexInitialized) {
+        if (canSearch(searchQuery) && isIndexInitialized) {
           const results = await search(searchQuery, true);
-          setSearchResults(results);
+          if (!cancelled) setSearchResults(results);
         }
       };
       const debounceTimer = setTimeout(doSearch, 0);
-      return () => clearTimeout(debounceTimer);
+      return () => {
+        cancelled = true;
+        clearTimeout(debounceTimer);
+      };
     }, [searchQuery, isIndexInitialized]);
 
     useEffect(() => {
-      if (currentPage && searchQuery) {
+      if (currentPage && canSearch(searchQuery)) {
         navigate(`/search/${encodeURIComponent(searchQuery)}/${currentPage}`, {
           replace: true,
         });
@@ -134,7 +143,7 @@ export const SearchResults = React.memo(
 
     return (
       <Box>
-        {searchQuery.length > 0 && (
+        {canSearch(searchQuery) && (
           <div className={classSuffix("results-window", floating)}>
             {searchResults != null && (
               <Collapsible.Root open={Boolean(searchQuery)}>
@@ -263,10 +272,7 @@ export const SearchResults = React.memo(
                                     "Unnamed Section"}
                                 </div>
                                 <div className="results-title">
-                                  {doc.title ===
-                                  snippetToRender.replace(/<[^>]*>/g, "")
-                                    ? "Section Header"
-                                    : doc.title || "Unnamed Header"}
+                                  {doc.title || doc.subsectionTitle || "Unnamed Header"}
                                 </div>
                               </div>
                               <ResultSnippet snippet={snippetToRender} />

@@ -10,7 +10,7 @@ import React from "react";
 import { useMemo, useRef, useState, useEffect } from "react";
 import precomputedBuild from "./precomputed-markdown-data.json";
 import ReactMarkdown from "react-markdown";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { remarkSidebarRef } from "./remarkSidebarRef";
@@ -1690,6 +1690,15 @@ function MarkdownRenderer({
 
   const [showFootnotes, setShowFootnotes] = useState(false);
   const pendingScrollId = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isDrawerMode && location.hash === "#bibliography") {
+      pendingScrollId.current = "bibliography";
+      setShowFootnotes(true);
+    }
+  }, [isDrawerMode, location.hash, content]);
+
 
   useEffect(() => {
     function handleFootnoteClick(e) {
@@ -1724,7 +1733,7 @@ function MarkdownRenderer({
   function CustomFootnotesSection() {
     if (!processed.footnotes.length) return null;
     return (
-      <section data-footnotes className="footnotes">
+      <section id="bibliography" data-footnotes className="footnotes">
         <button
           type="button"
           className="footnotes-toggle"

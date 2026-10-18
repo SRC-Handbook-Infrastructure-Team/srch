@@ -1,3 +1,5 @@
+import { getPlaintextFromMarkdown, getDrawerSearchTitle, splitSearchBibliography } from "./searchText.js";
+import { canSearch } from "./searchQuery.js";
 /**
  * Builds and queries the search index, normalizes content for indexing, and
  * returns ranked results used by search UI components.
@@ -99,48 +101,6 @@ function extractMainAndSidebar(markdown) {
   return { mainContent, sidebarRaw };
 }
 
-function getPlaintextFromMarkdown(content) {
-  if (!content) return "";
-
-  // Remove YAML frontmatter
-  content = content.replace(/^---[\s\S]*?---\s*/, "");
-
-  // Remove images
-  content = content.replace(/!\[[^\]]*\]\([^\)]*\)/g, "");
-
-  // Replace drawer links {text} with just 'text'
-  content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
-    p1.replace(/-/g, " "),
-  );
-
-  // Replace general links [text](url) with just 'text'
-  content = content.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
-
-  // Remove emphasis and code markers
-  content = content.replace(/(\*\*|__)(.*?)\1/g, "$2"); // bold
-  content = content.replace(/(\*|_)(.*?)\1/g, "$2"); // italic
-  content = content.replace(/`([^`]+)`/g, "$1"); // inline code
-
-  // Remove headings but keep text
-  content = content.replace(/^#{1,6}\s*(.*)$/gm, "$1");
-
-  // Remove footnotes
-  content = content.replace(/\[\^([^\]]+)\]/g, "");
-
-  // Remove Markdown table rows (lines starting and ending with |)
-  content = content.replace(/^\s*\|[-:\s|]+\|\s*$/gm, "");
-
-  // Normalize spaces (but keep newlines)
-  content = content.replace(/[ \t]{2,}/g, " ");
-
-  // Preserve paragraph breaks by replacing multiple newlines with exactly two newlines
-  content = content.replace(/\n{2,}/g, "\n\n").trim();
-
-  // Remove remaining text inside square brackets including the brackets
-  content = content.replace(/\[[^\]]*\]/g, "");
-
-  return content;
-}
 function truncateSnippet(snippet, searchQuery) {
   if (!snippet) return "";
 
@@ -191,7 +151,8 @@ function extractBlocksFromContent(
   subsectionTitle = null,
   defaultTitle = null,
 ) {
-  const lines = content.replace(/\r/g, "").split("\n");
+  const { body, bibliography } = splitSearchBibliography(content);
+  const lines = body.replace(/\r/g, "").split("\n");
   const blocks = [];
 
   let currentTitle = null;
@@ -240,6 +201,19 @@ function extractBlocksFromContent(
   });
 
   pushBlock();
+  if (bibliography) {
+    blocks.push({
+      id: `${sectionId}/${subsectionId}#bibliography`,
+      section: sectionId,
+      sectionTitle,
+      subsection: subsectionId,
+      subsectionTitle,
+      anchor: "bibliography",
+      title: "Bibliography",
+      content: bibliography,
+      isDrawer: false,
+    });
+  }
   return blocks;
 }
 
@@ -322,9 +296,7 @@ export async function initializeIndex() {
           subsection: subsection.id,
           subsectionTitle: subsection.title,
           anchor: key,
-          title: getPlaintextFromMarkdown(
-            value.heading || key.replace(/-/g, " "),
-          ),
+          title: getDrawerSearchTitle(value.heading, key),
           content: value.content,
           sidebarKey: key,
           isDrawer: true,
@@ -364,7 +336,7 @@ function createSnippet(content, query) {
 }
 
 export async function search(query, truncateSnippetFlag = true) {
-  if (!query) return [];
+  if (!canSearch(query)) return [];
 
   const results = index.search(query, {
     enrich: true,
@@ -381,7 +353,9 @@ export async function search(query, truncateSnippetFlag = true) {
   const seenKeys = new Set();
 
   allResults.forEach((res) => {
-    const doc = res.doc;
+    const doc = res.doc
+      ? { ...res.doc, title: getPlaintextFromMarkdown(res.doc.title) }
+      : null;
     if (doc) {
       const regex = new RegExp(
         `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
@@ -405,6 +379,7 @@ export async function search(query, truncateSnippetFlag = true) {
           seenKeys.add(titleKey);
           snippetResults.push({
             ...res,
+            doc,
             id: titleKey,
             snippet: cleanTitle.replace(regex, "<mark>$1</mark>"),
             allSnippets: [cleanTitle.replace(regex, "<mark>$1</mark>")],
@@ -431,6 +406,7 @@ export async function search(query, truncateSnippetFlag = true) {
             seenKeys.add(contentKey);
             snippetResults.push({
               ...res,
+              doc,
               id: contentKey,
               snippet: contentSnippet,
               allSnippets: [contentSnippet],

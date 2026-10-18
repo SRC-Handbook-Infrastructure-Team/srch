@@ -1,3 +1,4 @@
+import { getPlaintextFromMarkdown, getDrawerSearchTitle, splitSearchBibliography } from "./searchText.js";
 /**
  * ExportIndex.js
  *
@@ -75,27 +76,6 @@ function createIdFromHeading(text) {
     .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
-}
-
-function getPlaintextFromMarkdown(content) {
-  if (!content) return "";
-
-  content = content.replace(/^---[\s\S]*?---\s*/, "");
-  content = content.replace(/!\[[^\]]*\]\([^)]*\)/g, "");
-  content = content.replace(/\{([A-Za-z0-9-]+)\}/g, (match, p1) =>
-    p1.replace(/-/g, " "),
-  );
-  content = content.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-  content = content.replace(/(\*\*|__)(.*?)\1/g, "$2");
-  content = content.replace(/(\*|_)(.*?)\1/g, "$2");
-  content = content.replace(/`([^`]+)`/g, "$1");
-  content = content.replace(/^#{1,6}\s*(.*)$/gm, "$1");
-  content = content.replace(/\[\^([^\]]+)\]/g, "");
-  content = content.replace(/^\s*\|[-:\s|]+\|\s*$/gm, "");
-  content = content.replace(/[ \t]{2,}/g, " ");
-  content = content.replace(/\n{2,}/g, "\n\n").trim();
-  content = content.replace(/\[[^\]]*\]/g, "");
-  return content;
 }
 
 function parseSidebar(sidebarRaw) {
@@ -279,7 +259,8 @@ function extractBlocksFromContent(
   subsectionId,
   subsectionTitle,
 ) {
-  const lines = content.replace(/\r/g, "").split("\n");
+  const { body, bibliography } = splitSearchBibliography(content);
+  const lines = body.replace(/\r/g, "").split("\n");
   const blocks = [];
 
   let currentTitle = null;
@@ -328,6 +309,19 @@ function extractBlocksFromContent(
   });
 
   pushBlock();
+  if (bibliography) {
+    blocks.push({
+      id: `${sectionId}/${subsectionId}#bibliography`,
+      section: sectionId,
+      sectionTitle,
+      subsection: subsectionId,
+      subsectionTitle,
+      anchor: "bibliography",
+      title: "Bibliography",
+      content: bibliography,
+      isDrawer: false,
+    });
+  }
   return blocks;
 }
 
@@ -451,9 +445,7 @@ function buildContentArray() {
           subsection: subsection.id,
           subsectionTitle: subsection.title,
           anchor: key,
-          title: getPlaintextFromMarkdown(
-            value.heading || key.replace(/-/g, " "),
-          ),
+          title: getDrawerSearchTitle(value.heading, key),
           content: value.content,
           sidebarKey: key,
           isDrawer: true,
