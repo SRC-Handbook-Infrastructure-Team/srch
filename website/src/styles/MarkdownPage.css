@@ -1118,3 +1118,36 @@ html body .main-content:focus,
 html body .main-content:focus-visible {
   outline: none !important;
 }
+
+/* case study library back link */
+.case-study-library-back-link {
+  display: inline-flex;
+  align-items: center;
+
+  margin: 16px 0 20px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: var(--color-text-hover);
+
+  font-family: var(--content-font);
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.case-study-library-back-link:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.case-study-library-back-link:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

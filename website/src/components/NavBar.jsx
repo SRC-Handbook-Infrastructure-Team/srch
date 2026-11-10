@@ -340,9 +340,19 @@ function NavBar() {
                 as="button"
                 type="button"
                 className="nav-link-box nav-button"
+                onClick={() => navigate("/case-studies")}
+                onMouseEnter={() => closeSectionOnLeave("modules")}
+              >
+                <span>Case Study Library</span>
+              </Box>
+              <Box
+                as="button"
+                type="button"
+                className="nav-link-box nav-button"
                 onClick={() => navigate("/acknowledgments")}
                 onMouseEnter={() => closeSectionOnLeave("modules")}
               >
+
                 <span>Acknowledgments</span>
               </Box>
             </Box>
@@ -529,6 +539,19 @@ function NavBar() {
               >
                 About
               </Box>
+
+              <Box
+                as="button"
+                type="button"
+                className="nav-link-box nav-button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/case-studies");
+                }}
+              >
+                  Case Study Library
+              </Box>
+
               <Box
                 as="button"
                 type="button"
