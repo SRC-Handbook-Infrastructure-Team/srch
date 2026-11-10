@@ -658,6 +658,18 @@ function MarkdownPage() {
           </span>
         </div>
         <div className="drawer-meta-divider" />
+        {!isNote && (
+          <button
+            type="button"
+            className="case-study-library-back-link"
+            onClick={() => {
+              closeRightDrawer();
+              navigate("/case-studies");
+            }}
+          >
+            ← View all case studies
+          </button>
+        )}
         <div className="drawer-markdown-content">
           <MarkdownRenderer
             content={contentToShow}
