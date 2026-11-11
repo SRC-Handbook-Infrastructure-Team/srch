@@ -507,12 +507,7 @@ async function loadPrecomputedMarkdownData() {
 }
 
 function getAllowedNavigationSections(sections = [], allSubsectionsMap = {}) {
-  return sections.filter(
-    (s) =>
-      s &&
-      Array.isArray(allSubsectionsMap[s.id]) &&
-      allSubsectionsMap[s.id].length > 0,
-  );
+  return sections.filter((s) => s && s.id && s.id !== "about");
 }
 
 function sanitizeSubsections(rawSubsections = []) {

@@ -21,7 +21,7 @@ import MarkdownRenderer, {
   getPreloadedMarkdownContent,
   highlightText,
 } from "../util/MarkdownRenderer";
-import { getSectionIconById } from "../util/sectionIcons";
+import { SectionIcon } from "../util/sectionIcons";
 import primersData from "../primers_to_curriculum.json";
 import { drawerAliases } from "../util/drawerAliases.js";
 
@@ -317,6 +317,7 @@ function MarkdownPage() {
     accessibility: "2",
     automateddecisionmaking: "3",
     generativeai: "4",
+    sustainability: "5",
   };
 
   function indexToLetter(index) {
@@ -486,10 +487,6 @@ function MarkdownPage() {
   const [furtherReadingBlock, setFurtherReadingBlock] = useState(
     cachedPageContent?.furtherReadingBlock || null,
   );
-  const sectionIconSrc = sectionId
-    ? getSectionIconById(sectionId, theme)
-    : null;
-
   useDrawerScrollWatcher({
     urlTerm,
     isReady: !isLoading && !!mainContent,
@@ -1033,10 +1030,12 @@ function MarkdownPage() {
         <div className="page-header markdown-margin">
           <div className="page-header-top-row">
             <p className="page-section-label">
-              {sectionIconSrc && (
-                <img
+              {sectionId && (
+                <SectionIcon
+                  sectionId={sectionId}
+                  theme={theme}
                   className="page-section-label-icon"
-                  src={sectionIconSrc}
+                  size={32}
                   alt=""
                   aria-hidden="true"
                 />

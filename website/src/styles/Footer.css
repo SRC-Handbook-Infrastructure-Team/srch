@@ -95,7 +95,8 @@
   justify-content: center;
 }
 
-.primer-link-photo-primer-footer img {
+.primer-link-photo-primer-footer img,
+.primer-link-photo-primer-footer svg {
   width: 24px;
   height: 24px;
   object-fit: contain;

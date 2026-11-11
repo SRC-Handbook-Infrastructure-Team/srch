@@ -18,7 +18,7 @@ import MarkdownRenderer, {
   getPreloadedMarkdownContent,
   warmMarkdownContent,
 } from "../util/MarkdownRenderer";
-import { getSectionIconById } from "../util/sectionIcons";
+import { SectionIcon } from "../util/sectionIcons";
 import GridBackground from "../components/GridBackground";
 
 function prettifySlug(slug = "") {
@@ -29,10 +29,6 @@ function prettifySlug(slug = "") {
     .replace(/\s+/g, " ")
     .replace(/\b\w/g, (m) => m.toUpperCase())
     .trim();
-}
-
-function getSectionIcon(sectionId, theme) {
-  return getSectionIconById(sectionId, theme);
 }
 
 function getSubsectionPreview(content) {
@@ -332,8 +328,6 @@ function LandingPage() {
     navigate(`/${sectionId}/${targetId}`);
   };
 
-  const sectionIcon = getSectionIcon(sectionId, theme);
-
   const toggleCardExpanded = (subId, event) => {
     event.stopPropagation();
     setExpandedCards((prev) => {
@@ -366,13 +360,12 @@ function LandingPage() {
         <div className="landing-upper-content">
           <div className="landing-upper-text-section">
             <div className="landing-title" id="landing-title">
-              {sectionIcon && (
-                <img
-                  className="landing-primer-icon"
-                  src={sectionIcon}
-                  alt={`${formattedTitle} icon`}
-                />
-              )}
+              <SectionIcon
+                sectionId={sectionId}
+                theme={theme}
+                className="landing-primer-icon"
+                alt={`${formattedTitle} icon`}
+              />
               <span>{formattedTitle}</span>
             </div>
           </div>

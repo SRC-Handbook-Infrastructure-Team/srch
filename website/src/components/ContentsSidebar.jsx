@@ -270,9 +270,7 @@ export default function ContentsSidebar({
         });
 
         const filteredSections = sortedSections.filter(
-          (section) =>
-            Array.isArray(subsectionsMap[section.id]) &&
-            subsectionsMap[section.id].length > 0,
+          (section) => section?.id && section.id !== "about",
         );
 
         setSections(filteredSections);

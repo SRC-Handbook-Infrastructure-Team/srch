@@ -67,6 +67,12 @@ html.is-landing-page {
   flex-shrink: 0;
 }
 
+.landing-primer-icon svg,
+svg.landing-primer-icon {
+  width: 1em;
+  height: 1em;
+}
+
 .landing-outline {
   margin-top: 64px;
 }

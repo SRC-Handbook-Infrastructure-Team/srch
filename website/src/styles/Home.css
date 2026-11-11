@@ -207,13 +207,15 @@ html[data-theme="light"] .topic-card {
   justify-items: center;
 }
 
-.topic-card:hover .card-icon-wrap img {
+.topic-card:hover .card-icon-wrap img,
+.topic-card:hover .card-icon-wrap svg {
   filter: invert(14%) sepia(80%) saturate(900%) hue-rotate(330deg)
     brightness(70%);
   transform: scale(1.15);
 }
 
-html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
+html[data-theme="dark"] .topic-card:hover .card-icon-wrap img,
+html[data-theme="dark"] .topic-card:hover .card-icon-wrap svg {
   filter: brightness(70%) sepia(100%) hue-rotate(90deg) saturate(57%)
     brightness(89%);
   transform: scale(1.15);
@@ -228,7 +230,8 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   transform: scale(1.15);
 }
 
-.topic-card .card-icon-wrap img {
+.topic-card .card-icon-wrap img,
+.topic-card .card-icon-wrap svg {
   transition: transform 0.3s ease;
 }
 
@@ -269,7 +272,10 @@ html[data-theme="dark"] .topic-card:hover .card-icon-wrap img {
   flex-shrink: 0;
 }
 
-.card-icon-wrap img {
+.card-icon-wrap img,
+.card-icon-wrap svg {
+  width: 52px;
+  height: 52px;
   transition: filter 0.2s ease;
 }
 

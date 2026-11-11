@@ -42,9 +42,9 @@ The Handbook is currently organized into four core modules:
 1. Privacy
 2. Accessibility
 3. Automated Decision Making
-4. Generative AI
+4. Sustainability
 
-The SRC Handbook is currently organized into four core modules: Privacy, Accessibility, Automated Decision Making, and Generative AI. Each module contains primers aligned to learning objectives, with side panels throughout that expand on key ideas, definitions, and case studies.
+The SRC Handbook is currently organized into four core modules: Privacy, Accessibility, Automated Decision Making, and Sustainability. Each module contains primers aligned to learning objectives, with side panels throughout that expand on key ideas, definitions, and case studies.
 
 ## Project History
 

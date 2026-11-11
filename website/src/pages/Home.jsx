@@ -24,10 +24,9 @@ import SearchBar from "../components/SearchBar";
 import { ArrowRight } from "lucide-react";
 import {
   getSections,
-  getSubsections,
   getPreloadedNavigationData,
 } from "../util/MarkdownData";
-import { getSectionIconById } from "../util/sectionIcons";
+import { SectionIcon } from "../util/sectionIcons";
 import { LuChevronDown } from "react-icons/lu";
 
 function getFirstParagraph(markdown = "") {
@@ -206,22 +205,12 @@ function Home() {
         const sortedSections = [...sections].sort(
           (a, b) => (a.order || 999) - (b.order || 999),
         );
-        const subsectionResults = await Promise.all(
-          sortedSections.map((section) => getSubsections(section.id)),
-        );
 
         if (isCancelled) return;
 
         const cards = sortedSections
-          .map((section, index) => ({
-            section,
-            subsections: subsectionResults[index] || [],
-          }))
-          .filter(
-            ({ subsections }) =>
-              Array.isArray(subsections) && subsections.length > 0,
-          )
-          .map(({ section }) => ({
+          .filter((section) => section?.id && section.id !== "about")
+          .map((section) => ({
             id: section.id,
             title: section.title || section.id,
             slug: `/${section.id}`,
@@ -241,15 +230,6 @@ function Home() {
       isCancelled = true;
     };
   }, []);
-
-  const getCardIcon = (sectionId) => {
-    const src = getSectionIconById(sectionId, theme);
-    if (!src) return null;
-    return {
-      src,
-      alt: `${cardTitleFromSectionId(sectionId)} Icon`,
-    };
-  };
 
   const cardTitleFromSectionId = (sectionId) =>
     String(sectionId || "")
@@ -299,7 +279,7 @@ function Home() {
 
             <div className="card-grid">
               {curriculumCards.map((card, index) => {
-                const icon = getCardIcon(card.id);
+                const iconAlt = `${cardTitleFromSectionId(card.id)} Icon`;
                 return (
                   <div key={card.id} className="topic-card-row">
                     {isMobileLayout ? (
@@ -316,14 +296,12 @@ function Home() {
                             </span>
 
                             <div className="card-icon-wrap">
-                              {icon ? (
-                                <img
-                                  src={icon.src}
-                                  alt={icon.alt}
-                                  width={52}
-                                  height={52}
-                                />
-                              ) : null}
+                              <SectionIcon
+                                sectionId={card.id}
+                                theme={theme}
+                                alt={iconAlt}
+                                size={52}
+                              />
                             </div>
                           </div>
                           <div className="card-divider" />
@@ -354,14 +332,12 @@ function Home() {
                         <div className="card-divider" />
 
                         <div className="card-icon-wrap">
-                          {icon ? (
-                            <img
-                              src={icon.src}
-                              alt={icon.alt}
-                              width={52}
-                              height={52}
-                            />
-                          ) : null}
+                          <SectionIcon
+                            sectionId={card.id}
+                            theme={theme}
+                            alt={iconAlt}
+                            size={52}
+                          />
                         </div>
 
                         <div className="card-body">

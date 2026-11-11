@@ -437,6 +437,11 @@ html:not(.left-open) .header-toggle {
   flex: 0 0 2rem;
   object-fit: contain;
 }
+
+svg.page-section-label-icon {
+  width: 2rem;
+  height: 2rem;
+}
 .page-header-row {
   position: relative;
   display: flex;

@@ -13,7 +13,7 @@ import {
   getPreloadedNavigationData,
   preloadNavigationData,
 } from "../util/MarkdownData";
-import { getSectionIconById } from "../util/sectionIcons";
+import { SectionIcon } from "../util/sectionIcons";
 
 function Footer({
   withSidebars = false,
@@ -119,9 +119,6 @@ function Footer({
   }, []);
 
   const getLogo = () => (theme === "dark" ? logoDark : logoLight);
-  function getModuleIconById(sectionId) {
-    return getSectionIconById(sectionId, theme);
-  }
 
   return (
     <Box
@@ -155,20 +152,16 @@ function Footer({
             <div>
               <div className="heading-footer">Modules</div>
               {moduleLinks.map((module) => {
-                const iconSrc = getModuleIconById(module.id);
-
                 return (
                   <div className="primer-link-primer-footer" key={module.id}>
                     <div className="primer-link-photo-primer-footer">
-                      {iconSrc ? (
-                        <img
-                          className="footer-icon"
-                          src={iconSrc}
-                          alt={`${module.title} Icon`}
-                          width={24}
-                          height={24}
-                        />
-                      ) : null}
+                      <SectionIcon
+                        sectionId={module.id}
+                        theme={theme}
+                        className="footer-icon"
+                        alt={`${module.title} Icon`}
+                        size={24}
+                      />
                     </div>
                     <button
                       onClick={() => navigate(module.slug)}
