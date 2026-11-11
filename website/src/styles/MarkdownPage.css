@@ -1124,12 +1124,11 @@ html body .main-content:focus-visible {
   outline: none !important;
 }
 
-/* case study library back link */
 .case-study-library-back-link {
   display: inline-flex;
   align-items: center;
 
-  margin: 16px 0 20px;
+  margin: 1.5rem 1.5rem 0.5rem;
   padding: 0;
 
   border: none;
@@ -1138,21 +1137,23 @@ html body .main-content:focus-visible {
   color: var(--color-text-hover);
 
   font-family: var(--content-font);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
 
   cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
 
   transition: color 0.2s ease;
 }
 
-.case-study-library-back-link:hover {
-  color: var(--color-text);
+.case-study-library-back-link:hover,
+.case-study-library-back-link:focus {
+  color: var(--color-text-hover);
   text-decoration: underline;
 }
 
 .case-study-library-back-link:focus-visible {
   outline: 2px solid var(--color-focus-ring);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline-offset: 2px;
 }

@@ -110,8 +110,10 @@ function CaseStudies() {
                 id: `${routeData.sectionId}-${routeData.subsectionId}-${routeData.slug}`,
 
                 title:
-                  frontmatter.title ||
-                  prettify(routeData.slug),
+                  stripMarkdown(
+                    frontmatter.title ||
+                      prettify(routeData.slug),
+                  ),
 
                 description:
                   cleanContent.length > 120
@@ -223,7 +225,9 @@ function CaseStudies() {
               to={study.href}
               className="case-study-card"
             >
-              <h2>{study.title}</h2>
+              <h2 className="case-study-card-title">
+                {study.title}
+              </h2>
 
               <p>
                 {study.description}

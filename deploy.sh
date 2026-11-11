@@ -2,6 +2,10 @@
 
 # Deployment script for SRCH website (run from repo root)
 # Usage: ./deploy.sh <username>
+#
+# <username> is your Brown CS login (not necessarily your Brown email local-part,
+# i.e. the bit before @ in you@brown.edu).
+# Set up SSH access (keys, first login): https://cs.brown.edu/about/system/connecting/ssh/
 
 set -e  # Exit on error
 

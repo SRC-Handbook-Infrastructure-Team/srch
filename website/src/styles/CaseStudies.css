@@ -126,7 +126,8 @@
     outline-offset: 3px;
   }
   
-  .case-study-card h2 {
+  .case-study-card h2,
+  .case-study-card-title {
     margin: 0 0 12px;
   
     color: var(--color-text-hover);

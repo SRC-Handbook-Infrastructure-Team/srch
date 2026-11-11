@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+
+# Don't rewrite real files or directories
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# SPA fallback: send unknown paths to the React app
+RewriteRule . /index.html [L]
